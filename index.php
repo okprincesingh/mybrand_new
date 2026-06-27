@@ -1111,7 +1111,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <div class="office-grid">
               <?php
                 $displayOffices = array_values($homeOffices);
-                if (count($displayOffices) < 5) {
+                if (count($displayOffices) < 2) {
                   $displayOffices[] = [
                     'country' => 'United Kingdom',
                     'address' => 'Unit 1, Durham Way South, Newton Aycliffe, DL5 6ZF, UNITED KINGDOM',
@@ -1133,6 +1133,8 @@ document.addEventListener('DOMContentLoaded', function () {
                   $officeAddress = trim((string) ($office['address'] ?? ''));
                   $officeEmail = trim((string) ($office['email'] ?? ''));
                   $officePhone = trim((string) ($office['phone'] ?? ''));
+                  $officeRegistrationLabel = trim((string) ($office['registration_label'] ?? ''));
+                  $officeRegistrationNumber = trim((string) ($office['registration_number'] ?? ''));
                   $officeWebsite = trim((string) ($office['website'] ?? ''));
                   if ($officeWebsite === '') {
                     $officeWebsite = 'https://www.mybrandplease.com';
@@ -1150,6 +1152,17 @@ document.addEventListener('DOMContentLoaded', function () {
                     <h3 class="office-card__title"><?php echo htmlspecialchars($officeCountry, ENT_QUOTES, 'UTF-8'); ?></h3>
                     <p class="office-card__address"><?php echo nl2br(htmlspecialchars($officeAddress, ENT_QUOTES, 'UTF-8')); ?></p>
                     <div class="office-card__meta-list">
+                      <?php if ($officeRegistrationLabel !== '' || $officeRegistrationNumber !== ''): ?>
+                        <div class="office-card__meta office-card__meta--plain">
+                          <span class="office-card__meta-icon"><i class="fa-regular fa-building"></i></span>
+                          <span>
+                            <?php if ($officeRegistrationLabel !== ''): ?>
+                              <strong><?php echo htmlspecialchars($officeRegistrationLabel, ENT_QUOTES, 'UTF-8'); ?>:</strong>
+                            <?php endif; ?>
+                            <?php echo htmlspecialchars($officeRegistrationNumber, ENT_QUOTES, 'UTF-8'); ?>
+                          </span>
+                        </div>
+                      <?php endif; ?>
                       <?php if ($officePhone !== ''): ?>
                         <a class="office-card__meta" href="https://wa.me/<?php echo htmlspecialchars($officePhoneHref ?: $officePhone, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" rel="noopener noreferrer">
                           <span class="office-card__meta-icon"><i class="fa-brands fa-whatsapp"></i></span>

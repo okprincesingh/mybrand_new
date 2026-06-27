@@ -301,6 +301,8 @@ CREATE TABLE IF NOT EXISTS home_offices (
   address TEXT NOT NULL,
   email VARCHAR(190) NULL,
   phone VARCHAR(80) NULL,
+  registration_label VARCHAR(40) NULL,
+  registration_number VARCHAR(120) NULL,
   image_path VARCHAR(255) NULL,
   sort_order INT NOT NULL DEFAULT 0,
   is_active TINYINT(1) NOT NULL DEFAULT 1,

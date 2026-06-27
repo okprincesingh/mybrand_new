@@ -537,6 +537,35 @@ function cms_invalidate_home_offices_cache(): void
     cache_delete(cms_cache_key('home', 'offices'));
 }
 
+function cms_ensure_home_offices_registration_columns(PDO $pdo): bool
+{
+    static $available = null;
+    if ($available !== null) {
+        return $available;
+    }
+
+    try {
+        $columns = db_fetch_all($pdo, 'SHOW COLUMNS FROM home_offices');
+        $existing = [];
+        foreach ($columns as $column) {
+            $existing[strtolower((string) ($column['Field'] ?? ''))] = true;
+        }
+
+        if (empty($existing['registration_label'])) {
+            $pdo->exec('ALTER TABLE home_offices ADD COLUMN registration_label VARCHAR(40) NULL AFTER phone');
+        }
+        if (empty($existing['registration_number'])) {
+            $pdo->exec('ALTER TABLE home_offices ADD COLUMN registration_number VARCHAR(120) NULL AFTER registration_label');
+        }
+        $available = true;
+        return true;
+    } catch (Throwable $e) {
+        // Keep the public page available even when the DB user cannot alter schema.
+        $available = false;
+        return false;
+    }
+}
+
 function cms_invalidate_home_instagram_reels_cache(): void
 {
     cache_delete(cms_cache_key('home', 'instagram_reels'));
@@ -612,31 +641,30 @@ function cms_get_home_offices(): array
     $fallback = [
         [
             'country' => 'India',
-            'address' => 'D226, 10th Avenue, Gaur City 2\nGr. Noida West - 201301, INDIA',
-            'email' => 'info@mybrandplease.com',
+            'address' => 'D-226, 10th Avenue, Gaur City 2,\nGr. Noida West, UP - 201301, IN',
+            'email' => 'customersupport@nimishaimpex.com',
             'phone' => '+91 (971) 700 4615',
+            'registration_label' => 'CIN',
+            'registration_number' => 'U20237UP2025PTC234476',
             'image_path' => 'assets/imgs/home/office/INDIAN.webp',
         ],
         [
             'country' => 'United States',
-            'address' => '59th Terrace, SW, West Park\nFlorida - 33023, UNITED STATES',
-            'email' => 'info@mybrandplease.com',
+            'address' => '30 N Gould St, Ste R,\nSheridan, WY 82801, USA',
+            'email' => 'customersupport@nimishaimpex.com',
             'phone' => '+1 (343) 322 5866',
+            'registration_label' => 'EIN',
+            'registration_number' => '41-4152316',
             'image_path' => 'assets/imgs/home/office/USA-FLAG.webp',
         ],
         [
-            'country' => 'Canada',
-            'address' => 'K2C 3N8 ON, McWatters Road\nOntario, Ottawa, CANADA',
-            'email' => 'barb@mybrandplease.com',
-            'phone' => '+1 (819) 593 8620',
-            'image_path' => 'assets/imgs/home/office/canada.webp',
-        ],
-        [
-            'country' => 'Australia',
-            'address' => '811 Pacific Highway, Chatswood\nSydney, AUSTRALIA',
-            'email' => 'info@mybrandplease.com',
-            'phone' => '+61 (422) 833 441',
-            'image_path' => 'assets/imgs/home/office/Australia-Flag-1.webp',
+            'country' => 'United Kingdom',
+            'address' => '128, City Rd, London,\nEC1V 2NX, UNITED KINGDOM',
+            'email' => 'customersupport@nimishaimpex.com',
+            'phone' => '+91 (120) 518 5637',
+            'registration_label' => 'Company No',
+            'registration_number' => '17263045',
+            'image_path' => 'assets/imgs/home/office/Flag-United-Kingdom.webp',
         ],
     ];
 
@@ -645,7 +673,12 @@ function cms_get_home_offices(): array
         return $fallback;
     }
 
-    $rows = db_fetch_all($pdo, 'SELECT id, country, address, email, phone, image_path FROM home_offices WHERE is_active = 1 ORDER BY sort_order ASC, id ASC');
+    $hasRegistrationColumns = cms_ensure_home_offices_registration_columns($pdo);
+
+    $rows = db_fetch_all($pdo, $hasRegistrationColumns
+        ? 'SELECT id, country, address, email, phone, registration_label, registration_number, image_path FROM home_offices WHERE is_active = 1 ORDER BY sort_order ASC, id ASC'
+        : 'SELECT id, country, address, email, phone, image_path FROM home_offices WHERE is_active = 1 ORDER BY sort_order ASC, id ASC'
+    );
     if (!$rows) {
         cache_set($cacheKey, $fallback, 300);
         return $fallback;
@@ -659,6 +692,8 @@ function cms_get_home_offices(): array
             'address' => (string) ($row['address'] ?? ''),
             'email' => (string) ($row['email'] ?? ''),
             'phone' => (string) ($row['phone'] ?? ''),
+            'registration_label' => (string) ($row['registration_label'] ?? ''),
+            'registration_number' => (string) ($row['registration_number'] ?? ''),
             'image_path' => (string) ($row['image_path'] ?? ''),
         ];
     }

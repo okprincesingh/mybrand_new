@@ -19488,6 +19488,9 @@ iframe {
   border-color: rgba(238, 45, 122, 0.18);
   transform: translateY(-2px);
 }
+.office-card__meta--plain:hover {
+  transform: none;
+}
 .office-card__meta-icon {
   width: 1.6rem;
   height: 1.6rem;
