@@ -253,26 +253,102 @@ function closeLogoutMessage() {
     <!-- Desktop Video -->
     <video
         class="hero-video hero-video-desktop"
+        data-hero-video="desktop"
+        data-src="<?php echo htmlspecialchars(url('https://jaikvik.in/lab/mybrand_video/mybrandvideo'), ENT_QUOTES, 'UTF-8'); ?>"
+        data-src-light="<?php echo htmlspecialchars(url('https://jaikvik.in/lab/mybrand_video/mybrandmobilevideo'), ENT_QUOTES, 'UTF-8'); ?>"
         autoplay
         muted
         loop
         playsinline
-        preload="auto">
-        <source src="<?php echo url('https://jaikvik.in/lab/mybrand_video/mybrandvideo'); ?>" type="video/mp4">
-    </video>
+        preload="none"></video>
 
     <!-- Mobile Video -->
     <video
         class="hero-video hero-video-mobile"
+        data-hero-video="mobile"
+        data-src="<?php echo htmlspecialchars(url('https://jaikvik.in/lab/mybrand_video/mybrandmobilevideo'), ENT_QUOTES, 'UTF-8'); ?>"
         autoplay
         muted
         loop
         playsinline
-        preload="auto">
-        <source src="<?php echo url('https://jaikvik.in/lab/mybrand_video/mybrandmobilevideo'); ?>" type="video/mp4">
-    </video>
+        preload="none"></video>
 
 </section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const desktopVideo = document.querySelector('[data-hero-video="desktop"]');
+    const mobileVideo = document.querySelector('[data-hero-video="mobile"]');
+    const mobileQuery = window.matchMedia('(max-width: 1024px)');
+    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+
+    function stopVideo(video) {
+        if (!video) return;
+        video.pause();
+        video.removeAttribute('src');
+        video.load();
+        video.preload = 'none';
+    }
+
+    function shouldUseLightHeroVideo() {
+        if (connection) {
+            if (connection.saveData) return true;
+            if (typeof connection.effectiveType === 'string' && /(^|-)2g|3g/.test(connection.effectiveType)) return true;
+            if (typeof connection.downlink === 'number' && connection.downlink > 0 && connection.downlink < 10) return true;
+        }
+
+        if (typeof navigator.deviceMemory === 'number' && navigator.deviceMemory < 4) {
+            return true;
+        }
+
+        return !connection;
+    }
+
+    function getVideoSource(video) {
+        if (!video) return '';
+        if (video === desktopVideo && shouldUseLightHeroVideo()) {
+            return video.getAttribute('data-src-light') || video.getAttribute('data-src') || '';
+        }
+
+        return video.getAttribute('data-src') || '';
+    }
+
+    function startVideo(video) {
+        if (!video) return;
+        const source = getVideoSource(video);
+        if (!source) return;
+        if (video.getAttribute('src') === source) return;
+        video.preload = 'auto';
+        video.setAttribute('src', source);
+        video.load();
+        const playPromise = video.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch(function () {});
+        }
+    }
+
+    function loadCurrentHeroVideo() {
+        if (mobileQuery.matches) {
+            stopVideo(desktopVideo);
+            startVideo(mobileVideo);
+        } else {
+            stopVideo(mobileVideo);
+            startVideo(desktopVideo);
+        }
+    }
+
+    loadCurrentHeroVideo();
+    if (typeof mobileQuery.addEventListener === 'function') {
+        mobileQuery.addEventListener('change', loadCurrentHeroVideo);
+    } else if (typeof mobileQuery.addListener === 'function') {
+        mobileQuery.addListener(loadCurrentHeroVideo);
+    }
+
+    if (connection && typeof connection.addEventListener === 'function') {
+        connection.addEventListener('change', loadCurrentHeroVideo);
+    }
+});
+</script>
 
 
 
@@ -288,7 +364,7 @@ function closeLogoutMessage() {
                 <div class="col-md-3 col-xl-3">
                   <div class="category1-item wow fadeInRight" data-wow-delay="0.2s">
                     <div class="category1-item__thumb">
-                      <img src="<?php echo url('assets/imgs/category/category_thumb1_2.jpeg'); ?>" alt="thumb">
+                      <img src="<?php echo url('assets/imgs/category/category_thumb1_2.png'); ?>" alt="thumb">
                     </div>
                     <div class="category1-item__content2">
                       </h2>
@@ -312,7 +388,7 @@ function closeLogoutMessage() {
                 <div class="col-md-6 col-xl-6">
                   <div class="category1-item wow fadeInRight" data-wow-delay="0.3s">
                     <div class="category1-item__thumb">
-                      <img src="<?php echo url('assets/imgs/category/category_thumb1_1.jpeg'); ?>" alt="thumb">
+                      <img src="<?php echo url('assets/imgs/category/category_thumb1_1.png'); ?>" alt="thumb">
                     </div>
                     <div class="category1-item__content2">
                       </h2>
@@ -336,7 +412,7 @@ function closeLogoutMessage() {
                 <div class="col-md-3 col-xl-3">
                   <div class="category1-item wow fadeInRight" data-wow-delay="0.5s">
                     <div class="category1-item__thumb">
-                      <img src="<?php echo url('assets/imgs/category/category_thumb1_3.jpeg'); ?>" alt="thumb">
+                      <img src="<?php echo url('assets/imgs/category/category_thumb1_3.png'); ?>" alt="thumb">
                     </div>
                     <div class="category1-item__content2">
                       </h2>
@@ -747,7 +823,7 @@ function closeLogoutMessage() {
         </section>
 
         <!-- new section -->
-        <section class="gs-process gs-section section-spacing-120">
+        <section class="gs-process gs-section section-spacing-120 mt-md-4">
           <div class="petal petal--1"></div>
           <div class="petal petal--2"></div>
           <div class="petal petal--3"></div>
@@ -1197,9 +1273,9 @@ function closeLogoutMessage() {
         const locations = [
           { name: 'North America', top: 44, left: 15, height: 20 },
           { name: 'Canada', top: 32, left: 18, height: 40 },
-          { name: 'Africa', top: 70, left: 55, height: 80 },
+          { name: 'Africa', top: 54, left: 52, height: 80 },
           { name: 'United Kingdom', top: 32, left: 45, height: 100 },
-          { name: 'Europe', top: 36, left: 53, height: 45 },
+          { name: 'Europe', top: 38, left: 50, height: 45 },
           { name: 'Asia', top: 45, left: 70, height: 80 },
           { name: 'South America', top: 68, left: 27, height: 60 },
           { name: 'Australia', top: 82, left: 89, height: 60 }

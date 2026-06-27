@@ -88,6 +88,8 @@ if ($isAosPage) {
   <script src="https://unpkg.com/aos@2.3.4/dist/aos.js" defer></script>
 <?php endif; ?>
 <?php if ($isHomepage): ?>
+  <link rel="preconnect" href="https://jaikvik.in" crossorigin>
+  <link rel="dns-prefetch" href="//jaikvik.in">
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
 <?php endif; ?>

@@ -388,7 +388,7 @@ h6 {
     width: 100%;
     height: 100%;
     transform: translate(-50%, -50%);
-    object-fit: fill;
+    object-fit: cover;
 }
 
 /* Mobile hidden by default */
@@ -19230,8 +19230,8 @@ iframe {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75), 0 14px 24px rgba(243, 83, 143, 0.14);
 }
 .milestone-card__icon-wrap img {
-  width: 4.65rem;
-  height: 4.65rem;
+  width: 7.65rem;
+  height: 7.65rem;
   object-fit: contain;
 }
 .milestone-card__kicker {
@@ -19321,8 +19321,8 @@ iframe {
     height: 5.8rem;
   }
   .milestone-card__icon-wrap img {
-    width: 3.85rem;
-    height: 3.85rem;
+    width: 5.85rem;
+    height: 5.85rem;
   }
   .milestone-card__text {
     font-size: 0.98rem;
@@ -19786,10 +19786,10 @@ iframe {
 .global-presence .pin-label {
   background-color: #000;
   color: #fff;
-  padding: 8px 16px;
+  padding: 9px 18px;
   border-radius: 20px;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.2;
   white-space: nowrap;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
@@ -23553,7 +23553,7 @@ iframe {
 }
 
 .gs-process__icon-glyph::before {
-  font-size: 2.35rem;
+  font-size: 3.5rem;
 }
 
 .gs-grid > .gs-card:nth-child(1) .gs-process__icon-glyph::before {
