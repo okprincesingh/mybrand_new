@@ -246,6 +246,15 @@
     const platLabel = { tp: "Trustpilot", goog: "Google", ali: "Alibaba" };
     const platPill = { tp: "rv-pill-tp", goog: "rv-pill-goog", ali: "rv-pill-ali" };
     const activeClass = { all: "active-all", tp: "active-tp", goog: "active-goog", ali: "active-ali" };
+    const scoreLogo = {
+      all: "uploads/logo/trusp.png",
+      tp: "uploads/logo/trusp.png",
+      goog: "uploads/logo/goo.png",
+      ali: "uploads/logo/ali.png"
+    };
+    const scoreLabel = { all: "Trustpilot", tp: "Trustpilot", goog: "Google", ali: "Alibaba" };
+    const scoreValue = { all: "4.4", tp: "4.4", goog: "4.8", ali: "4.7" };
+    const scoreText = { all: "Excellent", tp: "Excellent", goog: "Excellent", ali: "Excellent" };
 
     allReviews.forEach((review) => {
       review.platform = platformKey[review.p] || review.p;
@@ -287,6 +296,24 @@
       reviewsSection.classList.toggle("is-review-engaged", Boolean(showBadge));
     }
 
+    function updateScoreCard(platform) {
+      const normalized = platform === "goog" || platform === "ali" || platform === "tp" ? platform : "all";
+      const logo = document.getElementById("rvScoreLogo");
+      const name = document.getElementById("rvScoreName");
+      const blocks = document.getElementById("rvScoreBlocks");
+      const value = document.getElementById("rvScoreValue");
+      const text = document.getElementById("rvScoreText");
+      if (!logo || !name || !blocks || !value || !text) return;
+
+      logo.src = scoreLogo[normalized];
+      logo.alt = scoreLabel[normalized];
+      name.textContent = scoreLabel[normalized];
+      value.textContent = scoreValue[normalized];
+      text.textContent = scoreText[normalized];
+      blocks.classList.remove("rv-score-card__blocks--tp", "rv-score-card__blocks--goog", "rv-score-card__blocks--ali");
+      blocks.classList.add("rv-score-card__blocks--" + (normalized === "all" ? "tp" : normalized));
+    }
+
     function render() {
       document.getElementById("track").innerHTML = list.map((r) => `
         <div class="rv-card">
@@ -316,6 +343,7 @@
         `<div class="rv-dot${i === cur ? " active" : ""}" onclick="goTo(${i})"></div>`
       ).join("");
       updatePlatformBadge(hasReviewInteraction);
+      updateScoreCard(list[cur] ? list[cur].p : "all");
     }
 
     function resetProg() {
@@ -358,6 +386,7 @@
       list = p === "all" ? [...allReviews] : allReviews.filter((r) => r.p === p);
       cur = 0;
       hasReviewInteraction = true;
+      updateScoreCard(p);
       render();
       resetProg();
     };

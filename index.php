@@ -987,15 +987,35 @@ document.addEventListener('DOMContentLoaded', function () {
         <!-- Global Presence Map Section End -->
 
         <section class="reviews-section">
-          <div class="row align-items-center">
-            <div class="col-12 col-md-5 reviews-section__intro">
-              <p class="rv-label">Verified Reviews</p>
+          <div class="reviews-section__grid">
+            <div class="reviews-section__intro">
+              <p class="rv-label"><span><i class="fa-solid fa-shield-halved"></i></span> Verified Reviews</p>
               <h2 class="rv-heading">mybrandplease.com is rated <b>Excellent</b></h2>
+              <div class="rv-score-card">
+                <div class="rv-score-card__brand">
+                  <img src="<?php echo url('uploads/logo/trusp.png'); ?>" alt="Trustpilot" id="rvScoreLogo">
+                  <span id="rvScoreName">Trustpilot</span>
+                </div>
+                <div class="rv-score-card__blocks rv-score-card__blocks--tp" id="rvScoreBlocks" aria-label="4.4 out of 5 stars">
+                  <span><i class="fa-solid fa-star"></i></span>
+                  <span><i class="fa-solid fa-star"></i></span>
+                  <span><i class="fa-solid fa-star"></i></span>
+                  <span><i class="fa-solid fa-star"></i></span>
+                  <span class="is-half"><i class="fa-solid fa-star"></i></span>
+                </div>
+                <p>Rated <strong id="rvScoreValue">4.4</strong> &bull; <span id="rvScoreText">Excellent</span></p>
+                <div class="rv-score-card__verified"><i class="fa-solid fa-shield-halved"></i> Verified reviews from real customers</div>
+              </div>
+              <div class="rv-trust-strip">
+                <span><i class="fa-solid fa-shield-halved"></i><b>1000+</b> businesses</span>
+                <span><i class="fa-solid fa-users"></i><b>98%</b> satisfaction</span>
+                <span><i class="fa-solid fa-star"></i>Quality you can rely on</span>
+              </div>
               <div class="rv-platform-badge" id="rvPlatformBadge" aria-hidden="true">
                 <img src="" alt="" id="rvPlatformBadgeLogo">
               </div>
             </div>
-            <div class="col-12 col-md-7">
+            <div class="reviews-section__content">
               <div class="rv-tabs">
             <button class="rv-tab active-all" onclick="filterPlat('all', this)">All Reviews</button>
             <button class="rv-tab" onclick="filterPlat('tp', this)"> <img src="<?php echo url('uploads/logo/trusp.png'); ?>" alt="Trustpilot"> Trustpilot</button>
