@@ -298,6 +298,7 @@
 
     function updateScoreCard(platform) {
       const normalized = platform === "goog" || platform === "ali" || platform === "tp" ? platform : "all";
+      const card = document.querySelector(".rv-score-card");
       const logo = document.getElementById("rvScoreLogo");
       const name = document.getElementById("rvScoreName");
       const blocks = document.getElementById("rvScoreBlocks");
@@ -305,13 +306,28 @@
       const text = document.getElementById("rvScoreText");
       if (!logo || !name || !blocks || !value || !text) return;
 
-      logo.src = scoreLogo[normalized];
-      logo.alt = scoreLabel[normalized];
-      name.textContent = scoreLabel[normalized];
-      value.textContent = scoreValue[normalized];
-      text.textContent = scoreText[normalized];
-      blocks.classList.remove("rv-score-card__blocks--tp", "rv-score-card__blocks--goog", "rv-score-card__blocks--ali");
-      blocks.classList.add("rv-score-card__blocks--" + (normalized === "all" ? "tp" : normalized));
+      const applyScore = () => {
+        logo.src = scoreLogo[normalized];
+        logo.alt = scoreLabel[normalized];
+        name.textContent = scoreLabel[normalized];
+        value.textContent = scoreValue[normalized];
+        text.textContent = scoreText[normalized];
+        blocks.classList.remove("rv-score-card__blocks--tp", "rv-score-card__blocks--goog", "rv-score-card__blocks--ali");
+        blocks.classList.add("rv-score-card__blocks--" + (normalized === "all" ? "tp" : normalized));
+      };
+
+      if (!card || card.dataset.platform === normalized) {
+        applyScore();
+        if (card) card.dataset.platform = normalized;
+        return;
+      }
+
+      card.classList.add("is-changing");
+      window.setTimeout(() => {
+        applyScore();
+        card.dataset.platform = normalized;
+        card.classList.remove("is-changing");
+      }, 140);
     }
 
     function render() {
@@ -367,6 +383,7 @@
         d.className = "rv-dot" + (j === cur ? " active" : "");
       });
       updatePlatformBadge(hasReviewInteraction);
+      updateScoreCard(list[cur] ? list[cur].p : "all");
       resetProg();
     };
 
