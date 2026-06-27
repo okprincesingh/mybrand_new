@@ -1,0 +1,12 @@
+CREATE TABLE IF NOT EXISTS home_instagram_reels (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  reel_url VARCHAR(500) NULL,
+  video_path VARCHAR(255) NULL,
+  sort_order INT NOT NULL DEFAULT 0,
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_home_instagram_reels_active_order (is_active, sort_order, id)
+) ENGINE=InnoDB;
+
+

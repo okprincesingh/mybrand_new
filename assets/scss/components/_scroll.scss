@@ -1,0 +1,159 @@
+@use "../utils" as *;
+/* === scroll scss (index 01) === */
+.scroll {
+  &__down {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    p {
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 1.9;
+      text-transform: uppercase;
+      color: var(--white);
+    }
+
+    span {
+      width: 66px;
+      height: 106px;
+      border: 1px solid var(--black-6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 89px;
+      i {
+        color: var(--white);
+      }
+    }
+
+    &-wrapper {
+      height: 425px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      @media #{$xl} {
+        height: 380px;
+      }
+      @media #{$lg} {
+        height: 350px;
+      }
+      @media #{$sm} {
+        height: auto;
+        padding: 40px 0;
+      }
+    }
+  }
+
+  &-top {
+    width: 50px;
+    height: 50px;
+    position: fixed;
+    right: 15px;
+    bottom: 0px;
+    z-index: 9999;
+    border-radius: 100px;
+    mix-blend-mode: exclusion;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s;
+    background-color: #EE2D7A;
+    &.showed {
+      opacity: 1;
+      visibility: visible;
+      bottom: 20px;
+      background-color: #EE2D7A;
+    }
+  }
+}
+
+.go-top {
+  &-writer {
+    width: 105px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: left;
+    color: var(--white);
+    background-image: url(../imgs/writer/go-top.webp);
+    background-position: right center;
+    background-repeat: no-repeat;
+    right: 16%;
+    visibility: hidden;
+    opacity: 0;
+    z-index: 9;
+    transition: all 0.5s;
+    &:hover {
+      color: var(--primary);
+    }
+    &.showed {
+      opacity: 1;
+      visibility: visible;
+      bottom: 20px;
+    }
+    br {
+      @media #{$sm} {
+        display: block;
+      }
+    }
+  }
+
+}
+
+/* === progress-wrap scss (index 01) === */
+.progress-wrap {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  height: 46px;
+  width: 46px;
+  cursor: pointer;
+  display: block;
+  border-radius: 50px;
+  z-index: 99;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-100px);
+  transition: all 300ms linear;
+  background-color: #EE2D7A;
+}
+
+.progress-wrap.active-progress {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0); 
+  background-color: #EE2D7A;
+}
+
+.progress-wrap::after {
+  position: absolute;
+  content: '\f062';
+  font: var(--fa-font-solid);
+  text-align: center;
+  line-height: 46px;
+  font-size: 20px;
+  color: var(--primary);
+  left: 0;
+  top: 0;
+  height: 46px;
+  width: 46px;
+  cursor: pointer;
+  display: block;
+  z-index: 1;
+  transition: all 200ms linear;
+  border-radius: 50px;
+  background-color: #EE2D7A;
+  @include dark {
+    color: var(--black);
+  }
+}
+
+.progress-wrap svg path {
+  fill:#EE2D7A;
+}
+
+.progress-wrap svg.progress-circle path {
+  fill:#EE2D7A;
+  stroke: transparent;
+  stroke-width: 5;
+  box-sizing: border-box;
+  transition: all 200ms linear;
+}

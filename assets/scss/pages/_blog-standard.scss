@@ -1,0 +1,193 @@
+@use "../utils" as *;
+
+.blog-standard {
+  &-wrapper {
+    &-items {
+      &:not(:last-child) {
+        margin-bottom: 32px;
+      }
+
+      &__thumb {
+        position: relative;
+        margin-bottom: 16px;
+
+        img {
+          max-width: 100%;
+        }
+      }
+
+      &__post {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+        margin-bottom: 10px;
+
+        @media #{$xl} {
+          gap: 20px;
+        }
+
+        @media #{$xs} {
+          flex-wrap: wrap;
+        }
+
+        &-date {
+          display: block;
+          color: $text-950;
+          font-family: $font-playfair;
+          font-weight: 500;
+          font-style: Medium;
+          font-size: 16px;
+          line-height: 22px;
+          letter-spacing: 0px;
+          list-style: none;
+
+          @media #{$xs} {
+            font-size: 14px;
+          }
+
+          svg {
+            margin-right: 5px;
+          }
+        }
+      }
+
+      &__content {
+        &-title {
+          margin-bottom: 17px;
+
+          a {
+            color: $text-950;
+            font-family: $font-playfair;
+            font-weight: 700;
+            font-style: Bold;
+            font-size: 32px;
+            line-height: 40px;
+            letter-spacing: 0px;
+            text-transform: capitalize;
+
+            @media #{$xl} {
+              font-size: 30px;
+            }
+
+            @media #{$md} {
+              font-size: 20px;
+            }
+
+            @media #{$xs} {
+              font-size: 18px;
+            }
+
+            &:hover {
+              color: $color-primary-two;
+            }
+          }
+        }
+
+        &-subtitle {
+          color: $text-600;
+          font-family: Lato;
+          font-weight: 400;
+          font-style: Regular;
+          font-size: 16px;
+          line-height: 26px;
+          letter-spacing: 0px;
+          margin-bottom: 29px;
+        }
+
+        &-button {
+          .rr-btn-button {
+            gap: 11px;
+            font-family: var(--font_Playfair);
+            font-weight: 500;
+            font-style: Medium;
+            font-size: 16px;
+            line-height: 18px;
+            letter-spacing: 0px;
+            align-items: center;
+            display: inline-flex;
+            color: $color-white;
+            border-radius: 90px;
+            text-transform: capitalize;
+            padding: 8px 8px 8px 32px;
+            border: 1px solid #e3e3e3;
+            justify-content: space-between;
+            background: $text-color-one;
+
+            @media #{$xs} {
+              padding: 8px 6px 8px 18px;
+            }
+
+            .icon {
+              width: 36px;
+              height: 36px;
+              display: flex;
+              font-size: 20px;
+              color: var(--white);
+              align-items: center;
+              border-radius: 500px;
+              transition: all 0.3s;
+              background: var(--primary-two);
+              justify-content: center;
+              background: $color-primary-two;
+            }
+
+            &:hover {
+              .icon {
+                rotate: -45deg;
+              }
+            }
+
+            &.btn-black {
+              color: var(--white);
+              background: var(--primary);
+
+              .icon {
+                color: var(--primary);
+                background: var(--white);
+              }
+            }
+
+            &.btn-purple3 {
+              gap: 11px;
+              color: $text-color-one;
+              background: transparent;
+              padding: 8px 14px 8px 17px;
+              border: 1px solid $text-color7;
+
+              @media #{$xs} {
+                padding: 8px 8px 8px 18px;
+              }
+
+              .text {
+                color: $text-color-one;
+              }
+
+              .icon {
+                width: 36px;
+                height: 36px;
+                display: flex;
+                font-size: 20px;
+                color: var(--white);
+                align-items: center;
+                border-radius: 500px;
+                transition: all 0.3s;
+                justify-content: center;
+                background: $color-primary-two;
+
+                &:hover {
+                  background: $color-primary-two;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .pagination {
+      border-top: 1px solid #C9C9C83D;
+      margin-top: 40px;
+      padding-top: 40px;
+    }
+  }
+}

@@ -1,0 +1,21 @@
+/* Basic RTL support */
+html[dir='rtl'] body {
+  direction: rtl;
+  text-align: right;
+}
+
+html[dir='rtl'] .main-menu ul,
+html[dir='rtl'] .header-right,
+html[dir='rtl'] .checkout-page__order-summary-item,
+html[dir='rtl'] .form-row,
+html[dir='rtl'] .modern-table {
+  direction: rtl;
+}
+
+html[dir='rtl'] .header-right {
+  flex-direction: row-reverse;
+}
+
+html[dir='rtl'] .main-menu ul li {
+  float: right;
+}

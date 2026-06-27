@@ -1,0 +1,19 @@
+/* animation css */
+
+.t_parallax_image {
+  overflow: hidden;
+}
+
+.rotate-spin {
+  display: inline-block;
+  animation: spin 7s linear infinite;  
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

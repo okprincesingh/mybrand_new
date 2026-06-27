@@ -1,0 +1,66 @@
+/* === heading scss (index 01) === */
+@mixin heading($font_family) {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: $font_family;
+  }
+}
+
+/* === dark scss (index 01) === */
+@mixin dark {
+  .dark & {
+    @content;
+  }
+}
+
+/* === bg primary  scss (index 01) === */
+@mixin bg-primary {
+  .rr-bg-primary & {
+    @content;
+  }
+}
+
+/* === Transition multiple scss (index 01) === */
+@mixin rs-transition-mul($property) {
+  -webkit-transition: $property;
+  -moz-transition: $property;
+  -ms-transition: $property;
+  -o-transition: $property;
+  transition: $property ;
+}
+
+/* === Transform scss (index 01) === */
+@mixin transform($transforms) {
+  -webkit-transform: $transforms;
+  -moz-transform: $transforms;
+  -ms-transform: $transforms;
+  -o-transform: $transforms;
+  transform: $transforms;
+}
+
+/* === Flexbox scss (index 01) === */
+@mixin flexbox() {
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+}
+
+@mixin inline-flex() {
+  display: -webkit-inline-box;
+  display: -moz-inline-box;
+  display: -ms-inline-flexbox;
+  display: -webkit-inline-flex;
+  display: inline-flexbox;
+  display: inline-flex;
+}
+
+@function rem($px, $base: 16) {
+  @return ($px / $base) * 1rem;
+}

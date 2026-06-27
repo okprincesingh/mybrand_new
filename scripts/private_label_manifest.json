@@ -1,0 +1,3015 @@
+{
+  "source_dir": "D:\\xampp\\htdocs\\mybrand\\Private Label Products Line",
+  "output_dir": "D:\\xampp\\htdocs\\mybrand\\uploads\\products\\private-label",
+  "items": [
+    {
+      "pdf": "Aerosols/Amber_Pafum Body Spray.pdf",
+      "name": "Amber Pafum Body Spray",
+      "name_fallback": "Amber Pafum Body Spray",
+      "product_slug": "amber-pafum-body-spray",
+      "top_category": "Aerosols",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/amber-pafum-body-spray/01.jpg",
+        "uploads/products/private-label/amber-pafum-body-spray/02.jpg",
+        "uploads/products/private-label/amber-pafum-body-spray/03.jpg",
+        "uploads/products/private-label/amber-pafum-body-spray/04.jpg",
+        "uploads/products/private-label/amber-pafum-body-spray/05.jpg",
+        "uploads/products/private-label/amber-pafum-body-spray/06.jpg",
+        "uploads/products/private-label/amber-pafum-body-spray/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Aerosols/Aura_Deodorant Body Spray.pdf",
+      "name": "Aura Deodorant Body Spray",
+      "name_fallback": "Aura Deodorant Body Spray",
+      "product_slug": "aura-deodorant-body-spray",
+      "top_category": "Aerosols",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/aura-deodorant-body-spray/01.jpg",
+        "uploads/products/private-label/aura-deodorant-body-spray/02.jpg",
+        "uploads/products/private-label/aura-deodorant-body-spray/03.jpg",
+        "uploads/products/private-label/aura-deodorant-body-spray/04.jpg",
+        "uploads/products/private-label/aura-deodorant-body-spray/05.jpg",
+        "uploads/products/private-label/aura-deodorant-body-spray/06.jpg"
+      ]
+    },
+    {
+      "pdf": "Aerosols/Bleu_Pafum Body Spray.pdf",
+      "name": "Bleu Pafum Body Spray",
+      "name_fallback": "Bleu Pafum Body Spray",
+      "product_slug": "bleu-pafum-body-spray",
+      "top_category": "Aerosols",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/bleu-pafum-body-spray/01.jpg",
+        "uploads/products/private-label/bleu-pafum-body-spray/02.jpg",
+        "uploads/products/private-label/bleu-pafum-body-spray/03.jpg",
+        "uploads/products/private-label/bleu-pafum-body-spray/04.jpg",
+        "uploads/products/private-label/bleu-pafum-body-spray/05.jpg",
+        "uploads/products/private-label/bleu-pafum-body-spray/06.jpg"
+      ]
+    },
+    {
+      "pdf": "Aerosols/Bloom_Deodorant Body Spray.pdf",
+      "name": "Bloom Deodorant Body Spray",
+      "name_fallback": "Bloom Deodorant Body Spray",
+      "product_slug": "bloom-deodorant-body-spray",
+      "top_category": "Aerosols",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/bloom-deodorant-body-spray/01.jpg",
+        "uploads/products/private-label/bloom-deodorant-body-spray/02.jpg",
+        "uploads/products/private-label/bloom-deodorant-body-spray/03.jpg",
+        "uploads/products/private-label/bloom-deodorant-body-spray/04.jpg",
+        "uploads/products/private-label/bloom-deodorant-body-spray/05.jpg",
+        "uploads/products/private-label/bloom-deodorant-body-spray/06.jpg"
+      ]
+    },
+    {
+      "pdf": "Aerosols/Desire_Pafum Body Spray.pdf",
+      "name": "Desire Pafum Body Spray",
+      "name_fallback": "Desire Pafum Body Spray",
+      "product_slug": "desire-pafum-body-spray",
+      "top_category": "Aerosols",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/desire-pafum-body-spray/01.jpg",
+        "uploads/products/private-label/desire-pafum-body-spray/02.jpg",
+        "uploads/products/private-label/desire-pafum-body-spray/03.jpg",
+        "uploads/products/private-label/desire-pafum-body-spray/04.jpg",
+        "uploads/products/private-label/desire-pafum-body-spray/05.jpg",
+        "uploads/products/private-label/desire-pafum-body-spray/06.jpg"
+      ]
+    },
+    {
+      "pdf": "Aerosols/Enchante_Deodorant Body Spray.pdf",
+      "name": "Enchante Deodorant Body Spray",
+      "name_fallback": "Enchante Deodorant Body Spray",
+      "product_slug": "enchante-deodorant-body-spray",
+      "top_category": "Aerosols",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/enchante-deodorant-body-spray/01.jpg",
+        "uploads/products/private-label/enchante-deodorant-body-spray/02.jpg",
+        "uploads/products/private-label/enchante-deodorant-body-spray/03.jpg",
+        "uploads/products/private-label/enchante-deodorant-body-spray/04.jpg",
+        "uploads/products/private-label/enchante-deodorant-body-spray/05.jpg",
+        "uploads/products/private-label/enchante-deodorant-body-spray/06.jpg"
+      ]
+    },
+    {
+      "pdf": "Aerosols/Fresh Oud_Pafum Body Spray.pdf",
+      "name": "Fresh Oud Pafum Body Spray",
+      "name_fallback": "Fresh Oud Pafum Body Spray",
+      "product_slug": "fresh-oud-pafum-body-spray",
+      "top_category": "Aerosols",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/fresh-oud-pafum-body-spray/01.jpg",
+        "uploads/products/private-label/fresh-oud-pafum-body-spray/02.jpg",
+        "uploads/products/private-label/fresh-oud-pafum-body-spray/03.jpg",
+        "uploads/products/private-label/fresh-oud-pafum-body-spray/04.jpg",
+        "uploads/products/private-label/fresh-oud-pafum-body-spray/05.jpg",
+        "uploads/products/private-label/fresh-oud-pafum-body-spray/06.jpg",
+        "uploads/products/private-label/fresh-oud-pafum-body-spray/07.jpg",
+        "uploads/products/private-label/fresh-oud-pafum-body-spray/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Aerosols/Grace_Deodorant Body Spray.pdf",
+      "name": "Grace Deodorant Body Spray",
+      "name_fallback": "Grace Deodorant Body Spray",
+      "product_slug": "grace-deodorant-body-spray",
+      "top_category": "Aerosols",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/grace-deodorant-body-spray/01.jpg",
+        "uploads/products/private-label/grace-deodorant-body-spray/02.jpg",
+        "uploads/products/private-label/grace-deodorant-body-spray/03.jpg",
+        "uploads/products/private-label/grace-deodorant-body-spray/04.jpg",
+        "uploads/products/private-label/grace-deodorant-body-spray/05.jpg",
+        "uploads/products/private-label/grace-deodorant-body-spray/06.jpg"
+      ]
+    },
+    {
+      "pdf": "Aerosols/Intense_Deodorant Body Spray.pdf",
+      "name": "Intense Deodorant Body Spray",
+      "name_fallback": "Intense Deodorant Body Spray",
+      "product_slug": "intense-deodorant-body-spray",
+      "top_category": "Aerosols",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/intense-deodorant-body-spray/01.jpg",
+        "uploads/products/private-label/intense-deodorant-body-spray/02.jpg",
+        "uploads/products/private-label/intense-deodorant-body-spray/03.jpg",
+        "uploads/products/private-label/intense-deodorant-body-spray/04.jpg",
+        "uploads/products/private-label/intense-deodorant-body-spray/05.jpg",
+        "uploads/products/private-label/intense-deodorant-body-spray/06.jpg",
+        "uploads/products/private-label/intense-deodorant-body-spray/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Aerosols/Intimate_Pafum Body Spray.pdf",
+      "name": "Intimate Pafum Body Spray",
+      "name_fallback": "Intimate Pafum Body Spray",
+      "product_slug": "intimate-pafum-body-spray",
+      "top_category": "Aerosols",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/intimate-pafum-body-spray/01.jpg",
+        "uploads/products/private-label/intimate-pafum-body-spray/02.jpg",
+        "uploads/products/private-label/intimate-pafum-body-spray/03.jpg",
+        "uploads/products/private-label/intimate-pafum-body-spray/04.jpg",
+        "uploads/products/private-label/intimate-pafum-body-spray/05.jpg",
+        "uploads/products/private-label/intimate-pafum-body-spray/06.jpg"
+      ]
+    },
+    {
+      "pdf": "Aerosols/Jazz_Deodorant Body Spray.pdf",
+      "name": "Jazz Deodorant Body Spray",
+      "name_fallback": "Jazz Deodorant Body Spray",
+      "product_slug": "jazz-deodorant-body-spray",
+      "top_category": "Aerosols",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/jazz-deodorant-body-spray/01.jpg",
+        "uploads/products/private-label/jazz-deodorant-body-spray/02.jpg",
+        "uploads/products/private-label/jazz-deodorant-body-spray/03.jpg",
+        "uploads/products/private-label/jazz-deodorant-body-spray/04.jpg",
+        "uploads/products/private-label/jazz-deodorant-body-spray/05.jpg"
+      ]
+    },
+    {
+      "pdf": "Aerosols/Noir_Deodorant Body Spray.pdf",
+      "name": "Noir Deodorant Body Spray",
+      "name_fallback": "Noir Deodorant Body Spray",
+      "product_slug": "noir-deodorant-body-spray",
+      "top_category": "Aerosols",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/noir-deodorant-body-spray/01.jpg",
+        "uploads/products/private-label/noir-deodorant-body-spray/02.jpg",
+        "uploads/products/private-label/noir-deodorant-body-spray/03.jpg",
+        "uploads/products/private-label/noir-deodorant-body-spray/04.jpg",
+        "uploads/products/private-label/noir-deodorant-body-spray/05.jpg",
+        "uploads/products/private-label/noir-deodorant-body-spray/06.jpg",
+        "uploads/products/private-label/noir-deodorant-body-spray/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Aerosols/Oud Royale_Pafum Body Spray.pdf",
+      "name": "Oud Royale Pafum Body Spray",
+      "name_fallback": "Oud Royale Pafum Body Spray",
+      "product_slug": "oud-royale-pafum-body-spray",
+      "top_category": "Aerosols",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/oud-royale-pafum-body-spray/01.jpg",
+        "uploads/products/private-label/oud-royale-pafum-body-spray/02.jpg",
+        "uploads/products/private-label/oud-royale-pafum-body-spray/03.jpg",
+        "uploads/products/private-label/oud-royale-pafum-body-spray/04.jpg",
+        "uploads/products/private-label/oud-royale-pafum-body-spray/05.jpg",
+        "uploads/products/private-label/oud-royale-pafum-body-spray/06.jpg"
+      ]
+    },
+    {
+      "pdf": "Aerosols/Oud Unisex_Deodorant Body Spray - 150ml.pdf",
+      "name": "Oud Unisex Deodorant Body Spray - 150ml",
+      "name_fallback": "Oud Unisex Deodorant Body Spray - 150ml",
+      "product_slug": "oud-unisex-deodorant-body-spray-150ml",
+      "top_category": "Aerosols",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/oud-unisex-deodorant-body-spray-150ml/01.jpg",
+        "uploads/products/private-label/oud-unisex-deodorant-body-spray-150ml/02.jpg",
+        "uploads/products/private-label/oud-unisex-deodorant-body-spray-150ml/03.jpg",
+        "uploads/products/private-label/oud-unisex-deodorant-body-spray-150ml/04.jpg",
+        "uploads/products/private-label/oud-unisex-deodorant-body-spray-150ml/05.jpg",
+        "uploads/products/private-label/oud-unisex-deodorant-body-spray-150ml/06.jpg"
+      ]
+    },
+    {
+      "pdf": "Aerosols/Recharge_Deodorant Body Spray.pdf",
+      "name": "Recharge Deodorant Body Spray",
+      "name_fallback": "Recharge Deodorant Body Spray",
+      "product_slug": "recharge-deodorant-body-spray",
+      "top_category": "Aerosols",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/recharge-deodorant-body-spray/01.jpg",
+        "uploads/products/private-label/recharge-deodorant-body-spray/02.jpg",
+        "uploads/products/private-label/recharge-deodorant-body-spray/03.jpg",
+        "uploads/products/private-label/recharge-deodorant-body-spray/04.jpg",
+        "uploads/products/private-label/recharge-deodorant-body-spray/05.jpg",
+        "uploads/products/private-label/recharge-deodorant-body-spray/06.jpg",
+        "uploads/products/private-label/recharge-deodorant-body-spray/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Aerosols/Triumph_Deodorant Body Spray.pdf",
+      "name": "Triumph Deodorant Body Spray",
+      "name_fallback": "Triumph Deodorant Body Spray",
+      "product_slug": "triumph-deodorant-body-spray",
+      "top_category": "Aerosols",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/triumph-deodorant-body-spray/01.jpg",
+        "uploads/products/private-label/triumph-deodorant-body-spray/02.jpg",
+        "uploads/products/private-label/triumph-deodorant-body-spray/03.jpg",
+        "uploads/products/private-label/triumph-deodorant-body-spray/04.jpg",
+        "uploads/products/private-label/triumph-deodorant-body-spray/05.jpg",
+        "uploads/products/private-label/triumph-deodorant-body-spray/06.jpg"
+      ]
+    },
+    {
+      "pdf": "Aerosols/Urban_Pafum Body Spray.pdf",
+      "name": "Urban Pafum Body Spray",
+      "name_fallback": "Urban Pafum Body Spray",
+      "product_slug": "urban-pafum-body-spray",
+      "top_category": "Aerosols",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/urban-pafum-body-spray/01.jpg",
+        "uploads/products/private-label/urban-pafum-body-spray/02.jpg",
+        "uploads/products/private-label/urban-pafum-body-spray/03.jpg",
+        "uploads/products/private-label/urban-pafum-body-spray/04.jpg",
+        "uploads/products/private-label/urban-pafum-body-spray/05.jpg"
+      ]
+    },
+    {
+      "pdf": "Body Care/Body butters/Coco Body Butter.pdf",
+      "name": "Coco Body Butter",
+      "name_fallback": "Coco Body Butter",
+      "product_slug": "coco-body-butter",
+      "top_category": "Body Care",
+      "sub_category": "Body butters",
+      "images": [
+        "uploads/products/private-label/coco-body-butter/01.jpg",
+        "uploads/products/private-label/coco-body-butter/02.jpg",
+        "uploads/products/private-label/coco-body-butter/03.jpg",
+        "uploads/products/private-label/coco-body-butter/04.jpg",
+        "uploads/products/private-label/coco-body-butter/05.jpg",
+        "uploads/products/private-label/coco-body-butter/06.jpg",
+        "uploads/products/private-label/coco-body-butter/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Body Care/Body butters/Day Long Body Milk.pdf",
+      "name": "Day Long Body Milk",
+      "name_fallback": "Day Long Body Milk",
+      "product_slug": "day-long-body-milk",
+      "top_category": "Body Care",
+      "sub_category": "Body butters",
+      "images": [
+        "uploads/products/private-label/day-long-body-milk/01.jpg",
+        "uploads/products/private-label/day-long-body-milk/02.jpg",
+        "uploads/products/private-label/day-long-body-milk/03.jpg",
+        "uploads/products/private-label/day-long-body-milk/04.jpg",
+        "uploads/products/private-label/day-long-body-milk/05.jpg",
+        "uploads/products/private-label/day-long-body-milk/06.jpg",
+        "uploads/products/private-label/day-long-body-milk/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Body Care/Body butters/Moringa Body Butter.pdf",
+      "name": "Moringa Body Butter",
+      "name_fallback": "Moringa Body Butter",
+      "product_slug": "moringa-body-butter",
+      "top_category": "Body Care",
+      "sub_category": "Body butters",
+      "images": [
+        "uploads/products/private-label/moringa-body-butter/01.jpg",
+        "uploads/products/private-label/moringa-body-butter/02.jpg",
+        "uploads/products/private-label/moringa-body-butter/03.jpg",
+        "uploads/products/private-label/moringa-body-butter/04.jpg",
+        "uploads/products/private-label/moringa-body-butter/05.jpg",
+        "uploads/products/private-label/moringa-body-butter/06.jpg",
+        "uploads/products/private-label/moringa-body-butter/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Body Care/Body butters/Mulberry & Licorice Fairness Body Milk.pdf",
+      "name": "Mulberry & Licorice Fairness Body Milk",
+      "name_fallback": "Mulberry & Licorice Fairness Body Milk",
+      "product_slug": "mulberry-licorice-fairness-body-milk",
+      "top_category": "Body Care",
+      "sub_category": "Body butters",
+      "images": [
+        "uploads/products/private-label/mulberry-licorice-fairness-body-milk/01.jpg",
+        "uploads/products/private-label/mulberry-licorice-fairness-body-milk/02.jpg",
+        "uploads/products/private-label/mulberry-licorice-fairness-body-milk/03.jpg",
+        "uploads/products/private-label/mulberry-licorice-fairness-body-milk/04.jpg",
+        "uploads/products/private-label/mulberry-licorice-fairness-body-milk/05.jpg",
+        "uploads/products/private-label/mulberry-licorice-fairness-body-milk/06.jpg"
+      ]
+    },
+    {
+      "pdf": "Body Care/Body butters/Papaya Body Butter.pdf",
+      "name": "Papaya Body Butter",
+      "name_fallback": "Papaya Body Butter",
+      "product_slug": "papaya-body-butter",
+      "top_category": "Body Care",
+      "sub_category": "Body butters",
+      "images": [
+        "uploads/products/private-label/papaya-body-butter/01.jpg",
+        "uploads/products/private-label/papaya-body-butter/02.jpg",
+        "uploads/products/private-label/papaya-body-butter/03.jpg",
+        "uploads/products/private-label/papaya-body-butter/04.jpg",
+        "uploads/products/private-label/papaya-body-butter/05.jpg",
+        "uploads/products/private-label/papaya-body-butter/06.jpg",
+        "uploads/products/private-label/papaya-body-butter/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Body Care/Body butters/Strawberry Hydrating & Softening Body Butter 72 Hour Moisturizing.pdf",
+      "name": "Strawberry Hydrating & Softening Body Butter 72 Hour Moisturizing",
+      "name_fallback": "Strawberry Hydrating & Softening Body Butter 72 Hour Moisturizing",
+      "product_slug": "strawberry-hydrating-softening-body-butter-72-hour-moisturizing",
+      "top_category": "Body Care",
+      "sub_category": "Body butters",
+      "images": [
+        "uploads/products/private-label/strawberry-hydrating-softening-body-butter-72-hour-moisturizing/01.jpg",
+        "uploads/products/private-label/strawberry-hydrating-softening-body-butter-72-hour-moisturizing/02.jpg",
+        "uploads/products/private-label/strawberry-hydrating-softening-body-butter-72-hour-moisturizing/03.jpg",
+        "uploads/products/private-label/strawberry-hydrating-softening-body-butter-72-hour-moisturizing/04.jpg",
+        "uploads/products/private-label/strawberry-hydrating-softening-body-butter-72-hour-moisturizing/05.jpg",
+        "uploads/products/private-label/strawberry-hydrating-softening-body-butter-72-hour-moisturizing/06.jpg",
+        "uploads/products/private-label/strawberry-hydrating-softening-body-butter-72-hour-moisturizing/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Body Care/Body Wash & Shower Gel/1_ Hyaluronic Acid + Pentavitin + PGA Bodywash infused with Watermelon.pdf",
+      "name": "1 Hyaluronic Acid + Pentavitin + PGA Bodywash infused with Watermelon",
+      "name_fallback": "1 Hyaluronic Acid + Pentavitin + PGA Bodywash infused with Watermelon",
+      "product_slug": "1-hyaluronic-acid-pentavitin-pga-bodywash-infused-with-watermelon",
+      "top_category": "Body Care",
+      "sub_category": "Body Wash & Shower Gel",
+      "images": [
+        "uploads/products/private-label/1-hyaluronic-acid-pentavitin-pga-bodywash-infused-with-watermelon/01.jpg",
+        "uploads/products/private-label/1-hyaluronic-acid-pentavitin-pga-bodywash-infused-with-watermelon/02.jpg",
+        "uploads/products/private-label/1-hyaluronic-acid-pentavitin-pga-bodywash-infused-with-watermelon/03.jpg",
+        "uploads/products/private-label/1-hyaluronic-acid-pentavitin-pga-bodywash-infused-with-watermelon/04.jpg",
+        "uploads/products/private-label/1-hyaluronic-acid-pentavitin-pga-bodywash-infused-with-watermelon/05.jpg",
+        "uploads/products/private-label/1-hyaluronic-acid-pentavitin-pga-bodywash-infused-with-watermelon/06.jpg",
+        "uploads/products/private-label/1-hyaluronic-acid-pentavitin-pga-bodywash-infused-with-watermelon/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Body Care/Body Wash & Shower Gel/2_ Salicylic Acid + 3_ AHA Complex + AcneBuster Bodywash Infused with Probiotic.pdf",
+      "name": "2 Salicylic Acid + 3 AHA Complex + AcneBuster Bodywash Infused with Probiotic",
+      "name_fallback": "2 Salicylic Acid + 3 AHA Complex + AcneBuster Bodywash Infused with Probiotic",
+      "product_slug": "2-salicylic-acid-3-aha-complex-acnebuster-bodywash-infused-with-probiotic",
+      "top_category": "Body Care",
+      "sub_category": "Body Wash & Shower Gel",
+      "images": [
+        "uploads/products/private-label/2-salicylic-acid-3-aha-complex-acnebuster-bodywash-infused-with-probiotic/01.jpg",
+        "uploads/products/private-label/2-salicylic-acid-3-aha-complex-acnebuster-bodywash-infused-with-probiotic/02.jpg",
+        "uploads/products/private-label/2-salicylic-acid-3-aha-complex-acnebuster-bodywash-infused-with-probiotic/03.jpg",
+        "uploads/products/private-label/2-salicylic-acid-3-aha-complex-acnebuster-bodywash-infused-with-probiotic/04.jpg",
+        "uploads/products/private-label/2-salicylic-acid-3-aha-complex-acnebuster-bodywash-infused-with-probiotic/05.jpg",
+        "uploads/products/private-label/2-salicylic-acid-3-aha-complex-acnebuster-bodywash-infused-with-probiotic/06.jpg",
+        "uploads/products/private-label/2-salicylic-acid-3-aha-complex-acnebuster-bodywash-infused-with-probiotic/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Body Care/Body Wash & Shower Gel/Aqua Marine Luxury Body Wash.pdf",
+      "name": "Aqua Marine Luxury Body Wash",
+      "name_fallback": "Aqua Marine Luxury Body Wash",
+      "product_slug": "aqua-marine-luxury-body-wash",
+      "top_category": "Body Care",
+      "sub_category": "Body Wash & Shower Gel",
+      "images": [
+        "uploads/products/private-label/aqua-marine-luxury-body-wash/01.jpg",
+        "uploads/products/private-label/aqua-marine-luxury-body-wash/02.jpg",
+        "uploads/products/private-label/aqua-marine-luxury-body-wash/03.jpg",
+        "uploads/products/private-label/aqua-marine-luxury-body-wash/04.jpg",
+        "uploads/products/private-label/aqua-marine-luxury-body-wash/05.jpg",
+        "uploads/products/private-label/aqua-marine-luxury-body-wash/06.jpg",
+        "uploads/products/private-label/aqua-marine-luxury-body-wash/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Body Care/Body Wash & Shower Gel/Cream Feel Moisturising Body Wash.pdf",
+      "name": "Cream Feel Moisturising Body Wash",
+      "name_fallback": "Cream Feel Moisturising Body Wash",
+      "product_slug": "cream-feel-moisturising-body-wash",
+      "top_category": "Body Care",
+      "sub_category": "Body Wash & Shower Gel",
+      "images": [
+        "uploads/products/private-label/cream-feel-moisturising-body-wash/01.jpg",
+        "uploads/products/private-label/cream-feel-moisturising-body-wash/02.jpg",
+        "uploads/products/private-label/cream-feel-moisturising-body-wash/03.jpg",
+        "uploads/products/private-label/cream-feel-moisturising-body-wash/04.jpg",
+        "uploads/products/private-label/cream-feel-moisturising-body-wash/05.jpg",
+        "uploads/products/private-label/cream-feel-moisturising-body-wash/06.jpg",
+        "uploads/products/private-label/cream-feel-moisturising-body-wash/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Body Care/Body Wash & Shower Gel/Menz Max Care Body Wash.pdf",
+      "name": "Menz Max Care Body Wash",
+      "name_fallback": "Menz Max Care Body Wash",
+      "product_slug": "menz-max-care-body-wash",
+      "top_category": "Body Care",
+      "sub_category": "Body Wash & Shower Gel",
+      "images": [
+        "uploads/products/private-label/menz-max-care-body-wash/01.jpg",
+        "uploads/products/private-label/menz-max-care-body-wash/02.jpg",
+        "uploads/products/private-label/menz-max-care-body-wash/03.jpg",
+        "uploads/products/private-label/menz-max-care-body-wash/04.jpg",
+        "uploads/products/private-label/menz-max-care-body-wash/05.jpg",
+        "uploads/products/private-label/menz-max-care-body-wash/06.jpg",
+        "uploads/products/private-label/menz-max-care-body-wash/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Body Care/Body Wash & Shower Gel/Silk Touch Luxury Body Wash.pdf",
+      "name": "Silk Touch Luxury Body Wash",
+      "name_fallback": "Silk Touch Luxury Body Wash",
+      "product_slug": "silk-touch-luxury-body-wash",
+      "top_category": "Body Care",
+      "sub_category": "Body Wash & Shower Gel",
+      "images": [
+        "uploads/products/private-label/silk-touch-luxury-body-wash/01.jpg",
+        "uploads/products/private-label/silk-touch-luxury-body-wash/02.jpg",
+        "uploads/products/private-label/silk-touch-luxury-body-wash/03.jpg",
+        "uploads/products/private-label/silk-touch-luxury-body-wash/04.jpg",
+        "uploads/products/private-label/silk-touch-luxury-body-wash/05.jpg",
+        "uploads/products/private-label/silk-touch-luxury-body-wash/06.jpg",
+        "uploads/products/private-label/silk-touch-luxury-body-wash/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Body Care/Body Wash & Shower Gel/Turmeric Brightening Soap.pdf",
+      "name": "Turmeric Brightening Soap",
+      "name_fallback": "Turmeric Brightening Soap",
+      "product_slug": "turmeric-brightening-soap",
+      "top_category": "Body Care",
+      "sub_category": "Body Wash & Shower Gel",
+      "images": [
+        "uploads/products/private-label/turmeric-brightening-soap/01.jpg",
+        "uploads/products/private-label/turmeric-brightening-soap/02.jpg",
+        "uploads/products/private-label/turmeric-brightening-soap/03.jpg",
+        "uploads/products/private-label/turmeric-brightening-soap/04.jpg",
+        "uploads/products/private-label/turmeric-brightening-soap/05.jpg",
+        "uploads/products/private-label/turmeric-brightening-soap/06.jpg",
+        "uploads/products/private-label/turmeric-brightening-soap/07.jpg",
+        "uploads/products/private-label/turmeric-brightening-soap/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Body Care/Lotions/Cocoa Honey Moisturising Body Lotion.pdf",
+      "name": "Cocoa Honey Moisturising Body Lotion",
+      "name_fallback": "Cocoa Honey Moisturising Body Lotion",
+      "product_slug": "cocoa-honey-moisturising-body-lotion",
+      "top_category": "Body Care",
+      "sub_category": "Lotions",
+      "images": [
+        "uploads/products/private-label/cocoa-honey-moisturising-body-lotion/01.jpg",
+        "uploads/products/private-label/cocoa-honey-moisturising-body-lotion/02.jpg",
+        "uploads/products/private-label/cocoa-honey-moisturising-body-lotion/03.jpg",
+        "uploads/products/private-label/cocoa-honey-moisturising-body-lotion/04.jpg",
+        "uploads/products/private-label/cocoa-honey-moisturising-body-lotion/05.jpg",
+        "uploads/products/private-label/cocoa-honey-moisturising-body-lotion/06.jpg",
+        "uploads/products/private-label/cocoa-honey-moisturising-body-lotion/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Body Care/Lotions/Cocoa Honey Moisturising Lotion.pdf",
+      "name": "Cocoa Honey Moisturising Lotion",
+      "name_fallback": "Cocoa Honey Moisturising Lotion",
+      "product_slug": "cocoa-honey-moisturising-lotion",
+      "top_category": "Body Care",
+      "sub_category": "Lotions",
+      "images": [
+        "uploads/products/private-label/cocoa-honey-moisturising-lotion/01.jpg",
+        "uploads/products/private-label/cocoa-honey-moisturising-lotion/02.jpg",
+        "uploads/products/private-label/cocoa-honey-moisturising-lotion/03.jpg",
+        "uploads/products/private-label/cocoa-honey-moisturising-lotion/04.jpg",
+        "uploads/products/private-label/cocoa-honey-moisturising-lotion/05.jpg",
+        "uploads/products/private-label/cocoa-honey-moisturising-lotion/06.jpg",
+        "uploads/products/private-label/cocoa-honey-moisturising-lotion/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Body Care/Lotions/Grape Fruit Moisturising Lotion.pdf",
+      "name": "Grape Fruit Moisturising Lotion",
+      "name_fallback": "Grape Fruit Moisturising Lotion",
+      "product_slug": "grape-fruit-moisturising-lotion",
+      "top_category": "Body Care",
+      "sub_category": "Lotions",
+      "images": [
+        "uploads/products/private-label/grape-fruit-moisturising-lotion/01.jpg",
+        "uploads/products/private-label/grape-fruit-moisturising-lotion/02.jpg",
+        "uploads/products/private-label/grape-fruit-moisturising-lotion/03.jpg",
+        "uploads/products/private-label/grape-fruit-moisturising-lotion/04.jpg",
+        "uploads/products/private-label/grape-fruit-moisturising-lotion/05.jpg",
+        "uploads/products/private-label/grape-fruit-moisturising-lotion/06.jpg"
+      ]
+    },
+    {
+      "pdf": "Body Care/Lotions/Honey & Saffron Hydrating Body Lotion.pdf",
+      "name": "Honey & Saffron Hydrating Body Lotion",
+      "name_fallback": "Honey & Saffron Hydrating Body Lotion",
+      "product_slug": "honey-saffron-hydrating-body-lotion",
+      "top_category": "Body Care",
+      "sub_category": "Lotions",
+      "images": [
+        "uploads/products/private-label/honey-saffron-hydrating-body-lotion/01.jpg",
+        "uploads/products/private-label/honey-saffron-hydrating-body-lotion/02.jpg",
+        "uploads/products/private-label/honey-saffron-hydrating-body-lotion/03.jpg",
+        "uploads/products/private-label/honey-saffron-hydrating-body-lotion/04.jpg",
+        "uploads/products/private-label/honey-saffron-hydrating-body-lotion/05.jpg",
+        "uploads/products/private-label/honey-saffron-hydrating-body-lotion/06.jpg",
+        "uploads/products/private-label/honey-saffron-hydrating-body-lotion/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Body Care/Lotions/Papaya Radiance Body Lotion.pdf",
+      "name": "Papaya Radiance Body Lotion",
+      "name_fallback": "Papaya Radiance Body Lotion",
+      "product_slug": "papaya-radiance-body-lotion",
+      "top_category": "Body Care",
+      "sub_category": "Lotions",
+      "images": [
+        "uploads/products/private-label/papaya-radiance-body-lotion/01.jpg",
+        "uploads/products/private-label/papaya-radiance-body-lotion/02.jpg",
+        "uploads/products/private-label/papaya-radiance-body-lotion/03.jpg",
+        "uploads/products/private-label/papaya-radiance-body-lotion/04.jpg",
+        "uploads/products/private-label/papaya-radiance-body-lotion/05.jpg",
+        "uploads/products/private-label/papaya-radiance-body-lotion/06.jpg",
+        "uploads/products/private-label/papaya-radiance-body-lotion/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Body Care/Lotions/Rice Water Nourishing Body Lotion.pdf",
+      "name": "Rice Water Nourishing Body Lotion",
+      "name_fallback": "Rice Water Nourishing Body Lotion",
+      "product_slug": "rice-water-nourishing-body-lotion",
+      "top_category": "Body Care",
+      "sub_category": "Lotions",
+      "images": [
+        "uploads/products/private-label/rice-water-nourishing-body-lotion/01.jpg",
+        "uploads/products/private-label/rice-water-nourishing-body-lotion/02.jpg",
+        "uploads/products/private-label/rice-water-nourishing-body-lotion/03.jpg",
+        "uploads/products/private-label/rice-water-nourishing-body-lotion/04.jpg",
+        "uploads/products/private-label/rice-water-nourishing-body-lotion/05.jpg",
+        "uploads/products/private-label/rice-water-nourishing-body-lotion/06.jpg",
+        "uploads/products/private-label/rice-water-nourishing-body-lotion/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Body Care/Lotions/Turmeric Brightening Lotion.pdf",
+      "name": "Turmeric Brightening Lotion",
+      "name_fallback": "Turmeric Brightening Lotion",
+      "product_slug": "turmeric-brightening-lotion",
+      "top_category": "Body Care",
+      "sub_category": "Lotions",
+      "images": [
+        "uploads/products/private-label/turmeric-brightening-lotion/01.jpg",
+        "uploads/products/private-label/turmeric-brightening-lotion/02.jpg",
+        "uploads/products/private-label/turmeric-brightening-lotion/03.jpg",
+        "uploads/products/private-label/turmeric-brightening-lotion/04.jpg",
+        "uploads/products/private-label/turmeric-brightening-lotion/05.jpg",
+        "uploads/products/private-label/turmeric-brightening-lotion/06.jpg",
+        "uploads/products/private-label/turmeric-brightening-lotion/07.jpg",
+        "uploads/products/private-label/turmeric-brightening-lotion/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Body Care/Lotions/Vitamin-C-Body-Lotion-400-ml.pdf",
+      "name": "Vitamin-C-Body-Lotion-400-ml",
+      "name_fallback": "Vitamin-C-Body-Lotion-400-ml",
+      "product_slug": "vitamin-c-body-lotion-400-ml",
+      "top_category": "Body Care",
+      "sub_category": "Lotions",
+      "images": [
+        "uploads/products/private-label/vitamin-c-body-lotion-400-ml/01.jpg",
+        "uploads/products/private-label/vitamin-c-body-lotion-400-ml/02.jpg",
+        "uploads/products/private-label/vitamin-c-body-lotion-400-ml/03.jpg",
+        "uploads/products/private-label/vitamin-c-body-lotion-400-ml/04.jpg",
+        "uploads/products/private-label/vitamin-c-body-lotion-400-ml/05.jpg",
+        "uploads/products/private-label/vitamin-c-body-lotion-400-ml/06.jpg",
+        "uploads/products/private-label/vitamin-c-body-lotion-400-ml/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Body Care/Lotions/Whitening Body Lotion.pdf",
+      "name": "Whitening Body Lotion",
+      "name_fallback": "Whitening Body Lotion",
+      "product_slug": "whitening-body-lotion",
+      "top_category": "Body Care",
+      "sub_category": "Lotions",
+      "images": [
+        "uploads/products/private-label/whitening-body-lotion/01.jpg",
+        "uploads/products/private-label/whitening-body-lotion/02.jpg",
+        "uploads/products/private-label/whitening-body-lotion/03.jpg",
+        "uploads/products/private-label/whitening-body-lotion/04.jpg",
+        "uploads/products/private-label/whitening-body-lotion/05.jpg",
+        "uploads/products/private-label/whitening-body-lotion/06.jpg",
+        "uploads/products/private-label/whitening-body-lotion/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Body Care/Specialty Products/Hand Sanitizer.pdf",
+      "name": "Hand Sanitizer",
+      "name_fallback": "Hand Sanitizer",
+      "product_slug": "hand-sanitizer",
+      "top_category": "Body Care",
+      "sub_category": "Specialty Products",
+      "images": [
+        "uploads/products/private-label/hand-sanitizer/01.jpg",
+        "uploads/products/private-label/hand-sanitizer/02.jpg",
+        "uploads/products/private-label/hand-sanitizer/03.jpg",
+        "uploads/products/private-label/hand-sanitizer/04.jpg",
+        "uploads/products/private-label/hand-sanitizer/05.jpg"
+      ]
+    },
+    {
+      "pdf": "Body Care/Specialty Products/Radian D Tan Fairness Body Oil.pdf",
+      "name": "Radian D Tan Fairness Body Oil",
+      "name_fallback": "Radian D Tan Fairness Body Oil",
+      "product_slug": "radian-d-tan-fairness-body-oil",
+      "top_category": "Body Care",
+      "sub_category": "Specialty Products",
+      "images": [
+        "uploads/products/private-label/radian-d-tan-fairness-body-oil/01.jpg",
+        "uploads/products/private-label/radian-d-tan-fairness-body-oil/02.jpg",
+        "uploads/products/private-label/radian-d-tan-fairness-body-oil/03.jpg",
+        "uploads/products/private-label/radian-d-tan-fairness-body-oil/04.jpg",
+        "uploads/products/private-label/radian-d-tan-fairness-body-oil/05.jpg",
+        "uploads/products/private-label/radian-d-tan-fairness-body-oil/06.jpg",
+        "uploads/products/private-label/radian-d-tan-fairness-body-oil/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Hair Care/Conditioners/5in1 Hair Conditioner_Enriched with- Hydrolysed Rice Protein, Hibiscus Extract & Coconut Oil.pdf",
+      "name": "5in1 Hair Conditioner Enriched with- Hydrolysed Rice Protein, Hibiscus Extract & Coconut Oil",
+      "name_fallback": "5in1 Hair Conditioner Enriched with- Hydrolysed Rice Protein, Hibiscus Extract & Coconut Oil",
+      "product_slug": "5in1-hair-conditioner-enriched-with-hydrolysed-rice-protein-hibiscus-extract-coconut-oil",
+      "top_category": "Hair Care",
+      "sub_category": "Conditioners",
+      "images": [
+        "uploads/products/private-label/5in1-hair-conditioner-enriched-with-hydrolysed-rice-protein-hibiscus-extract-coconut-oil/01.jpg",
+        "uploads/products/private-label/5in1-hair-conditioner-enriched-with-hydrolysed-rice-protein-hibiscus-extract-coconut-oil/02.jpg",
+        "uploads/products/private-label/5in1-hair-conditioner-enriched-with-hydrolysed-rice-protein-hibiscus-extract-coconut-oil/03.jpg",
+        "uploads/products/private-label/5in1-hair-conditioner-enriched-with-hydrolysed-rice-protein-hibiscus-extract-coconut-oil/04.jpg",
+        "uploads/products/private-label/5in1-hair-conditioner-enriched-with-hydrolysed-rice-protein-hibiscus-extract-coconut-oil/05.jpg",
+        "uploads/products/private-label/5in1-hair-conditioner-enriched-with-hydrolysed-rice-protein-hibiscus-extract-coconut-oil/06.jpg",
+        "uploads/products/private-label/5in1-hair-conditioner-enriched-with-hydrolysed-rice-protein-hibiscus-extract-coconut-oil/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Hair Care/Conditioners/Rice Water Conditioner Enriched with Niacinamide & Almond Butter.pdf",
+      "name": "Rice Water Conditioner Enriched with Niacinamide & Almond Butter",
+      "name_fallback": "Rice Water Conditioner Enriched with Niacinamide & Almond Butter",
+      "product_slug": "rice-water-conditioner-enriched-with-niacinamide-almond-butter",
+      "top_category": "Hair Care",
+      "sub_category": "Conditioners",
+      "images": [
+        "uploads/products/private-label/rice-water-conditioner-enriched-with-niacinamide-almond-butter/01.jpg",
+        "uploads/products/private-label/rice-water-conditioner-enriched-with-niacinamide-almond-butter/02.jpg",
+        "uploads/products/private-label/rice-water-conditioner-enriched-with-niacinamide-almond-butter/03.jpg",
+        "uploads/products/private-label/rice-water-conditioner-enriched-with-niacinamide-almond-butter/04.jpg",
+        "uploads/products/private-label/rice-water-conditioner-enriched-with-niacinamide-almond-butter/05.jpg",
+        "uploads/products/private-label/rice-water-conditioner-enriched-with-niacinamide-almond-butter/06.jpg",
+        "uploads/products/private-label/rice-water-conditioner-enriched-with-niacinamide-almond-butter/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Hair Care/Conditioners/Volumising Hair Conditioner Enriched with Avocado & Cherry Extracts.pdf",
+      "name": "Volumising Hair Conditioner Enriched with Avocado & Cherry Extracts",
+      "name_fallback": "Volumising Hair Conditioner Enriched with Avocado & Cherry Extracts",
+      "product_slug": "volumising-hair-conditioner-enriched-with-avocado-cherry-extracts",
+      "top_category": "Hair Care",
+      "sub_category": "Conditioners",
+      "images": [
+        "uploads/products/private-label/volumising-hair-conditioner-enriched-with-avocado-cherry-extracts/01.jpg",
+        "uploads/products/private-label/volumising-hair-conditioner-enriched-with-avocado-cherry-extracts/02.jpg",
+        "uploads/products/private-label/volumising-hair-conditioner-enriched-with-avocado-cherry-extracts/03.jpg",
+        "uploads/products/private-label/volumising-hair-conditioner-enriched-with-avocado-cherry-extracts/04.jpg",
+        "uploads/products/private-label/volumising-hair-conditioner-enriched-with-avocado-cherry-extracts/05.jpg",
+        "uploads/products/private-label/volumising-hair-conditioner-enriched-with-avocado-cherry-extracts/06.jpg",
+        "uploads/products/private-label/volumising-hair-conditioner-enriched-with-avocado-cherry-extracts/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Hair Care/Hair Growth Serums & Oils/Eclipta Alba [Bhringraj] Hair Oil.pdf",
+      "name": "Eclipta Alba [Bhringraj] Hair Oil",
+      "name_fallback": "Eclipta Alba [Bhringraj] Hair Oil",
+      "product_slug": "eclipta-alba-bhringraj-hair-oil",
+      "top_category": "Hair Care",
+      "sub_category": "Hair Growth Serums & Oils",
+      "images": [
+        "uploads/products/private-label/eclipta-alba-bhringraj-hair-oil/01.jpg",
+        "uploads/products/private-label/eclipta-alba-bhringraj-hair-oil/02.jpg",
+        "uploads/products/private-label/eclipta-alba-bhringraj-hair-oil/03.jpg",
+        "uploads/products/private-label/eclipta-alba-bhringraj-hair-oil/04.jpg",
+        "uploads/products/private-label/eclipta-alba-bhringraj-hair-oil/05.jpg",
+        "uploads/products/private-label/eclipta-alba-bhringraj-hair-oil/06.jpg",
+        "uploads/products/private-label/eclipta-alba-bhringraj-hair-oil/07.jpg",
+        "uploads/products/private-label/eclipta-alba-bhringraj-hair-oil/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Hair Care/Hair Growth Serums & Oils/Hair Growth Serum Enriched with Onion & Ginger Extracts.pdf",
+      "name": "Hair Growth Serum Enriched with Onion & Ginger Extracts",
+      "name_fallback": "Hair Growth Serum Enriched with Onion & Ginger Extracts",
+      "product_slug": "hair-growth-serum-enriched-with-onion-ginger-extracts",
+      "top_category": "Hair Care",
+      "sub_category": "Hair Growth Serums & Oils",
+      "images": [
+        "uploads/products/private-label/hair-growth-serum-enriched-with-onion-ginger-extracts/01.jpg",
+        "uploads/products/private-label/hair-growth-serum-enriched-with-onion-ginger-extracts/02.jpg",
+        "uploads/products/private-label/hair-growth-serum-enriched-with-onion-ginger-extracts/03.jpg",
+        "uploads/products/private-label/hair-growth-serum-enriched-with-onion-ginger-extracts/04.jpg",
+        "uploads/products/private-label/hair-growth-serum-enriched-with-onion-ginger-extracts/05.jpg",
+        "uploads/products/private-label/hair-growth-serum-enriched-with-onion-ginger-extracts/06.jpg",
+        "uploads/products/private-label/hair-growth-serum-enriched-with-onion-ginger-extracts/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Hair Care/Hair Growth Serums & Oils/Hair Serum Enriched with Eclipta Alba [ Bhringraj ] .pdf",
+      "name": "Hair Serum Enriched with Eclipta Alba [ Bhringraj ]",
+      "name_fallback": "Hair Serum Enriched with Eclipta Alba [ Bhringraj ]",
+      "product_slug": "hair-serum-enriched-with-eclipta-alba-bhringraj",
+      "top_category": "Hair Care",
+      "sub_category": "Hair Growth Serums & Oils",
+      "images": [
+        "uploads/products/private-label/hair-serum-enriched-with-eclipta-alba-bhringraj/01.jpg",
+        "uploads/products/private-label/hair-serum-enriched-with-eclipta-alba-bhringraj/02.jpg",
+        "uploads/products/private-label/hair-serum-enriched-with-eclipta-alba-bhringraj/03.jpg",
+        "uploads/products/private-label/hair-serum-enriched-with-eclipta-alba-bhringraj/04.jpg",
+        "uploads/products/private-label/hair-serum-enriched-with-eclipta-alba-bhringraj/05.jpg",
+        "uploads/products/private-label/hair-serum-enriched-with-eclipta-alba-bhringraj/06.jpg",
+        "uploads/products/private-label/hair-serum-enriched-with-eclipta-alba-bhringraj/07.jpg",
+        "uploads/products/private-label/hair-serum-enriched-with-eclipta-alba-bhringraj/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Hair Care/Hair Growth Serums & Oils/Hair Vitalizer_Follicusan & Milk Protein.pdf",
+      "name": "Hair Vitalizer Follicusan & Milk Protein",
+      "name_fallback": "Hair Vitalizer Follicusan & Milk Protein",
+      "product_slug": "hair-vitalizer-follicusan-milk-protein",
+      "top_category": "Hair Care",
+      "sub_category": "Hair Growth Serums & Oils",
+      "images": [
+        "uploads/products/private-label/hair-vitalizer-follicusan-milk-protein/01.jpg",
+        "uploads/products/private-label/hair-vitalizer-follicusan-milk-protein/02.jpg",
+        "uploads/products/private-label/hair-vitalizer-follicusan-milk-protein/03.jpg",
+        "uploads/products/private-label/hair-vitalizer-follicusan-milk-protein/04.jpg",
+        "uploads/products/private-label/hair-vitalizer-follicusan-milk-protein/05.jpg",
+        "uploads/products/private-label/hair-vitalizer-follicusan-milk-protein/06.jpg",
+        "uploads/products/private-label/hair-vitalizer-follicusan-milk-protein/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Hair Care/Hair Growth Serums & Oils/Onion & Ginger Hair Oil Enriched with Onion Bulb & Ginger Extracts.pdf",
+      "name": "Onion & Ginger Hair Oil Enriched with Onion Bulb & Ginger Extracts",
+      "name_fallback": "Onion & Ginger Hair Oil Enriched with Onion Bulb & Ginger Extracts",
+      "product_slug": "onion-ginger-hair-oil-enriched-with-onion-bulb-ginger-extracts",
+      "top_category": "Hair Care",
+      "sub_category": "Hair Growth Serums & Oils",
+      "images": [
+        "uploads/products/private-label/onion-ginger-hair-oil-enriched-with-onion-bulb-ginger-extracts/01.jpg",
+        "uploads/products/private-label/onion-ginger-hair-oil-enriched-with-onion-bulb-ginger-extracts/02.jpg",
+        "uploads/products/private-label/onion-ginger-hair-oil-enriched-with-onion-bulb-ginger-extracts/03.jpg",
+        "uploads/products/private-label/onion-ginger-hair-oil-enriched-with-onion-bulb-ginger-extracts/04.jpg",
+        "uploads/products/private-label/onion-ginger-hair-oil-enriched-with-onion-bulb-ginger-extracts/05.jpg",
+        "uploads/products/private-label/onion-ginger-hair-oil-enriched-with-onion-bulb-ginger-extracts/06.jpg",
+        "uploads/products/private-label/onion-ginger-hair-oil-enriched-with-onion-bulb-ginger-extracts/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Hair Care/Hair Growth Serums & Oils/Rosemary Hair Growth Oil Enriched with RootBio Tec, Biotin & Vitamin E.pdf",
+      "name": "Rosemary Hair Growth Oil Enriched with RootBio Tec, Biotin & Vitamin E",
+      "name_fallback": "Rosemary Hair Growth Oil Enriched with RootBio Tec, Biotin & Vitamin E",
+      "product_slug": "rosemary-hair-growth-oil-enriched-with-rootbio-tec-biotin-vitamin-e",
+      "top_category": "Hair Care",
+      "sub_category": "Hair Growth Serums & Oils",
+      "images": [
+        "uploads/products/private-label/rosemary-hair-growth-oil-enriched-with-rootbio-tec-biotin-vitamin-e/01.jpg",
+        "uploads/products/private-label/rosemary-hair-growth-oil-enriched-with-rootbio-tec-biotin-vitamin-e/02.jpg",
+        "uploads/products/private-label/rosemary-hair-growth-oil-enriched-with-rootbio-tec-biotin-vitamin-e/03.jpg",
+        "uploads/products/private-label/rosemary-hair-growth-oil-enriched-with-rootbio-tec-biotin-vitamin-e/04.jpg",
+        "uploads/products/private-label/rosemary-hair-growth-oil-enriched-with-rootbio-tec-biotin-vitamin-e/05.jpg",
+        "uploads/products/private-label/rosemary-hair-growth-oil-enriched-with-rootbio-tec-biotin-vitamin-e/06.jpg",
+        "uploads/products/private-label/rosemary-hair-growth-oil-enriched-with-rootbio-tec-biotin-vitamin-e/07.jpg",
+        "uploads/products/private-label/rosemary-hair-growth-oil-enriched-with-rootbio-tec-biotin-vitamin-e/08.jpg",
+        "uploads/products/private-label/rosemary-hair-growth-oil-enriched-with-rootbio-tec-biotin-vitamin-e/09.jpg",
+        "uploads/products/private-label/rosemary-hair-growth-oil-enriched-with-rootbio-tec-biotin-vitamin-e/10.jpg",
+        "uploads/products/private-label/rosemary-hair-growth-oil-enriched-with-rootbio-tec-biotin-vitamin-e/11.jpg",
+        "uploads/products/private-label/rosemary-hair-growth-oil-enriched-with-rootbio-tec-biotin-vitamin-e/12.jpg"
+      ]
+    },
+    {
+      "pdf": "Hair Care/Hair Growth Serums & Oils/Rosemary Hair Growth Spray.pdf",
+      "name": "Rosemary Hair Growth Spray",
+      "name_fallback": "Rosemary Hair Growth Spray",
+      "product_slug": "rosemary-hair-growth-spray",
+      "top_category": "Hair Care",
+      "sub_category": "Hair Growth Serums & Oils",
+      "images": [
+        "uploads/products/private-label/rosemary-hair-growth-spray/01.jpg",
+        "uploads/products/private-label/rosemary-hair-growth-spray/02.jpg",
+        "uploads/products/private-label/rosemary-hair-growth-spray/03.jpg",
+        "uploads/products/private-label/rosemary-hair-growth-spray/04.jpg",
+        "uploads/products/private-label/rosemary-hair-growth-spray/05.jpg",
+        "uploads/products/private-label/rosemary-hair-growth-spray/06.jpg",
+        "uploads/products/private-label/rosemary-hair-growth-spray/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Hair Care/Hair Mask/Hair Butter Enriched with Shea Butter, Neem, Basil & Avocado Extract.pdf",
+      "name": "Hair Butter Enriched with Shea Butter, Neem, Basil & Avocado Extract",
+      "name_fallback": "Hair Butter Enriched with Shea Butter, Neem, Basil & Avocado Extract",
+      "product_slug": "hair-butter-enriched-with-shea-butter-neem-basil-avocado-extract",
+      "top_category": "Hair Care",
+      "sub_category": "Hair Mask",
+      "images": [
+        "uploads/products/private-label/hair-butter-enriched-with-shea-butter-neem-basil-avocado-extract/01.jpg",
+        "uploads/products/private-label/hair-butter-enriched-with-shea-butter-neem-basil-avocado-extract/02.jpg",
+        "uploads/products/private-label/hair-butter-enriched-with-shea-butter-neem-basil-avocado-extract/03.jpg",
+        "uploads/products/private-label/hair-butter-enriched-with-shea-butter-neem-basil-avocado-extract/04.jpg",
+        "uploads/products/private-label/hair-butter-enriched-with-shea-butter-neem-basil-avocado-extract/05.jpg",
+        "uploads/products/private-label/hair-butter-enriched-with-shea-butter-neem-basil-avocado-extract/06.jpg",
+        "uploads/products/private-label/hair-butter-enriched-with-shea-butter-neem-basil-avocado-extract/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Hair Care/Hair Mask/Nourishing Hair Mask_Rice Water with Niacinamide & Almond Butter.pdf",
+      "name": "Nourishing Hair Mask Rice Water with Niacinamide & Almond Butter",
+      "name_fallback": "Nourishing Hair Mask Rice Water with Niacinamide & Almond Butter",
+      "product_slug": "nourishing-hair-mask-rice-water-with-niacinamide-almond-butter",
+      "top_category": "Hair Care",
+      "sub_category": "Hair Mask",
+      "images": [
+        "uploads/products/private-label/nourishing-hair-mask-rice-water-with-niacinamide-almond-butter/01.jpg",
+        "uploads/products/private-label/nourishing-hair-mask-rice-water-with-niacinamide-almond-butter/02.jpg",
+        "uploads/products/private-label/nourishing-hair-mask-rice-water-with-niacinamide-almond-butter/03.jpg",
+        "uploads/products/private-label/nourishing-hair-mask-rice-water-with-niacinamide-almond-butter/04.jpg",
+        "uploads/products/private-label/nourishing-hair-mask-rice-water-with-niacinamide-almond-butter/05.jpg",
+        "uploads/products/private-label/nourishing-hair-mask-rice-water-with-niacinamide-almond-butter/06.jpg",
+        "uploads/products/private-label/nourishing-hair-mask-rice-water-with-niacinamide-almond-butter/07.jpg",
+        "uploads/products/private-label/nourishing-hair-mask-rice-water-with-niacinamide-almond-butter/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Hair Care/Shampoo/9 IN 1 Shampoo - Enriched wth Panax Ginseng Extract, Rice Amino Acid, & Prodew 500_.pdf",
+      "name": "9 IN 1 Shampoo - Enriched wth Panax Ginseng Extract, Rice Amino Acid, & Prodew 500",
+      "name_fallback": "9 IN 1 Shampoo - Enriched wth Panax Ginseng Extract, Rice Amino Acid, & Prodew 500",
+      "product_slug": "9-in-1-shampoo-enriched-wth-panax-ginseng-extract-rice-amino-acid-prodew-500",
+      "top_category": "Hair Care",
+      "sub_category": "Shampoo",
+      "images": [
+        "uploads/products/private-label/9-in-1-shampoo-enriched-wth-panax-ginseng-extract-rice-amino-acid-prodew-500/01.jpg",
+        "uploads/products/private-label/9-in-1-shampoo-enriched-wth-panax-ginseng-extract-rice-amino-acid-prodew-500/02.jpg",
+        "uploads/products/private-label/9-in-1-shampoo-enriched-wth-panax-ginseng-extract-rice-amino-acid-prodew-500/03.jpg",
+        "uploads/products/private-label/9-in-1-shampoo-enriched-wth-panax-ginseng-extract-rice-amino-acid-prodew-500/04.jpg",
+        "uploads/products/private-label/9-in-1-shampoo-enriched-wth-panax-ginseng-extract-rice-amino-acid-prodew-500/05.jpg",
+        "uploads/products/private-label/9-in-1-shampoo-enriched-wth-panax-ginseng-extract-rice-amino-acid-prodew-500/06.jpg",
+        "uploads/products/private-label/9-in-1-shampoo-enriched-wth-panax-ginseng-extract-rice-amino-acid-prodew-500/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Hair Care/Shampoo/Anti Dandruff Shampoo enriched with Neem & Fenugreek Extract..pdf",
+      "name": "Anti Dandruff Shampoo enriched with Neem & Fenugreek Extract.",
+      "name_fallback": "Anti Dandruff Shampoo enriched with Neem & Fenugreek Extract.",
+      "product_slug": "anti-dandruff-shampoo-enriched-with-neem-fenugreek-extract",
+      "top_category": "Hair Care",
+      "sub_category": "Shampoo",
+      "images": [
+        "uploads/products/private-label/anti-dandruff-shampoo-enriched-with-neem-fenugreek-extract/01.jpg",
+        "uploads/products/private-label/anti-dandruff-shampoo-enriched-with-neem-fenugreek-extract/02.jpg",
+        "uploads/products/private-label/anti-dandruff-shampoo-enriched-with-neem-fenugreek-extract/03.jpg",
+        "uploads/products/private-label/anti-dandruff-shampoo-enriched-with-neem-fenugreek-extract/04.jpg",
+        "uploads/products/private-label/anti-dandruff-shampoo-enriched-with-neem-fenugreek-extract/05.jpg",
+        "uploads/products/private-label/anti-dandruff-shampoo-enriched-with-neem-fenugreek-extract/06.jpg",
+        "uploads/products/private-label/anti-dandruff-shampoo-enriched-with-neem-fenugreek-extract/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Hair Care/Shampoo/Conditioning Shampoo enriched with Heena & Bhringraj (Eclipta Alba) Extracts.pdf",
+      "name": "Conditioning Shampoo enriched with Heena & Bhringraj (Eclipta Alba) Extracts",
+      "name_fallback": "Conditioning Shampoo enriched with Heena & Bhringraj (Eclipta Alba) Extracts",
+      "product_slug": "conditioning-shampoo-enriched-with-heena-bhringraj-eclipta-alba-extracts",
+      "top_category": "Hair Care",
+      "sub_category": "Shampoo",
+      "images": [
+        "uploads/products/private-label/conditioning-shampoo-enriched-with-heena-bhringraj-eclipta-alba-extracts/01.jpg",
+        "uploads/products/private-label/conditioning-shampoo-enriched-with-heena-bhringraj-eclipta-alba-extracts/02.jpg",
+        "uploads/products/private-label/conditioning-shampoo-enriched-with-heena-bhringraj-eclipta-alba-extracts/03.jpg",
+        "uploads/products/private-label/conditioning-shampoo-enriched-with-heena-bhringraj-eclipta-alba-extracts/04.jpg",
+        "uploads/products/private-label/conditioning-shampoo-enriched-with-heena-bhringraj-eclipta-alba-extracts/05.jpg",
+        "uploads/products/private-label/conditioning-shampoo-enriched-with-heena-bhringraj-eclipta-alba-extracts/06.jpg",
+        "uploads/products/private-label/conditioning-shampoo-enriched-with-heena-bhringraj-eclipta-alba-extracts/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Hair Care/Shampoo/Conditioning Shampoo for Mens Enriched with Niacinamide, Menthol & Biotin.pdf",
+      "name": "Conditioning Shampoo for Mens Enriched with Niacinamide, Menthol & Biotin",
+      "name_fallback": "Conditioning Shampoo for Mens Enriched with Niacinamide, Menthol & Biotin",
+      "product_slug": "conditioning-shampoo-for-mens-enriched-with-niacinamide-menthol-biotin",
+      "top_category": "Hair Care",
+      "sub_category": "Shampoo",
+      "images": [
+        "uploads/products/private-label/conditioning-shampoo-for-mens-enriched-with-niacinamide-menthol-biotin/01.jpg",
+        "uploads/products/private-label/conditioning-shampoo-for-mens-enriched-with-niacinamide-menthol-biotin/02.jpg",
+        "uploads/products/private-label/conditioning-shampoo-for-mens-enriched-with-niacinamide-menthol-biotin/03.jpg",
+        "uploads/products/private-label/conditioning-shampoo-for-mens-enriched-with-niacinamide-menthol-biotin/04.jpg",
+        "uploads/products/private-label/conditioning-shampoo-for-mens-enriched-with-niacinamide-menthol-biotin/05.jpg",
+        "uploads/products/private-label/conditioning-shampoo-for-mens-enriched-with-niacinamide-menthol-biotin/06.jpg",
+        "uploads/products/private-label/conditioning-shampoo-for-mens-enriched-with-niacinamide-menthol-biotin/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Hair Care/Shampoo/Indian Gooseberry Shampoo enriched with Amla & Aloevera Extracts.pdf",
+      "name": "Indian Gooseberry Shampoo enriched with Amla & Aloevera Extracts",
+      "name_fallback": "Indian Gooseberry Shampoo enriched with Amla & Aloevera Extracts",
+      "product_slug": "indian-gooseberry-shampoo-enriched-with-amla-aloevera-extracts",
+      "top_category": "Hair Care",
+      "sub_category": "Shampoo",
+      "images": [
+        "uploads/products/private-label/indian-gooseberry-shampoo-enriched-with-amla-aloevera-extracts/01.jpg",
+        "uploads/products/private-label/indian-gooseberry-shampoo-enriched-with-amla-aloevera-extracts/02.jpg",
+        "uploads/products/private-label/indian-gooseberry-shampoo-enriched-with-amla-aloevera-extracts/03.jpg",
+        "uploads/products/private-label/indian-gooseberry-shampoo-enriched-with-amla-aloevera-extracts/04.jpg",
+        "uploads/products/private-label/indian-gooseberry-shampoo-enriched-with-amla-aloevera-extracts/05.jpg",
+        "uploads/products/private-label/indian-gooseberry-shampoo-enriched-with-amla-aloevera-extracts/06.jpg",
+        "uploads/products/private-label/indian-gooseberry-shampoo-enriched-with-amla-aloevera-extracts/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Hair Care/Shampoo/Keratin Hair Repair Shampoo Enriched with Enriched with hydrolyzed Pea protin_ & Provtamin-B5.pdf",
+      "name": "Keratin Hair Repair Shampoo Enriched with Enriched with hydrolyzed Pea protin & Provtamin-B5",
+      "name_fallback": "Keratin Hair Repair Shampoo Enriched with Enriched with hydrolyzed Pea protin & Provtamin-B5",
+      "product_slug": "keratin-hair-repair-shampoo-enriched-with-enriched-with-hydrolyzed-pea-protin-provtamin-b5",
+      "top_category": "Hair Care",
+      "sub_category": "Shampoo",
+      "images": [
+        "uploads/products/private-label/keratin-hair-repair-shampoo-enriched-with-enriched-with-hydrolyzed-pea-protin-provtamin-b5/01.jpg",
+        "uploads/products/private-label/keratin-hair-repair-shampoo-enriched-with-enriched-with-hydrolyzed-pea-protin-provtamin-b5/02.jpg",
+        "uploads/products/private-label/keratin-hair-repair-shampoo-enriched-with-enriched-with-hydrolyzed-pea-protin-provtamin-b5/03.jpg",
+        "uploads/products/private-label/keratin-hair-repair-shampoo-enriched-with-enriched-with-hydrolyzed-pea-protin-provtamin-b5/04.jpg",
+        "uploads/products/private-label/keratin-hair-repair-shampoo-enriched-with-enriched-with-hydrolyzed-pea-protin-provtamin-b5/05.jpg",
+        "uploads/products/private-label/keratin-hair-repair-shampoo-enriched-with-enriched-with-hydrolyzed-pea-protin-provtamin-b5/06.jpg",
+        "uploads/products/private-label/keratin-hair-repair-shampoo-enriched-with-enriched-with-hydrolyzed-pea-protin-provtamin-b5/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Hair Care/Shampoo/Onion & Ginger Shampoo Enriched with Onion Bulb & Ginger Extract.pdf",
+      "name": "Onion & Ginger Shampoo Enriched with Onion Bulb & Ginger Extract",
+      "name_fallback": "Onion & Ginger Shampoo Enriched with Onion Bulb & Ginger Extract",
+      "product_slug": "onion-ginger-shampoo-enriched-with-onion-bulb-ginger-extract",
+      "top_category": "Hair Care",
+      "sub_category": "Shampoo",
+      "images": [
+        "uploads/products/private-label/onion-ginger-shampoo-enriched-with-onion-bulb-ginger-extract/01.jpg",
+        "uploads/products/private-label/onion-ginger-shampoo-enriched-with-onion-bulb-ginger-extract/02.jpg",
+        "uploads/products/private-label/onion-ginger-shampoo-enriched-with-onion-bulb-ginger-extract/03.jpg",
+        "uploads/products/private-label/onion-ginger-shampoo-enriched-with-onion-bulb-ginger-extract/04.jpg",
+        "uploads/products/private-label/onion-ginger-shampoo-enriched-with-onion-bulb-ginger-extract/05.jpg",
+        "uploads/products/private-label/onion-ginger-shampoo-enriched-with-onion-bulb-ginger-extract/06.jpg",
+        "uploads/products/private-label/onion-ginger-shampoo-enriched-with-onion-bulb-ginger-extract/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Hair Care/Shampoo/Premium Bath & Body Kit .pdf",
+      "name": "Premium Bath & Body Kit",
+      "name_fallback": "Premium Bath & Body Kit",
+      "product_slug": "premium-bath-body-kit",
+      "top_category": "Hair Care",
+      "sub_category": "Shampoo",
+      "images": [
+        "uploads/products/private-label/premium-bath-body-kit/01.jpg",
+        "uploads/products/private-label/premium-bath-body-kit/02.jpg",
+        "uploads/products/private-label/premium-bath-body-kit/03.jpg",
+        "uploads/products/private-label/premium-bath-body-kit/04.jpg",
+        "uploads/products/private-label/premium-bath-body-kit/05.jpg",
+        "uploads/products/private-label/premium-bath-body-kit/06.jpg",
+        "uploads/products/private-label/premium-bath-body-kit/07.jpg",
+        "uploads/products/private-label/premium-bath-body-kit/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Hair Care/Shampoo/Redensyl + Anagain + Baicapil + Rootbiotec HO, Biotin Infused with Rosemary Extract Anti - Hairfall Shampoo.pdf",
+      "name": "Redensyl + Anagain + Baicapil + Rootbiotec HO, Biotin Infused with Rosemary Extract Anti - Hairfall Shampoo",
+      "name_fallback": "Redensyl + Anagain + Baicapil + Rootbiotec HO, Biotin Infused with Rosemary Extract Anti - Hairfall Shampoo",
+      "product_slug": "redensyl-anagain-baicapil-rootbiotec-ho-biotin-infused-with-rosemary-extract-anti-hairfall-shampoo",
+      "top_category": "Hair Care",
+      "sub_category": "Shampoo",
+      "images": [
+        "uploads/products/private-label/redensyl-anagain-baicapil-rootbiotec-ho-biotin-infused-with-rosemary-extract-anti-hairfall-shampoo/01.jpg",
+        "uploads/products/private-label/redensyl-anagain-baicapil-rootbiotec-ho-biotin-infused-with-rosemary-extract-anti-hairfall-shampoo/02.jpg",
+        "uploads/products/private-label/redensyl-anagain-baicapil-rootbiotec-ho-biotin-infused-with-rosemary-extract-anti-hairfall-shampoo/03.jpg",
+        "uploads/products/private-label/redensyl-anagain-baicapil-rootbiotec-ho-biotin-infused-with-rosemary-extract-anti-hairfall-shampoo/04.jpg",
+        "uploads/products/private-label/redensyl-anagain-baicapil-rootbiotec-ho-biotin-infused-with-rosemary-extract-anti-hairfall-shampoo/05.jpg",
+        "uploads/products/private-label/redensyl-anagain-baicapil-rootbiotec-ho-biotin-infused-with-rosemary-extract-anti-hairfall-shampoo/06.jpg",
+        "uploads/products/private-label/redensyl-anagain-baicapil-rootbiotec-ho-biotin-infused-with-rosemary-extract-anti-hairfall-shampoo/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Hair Care/Shampoo/Rice Water with Niacinamide & Oatmeal Ext. Nourishing shampoo.pdf",
+      "name": "Rice Water with Niacinamide & Oatmeal Ext. Nourishing shampoo",
+      "name_fallback": "Rice Water with Niacinamide & Oatmeal Ext. Nourishing shampoo",
+      "product_slug": "rice-water-with-niacinamide-oatmeal-ext-nourishing-shampoo",
+      "top_category": "Hair Care",
+      "sub_category": "Shampoo",
+      "images": [
+        "uploads/products/private-label/rice-water-with-niacinamide-oatmeal-ext-nourishing-shampoo/01.jpg",
+        "uploads/products/private-label/rice-water-with-niacinamide-oatmeal-ext-nourishing-shampoo/02.jpg",
+        "uploads/products/private-label/rice-water-with-niacinamide-oatmeal-ext-nourishing-shampoo/03.jpg",
+        "uploads/products/private-label/rice-water-with-niacinamide-oatmeal-ext-nourishing-shampoo/04.jpg",
+        "uploads/products/private-label/rice-water-with-niacinamide-oatmeal-ext-nourishing-shampoo/05.jpg",
+        "uploads/products/private-label/rice-water-with-niacinamide-oatmeal-ext-nourishing-shampoo/06.jpg",
+        "uploads/products/private-label/rice-water-with-niacinamide-oatmeal-ext-nourishing-shampoo/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Men's Care/1) Activated Charcoal Soap for Mens.pdf",
+      "name": "Detox Bar",
+      "name_fallback": "1) Activated Charcoal Soap for Mens",
+      "product_slug": "1-activated-charcoal-soap-for-mens",
+      "top_category": "Men's Care",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/1-activated-charcoal-soap-for-mens/01.jpg",
+        "uploads/products/private-label/1-activated-charcoal-soap-for-mens/02.jpg",
+        "uploads/products/private-label/1-activated-charcoal-soap-for-mens/03.jpg",
+        "uploads/products/private-label/1-activated-charcoal-soap-for-mens/04.jpg",
+        "uploads/products/private-label/1-activated-charcoal-soap-for-mens/05.jpg",
+        "uploads/products/private-label/1-activated-charcoal-soap-for-mens/06.jpg"
+      ]
+    },
+    {
+      "pdf": "Men's Care/1) Exfoliation Body Bar for Mens_300g.pdf",
+      "name": "1) Exfoliation Body Bar for Mens 300g",
+      "name_fallback": "1) Exfoliation Body Bar for Mens 300g",
+      "product_slug": "1-exfoliation-body-bar-for-mens-300g",
+      "top_category": "Men's Care",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/1-exfoliation-body-bar-for-mens-300g/01.jpg",
+        "uploads/products/private-label/1-exfoliation-body-bar-for-mens-300g/02.jpg",
+        "uploads/products/private-label/1-exfoliation-body-bar-for-mens-300g/03.jpg",
+        "uploads/products/private-label/1-exfoliation-body-bar-for-mens-300g/04.jpg",
+        "uploads/products/private-label/1-exfoliation-body-bar-for-mens-300g/05.jpg",
+        "uploads/products/private-label/1-exfoliation-body-bar-for-mens-300g/06.jpg"
+      ]
+    },
+    {
+      "pdf": "Men's Care/Aqua Soap For Mens.pdf",
+      "name": "Aqua Soap For Mens",
+      "name_fallback": "Aqua Soap For Mens",
+      "product_slug": "aqua-soap-for-mens",
+      "top_category": "Men's Care",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/aqua-soap-for-mens/01.jpg",
+        "uploads/products/private-label/aqua-soap-for-mens/02.jpg",
+        "uploads/products/private-label/aqua-soap-for-mens/03.jpg",
+        "uploads/products/private-label/aqua-soap-for-mens/04.jpg",
+        "uploads/products/private-label/aqua-soap-for-mens/05.jpg",
+        "uploads/products/private-label/aqua-soap-for-mens/06.jpg",
+        "uploads/products/private-label/aqua-soap-for-mens/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Men's Care/Beard Soap.pdf",
+      "name": "Beard Soap",
+      "name_fallback": "Beard Soap",
+      "product_slug": "beard-soap",
+      "top_category": "Men's Care",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/beard-soap/01.jpg",
+        "uploads/products/private-label/beard-soap/02.jpg",
+        "uploads/products/private-label/beard-soap/03.jpg",
+        "uploads/products/private-label/beard-soap/04.jpg",
+        "uploads/products/private-label/beard-soap/05.jpg",
+        "uploads/products/private-label/beard-soap/06.jpg"
+      ]
+    },
+    {
+      "pdf": "Men's Care/Conditioning Shampoo for Mens Enriched with Niacinamide, Menthol & Biotin.pdf",
+      "name": "Conditioning Shampoo for Mens Enriched with Niacinamide, Menthol & Biotin",
+      "name_fallback": "Conditioning Shampoo for Mens Enriched with Niacinamide, Menthol & Biotin",
+      "product_slug": "conditioning-shampoo-for-mens-enriched-with-niacinamide-menthol-biotin",
+      "top_category": "Men's Care",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/conditioning-shampoo-for-mens-enriched-with-niacinamide-menthol-biotin/01.jpg",
+        "uploads/products/private-label/conditioning-shampoo-for-mens-enriched-with-niacinamide-menthol-biotin/02.jpg",
+        "uploads/products/private-label/conditioning-shampoo-for-mens-enriched-with-niacinamide-menthol-biotin/03.jpg",
+        "uploads/products/private-label/conditioning-shampoo-for-mens-enriched-with-niacinamide-menthol-biotin/04.jpg",
+        "uploads/products/private-label/conditioning-shampoo-for-mens-enriched-with-niacinamide-menthol-biotin/05.jpg",
+        "uploads/products/private-label/conditioning-shampoo-for-mens-enriched-with-niacinamide-menthol-biotin/06.jpg",
+        "uploads/products/private-label/conditioning-shampoo-for-mens-enriched-with-niacinamide-menthol-biotin/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Men's Care/Menz Max Care _Vitamin C, Niacinamide & Biotin Serum.pdf",
+      "name": "Menz Max Care Vitamin C, Niacinamide & Biotin Serum",
+      "name_fallback": "Menz Max Care Vitamin C, Niacinamide & Biotin Serum",
+      "product_slug": "menz-max-care-vitamin-c-niacinamide-biotin-serum",
+      "top_category": "Men's Care",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/menz-max-care-vitamin-c-niacinamide-biotin-serum/01.jpg",
+        "uploads/products/private-label/menz-max-care-vitamin-c-niacinamide-biotin-serum/02.jpg",
+        "uploads/products/private-label/menz-max-care-vitamin-c-niacinamide-biotin-serum/03.jpg",
+        "uploads/products/private-label/menz-max-care-vitamin-c-niacinamide-biotin-serum/04.jpg",
+        "uploads/products/private-label/menz-max-care-vitamin-c-niacinamide-biotin-serum/05.jpg",
+        "uploads/products/private-label/menz-max-care-vitamin-c-niacinamide-biotin-serum/06.jpg",
+        "uploads/products/private-label/menz-max-care-vitamin-c-niacinamide-biotin-serum/07.jpg",
+        "uploads/products/private-label/menz-max-care-vitamin-c-niacinamide-biotin-serum/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Men's Care/Menz Max Care Body Wash.pdf",
+      "name": "Menz Max Care Body Wash",
+      "name_fallback": "Menz Max Care Body Wash",
+      "product_slug": "menz-max-care-body-wash",
+      "top_category": "Men's Care",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/menz-max-care-body-wash/01.jpg",
+        "uploads/products/private-label/menz-max-care-body-wash/02.jpg",
+        "uploads/products/private-label/menz-max-care-body-wash/03.jpg",
+        "uploads/products/private-label/menz-max-care-body-wash/04.jpg",
+        "uploads/products/private-label/menz-max-care-body-wash/05.jpg",
+        "uploads/products/private-label/menz-max-care-body-wash/06.jpg",
+        "uploads/products/private-label/menz-max-care-body-wash/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Men's Care/Menz Max Care Cream with SPF25 PA+ .pdf",
+      "name": "Menz Max Care Cream with SPF25 PA+",
+      "name_fallback": "Menz Max Care Cream with SPF25 PA+",
+      "product_slug": "menz-max-care-cream-with-spf25-pa",
+      "top_category": "Men's Care",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/menz-max-care-cream-with-spf25-pa/01.jpg",
+        "uploads/products/private-label/menz-max-care-cream-with-spf25-pa/02.jpg",
+        "uploads/products/private-label/menz-max-care-cream-with-spf25-pa/03.jpg",
+        "uploads/products/private-label/menz-max-care-cream-with-spf25-pa/04.jpg",
+        "uploads/products/private-label/menz-max-care-cream-with-spf25-pa/05.jpg",
+        "uploads/products/private-label/menz-max-care-cream-with-spf25-pa/06.jpg",
+        "uploads/products/private-label/menz-max-care-cream-with-spf25-pa/07.jpg",
+        "uploads/products/private-label/menz-max-care-cream-with-spf25-pa/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Parfumes/Mens/BLEU Men_Eau De Parfum.pdf",
+      "name": "BLEU Men Eau De Parfum",
+      "name_fallback": "BLEU Men Eau De Parfum",
+      "product_slug": "bleu-men-eau-de-parfum",
+      "top_category": "Parfumes",
+      "sub_category": "Mens",
+      "images": [
+        "uploads/products/private-label/bleu-men-eau-de-parfum/01.jpg",
+        "uploads/products/private-label/bleu-men-eau-de-parfum/02.jpg",
+        "uploads/products/private-label/bleu-men-eau-de-parfum/03.jpg",
+        "uploads/products/private-label/bleu-men-eau-de-parfum/04.jpg",
+        "uploads/products/private-label/bleu-men-eau-de-parfum/05.jpg",
+        "uploads/products/private-label/bleu-men-eau-de-parfum/06.jpg"
+      ]
+    },
+    {
+      "pdf": "Parfumes/Mens/Intimate Mens_Eau De Parfum.pdf",
+      "name": "Intimate Mens Eau De Parfum",
+      "name_fallback": "Intimate Mens Eau De Parfum",
+      "product_slug": "intimate-mens-eau-de-parfum",
+      "top_category": "Parfumes",
+      "sub_category": "Mens",
+      "images": [
+        "uploads/products/private-label/intimate-mens-eau-de-parfum/01.jpg",
+        "uploads/products/private-label/intimate-mens-eau-de-parfum/02.jpg",
+        "uploads/products/private-label/intimate-mens-eau-de-parfum/03.jpg",
+        "uploads/products/private-label/intimate-mens-eau-de-parfum/04.jpg"
+      ]
+    },
+    {
+      "pdf": "Parfumes/Mens/Jazz Men_Eau De Parfum.pdf",
+      "name": "Jazz Men Eau De Parfum",
+      "name_fallback": "Jazz Men Eau De Parfum",
+      "product_slug": "jazz-men-eau-de-parfum",
+      "top_category": "Parfumes",
+      "sub_category": "Mens",
+      "images": [
+        "uploads/products/private-label/jazz-men-eau-de-parfum/01.jpg",
+        "uploads/products/private-label/jazz-men-eau-de-parfum/02.jpg",
+        "uploads/products/private-label/jazz-men-eau-de-parfum/03.jpg",
+        "uploads/products/private-label/jazz-men-eau-de-parfum/04.jpg"
+      ]
+    },
+    {
+      "pdf": "Parfumes/Mens/Noir Men_Eau De Parfum.pdf",
+      "name": "Noir Men Eau De Parfum",
+      "name_fallback": "Noir Men Eau De Parfum",
+      "product_slug": "noir-men-eau-de-parfum",
+      "top_category": "Parfumes",
+      "sub_category": "Mens",
+      "images": [
+        "uploads/products/private-label/noir-men-eau-de-parfum/01.jpg",
+        "uploads/products/private-label/noir-men-eau-de-parfum/02.jpg",
+        "uploads/products/private-label/noir-men-eau-de-parfum/03.jpg",
+        "uploads/products/private-label/noir-men-eau-de-parfum/04.jpg",
+        "uploads/products/private-label/noir-men-eau-de-parfum/05.jpg",
+        "uploads/products/private-label/noir-men-eau-de-parfum/06.jpg"
+      ]
+    },
+    {
+      "pdf": "Parfumes/Mens/Oud Men_Eau De Parfum.pdf",
+      "name": "Oud Men Eau De Parfum",
+      "name_fallback": "Oud Men Eau De Parfum",
+      "product_slug": "oud-men-eau-de-parfum",
+      "top_category": "Parfumes",
+      "sub_category": "Mens",
+      "images": [
+        "uploads/products/private-label/oud-men-eau-de-parfum/01.jpg",
+        "uploads/products/private-label/oud-men-eau-de-parfum/02.jpg",
+        "uploads/products/private-label/oud-men-eau-de-parfum/03.jpg"
+      ]
+    },
+    {
+      "pdf": "Parfumes/Mens/Recharge Mens_Pafum Body Spray.pdf",
+      "name": "Recharge Mens Pafum Body Spray",
+      "name_fallback": "Recharge Mens Pafum Body Spray",
+      "product_slug": "recharge-mens-pafum-body-spray",
+      "top_category": "Parfumes",
+      "sub_category": "Mens",
+      "images": [
+        "uploads/products/private-label/recharge-mens-pafum-body-spray/01.jpg",
+        "uploads/products/private-label/recharge-mens-pafum-body-spray/02.jpg",
+        "uploads/products/private-label/recharge-mens-pafum-body-spray/03.jpg",
+        "uploads/products/private-label/recharge-mens-pafum-body-spray/04.jpg",
+        "uploads/products/private-label/recharge-mens-pafum-body-spray/05.jpg",
+        "uploads/products/private-label/recharge-mens-pafum-body-spray/06.jpg"
+      ]
+    },
+    {
+      "pdf": "Parfumes/Mens/Triumph Men_Eau De Parfum.pdf",
+      "name": "Triumph Men Eau De Parfum",
+      "name_fallback": "Triumph Men Eau De Parfum",
+      "product_slug": "triumph-men-eau-de-parfum",
+      "top_category": "Parfumes",
+      "sub_category": "Mens",
+      "images": [
+        "uploads/products/private-label/triumph-men-eau-de-parfum/01.jpg",
+        "uploads/products/private-label/triumph-men-eau-de-parfum/02.jpg",
+        "uploads/products/private-label/triumph-men-eau-de-parfum/03.jpg"
+      ]
+    },
+    {
+      "pdf": "Parfumes/Mens/Urban Men_Eau De Parfum.pdf",
+      "name": "Urban Men Eau De Parfum",
+      "name_fallback": "Urban Men Eau De Parfum",
+      "product_slug": "urban-men-eau-de-parfum",
+      "top_category": "Parfumes",
+      "sub_category": "Mens",
+      "images": [
+        "uploads/products/private-label/urban-men-eau-de-parfum/01.jpg",
+        "uploads/products/private-label/urban-men-eau-de-parfum/02.jpg",
+        "uploads/products/private-label/urban-men-eau-de-parfum/03.jpg",
+        "uploads/products/private-label/urban-men-eau-de-parfum/04.jpg",
+        "uploads/products/private-label/urban-men-eau-de-parfum/05.jpg"
+      ]
+    },
+    {
+      "pdf": "Parfumes/Women/Aura Women_Eau De Parfum.pdf",
+      "name": "Aura Women Eau De Parfum",
+      "name_fallback": "Aura Women Eau De Parfum",
+      "product_slug": "aura-women-eau-de-parfum",
+      "top_category": "Parfumes",
+      "sub_category": "Women",
+      "images": [
+        "uploads/products/private-label/aura-women-eau-de-parfum/01.jpg",
+        "uploads/products/private-label/aura-women-eau-de-parfum/02.jpg",
+        "uploads/products/private-label/aura-women-eau-de-parfum/03.jpg",
+        "uploads/products/private-label/aura-women-eau-de-parfum/04.jpg",
+        "uploads/products/private-label/aura-women-eau-de-parfum/05.jpg"
+      ]
+    },
+    {
+      "pdf": "Parfumes/Women/Bloom Women_Eau De Parfum.pdf",
+      "name": "Bloom Women Eau De Parfum",
+      "name_fallback": "Bloom Women Eau De Parfum",
+      "product_slug": "bloom-women-eau-de-parfum",
+      "top_category": "Parfumes",
+      "sub_category": "Women",
+      "images": [
+        "uploads/products/private-label/bloom-women-eau-de-parfum/01.jpg",
+        "uploads/products/private-label/bloom-women-eau-de-parfum/02.jpg",
+        "uploads/products/private-label/bloom-women-eau-de-parfum/03.jpg",
+        "uploads/products/private-label/bloom-women-eau-de-parfum/04.jpg"
+      ]
+    },
+    {
+      "pdf": "Parfumes/Women/Charm Women_Eau De Parfum.pdf",
+      "name": "Charm Women Eau De Parfum",
+      "name_fallback": "Charm Women Eau De Parfum",
+      "product_slug": "charm-women-eau-de-parfum",
+      "top_category": "Parfumes",
+      "sub_category": "Women",
+      "images": [
+        "uploads/products/private-label/charm-women-eau-de-parfum/01.jpg",
+        "uploads/products/private-label/charm-women-eau-de-parfum/02.jpg",
+        "uploads/products/private-label/charm-women-eau-de-parfum/03.jpg",
+        "uploads/products/private-label/charm-women-eau-de-parfum/04.jpg",
+        "uploads/products/private-label/charm-women-eau-de-parfum/05.jpg"
+      ]
+    },
+    {
+      "pdf": "Parfumes/Women/Enchante Women_Eau De Parfum.pdf",
+      "name": "Enchante Women Eau De Parfum",
+      "name_fallback": "Enchante Women Eau De Parfum",
+      "product_slug": "enchante-women-eau-de-parfum",
+      "top_category": "Parfumes",
+      "sub_category": "Women",
+      "images": [
+        "uploads/products/private-label/enchante-women-eau-de-parfum/01.jpg",
+        "uploads/products/private-label/enchante-women-eau-de-parfum/02.jpg",
+        "uploads/products/private-label/enchante-women-eau-de-parfum/03.jpg",
+        "uploads/products/private-label/enchante-women-eau-de-parfum/04.jpg",
+        "uploads/products/private-label/enchante-women-eau-de-parfum/05.jpg",
+        "uploads/products/private-label/enchante-women-eau-de-parfum/06.jpg"
+      ]
+    },
+    {
+      "pdf": "Parfumes/Women/Passion Women_Eau De Parfum.pdf",
+      "name": "Passion Women Eau De Parfum",
+      "name_fallback": "Passion Women Eau De Parfum",
+      "product_slug": "passion-women-eau-de-parfum",
+      "top_category": "Parfumes",
+      "sub_category": "Women",
+      "images": [
+        "uploads/products/private-label/passion-women-eau-de-parfum/01.jpg",
+        "uploads/products/private-label/passion-women-eau-de-parfum/02.jpg",
+        "uploads/products/private-label/passion-women-eau-de-parfum/03.jpg",
+        "uploads/products/private-label/passion-women-eau-de-parfum/04.jpg"
+      ]
+    },
+    {
+      "pdf": "Scented Candles/Scented Candles_1.pdf",
+      "name": "Scented Candles",
+      "name_fallback": "Scented Candles 1",
+      "product_slug": "scented-candles-1",
+      "top_category": "Scented Candles",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/scented-candles-1/01.jpg",
+        "uploads/products/private-label/scented-candles-1/02.jpg",
+        "uploads/products/private-label/scented-candles-1/03.jpg",
+        "uploads/products/private-label/scented-candles-1/04.jpg",
+        "uploads/products/private-label/scented-candles-1/05.jpg",
+        "uploads/products/private-label/scented-candles-1/06.jpg",
+        "uploads/products/private-label/scented-candles-1/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Scented Candles/Scented Candles_2.pdf",
+      "name": "Scented Candles",
+      "name_fallback": "Scented Candles 2",
+      "product_slug": "scented-candles-2",
+      "top_category": "Scented Candles",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/scented-candles-2/01.jpg",
+        "uploads/products/private-label/scented-candles-2/02.jpg",
+        "uploads/products/private-label/scented-candles-2/03.jpg",
+        "uploads/products/private-label/scented-candles-2/04.jpg",
+        "uploads/products/private-label/scented-candles-2/05.jpg",
+        "uploads/products/private-label/scented-candles-2/06.jpg",
+        "uploads/products/private-label/scented-candles-2/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Scented Candles/Scented Candles_3.pdf",
+      "name": "Scented Candles",
+      "name_fallback": "Scented Candles 3",
+      "product_slug": "scented-candles-3",
+      "top_category": "Scented Candles",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/scented-candles-3/01.jpg",
+        "uploads/products/private-label/scented-candles-3/02.jpg",
+        "uploads/products/private-label/scented-candles-3/03.jpg",
+        "uploads/products/private-label/scented-candles-3/04.jpg",
+        "uploads/products/private-label/scented-candles-3/05.jpg",
+        "uploads/products/private-label/scented-candles-3/06.jpg",
+        "uploads/products/private-label/scented-candles-3/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Scented Candles/Scented Candles_4.pdf",
+      "name": "Scented Candles",
+      "name_fallback": "Scented Candles 4",
+      "product_slug": "scented-candles-4",
+      "top_category": "Scented Candles",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/scented-candles-4/01.jpg",
+        "uploads/products/private-label/scented-candles-4/02.jpg",
+        "uploads/products/private-label/scented-candles-4/03.jpg",
+        "uploads/products/private-label/scented-candles-4/04.jpg",
+        "uploads/products/private-label/scented-candles-4/05.jpg",
+        "uploads/products/private-label/scented-candles-4/06.jpg",
+        "uploads/products/private-label/scented-candles-4/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Scented Candles/Scented Candles_5.pdf",
+      "name": "Scented Candles",
+      "name_fallback": "Scented Candles 5",
+      "product_slug": "scented-candles-5",
+      "top_category": "Scented Candles",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/scented-candles-5/01.jpg",
+        "uploads/products/private-label/scented-candles-5/02.jpg",
+        "uploads/products/private-label/scented-candles-5/03.jpg",
+        "uploads/products/private-label/scented-candles-5/04.jpg",
+        "uploads/products/private-label/scented-candles-5/05.jpg",
+        "uploads/products/private-label/scented-candles-5/06.jpg",
+        "uploads/products/private-label/scented-candles-5/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Scented Candles/Scented Candles_6.pdf",
+      "name": "Scented Candles",
+      "name_fallback": "Scented Candles 6",
+      "product_slug": "scented-candles-6",
+      "top_category": "Scented Candles",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/scented-candles-6/01.jpg",
+        "uploads/products/private-label/scented-candles-6/02.jpg",
+        "uploads/products/private-label/scented-candles-6/03.jpg",
+        "uploads/products/private-label/scented-candles-6/04.jpg",
+        "uploads/products/private-label/scented-candles-6/05.jpg",
+        "uploads/products/private-label/scented-candles-6/06.jpg",
+        "uploads/products/private-label/scented-candles-6/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Scented Candles/Scented Candles_7.pdf",
+      "name": "Scented Candles",
+      "name_fallback": "Scented Candles 7",
+      "product_slug": "scented-candles-7",
+      "top_category": "Scented Candles",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/scented-candles-7/01.jpg",
+        "uploads/products/private-label/scented-candles-7/02.jpg",
+        "uploads/products/private-label/scented-candles-7/03.jpg",
+        "uploads/products/private-label/scented-candles-7/04.jpg",
+        "uploads/products/private-label/scented-candles-7/05.jpg",
+        "uploads/products/private-label/scented-candles-7/06.jpg",
+        "uploads/products/private-label/scented-candles-7/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Scented Candles/Scented Candles_8.pdf",
+      "name": "Scented Candles",
+      "name_fallback": "Scented Candles 8",
+      "product_slug": "scented-candles-8",
+      "top_category": "Scented Candles",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/scented-candles-8/01.jpg",
+        "uploads/products/private-label/scented-candles-8/02.jpg",
+        "uploads/products/private-label/scented-candles-8/03.jpg",
+        "uploads/products/private-label/scented-candles-8/04.jpg",
+        "uploads/products/private-label/scented-candles-8/05.jpg",
+        "uploads/products/private-label/scented-candles-8/06.jpg"
+      ]
+    },
+    {
+      "pdf": "Scented Candles/Scented Candles_9.pdf",
+      "name": "Scented Candles",
+      "name_fallback": "Scented Candles 9",
+      "product_slug": "scented-candles-9",
+      "top_category": "Scented Candles",
+      "sub_category": "",
+      "images": [
+        "uploads/products/private-label/scented-candles-9/01.jpg",
+        "uploads/products/private-label/scented-candles-9/02.jpg",
+        "uploads/products/private-label/scented-candles-9/03.jpg",
+        "uploads/products/private-label/scented-candles-9/04.jpg",
+        "uploads/products/private-label/scented-candles-9/05.jpg",
+        "uploads/products/private-label/scented-candles-9/06.jpg",
+        "uploads/products/private-label/scented-candles-9/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Cleaners/Brightening Foaming Cleanser Enriched with  Mulberry & Paeonia Suffruticosa Root Extract.pdf",
+      "name": "Brightening Foaming Cleanser Enriched with Mulberry & Paeonia Suffruticosa Root Extract",
+      "name_fallback": "Brightening Foaming Cleanser Enriched with Mulberry & Paeonia Suffruticosa Root Extract",
+      "product_slug": "brightening-foaming-cleanser-enriched-with-mulberry-paeonia-suffruticosa-root-extract",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Cleaners",
+      "images": [
+        "uploads/products/private-label/brightening-foaming-cleanser-enriched-with-mulberry-paeonia-suffruticosa-root-extract/01.jpg",
+        "uploads/products/private-label/brightening-foaming-cleanser-enriched-with-mulberry-paeonia-suffruticosa-root-extract/02.jpg",
+        "uploads/products/private-label/brightening-foaming-cleanser-enriched-with-mulberry-paeonia-suffruticosa-root-extract/03.jpg",
+        "uploads/products/private-label/brightening-foaming-cleanser-enriched-with-mulberry-paeonia-suffruticosa-root-extract/04.jpg",
+        "uploads/products/private-label/brightening-foaming-cleanser-enriched-with-mulberry-paeonia-suffruticosa-root-extract/05.jpg",
+        "uploads/products/private-label/brightening-foaming-cleanser-enriched-with-mulberry-paeonia-suffruticosa-root-extract/06.jpg",
+        "uploads/products/private-label/brightening-foaming-cleanser-enriched-with-mulberry-paeonia-suffruticosa-root-extract/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Cleaners/Cleansing Milk Enriched with Basil & Aloevera Extract.pdf",
+      "name": "Cleansing Milk Enriched with Basil & Aloevera Extract",
+      "name_fallback": "Cleansing Milk Enriched with Basil & Aloevera Extract",
+      "product_slug": "cleansing-milk-enriched-with-basil-aloevera-extract",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Cleaners",
+      "images": [
+        "uploads/products/private-label/cleansing-milk-enriched-with-basil-aloevera-extract/01.jpg",
+        "uploads/products/private-label/cleansing-milk-enriched-with-basil-aloevera-extract/02.jpg",
+        "uploads/products/private-label/cleansing-milk-enriched-with-basil-aloevera-extract/03.jpg",
+        "uploads/products/private-label/cleansing-milk-enriched-with-basil-aloevera-extract/04.jpg",
+        "uploads/products/private-label/cleansing-milk-enriched-with-basil-aloevera-extract/05.jpg",
+        "uploads/products/private-label/cleansing-milk-enriched-with-basil-aloevera-extract/06.jpg",
+        "uploads/products/private-label/cleansing-milk-enriched-with-basil-aloevera-extract/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Cleaners/Cleansing Milk Enriched with Trumeric, Liqourice & Aloevera Extract.pdf",
+      "name": "Cleansing Milk Enriched with Trumeric, Liqourice & Aloevera Extract",
+      "name_fallback": "Cleansing Milk Enriched with Trumeric, Liqourice & Aloevera Extract",
+      "product_slug": "cleansing-milk-enriched-with-trumeric-liqourice-aloevera-extract",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Cleaners",
+      "images": [
+        "uploads/products/private-label/cleansing-milk-enriched-with-trumeric-liqourice-aloevera-extract/01.jpg",
+        "uploads/products/private-label/cleansing-milk-enriched-with-trumeric-liqourice-aloevera-extract/02.jpg",
+        "uploads/products/private-label/cleansing-milk-enriched-with-trumeric-liqourice-aloevera-extract/03.jpg",
+        "uploads/products/private-label/cleansing-milk-enriched-with-trumeric-liqourice-aloevera-extract/04.jpg",
+        "uploads/products/private-label/cleansing-milk-enriched-with-trumeric-liqourice-aloevera-extract/05.jpg",
+        "uploads/products/private-label/cleansing-milk-enriched-with-trumeric-liqourice-aloevera-extract/06.jpg",
+        "uploads/products/private-label/cleansing-milk-enriched-with-trumeric-liqourice-aloevera-extract/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Cream/Anti Ageing Almond Cream.pdf",
+      "name": "Anti Ageing Almond Cream",
+      "name_fallback": "Anti Ageing Almond Cream",
+      "product_slug": "anti-ageing-almond-cream",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Cream",
+      "images": [
+        "uploads/products/private-label/anti-ageing-almond-cream/01.jpg",
+        "uploads/products/private-label/anti-ageing-almond-cream/02.jpg",
+        "uploads/products/private-label/anti-ageing-almond-cream/03.jpg",
+        "uploads/products/private-label/anti-ageing-almond-cream/04.jpg",
+        "uploads/products/private-label/anti-ageing-almond-cream/05.jpg",
+        "uploads/products/private-label/anti-ageing-almond-cream/06.jpg",
+        "uploads/products/private-label/anti-ageing-almond-cream/07.jpg",
+        "uploads/products/private-label/anti-ageing-almond-cream/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Cream/Anti Pimple & Acne Neem Cream.pdf",
+      "name": "Anti Pimple & Acne Neem Cream",
+      "name_fallback": "Anti Pimple & Acne Neem Cream",
+      "product_slug": "anti-pimple-acne-neem-cream",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Cream",
+      "images": [
+        "uploads/products/private-label/anti-pimple-acne-neem-cream/01.jpg",
+        "uploads/products/private-label/anti-pimple-acne-neem-cream/02.jpg",
+        "uploads/products/private-label/anti-pimple-acne-neem-cream/03.jpg",
+        "uploads/products/private-label/anti-pimple-acne-neem-cream/04.jpg",
+        "uploads/products/private-label/anti-pimple-acne-neem-cream/05.jpg",
+        "uploads/products/private-label/anti-pimple-acne-neem-cream/06.jpg",
+        "uploads/products/private-label/anti-pimple-acne-neem-cream/07.jpg",
+        "uploads/products/private-label/anti-pimple-acne-neem-cream/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Cream/Anti Pollution Day Carrot Cream.pdf",
+      "name": "Anti Pollution Day Carrot Cream",
+      "name_fallback": "Anti Pollution Day Carrot Cream",
+      "product_slug": "anti-pollution-day-carrot-cream",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Cream",
+      "images": [
+        "uploads/products/private-label/anti-pollution-day-carrot-cream/01.jpg",
+        "uploads/products/private-label/anti-pollution-day-carrot-cream/02.jpg",
+        "uploads/products/private-label/anti-pollution-day-carrot-cream/03.jpg",
+        "uploads/products/private-label/anti-pollution-day-carrot-cream/04.jpg",
+        "uploads/products/private-label/anti-pollution-day-carrot-cream/05.jpg",
+        "uploads/products/private-label/anti-pollution-day-carrot-cream/06.jpg",
+        "uploads/products/private-label/anti-pollution-day-carrot-cream/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Cream/CocoWhite Whitening Face Cream.pdf",
+      "name": "CocoWhite Whitening Face Cream",
+      "name_fallback": "CocoWhite Whitening Face Cream",
+      "product_slug": "cocowhite-whitening-face-cream",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Cream",
+      "images": [
+        "uploads/products/private-label/cocowhite-whitening-face-cream/01.jpg",
+        "uploads/products/private-label/cocowhite-whitening-face-cream/02.jpg",
+        "uploads/products/private-label/cocowhite-whitening-face-cream/03.jpg",
+        "uploads/products/private-label/cocowhite-whitening-face-cream/04.jpg",
+        "uploads/products/private-label/cocowhite-whitening-face-cream/05.jpg",
+        "uploads/products/private-label/cocowhite-whitening-face-cream/06.jpg",
+        "uploads/products/private-label/cocowhite-whitening-face-cream/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Cream/Marigold Night Cream.pdf",
+      "name": "Marigold Night Cream",
+      "name_fallback": "Marigold Night Cream",
+      "product_slug": "marigold-night-cream",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Cream",
+      "images": [
+        "uploads/products/private-label/marigold-night-cream/01.jpg",
+        "uploads/products/private-label/marigold-night-cream/02.jpg",
+        "uploads/products/private-label/marigold-night-cream/03.jpg",
+        "uploads/products/private-label/marigold-night-cream/04.jpg",
+        "uploads/products/private-label/marigold-night-cream/05.jpg",
+        "uploads/products/private-label/marigold-night-cream/06.jpg",
+        "uploads/products/private-label/marigold-night-cream/07.jpg",
+        "uploads/products/private-label/marigold-night-cream/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Cream/Rose Moist Moisturising Face Cream.pdf",
+      "name": "Rose Moist Moisturising Face Cream",
+      "name_fallback": "Rose Moist Moisturising Face Cream",
+      "product_slug": "rose-moist-moisturising-face-cream",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Cream",
+      "images": [
+        "uploads/products/private-label/rose-moist-moisturising-face-cream/01.jpg",
+        "uploads/products/private-label/rose-moist-moisturising-face-cream/02.jpg",
+        "uploads/products/private-label/rose-moist-moisturising-face-cream/03.jpg",
+        "uploads/products/private-label/rose-moist-moisturising-face-cream/04.jpg",
+        "uploads/products/private-label/rose-moist-moisturising-face-cream/05.jpg",
+        "uploads/products/private-label/rose-moist-moisturising-face-cream/06.jpg",
+        "uploads/products/private-label/rose-moist-moisturising-face-cream/07.jpg",
+        "uploads/products/private-label/rose-moist-moisturising-face-cream/08.jpg",
+        "uploads/products/private-label/rose-moist-moisturising-face-cream/09.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Cream/Turmeric Brightening Cream.pdf",
+      "name": "Turmeric Brightening Cream",
+      "name_fallback": "Turmeric Brightening Cream",
+      "product_slug": "turmeric-brightening-cream",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Cream",
+      "images": [
+        "uploads/products/private-label/turmeric-brightening-cream/01.jpg",
+        "uploads/products/private-label/turmeric-brightening-cream/02.jpg",
+        "uploads/products/private-label/turmeric-brightening-cream/03.jpg",
+        "uploads/products/private-label/turmeric-brightening-cream/04.jpg",
+        "uploads/products/private-label/turmeric-brightening-cream/05.jpg",
+        "uploads/products/private-label/turmeric-brightening-cream/06.jpg",
+        "uploads/products/private-label/turmeric-brightening-cream/07.jpg",
+        "uploads/products/private-label/turmeric-brightening-cream/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Masks/Anti Ageing Almond Oil Face Mask.pdf",
+      "name": "Anti Ageing Almond Oil Face Mask",
+      "name_fallback": "Anti Ageing Almond Oil Face Mask",
+      "product_slug": "anti-ageing-almond-oil-face-mask",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Masks",
+      "images": [
+        "uploads/products/private-label/anti-ageing-almond-oil-face-mask/01.jpg",
+        "uploads/products/private-label/anti-ageing-almond-oil-face-mask/02.jpg",
+        "uploads/products/private-label/anti-ageing-almond-oil-face-mask/03.jpg",
+        "uploads/products/private-label/anti-ageing-almond-oil-face-mask/04.jpg",
+        "uploads/products/private-label/anti-ageing-almond-oil-face-mask/05.jpg",
+        "uploads/products/private-label/anti-ageing-almond-oil-face-mask/06.jpg",
+        "uploads/products/private-label/anti-ageing-almond-oil-face-mask/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Masks/Bamboo Charcoal Peel off Face Mask.pdf",
+      "name": "Bamboo Charcoal Peel off Face Mask",
+      "name_fallback": "Bamboo Charcoal Peel off Face Mask",
+      "product_slug": "bamboo-charcoal-peel-off-face-mask",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Masks",
+      "images": [
+        "uploads/products/private-label/bamboo-charcoal-peel-off-face-mask/01.jpg",
+        "uploads/products/private-label/bamboo-charcoal-peel-off-face-mask/02.jpg",
+        "uploads/products/private-label/bamboo-charcoal-peel-off-face-mask/03.jpg",
+        "uploads/products/private-label/bamboo-charcoal-peel-off-face-mask/04.jpg",
+        "uploads/products/private-label/bamboo-charcoal-peel-off-face-mask/05.jpg",
+        "uploads/products/private-label/bamboo-charcoal-peel-off-face-mask/06.jpg",
+        "uploads/products/private-label/bamboo-charcoal-peel-off-face-mask/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Masks/Cafeine Skin Awakening Face Mask.pdf",
+      "name": "Cafeine Skin Awakening Face Mask",
+      "name_fallback": "Cafeine Skin Awakening Face Mask",
+      "product_slug": "cafeine-skin-awakening-face-mask",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Masks",
+      "images": [
+        "uploads/products/private-label/cafeine-skin-awakening-face-mask/01.jpg",
+        "uploads/products/private-label/cafeine-skin-awakening-face-mask/02.jpg",
+        "uploads/products/private-label/cafeine-skin-awakening-face-mask/03.jpg",
+        "uploads/products/private-label/cafeine-skin-awakening-face-mask/04.jpg",
+        "uploads/products/private-label/cafeine-skin-awakening-face-mask/05.jpg",
+        "uploads/products/private-label/cafeine-skin-awakening-face-mask/06.jpg",
+        "uploads/products/private-label/cafeine-skin-awakening-face-mask/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Masks/Glowing & D Tan Face Mask.pdf",
+      "name": "Glowing & D Tan Face Mask",
+      "name_fallback": "Glowing & D Tan Face Mask",
+      "product_slug": "glowing-d-tan-face-mask",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Masks",
+      "images": [
+        "uploads/products/private-label/glowing-d-tan-face-mask/01.jpg",
+        "uploads/products/private-label/glowing-d-tan-face-mask/02.jpg",
+        "uploads/products/private-label/glowing-d-tan-face-mask/03.jpg",
+        "uploads/products/private-label/glowing-d-tan-face-mask/04.jpg",
+        "uploads/products/private-label/glowing-d-tan-face-mask/05.jpg",
+        "uploads/products/private-label/glowing-d-tan-face-mask/06.jpg",
+        "uploads/products/private-label/glowing-d-tan-face-mask/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Packs/Anti Blemish Papaya Face Pack.pdf",
+      "name": "Anti Blemish Papaya Face Pack",
+      "name_fallback": "Anti Blemish Papaya Face Pack",
+      "product_slug": "anti-blemish-papaya-face-pack",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Packs",
+      "images": [
+        "uploads/products/private-label/anti-blemish-papaya-face-pack/01.jpg",
+        "uploads/products/private-label/anti-blemish-papaya-face-pack/02.jpg",
+        "uploads/products/private-label/anti-blemish-papaya-face-pack/03.jpg",
+        "uploads/products/private-label/anti-blemish-papaya-face-pack/04.jpg",
+        "uploads/products/private-label/anti-blemish-papaya-face-pack/05.jpg",
+        "uploads/products/private-label/anti-blemish-papaya-face-pack/06.jpg",
+        "uploads/products/private-label/anti-blemish-papaya-face-pack/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Packs/Anti Pimple & Acne Neem Face Pack.pdf",
+      "name": "Anti Pimple & Acne Neem Face Pack",
+      "name_fallback": "Anti Pimple & Acne Neem Face Pack",
+      "product_slug": "anti-pimple-acne-neem-face-pack",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Packs",
+      "images": [
+        "uploads/products/private-label/anti-pimple-acne-neem-face-pack/01.jpg",
+        "uploads/products/private-label/anti-pimple-acne-neem-face-pack/02.jpg",
+        "uploads/products/private-label/anti-pimple-acne-neem-face-pack/03.jpg",
+        "uploads/products/private-label/anti-pimple-acne-neem-face-pack/04.jpg",
+        "uploads/products/private-label/anti-pimple-acne-neem-face-pack/05.jpg",
+        "uploads/products/private-label/anti-pimple-acne-neem-face-pack/06.jpg",
+        "uploads/products/private-label/anti-pimple-acne-neem-face-pack/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Packs/Multi Purpose Gel Enriched with AloeVera & Green Tea Extracts .pdf",
+      "name": "Multi Purpose Gel Enriched with AloeVera & Green Tea Extracts",
+      "name_fallback": "Multi Purpose Gel Enriched with AloeVera & Green Tea Extracts",
+      "product_slug": "multi-purpose-gel-enriched-with-aloevera-green-tea-extracts",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Packs",
+      "images": [
+        "uploads/products/private-label/multi-purpose-gel-enriched-with-aloevera-green-tea-extracts/01.jpg",
+        "uploads/products/private-label/multi-purpose-gel-enriched-with-aloevera-green-tea-extracts/02.jpg",
+        "uploads/products/private-label/multi-purpose-gel-enriched-with-aloevera-green-tea-extracts/03.jpg",
+        "uploads/products/private-label/multi-purpose-gel-enriched-with-aloevera-green-tea-extracts/04.jpg",
+        "uploads/products/private-label/multi-purpose-gel-enriched-with-aloevera-green-tea-extracts/05.jpg",
+        "uploads/products/private-label/multi-purpose-gel-enriched-with-aloevera-green-tea-extracts/06.jpg",
+        "uploads/products/private-label/multi-purpose-gel-enriched-with-aloevera-green-tea-extracts/07.jpg",
+        "uploads/products/private-label/multi-purpose-gel-enriched-with-aloevera-green-tea-extracts/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Packs/Pea & Liquorice Lightening Face Pack.pdf",
+      "name": "Pea & Liquorice Lightening Face Pack",
+      "name_fallback": "Pea & Liquorice Lightening Face Pack",
+      "product_slug": "pea-liquorice-lightening-face-pack",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Packs",
+      "images": [
+        "uploads/products/private-label/pea-liquorice-lightening-face-pack/01.jpg",
+        "uploads/products/private-label/pea-liquorice-lightening-face-pack/02.jpg",
+        "uploads/products/private-label/pea-liquorice-lightening-face-pack/03.jpg",
+        "uploads/products/private-label/pea-liquorice-lightening-face-pack/04.jpg",
+        "uploads/products/private-label/pea-liquorice-lightening-face-pack/05.jpg",
+        "uploads/products/private-label/pea-liquorice-lightening-face-pack/06.jpg",
+        "uploads/products/private-label/pea-liquorice-lightening-face-pack/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Scrubs/Radiance D Tan Face Scrub Enriched with Aloevera & Grape Fruit Extract.pdf",
+      "name": "Radiance D Tan Face Scrub Enriched with Aloevera & Grape Fruit Extract",
+      "name_fallback": "Radiance D Tan Face Scrub Enriched with Aloevera & Grape Fruit Extract",
+      "product_slug": "radiance-d-tan-face-scrub-enriched-with-aloevera-grape-fruit-extract",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Scrubs",
+      "images": [
+        "uploads/products/private-label/radiance-d-tan-face-scrub-enriched-with-aloevera-grape-fruit-extract/01.jpg",
+        "uploads/products/private-label/radiance-d-tan-face-scrub-enriched-with-aloevera-grape-fruit-extract/02.jpg",
+        "uploads/products/private-label/radiance-d-tan-face-scrub-enriched-with-aloevera-grape-fruit-extract/03.jpg",
+        "uploads/products/private-label/radiance-d-tan-face-scrub-enriched-with-aloevera-grape-fruit-extract/04.jpg",
+        "uploads/products/private-label/radiance-d-tan-face-scrub-enriched-with-aloevera-grape-fruit-extract/05.jpg",
+        "uploads/products/private-label/radiance-d-tan-face-scrub-enriched-with-aloevera-grape-fruit-extract/06.jpg",
+        "uploads/products/private-label/radiance-d-tan-face-scrub-enriched-with-aloevera-grape-fruit-extract/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Serums/0.2_ Retinol + 1_ Peptide infused with Pomegranate Exquisite Serum.pdf",
+      "name": "0.2 Retinol + 1 Peptide infused with Pomegranate Exquisite Serum",
+      "name_fallback": "0.2 Retinol + 1 Peptide infused with Pomegranate Exquisite Serum",
+      "product_slug": "02-retinol-1-peptide-infused-with-pomegranate-exquisite-serum",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Serums",
+      "images": [
+        "uploads/products/private-label/02-retinol-1-peptide-infused-with-pomegranate-exquisite-serum/01.jpg",
+        "uploads/products/private-label/02-retinol-1-peptide-infused-with-pomegranate-exquisite-serum/02.jpg",
+        "uploads/products/private-label/02-retinol-1-peptide-infused-with-pomegranate-exquisite-serum/03.jpg",
+        "uploads/products/private-label/02-retinol-1-peptide-infused-with-pomegranate-exquisite-serum/04.jpg",
+        "uploads/products/private-label/02-retinol-1-peptide-infused-with-pomegranate-exquisite-serum/05.jpg",
+        "uploads/products/private-label/02-retinol-1-peptide-infused-with-pomegranate-exquisite-serum/06.jpg",
+        "uploads/products/private-label/02-retinol-1-peptide-infused-with-pomegranate-exquisite-serum/07.jpg",
+        "uploads/products/private-label/02-retinol-1-peptide-infused-with-pomegranate-exquisite-serum/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Serums/10_ Glycolic Acid + 2_ Niacinamide infused with Kiwi Exquisite Serum.pdf",
+      "name": "10 Glycolic Acid + 2 Niacinamide infused with Kiwi Exquisite Serum",
+      "name_fallback": "10 Glycolic Acid + 2 Niacinamide infused with Kiwi Exquisite Serum",
+      "product_slug": "10-glycolic-acid-2-niacinamide-infused-with-kiwi-exquisite-serum",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Serums",
+      "images": [
+        "uploads/products/private-label/10-glycolic-acid-2-niacinamide-infused-with-kiwi-exquisite-serum/01.jpg",
+        "uploads/products/private-label/10-glycolic-acid-2-niacinamide-infused-with-kiwi-exquisite-serum/02.jpg",
+        "uploads/products/private-label/10-glycolic-acid-2-niacinamide-infused-with-kiwi-exquisite-serum/03.jpg",
+        "uploads/products/private-label/10-glycolic-acid-2-niacinamide-infused-with-kiwi-exquisite-serum/04.jpg",
+        "uploads/products/private-label/10-glycolic-acid-2-niacinamide-infused-with-kiwi-exquisite-serum/05.jpg",
+        "uploads/products/private-label/10-glycolic-acid-2-niacinamide-infused-with-kiwi-exquisite-serum/06.jpg",
+        "uploads/products/private-label/10-glycolic-acid-2-niacinamide-infused-with-kiwi-exquisite-serum/07.jpg",
+        "uploads/products/private-label/10-glycolic-acid-2-niacinamide-infused-with-kiwi-exquisite-serum/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Serums/10_ Niacinamide + Zinc PCA infused with Cica Exquisite Serum.pdf",
+      "name": "10 Niacinamide + Zinc PCA infused with Cica Exquisite Serum",
+      "name_fallback": "10 Niacinamide + Zinc PCA infused with Cica Exquisite Serum",
+      "product_slug": "10-niacinamide-zinc-pca-infused-with-cica-exquisite-serum",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Serums",
+      "images": [
+        "uploads/products/private-label/10-niacinamide-zinc-pca-infused-with-cica-exquisite-serum/01.jpg",
+        "uploads/products/private-label/10-niacinamide-zinc-pca-infused-with-cica-exquisite-serum/02.jpg",
+        "uploads/products/private-label/10-niacinamide-zinc-pca-infused-with-cica-exquisite-serum/03.jpg",
+        "uploads/products/private-label/10-niacinamide-zinc-pca-infused-with-cica-exquisite-serum/04.jpg",
+        "uploads/products/private-label/10-niacinamide-zinc-pca-infused-with-cica-exquisite-serum/05.jpg",
+        "uploads/products/private-label/10-niacinamide-zinc-pca-infused-with-cica-exquisite-serum/06.jpg",
+        "uploads/products/private-label/10-niacinamide-zinc-pca-infused-with-cica-exquisite-serum/07.jpg",
+        "uploads/products/private-label/10-niacinamide-zinc-pca-infused-with-cica-exquisite-serum/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Serums/10_ Vitamin C + 0.5_ Ferulic Acid Infused with Grapefruit Exquisite Serum.pdf",
+      "name": "10 Vitamin C + 0.5 Ferulic Acid Infused with Grapefruit Exquisite Serum",
+      "name_fallback": "10 Vitamin C + 0.5 Ferulic Acid Infused with Grapefruit Exquisite Serum",
+      "product_slug": "10-vitamin-c-05-ferulic-acid-infused-with-grapefruit-exquisite-serum",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Serums",
+      "images": [
+        "uploads/products/private-label/10-vitamin-c-05-ferulic-acid-infused-with-grapefruit-exquisite-serum/01.jpg",
+        "uploads/products/private-label/10-vitamin-c-05-ferulic-acid-infused-with-grapefruit-exquisite-serum/02.jpg",
+        "uploads/products/private-label/10-vitamin-c-05-ferulic-acid-infused-with-grapefruit-exquisite-serum/03.jpg",
+        "uploads/products/private-label/10-vitamin-c-05-ferulic-acid-infused-with-grapefruit-exquisite-serum/04.jpg",
+        "uploads/products/private-label/10-vitamin-c-05-ferulic-acid-infused-with-grapefruit-exquisite-serum/05.jpg",
+        "uploads/products/private-label/10-vitamin-c-05-ferulic-acid-infused-with-grapefruit-exquisite-serum/06.jpg",
+        "uploads/products/private-label/10-vitamin-c-05-ferulic-acid-infused-with-grapefruit-exquisite-serum/07.jpg",
+        "uploads/products/private-label/10-vitamin-c-05-ferulic-acid-infused-with-grapefruit-exquisite-serum/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Serums/23_ Vitamin C + Retinol 2_ + Salicylic Acid 2_.pdf",
+      "name": "RETINOL",
+      "name_fallback": "23 Vitamin C + Retinol 2 + Salicylic Acid 2",
+      "product_slug": "23-vitamin-c-retinol-2-salicylic-acid-2",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Serums",
+      "images": [
+        "uploads/products/private-label/23-vitamin-c-retinol-2-salicylic-acid-2/01.jpg",
+        "uploads/products/private-label/23-vitamin-c-retinol-2-salicylic-acid-2/02.jpg",
+        "uploads/products/private-label/23-vitamin-c-retinol-2-salicylic-acid-2/03.jpg",
+        "uploads/products/private-label/23-vitamin-c-retinol-2-salicylic-acid-2/04.jpg",
+        "uploads/products/private-label/23-vitamin-c-retinol-2-salicylic-acid-2/05.jpg",
+        "uploads/products/private-label/23-vitamin-c-retinol-2-salicylic-acid-2/06.jpg",
+        "uploads/products/private-label/23-vitamin-c-retinol-2-salicylic-acid-2/07.jpg",
+        "uploads/products/private-label/23-vitamin-c-retinol-2-salicylic-acid-2/08.jpg",
+        "uploads/products/private-label/23-vitamin-c-retinol-2-salicylic-acid-2/09.jpg",
+        "uploads/products/private-label/23-vitamin-c-retinol-2-salicylic-acid-2/10.jpg",
+        "uploads/products/private-label/23-vitamin-c-retinol-2-salicylic-acid-2/11.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Serums/25_ AHA + 2_ BHA + 5_ PHA infused with sugarcane Peeling Solution.pdf",
+      "name": "25 AHA + 2 BHA + 5 PHA infused with sugarcane Peeling Solution",
+      "name_fallback": "25 AHA + 2 BHA + 5 PHA infused with sugarcane Peeling Solution",
+      "product_slug": "25-aha-2-bha-5-pha-infused-with-sugarcane-peeling-solution",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Serums",
+      "images": [
+        "uploads/products/private-label/25-aha-2-bha-5-pha-infused-with-sugarcane-peeling-solution/01.jpg",
+        "uploads/products/private-label/25-aha-2-bha-5-pha-infused-with-sugarcane-peeling-solution/02.jpg",
+        "uploads/products/private-label/25-aha-2-bha-5-pha-infused-with-sugarcane-peeling-solution/03.jpg",
+        "uploads/products/private-label/25-aha-2-bha-5-pha-infused-with-sugarcane-peeling-solution/04.jpg",
+        "uploads/products/private-label/25-aha-2-bha-5-pha-infused-with-sugarcane-peeling-solution/05.jpg",
+        "uploads/products/private-label/25-aha-2-bha-5-pha-infused-with-sugarcane-peeling-solution/06.jpg",
+        "uploads/products/private-label/25-aha-2-bha-5-pha-infused-with-sugarcane-peeling-solution/07.jpg",
+        "uploads/products/private-label/25-aha-2-bha-5-pha-infused-with-sugarcane-peeling-solution/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Serums/2_ Alpha Arbutin infused with Pineapple Exquisite Serum.pdf",
+      "name": "2 Alpha Arbutin infused with Pineapple Exquisite Serum",
+      "name_fallback": "2 Alpha Arbutin infused with Pineapple Exquisite Serum",
+      "product_slug": "2-alpha-arbutin-infused-with-pineapple-exquisite-serum",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Serums",
+      "images": [
+        "uploads/products/private-label/2-alpha-arbutin-infused-with-pineapple-exquisite-serum/01.jpg",
+        "uploads/products/private-label/2-alpha-arbutin-infused-with-pineapple-exquisite-serum/02.jpg",
+        "uploads/products/private-label/2-alpha-arbutin-infused-with-pineapple-exquisite-serum/03.jpg",
+        "uploads/products/private-label/2-alpha-arbutin-infused-with-pineapple-exquisite-serum/04.jpg",
+        "uploads/products/private-label/2-alpha-arbutin-infused-with-pineapple-exquisite-serum/05.jpg",
+        "uploads/products/private-label/2-alpha-arbutin-infused-with-pineapple-exquisite-serum/06.jpg",
+        "uploads/products/private-label/2-alpha-arbutin-infused-with-pineapple-exquisite-serum/07.jpg",
+        "uploads/products/private-label/2-alpha-arbutin-infused-with-pineapple-exquisite-serum/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Serums/2_ Hyaluronic Acid + PGA Serum Infused with Watermelon Exquisite Serum.pdf",
+      "name": "2 Hyaluronic Acid + PGA Serum Infused with Watermelon Exquisite Serum",
+      "name_fallback": "2 Hyaluronic Acid + PGA Serum Infused with Watermelon Exquisite Serum",
+      "product_slug": "2-hyaluronic-acid-pga-serum-infused-with-watermelon-exquisite-serum",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Serums",
+      "images": [
+        "uploads/products/private-label/2-hyaluronic-acid-pga-serum-infused-with-watermelon-exquisite-serum/01.jpg",
+        "uploads/products/private-label/2-hyaluronic-acid-pga-serum-infused-with-watermelon-exquisite-serum/02.jpg",
+        "uploads/products/private-label/2-hyaluronic-acid-pga-serum-infused-with-watermelon-exquisite-serum/03.jpg",
+        "uploads/products/private-label/2-hyaluronic-acid-pga-serum-infused-with-watermelon-exquisite-serum/04.jpg",
+        "uploads/products/private-label/2-hyaluronic-acid-pga-serum-infused-with-watermelon-exquisite-serum/05.jpg",
+        "uploads/products/private-label/2-hyaluronic-acid-pga-serum-infused-with-watermelon-exquisite-serum/06.jpg",
+        "uploads/products/private-label/2-hyaluronic-acid-pga-serum-infused-with-watermelon-exquisite-serum/07.jpg",
+        "uploads/products/private-label/2-hyaluronic-acid-pga-serum-infused-with-watermelon-exquisite-serum/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Serums/2_ Kojic Acid + 1_ Alpha Arbutin & Niacinamide infused with Blueberry Exquisite Serum.pdf",
+      "name": "2 Kojic Acid + 1 Alpha Arbutin & Niacinamide infused with Blueberry Exquisite Serum",
+      "name_fallback": "2 Kojic Acid + 1 Alpha Arbutin & Niacinamide infused with Blueberry Exquisite Serum",
+      "product_slug": "2-kojic-acid-1-alpha-arbutin-niacinamide-infused-with-blueberry-exquisite-serum",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Serums",
+      "images": [
+        "uploads/products/private-label/2-kojic-acid-1-alpha-arbutin-niacinamide-infused-with-blueberry-exquisite-serum/01.jpg",
+        "uploads/products/private-label/2-kojic-acid-1-alpha-arbutin-niacinamide-infused-with-blueberry-exquisite-serum/02.jpg",
+        "uploads/products/private-label/2-kojic-acid-1-alpha-arbutin-niacinamide-infused-with-blueberry-exquisite-serum/03.jpg",
+        "uploads/products/private-label/2-kojic-acid-1-alpha-arbutin-niacinamide-infused-with-blueberry-exquisite-serum/04.jpg",
+        "uploads/products/private-label/2-kojic-acid-1-alpha-arbutin-niacinamide-infused-with-blueberry-exquisite-serum/05.jpg",
+        "uploads/products/private-label/2-kojic-acid-1-alpha-arbutin-niacinamide-infused-with-blueberry-exquisite-serum/06.jpg",
+        "uploads/products/private-label/2-kojic-acid-1-alpha-arbutin-niacinamide-infused-with-blueberry-exquisite-serum/07.jpg",
+        "uploads/products/private-label/2-kojic-acid-1-alpha-arbutin-niacinamide-infused-with-blueberry-exquisite-serum/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Serums/2_ Salicylic Acid Serum infused with Probiotic Exquisite Serum.pdf",
+      "name": "2 Salicylic Acid Serum infused with Probiotic Exquisite Serum",
+      "name_fallback": "2 Salicylic Acid Serum infused with Probiotic Exquisite Serum",
+      "product_slug": "2-salicylic-acid-serum-infused-with-probiotic-exquisite-serum",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Serums",
+      "images": [
+        "uploads/products/private-label/2-salicylic-acid-serum-infused-with-probiotic-exquisite-serum/01.jpg",
+        "uploads/products/private-label/2-salicylic-acid-serum-infused-with-probiotic-exquisite-serum/02.jpg",
+        "uploads/products/private-label/2-salicylic-acid-serum-infused-with-probiotic-exquisite-serum/03.jpg",
+        "uploads/products/private-label/2-salicylic-acid-serum-infused-with-probiotic-exquisite-serum/04.jpg",
+        "uploads/products/private-label/2-salicylic-acid-serum-infused-with-probiotic-exquisite-serum/05.jpg",
+        "uploads/products/private-label/2-salicylic-acid-serum-infused-with-probiotic-exquisite-serum/06.jpg",
+        "uploads/products/private-label/2-salicylic-acid-serum-infused-with-probiotic-exquisite-serum/07.jpg",
+        "uploads/products/private-label/2-salicylic-acid-serum-infused-with-probiotic-exquisite-serum/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Serums/Alpha Arbutin 2_ + Hyaluronic Acid 10_.pdf",
+      "name": "HYALURONIC",
+      "name_fallback": "Alpha Arbutin 2 + Hyaluronic Acid 10",
+      "product_slug": "alpha-arbutin-2-hyaluronic-acid-10",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Serums",
+      "images": [
+        "uploads/products/private-label/alpha-arbutin-2-hyaluronic-acid-10/01.jpg",
+        "uploads/products/private-label/alpha-arbutin-2-hyaluronic-acid-10/02.jpg",
+        "uploads/products/private-label/alpha-arbutin-2-hyaluronic-acid-10/03.jpg",
+        "uploads/products/private-label/alpha-arbutin-2-hyaluronic-acid-10/04.jpg",
+        "uploads/products/private-label/alpha-arbutin-2-hyaluronic-acid-10/05.jpg",
+        "uploads/products/private-label/alpha-arbutin-2-hyaluronic-acid-10/06.jpg",
+        "uploads/products/private-label/alpha-arbutin-2-hyaluronic-acid-10/07.jpg",
+        "uploads/products/private-label/alpha-arbutin-2-hyaluronic-acid-10/08.jpg",
+        "uploads/products/private-label/alpha-arbutin-2-hyaluronic-acid-10/09.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Serums/Anti Acne & Pimple Face Serum.pdf",
+      "name": "Anti Acne & Pimple Face Serum",
+      "name_fallback": "Anti Acne & Pimple Face Serum",
+      "product_slug": "anti-acne-pimple-face-serum",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Serums",
+      "images": [
+        "uploads/products/private-label/anti-acne-pimple-face-serum/01.jpg",
+        "uploads/products/private-label/anti-acne-pimple-face-serum/02.jpg",
+        "uploads/products/private-label/anti-acne-pimple-face-serum/03.jpg",
+        "uploads/products/private-label/anti-acne-pimple-face-serum/04.jpg",
+        "uploads/products/private-label/anti-acne-pimple-face-serum/05.jpg",
+        "uploads/products/private-label/anti-acne-pimple-face-serum/06.jpg",
+        "uploads/products/private-label/anti-acne-pimple-face-serum/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Serums/Anti Ageing & Age reversal Face Serum.pdf",
+      "name": "Anti Ageing & Age reversal Face Serum",
+      "name_fallback": "Anti Ageing & Age reversal Face Serum",
+      "product_slug": "anti-ageing-age-reversal-face-serum",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Serums",
+      "images": [
+        "uploads/products/private-label/anti-ageing-age-reversal-face-serum/01.jpg",
+        "uploads/products/private-label/anti-ageing-age-reversal-face-serum/02.jpg",
+        "uploads/products/private-label/anti-ageing-age-reversal-face-serum/03.jpg",
+        "uploads/products/private-label/anti-ageing-age-reversal-face-serum/04.jpg",
+        "uploads/products/private-label/anti-ageing-age-reversal-face-serum/05.jpg",
+        "uploads/products/private-label/anti-ageing-age-reversal-face-serum/06.jpg",
+        "uploads/products/private-label/anti-ageing-age-reversal-face-serum/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Serums/Anti Ageing Almond Face Serum.pdf",
+      "name": "Anti Ageing Almond Face Serum",
+      "name_fallback": "Anti Ageing Almond Face Serum",
+      "product_slug": "anti-ageing-almond-face-serum",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Serums",
+      "images": [
+        "uploads/products/private-label/anti-ageing-almond-face-serum/01.jpg",
+        "uploads/products/private-label/anti-ageing-almond-face-serum/02.jpg",
+        "uploads/products/private-label/anti-ageing-almond-face-serum/03.jpg",
+        "uploads/products/private-label/anti-ageing-almond-face-serum/04.jpg",
+        "uploads/products/private-label/anti-ageing-almond-face-serum/05.jpg",
+        "uploads/products/private-label/anti-ageing-almond-face-serum/06.jpg",
+        "uploads/products/private-label/anti-ageing-almond-face-serum/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Serums/Anti Blemish Papaya Face Serum.pdf",
+      "name": "Anti Blemish Papaya Face Serum",
+      "name_fallback": "Anti Blemish Papaya Face Serum",
+      "product_slug": "anti-blemish-papaya-face-serum",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Serums",
+      "images": [
+        "uploads/products/private-label/anti-blemish-papaya-face-serum/01.jpg",
+        "uploads/products/private-label/anti-blemish-papaya-face-serum/02.jpg",
+        "uploads/products/private-label/anti-blemish-papaya-face-serum/03.jpg",
+        "uploads/products/private-label/anti-blemish-papaya-face-serum/04.jpg",
+        "uploads/products/private-label/anti-blemish-papaya-face-serum/05.jpg",
+        "uploads/products/private-label/anti-blemish-papaya-face-serum/06.jpg",
+        "uploads/products/private-label/anti-blemish-papaya-face-serum/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Serums/Ethyl Ascorbic + Ferulic Elixir.pdf",
+      "name": "Ethyl Ascorbic + Ferulic Elixir",
+      "name_fallback": "Ethyl Ascorbic + Ferulic Elixir",
+      "product_slug": "ethyl-ascorbic-ferulic-elixir",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Serums",
+      "images": [
+        "uploads/products/private-label/ethyl-ascorbic-ferulic-elixir/01.jpg",
+        "uploads/products/private-label/ethyl-ascorbic-ferulic-elixir/02.jpg",
+        "uploads/products/private-label/ethyl-ascorbic-ferulic-elixir/03.jpg",
+        "uploads/products/private-label/ethyl-ascorbic-ferulic-elixir/04.jpg",
+        "uploads/products/private-label/ethyl-ascorbic-ferulic-elixir/05.jpg",
+        "uploads/products/private-label/ethyl-ascorbic-ferulic-elixir/06.jpg",
+        "uploads/products/private-label/ethyl-ascorbic-ferulic-elixir/07.jpg",
+        "uploads/products/private-label/ethyl-ascorbic-ferulic-elixir/08.jpg",
+        "uploads/products/private-label/ethyl-ascorbic-ferulic-elixir/09.jpg",
+        "uploads/products/private-label/ethyl-ascorbic-ferulic-elixir/10.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Serums/Lemon Peel & Liquorice Face Serum.pdf",
+      "name": "Lemon Peel & Liquorice Face Serum",
+      "name_fallback": "Lemon Peel & Liquorice Face Serum",
+      "product_slug": "lemon-peel-liquorice-face-serum",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Serums",
+      "images": [
+        "uploads/products/private-label/lemon-peel-liquorice-face-serum/01.jpg",
+        "uploads/products/private-label/lemon-peel-liquorice-face-serum/02.jpg",
+        "uploads/products/private-label/lemon-peel-liquorice-face-serum/03.jpg",
+        "uploads/products/private-label/lemon-peel-liquorice-face-serum/04.jpg",
+        "uploads/products/private-label/lemon-peel-liquorice-face-serum/05.jpg",
+        "uploads/products/private-label/lemon-peel-liquorice-face-serum/06.jpg",
+        "uploads/products/private-label/lemon-peel-liquorice-face-serum/07.jpg",
+        "uploads/products/private-label/lemon-peel-liquorice-face-serum/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Serums/Retinol + Hyaluronic .pdf",
+      "name": "RETINOL +",
+      "name_fallback": "Retinol + Hyaluronic",
+      "product_slug": "retinol-hyaluronic",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Serums",
+      "images": [
+        "uploads/products/private-label/retinol-hyaluronic/01.jpg",
+        "uploads/products/private-label/retinol-hyaluronic/02.jpg",
+        "uploads/products/private-label/retinol-hyaluronic/03.jpg",
+        "uploads/products/private-label/retinol-hyaluronic/04.jpg",
+        "uploads/products/private-label/retinol-hyaluronic/05.jpg",
+        "uploads/products/private-label/retinol-hyaluronic/06.jpg",
+        "uploads/products/private-label/retinol-hyaluronic/07.jpg",
+        "uploads/products/private-label/retinol-hyaluronic/08.jpg",
+        "uploads/products/private-label/retinol-hyaluronic/09.jpg",
+        "uploads/products/private-label/retinol-hyaluronic/10.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Serums/Rice Water Brightening Face Serum.pdf",
+      "name": "Rice Water Brightening Face Serum",
+      "name_fallback": "Rice Water Brightening Face Serum",
+      "product_slug": "rice-water-brightening-face-serum",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Serums",
+      "images": [
+        "uploads/products/private-label/rice-water-brightening-face-serum/01.jpg",
+        "uploads/products/private-label/rice-water-brightening-face-serum/02.jpg",
+        "uploads/products/private-label/rice-water-brightening-face-serum/03.jpg",
+        "uploads/products/private-label/rice-water-brightening-face-serum/04.jpg",
+        "uploads/products/private-label/rice-water-brightening-face-serum/05.jpg",
+        "uploads/products/private-label/rice-water-brightening-face-serum/06.jpg",
+        "uploads/products/private-label/rice-water-brightening-face-serum/07.jpg",
+        "uploads/products/private-label/rice-water-brightening-face-serum/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Serums/Squalene + Hyaluronic .pdf",
+      "name": "Squalene +",
+      "name_fallback": "Squalene + Hyaluronic",
+      "product_slug": "squalene-hyaluronic",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Serums",
+      "images": [
+        "uploads/products/private-label/squalene-hyaluronic/01.jpg",
+        "uploads/products/private-label/squalene-hyaluronic/02.jpg",
+        "uploads/products/private-label/squalene-hyaluronic/03.jpg",
+        "uploads/products/private-label/squalene-hyaluronic/04.jpg",
+        "uploads/products/private-label/squalene-hyaluronic/05.jpg",
+        "uploads/products/private-label/squalene-hyaluronic/06.jpg",
+        "uploads/products/private-label/squalene-hyaluronic/07.jpg",
+        "uploads/products/private-label/squalene-hyaluronic/08.jpg",
+        "uploads/products/private-label/squalene-hyaluronic/09.jpg",
+        "uploads/products/private-label/squalene-hyaluronic/10.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Serums/Turmeric Serum Private Label.pdf",
+      "name": "Turmeric Serum Private Label",
+      "name_fallback": "Turmeric Serum Private Label",
+      "product_slug": "turmeric-serum-private-label",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Serums",
+      "images": [
+        "uploads/products/private-label/turmeric-serum-private-label/01.jpg",
+        "uploads/products/private-label/turmeric-serum-private-label/02.jpg",
+        "uploads/products/private-label/turmeric-serum-private-label/03.jpg",
+        "uploads/products/private-label/turmeric-serum-private-label/04.jpg",
+        "uploads/products/private-label/turmeric-serum-private-label/05.jpg",
+        "uploads/products/private-label/turmeric-serum-private-label/06.jpg",
+        "uploads/products/private-label/turmeric-serum-private-label/07.jpg",
+        "uploads/products/private-label/turmeric-serum-private-label/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Serums/Vitamin C Face Oil.pdf",
+      "name": "VITAMIN C",
+      "name_fallback": "Vitamin C Face Oil",
+      "product_slug": "vitamin-c-face-oil",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Serums",
+      "images": [
+        "uploads/products/private-label/vitamin-c-face-oil/01.jpg",
+        "uploads/products/private-label/vitamin-c-face-oil/02.jpg",
+        "uploads/products/private-label/vitamin-c-face-oil/03.jpg",
+        "uploads/products/private-label/vitamin-c-face-oil/04.jpg",
+        "uploads/products/private-label/vitamin-c-face-oil/05.jpg",
+        "uploads/products/private-label/vitamin-c-face-oil/06.jpg",
+        "uploads/products/private-label/vitamin-c-face-oil/07.jpg",
+        "uploads/products/private-label/vitamin-c-face-oil/08.jpg",
+        "uploads/products/private-label/vitamin-c-face-oil/09.jpg",
+        "uploads/products/private-label/vitamin-c-face-oil/10.jpg",
+        "uploads/products/private-label/vitamin-c-face-oil/11.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Serums/Vitamin C Skin illuminating Face Serum.pdf",
+      "name": "Vitamin C Skin illuminating Face Serum",
+      "name_fallback": "Vitamin C Skin illuminating Face Serum",
+      "product_slug": "vitamin-c-skin-illuminating-face-serum",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Serums",
+      "images": [
+        "uploads/products/private-label/vitamin-c-skin-illuminating-face-serum/01.jpg",
+        "uploads/products/private-label/vitamin-c-skin-illuminating-face-serum/02.jpg",
+        "uploads/products/private-label/vitamin-c-skin-illuminating-face-serum/03.jpg",
+        "uploads/products/private-label/vitamin-c-skin-illuminating-face-serum/04.jpg",
+        "uploads/products/private-label/vitamin-c-skin-illuminating-face-serum/05.jpg",
+        "uploads/products/private-label/vitamin-c-skin-illuminating-face-serum/06.jpg",
+        "uploads/products/private-label/vitamin-c-skin-illuminating-face-serum/07.jpg",
+        "uploads/products/private-label/vitamin-c-skin-illuminating-face-serum/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Serums/Vitamin C+Niacinamide.pdf",
+      "name": "VITAMIN C +",
+      "name_fallback": "Vitamin C+Niacinamide",
+      "product_slug": "vitamin-cniacinamide",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Serums",
+      "images": [
+        "uploads/products/private-label/vitamin-cniacinamide/01.jpg",
+        "uploads/products/private-label/vitamin-cniacinamide/02.jpg",
+        "uploads/products/private-label/vitamin-cniacinamide/03.jpg",
+        "uploads/products/private-label/vitamin-cniacinamide/04.jpg",
+        "uploads/products/private-label/vitamin-cniacinamide/05.jpg",
+        "uploads/products/private-label/vitamin-cniacinamide/06.jpg",
+        "uploads/products/private-label/vitamin-cniacinamide/07.jpg",
+        "uploads/products/private-label/vitamin-cniacinamide/08.jpg",
+        "uploads/products/private-label/vitamin-cniacinamide/09.jpg",
+        "uploads/products/private-label/vitamin-cniacinamide/10.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Serums/Whitening Boost Serum.pdf",
+      "name": "Whitening Boost Serum",
+      "name_fallback": "Whitening Boost Serum",
+      "product_slug": "whitening-boost-serum",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Serums",
+      "images": [
+        "uploads/products/private-label/whitening-boost-serum/01.jpg",
+        "uploads/products/private-label/whitening-boost-serum/02.jpg",
+        "uploads/products/private-label/whitening-boost-serum/03.jpg",
+        "uploads/products/private-label/whitening-boost-serum/04.jpg",
+        "uploads/products/private-label/whitening-boost-serum/05.jpg",
+        "uploads/products/private-label/whitening-boost-serum/06.jpg",
+        "uploads/products/private-label/whitening-boost-serum/07.jpg",
+        "uploads/products/private-label/whitening-boost-serum/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Serums/Zinc + Hyaluronic serum.pdf",
+      "name": "HYALURONIC",
+      "name_fallback": "Zinc + Hyaluronic serum",
+      "product_slug": "zinc-hyaluronic-serum",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Serums",
+      "images": [
+        "uploads/products/private-label/zinc-hyaluronic-serum/01.jpg",
+        "uploads/products/private-label/zinc-hyaluronic-serum/02.jpg",
+        "uploads/products/private-label/zinc-hyaluronic-serum/03.jpg",
+        "uploads/products/private-label/zinc-hyaluronic-serum/04.jpg",
+        "uploads/products/private-label/zinc-hyaluronic-serum/05.jpg",
+        "uploads/products/private-label/zinc-hyaluronic-serum/06.jpg",
+        "uploads/products/private-label/zinc-hyaluronic-serum/07.jpg",
+        "uploads/products/private-label/zinc-hyaluronic-serum/08.jpg",
+        "uploads/products/private-label/zinc-hyaluronic-serum/09.jpg",
+        "uploads/products/private-label/zinc-hyaluronic-serum/10.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Wash/1_ Hyaluronic Acid + 0.5_ Pentavitin + PGA Facewash infused with Watermelon.pdf",
+      "name": "1 Hyaluronic Acid + 0.5 Pentavitin + PGA Facewash infused with Watermelon",
+      "name_fallback": "1 Hyaluronic Acid + 0.5 Pentavitin + PGA Facewash infused with Watermelon",
+      "product_slug": "1-hyaluronic-acid-05-pentavitin-pga-facewash-infused-with-watermelon",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Wash",
+      "images": [
+        "uploads/products/private-label/1-hyaluronic-acid-05-pentavitin-pga-facewash-infused-with-watermelon/01.jpg",
+        "uploads/products/private-label/1-hyaluronic-acid-05-pentavitin-pga-facewash-infused-with-watermelon/02.jpg",
+        "uploads/products/private-label/1-hyaluronic-acid-05-pentavitin-pga-facewash-infused-with-watermelon/03.jpg",
+        "uploads/products/private-label/1-hyaluronic-acid-05-pentavitin-pga-facewash-infused-with-watermelon/04.jpg",
+        "uploads/products/private-label/1-hyaluronic-acid-05-pentavitin-pga-facewash-infused-with-watermelon/05.jpg",
+        "uploads/products/private-label/1-hyaluronic-acid-05-pentavitin-pga-facewash-infused-with-watermelon/06.jpg",
+        "uploads/products/private-label/1-hyaluronic-acid-05-pentavitin-pga-facewash-infused-with-watermelon/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Wash/1_ KOJIC ACID + 2_ NIACINAMIDE + ALPHA ARBUTIN FACEWASH infused with Multi-Berry.pdf",
+      "name": "1 KOJIC ACID + 2 NIACINAMIDE + ALPHA ARBUTIN FACEWASH infused with Multi-Berry",
+      "name_fallback": "1 KOJIC ACID + 2 NIACINAMIDE + ALPHA ARBUTIN FACEWASH infused with Multi-Berry",
+      "product_slug": "1-kojic-acid-2-niacinamide-alpha-arbutin-facewash-infused-with-multi-berry",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Wash",
+      "images": [
+        "uploads/products/private-label/1-kojic-acid-2-niacinamide-alpha-arbutin-facewash-infused-with-multi-berry/01.jpg",
+        "uploads/products/private-label/1-kojic-acid-2-niacinamide-alpha-arbutin-facewash-infused-with-multi-berry/02.jpg",
+        "uploads/products/private-label/1-kojic-acid-2-niacinamide-alpha-arbutin-facewash-infused-with-multi-berry/03.jpg",
+        "uploads/products/private-label/1-kojic-acid-2-niacinamide-alpha-arbutin-facewash-infused-with-multi-berry/04.jpg",
+        "uploads/products/private-label/1-kojic-acid-2-niacinamide-alpha-arbutin-facewash-infused-with-multi-berry/05.jpg",
+        "uploads/products/private-label/1-kojic-acid-2-niacinamide-alpha-arbutin-facewash-infused-with-multi-berry/06.jpg",
+        "uploads/products/private-label/1-kojic-acid-2-niacinamide-alpha-arbutin-facewash-infused-with-multi-berry/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Wash/Anti Acne & Pimple Face Wash Enriched with Neem Leaf Ext. & Cinnamon Oil.pdf",
+      "name": "Anti Acne & Pimple Face Wash Enriched with Neem Leaf Ext. & Cinnamon Oil",
+      "name_fallback": "Anti Acne & Pimple Face Wash Enriched with Neem Leaf Ext. & Cinnamon Oil",
+      "product_slug": "anti-acne-pimple-face-wash-enriched-with-neem-leaf-ext-cinnamon-oil",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Wash",
+      "images": [
+        "uploads/products/private-label/anti-acne-pimple-face-wash-enriched-with-neem-leaf-ext-cinnamon-oil/01.jpg",
+        "uploads/products/private-label/anti-acne-pimple-face-wash-enriched-with-neem-leaf-ext-cinnamon-oil/02.jpg",
+        "uploads/products/private-label/anti-acne-pimple-face-wash-enriched-with-neem-leaf-ext-cinnamon-oil/03.jpg",
+        "uploads/products/private-label/anti-acne-pimple-face-wash-enriched-with-neem-leaf-ext-cinnamon-oil/04.jpg",
+        "uploads/products/private-label/anti-acne-pimple-face-wash-enriched-with-neem-leaf-ext-cinnamon-oil/05.jpg",
+        "uploads/products/private-label/anti-acne-pimple-face-wash-enriched-with-neem-leaf-ext-cinnamon-oil/06.jpg",
+        "uploads/products/private-label/anti-acne-pimple-face-wash-enriched-with-neem-leaf-ext-cinnamon-oil/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Wash/Cafeine Pro Coffee Face Wash Enriched with Coffee Seed Oil & Mulberry Extract .pdf",
+      "name": "Cafeine Pro Coffee Face Wash Enriched with Coffee Seed Oil & Mulberry Extract",
+      "name_fallback": "Cafeine Pro Coffee Face Wash Enriched with Coffee Seed Oil & Mulberry Extract",
+      "product_slug": "cafeine-pro-coffee-face-wash-enriched-with-coffee-seed-oil-mulberry-extract",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Wash",
+      "images": [
+        "uploads/products/private-label/cafeine-pro-coffee-face-wash-enriched-with-coffee-seed-oil-mulberry-extract/01.jpg",
+        "uploads/products/private-label/cafeine-pro-coffee-face-wash-enriched-with-coffee-seed-oil-mulberry-extract/02.jpg",
+        "uploads/products/private-label/cafeine-pro-coffee-face-wash-enriched-with-coffee-seed-oil-mulberry-extract/03.jpg",
+        "uploads/products/private-label/cafeine-pro-coffee-face-wash-enriched-with-coffee-seed-oil-mulberry-extract/04.jpg",
+        "uploads/products/private-label/cafeine-pro-coffee-face-wash-enriched-with-coffee-seed-oil-mulberry-extract/05.jpg",
+        "uploads/products/private-label/cafeine-pro-coffee-face-wash-enriched-with-coffee-seed-oil-mulberry-extract/06.jpg",
+        "uploads/products/private-label/cafeine-pro-coffee-face-wash-enriched-with-coffee-seed-oil-mulberry-extract/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Wash/Glowing & D Tan Face Wash Enriched with Turmeric & Saffron Extract.pdf",
+      "name": "Glowing & D Tan Face Wash Enriched with Turmeric & Saffron Extract",
+      "name_fallback": "Glowing & D Tan Face Wash Enriched with Turmeric & Saffron Extract",
+      "product_slug": "glowing-d-tan-face-wash-enriched-with-turmeric-saffron-extract",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Wash",
+      "images": [
+        "uploads/products/private-label/glowing-d-tan-face-wash-enriched-with-turmeric-saffron-extract/01.jpg",
+        "uploads/products/private-label/glowing-d-tan-face-wash-enriched-with-turmeric-saffron-extract/02.jpg",
+        "uploads/products/private-label/glowing-d-tan-face-wash-enriched-with-turmeric-saffron-extract/03.jpg",
+        "uploads/products/private-label/glowing-d-tan-face-wash-enriched-with-turmeric-saffron-extract/04.jpg",
+        "uploads/products/private-label/glowing-d-tan-face-wash-enriched-with-turmeric-saffron-extract/05.jpg",
+        "uploads/products/private-label/glowing-d-tan-face-wash-enriched-with-turmeric-saffron-extract/06.jpg",
+        "uploads/products/private-label/glowing-d-tan-face-wash-enriched-with-turmeric-saffron-extract/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Wash/Mulberry & Licorice Lightening Face Wash.pdf",
+      "name": "Mulberry & Licorice Lightening Face Wash",
+      "name_fallback": "Mulberry & Licorice Lightening Face Wash",
+      "product_slug": "mulberry-licorice-lightening-face-wash",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Wash",
+      "images": [
+        "uploads/products/private-label/mulberry-licorice-lightening-face-wash/01.jpg",
+        "uploads/products/private-label/mulberry-licorice-lightening-face-wash/02.jpg",
+        "uploads/products/private-label/mulberry-licorice-lightening-face-wash/03.jpg",
+        "uploads/products/private-label/mulberry-licorice-lightening-face-wash/04.jpg",
+        "uploads/products/private-label/mulberry-licorice-lightening-face-wash/05.jpg",
+        "uploads/products/private-label/mulberry-licorice-lightening-face-wash/06.jpg",
+        "uploads/products/private-label/mulberry-licorice-lightening-face-wash/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Wash/Rice Water Brightening Foaming Cleanser With Niacinamide & Aloevera Extract .pdf",
+      "name": "Rice Water Brightening Foaming Cleanser With Niacinamide & Aloevera Extract",
+      "name_fallback": "Rice Water Brightening Foaming Cleanser With Niacinamide & Aloevera Extract",
+      "product_slug": "rice-water-brightening-foaming-cleanser-with-niacinamide-aloevera-extract",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Wash",
+      "images": [
+        "uploads/products/private-label/rice-water-brightening-foaming-cleanser-with-niacinamide-aloevera-extract/01.jpg",
+        "uploads/products/private-label/rice-water-brightening-foaming-cleanser-with-niacinamide-aloevera-extract/02.jpg",
+        "uploads/products/private-label/rice-water-brightening-foaming-cleanser-with-niacinamide-aloevera-extract/03.jpg",
+        "uploads/products/private-label/rice-water-brightening-foaming-cleanser-with-niacinamide-aloevera-extract/04.jpg",
+        "uploads/products/private-label/rice-water-brightening-foaming-cleanser-with-niacinamide-aloevera-extract/05.jpg",
+        "uploads/products/private-label/rice-water-brightening-foaming-cleanser-with-niacinamide-aloevera-extract/06.jpg",
+        "uploads/products/private-label/rice-water-brightening-foaming-cleanser-with-niacinamide-aloevera-extract/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Wash/Salicylic Acid + 2_ PHA + 2_ AHA Complex Facewash Infused with Probiotic.pdf",
+      "name": "Salicylic Acid + 2 PHA + 2 AHA Complex Facewash Infused with Probiotic",
+      "name_fallback": "Salicylic Acid + 2 PHA + 2 AHA Complex Facewash Infused with Probiotic",
+      "product_slug": "salicylic-acid-2-pha-2-aha-complex-facewash-infused-with-probiotic",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Wash",
+      "images": [
+        "uploads/products/private-label/salicylic-acid-2-pha-2-aha-complex-facewash-infused-with-probiotic/01.jpg",
+        "uploads/products/private-label/salicylic-acid-2-pha-2-aha-complex-facewash-infused-with-probiotic/02.jpg",
+        "uploads/products/private-label/salicylic-acid-2-pha-2-aha-complex-facewash-infused-with-probiotic/03.jpg",
+        "uploads/products/private-label/salicylic-acid-2-pha-2-aha-complex-facewash-infused-with-probiotic/04.jpg",
+        "uploads/products/private-label/salicylic-acid-2-pha-2-aha-complex-facewash-infused-with-probiotic/05.jpg",
+        "uploads/products/private-label/salicylic-acid-2-pha-2-aha-complex-facewash-infused-with-probiotic/06.jpg",
+        "uploads/products/private-label/salicylic-acid-2-pha-2-aha-complex-facewash-infused-with-probiotic/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Wash/VITAMIN C BRIGHTENING & ILLUMINATING FACE WASH.pdf",
+      "name": "VITAMIN C BRIGHTENING & ILLUMINATING FACE WASH",
+      "name_fallback": "VITAMIN C BRIGHTENING & ILLUMINATING FACE WASH",
+      "product_slug": "vitamin-c-brightening-illuminating-face-wash",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Wash",
+      "images": [
+        "uploads/products/private-label/vitamin-c-brightening-illuminating-face-wash/01.jpg",
+        "uploads/products/private-label/vitamin-c-brightening-illuminating-face-wash/02.jpg",
+        "uploads/products/private-label/vitamin-c-brightening-illuminating-face-wash/03.jpg",
+        "uploads/products/private-label/vitamin-c-brightening-illuminating-face-wash/04.jpg",
+        "uploads/products/private-label/vitamin-c-brightening-illuminating-face-wash/05.jpg",
+        "uploads/products/private-label/vitamin-c-brightening-illuminating-face-wash/06.jpg",
+        "uploads/products/private-label/vitamin-c-brightening-illuminating-face-wash/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Face Wash/Whitening Boost Face Wash.pdf",
+      "name": "Whitening Boost Face Wash",
+      "name_fallback": "Whitening Boost Face Wash",
+      "product_slug": "whitening-boost-face-wash",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Face Wash",
+      "images": [
+        "uploads/products/private-label/whitening-boost-face-wash/01.jpg",
+        "uploads/products/private-label/whitening-boost-face-wash/02.jpg",
+        "uploads/products/private-label/whitening-boost-face-wash/03.jpg",
+        "uploads/products/private-label/whitening-boost-face-wash/04.jpg",
+        "uploads/products/private-label/whitening-boost-face-wash/05.jpg",
+        "uploads/products/private-label/whitening-boost-face-wash/06.jpg",
+        "uploads/products/private-label/whitening-boost-face-wash/07.jpg",
+        "uploads/products/private-label/whitening-boost-face-wash/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Facials Kits/DIAMOND ANTI AGEING THERAPY – FACIAL KIT.pdf",
+      "name": "DIAMOND ANTI AGEING THERAPY – FACIAL KIT",
+      "name_fallback": "DIAMOND ANTI AGEING THERAPY – FACIAL KIT",
+      "product_slug": "diamond-anti-ageing-therapy-facial-kit",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Facials Kits",
+      "images": [
+        "uploads/products/private-label/diamond-anti-ageing-therapy-facial-kit/01.jpg",
+        "uploads/products/private-label/diamond-anti-ageing-therapy-facial-kit/02.jpg",
+        "uploads/products/private-label/diamond-anti-ageing-therapy-facial-kit/03.jpg",
+        "uploads/products/private-label/diamond-anti-ageing-therapy-facial-kit/04.jpg",
+        "uploads/products/private-label/diamond-anti-ageing-therapy-facial-kit/05.jpg",
+        "uploads/products/private-label/diamond-anti-ageing-therapy-facial-kit/06.jpg",
+        "uploads/products/private-label/diamond-anti-ageing-therapy-facial-kit/07.jpg",
+        "uploads/products/private-label/diamond-anti-ageing-therapy-facial-kit/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Facials Kits/Facial Kits/DIAMOND ANTI AGEING THERAPY – FACIAL KIT.pdf",
+      "name": "DIAMOND ANTI AGEING THERAPY – FACIAL KIT",
+      "name_fallback": "DIAMOND ANTI AGEING THERAPY – FACIAL KIT",
+      "product_slug": "diamond-anti-ageing-therapy-facial-kit",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Facials Kits",
+      "images": [
+        "uploads/products/private-label/diamond-anti-ageing-therapy-facial-kit/01.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Facials Kits/Facial Kits/FRUITMIX SKIN WHITENING FACIAL KIT.pdf",
+      "name": "SKIN LIGHTNING, REJUVENATING, HYDRATING, GLOW",
+      "name_fallback": "FRUITMIX SKIN WHITENING FACIAL KIT",
+      "product_slug": "fruitmix-skin-whitening-facial-kit",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Facials Kits",
+      "images": [
+        "uploads/products/private-label/fruitmix-skin-whitening-facial-kit/01.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Facials Kits/Facial Kits/GOLD SKIN GLOW THERAPY – FACIAL KIT.pdf",
+      "name": "GOLD SKIN GLOW THERAPY – FACIAL KIT",
+      "name_fallback": "GOLD SKIN GLOW THERAPY – FACIAL KIT",
+      "product_slug": "gold-skin-glow-therapy-facial-kit",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Facials Kits",
+      "images": [
+        "uploads/products/private-label/gold-skin-glow-therapy-facial-kit/01.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Facials Kits/Facial Kits/PEARL SKIN WHITENING THERAPY – FACIAL KIT.pdf",
+      "name": "PEARL SKIN WHITENING THERAPY – FACIAL KIT",
+      "name_fallback": "PEARL SKIN WHITENING THERAPY – FACIAL KIT",
+      "product_slug": "pearl-skin-whitening-therapy-facial-kit",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Facials Kits",
+      "images": [
+        "uploads/products/private-label/pearl-skin-whitening-therapy-facial-kit/01.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Facials Kits/Facial Kits/PLATINUM ANTI BLEMISH THERAPY – FACIAL KIT.pdf",
+      "name": "PLATINUM ANTI BLEMISH THERAPY – FACIAL KIT",
+      "name_fallback": "PLATINUM ANTI BLEMISH THERAPY – FACIAL KIT",
+      "product_slug": "platinum-anti-blemish-therapy-facial-kit",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Facials Kits",
+      "images": [
+        "uploads/products/private-label/platinum-anti-blemish-therapy-facial-kit/01.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Facials Kits/FRUITMIX SKIN WHITENING FACIAL KIT.pdf",
+      "name": "FRUITMIX SKIN WHITENING FACIAL KIT",
+      "name_fallback": "FRUITMIX SKIN WHITENING FACIAL KIT",
+      "product_slug": "fruitmix-skin-whitening-facial-kit",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Facials Kits",
+      "images": [
+        "uploads/products/private-label/fruitmix-skin-whitening-facial-kit/01.jpg",
+        "uploads/products/private-label/fruitmix-skin-whitening-facial-kit/02.jpg",
+        "uploads/products/private-label/fruitmix-skin-whitening-facial-kit/03.jpg",
+        "uploads/products/private-label/fruitmix-skin-whitening-facial-kit/04.jpg",
+        "uploads/products/private-label/fruitmix-skin-whitening-facial-kit/05.jpg",
+        "uploads/products/private-label/fruitmix-skin-whitening-facial-kit/06.jpg",
+        "uploads/products/private-label/fruitmix-skin-whitening-facial-kit/07.jpg",
+        "uploads/products/private-label/fruitmix-skin-whitening-facial-kit/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Facials Kits/GOLD SKIN GLOW THERAPY – FACIAL KIT.pdf",
+      "name": "GOLD SKIN GLOW THERAPY – FACIAL KIT",
+      "name_fallback": "GOLD SKIN GLOW THERAPY – FACIAL KIT",
+      "product_slug": "gold-skin-glow-therapy-facial-kit",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Facials Kits",
+      "images": [
+        "uploads/products/private-label/gold-skin-glow-therapy-facial-kit/01.jpg",
+        "uploads/products/private-label/gold-skin-glow-therapy-facial-kit/02.jpg",
+        "uploads/products/private-label/gold-skin-glow-therapy-facial-kit/03.jpg",
+        "uploads/products/private-label/gold-skin-glow-therapy-facial-kit/04.jpg",
+        "uploads/products/private-label/gold-skin-glow-therapy-facial-kit/05.jpg",
+        "uploads/products/private-label/gold-skin-glow-therapy-facial-kit/06.jpg",
+        "uploads/products/private-label/gold-skin-glow-therapy-facial-kit/07.jpg",
+        "uploads/products/private-label/gold-skin-glow-therapy-facial-kit/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Facials Kits/PAPAYA BRIGHTENING FACIAL KIT.pdf",
+      "name": "PAPAYA BRIGHTENING FACIAL KIT",
+      "name_fallback": "PAPAYA BRIGHTENING FACIAL KIT",
+      "product_slug": "papaya-brightening-facial-kit",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Facials Kits",
+      "images": [
+        "uploads/products/private-label/papaya-brightening-facial-kit/01.jpg",
+        "uploads/products/private-label/papaya-brightening-facial-kit/02.jpg",
+        "uploads/products/private-label/papaya-brightening-facial-kit/03.jpg",
+        "uploads/products/private-label/papaya-brightening-facial-kit/04.jpg",
+        "uploads/products/private-label/papaya-brightening-facial-kit/05.jpg",
+        "uploads/products/private-label/papaya-brightening-facial-kit/06.jpg",
+        "uploads/products/private-label/papaya-brightening-facial-kit/07.jpg",
+        "uploads/products/private-label/papaya-brightening-facial-kit/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Facials Kits/PEARL SKIN WHITENING THERAPY – FACIAL KIT.pdf",
+      "name": "PEARL SKIN WHITENING THERAPY – FACIAL KIT",
+      "name_fallback": "PEARL SKIN WHITENING THERAPY – FACIAL KIT",
+      "product_slug": "pearl-skin-whitening-therapy-facial-kit",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Facials Kits",
+      "images": [
+        "uploads/products/private-label/pearl-skin-whitening-therapy-facial-kit/01.jpg",
+        "uploads/products/private-label/pearl-skin-whitening-therapy-facial-kit/02.jpg",
+        "uploads/products/private-label/pearl-skin-whitening-therapy-facial-kit/03.jpg",
+        "uploads/products/private-label/pearl-skin-whitening-therapy-facial-kit/04.jpg",
+        "uploads/products/private-label/pearl-skin-whitening-therapy-facial-kit/05.jpg",
+        "uploads/products/private-label/pearl-skin-whitening-therapy-facial-kit/06.jpg",
+        "uploads/products/private-label/pearl-skin-whitening-therapy-facial-kit/07.jpg",
+        "uploads/products/private-label/pearl-skin-whitening-therapy-facial-kit/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Facials Kits/PLATINUM ANTI BLEMISH THERAPY – FACIAL KIT.pdf",
+      "name": "PLATINUM ANTI BLEMISH THERAPY – FACIAL KIT",
+      "name_fallback": "PLATINUM ANTI BLEMISH THERAPY – FACIAL KIT",
+      "product_slug": "platinum-anti-blemish-therapy-facial-kit",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Facials Kits",
+      "images": [
+        "uploads/products/private-label/platinum-anti-blemish-therapy-facial-kit/01.jpg",
+        "uploads/products/private-label/platinum-anti-blemish-therapy-facial-kit/02.jpg",
+        "uploads/products/private-label/platinum-anti-blemish-therapy-facial-kit/03.jpg",
+        "uploads/products/private-label/platinum-anti-blemish-therapy-facial-kit/04.jpg",
+        "uploads/products/private-label/platinum-anti-blemish-therapy-facial-kit/05.jpg",
+        "uploads/products/private-label/platinum-anti-blemish-therapy-facial-kit/06.jpg",
+        "uploads/products/private-label/platinum-anti-blemish-therapy-facial-kit/07.jpg",
+        "uploads/products/private-label/platinum-anti-blemish-therapy-facial-kit/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/SPF_s/SPF 40 PA+++ Enriched with Cucumber & Licorice Extract.pdf",
+      "name": "SPF 40 PA+++ Enriched with Cucumber & Licorice Extract",
+      "name_fallback": "SPF 40 PA+++ Enriched with Cucumber & Licorice Extract",
+      "product_slug": "spf-40-pa-enriched-with-cucumber-licorice-extract",
+      "top_category": "Skin Care Collections",
+      "sub_category": "SPF s",
+      "images": [
+        "uploads/products/private-label/spf-40-pa-enriched-with-cucumber-licorice-extract/01.jpg",
+        "uploads/products/private-label/spf-40-pa-enriched-with-cucumber-licorice-extract/02.jpg",
+        "uploads/products/private-label/spf-40-pa-enriched-with-cucumber-licorice-extract/03.jpg",
+        "uploads/products/private-label/spf-40-pa-enriched-with-cucumber-licorice-extract/04.jpg",
+        "uploads/products/private-label/spf-40-pa-enriched-with-cucumber-licorice-extract/05.jpg",
+        "uploads/products/private-label/spf-40-pa-enriched-with-cucumber-licorice-extract/06.jpg",
+        "uploads/products/private-label/spf-40-pa-enriched-with-cucumber-licorice-extract/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/SPF_s/SPF 45 PA+++ Enriched with Chamomile & Calendula Extract.pdf",
+      "name": "SPF 45 PA+++ Enriched with Chamomile & Calendula Extract",
+      "name_fallback": "SPF 45 PA+++ Enriched with Chamomile & Calendula Extract",
+      "product_slug": "spf-45-pa-enriched-with-chamomile-calendula-extract",
+      "top_category": "Skin Care Collections",
+      "sub_category": "SPF s",
+      "images": [
+        "uploads/products/private-label/spf-45-pa-enriched-with-chamomile-calendula-extract/01.jpg",
+        "uploads/products/private-label/spf-45-pa-enriched-with-chamomile-calendula-extract/02.jpg",
+        "uploads/products/private-label/spf-45-pa-enriched-with-chamomile-calendula-extract/03.jpg",
+        "uploads/products/private-label/spf-45-pa-enriched-with-chamomile-calendula-extract/04.jpg",
+        "uploads/products/private-label/spf-45-pa-enriched-with-chamomile-calendula-extract/05.jpg",
+        "uploads/products/private-label/spf-45-pa-enriched-with-chamomile-calendula-extract/06.jpg",
+        "uploads/products/private-label/spf-45-pa-enriched-with-chamomile-calendula-extract/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/SPF_s/SPF 50 PA+++ Enriched with Papaya & Green Tea Extract.pdf",
+      "name": "SPF 50 PA+++ Enriched with Papaya & Green Tea Extract",
+      "name_fallback": "SPF 50 PA+++ Enriched with Papaya & Green Tea Extract",
+      "product_slug": "spf-50-pa-enriched-with-papaya-green-tea-extract",
+      "top_category": "Skin Care Collections",
+      "sub_category": "SPF s",
+      "images": [
+        "uploads/products/private-label/spf-50-pa-enriched-with-papaya-green-tea-extract/01.jpg",
+        "uploads/products/private-label/spf-50-pa-enriched-with-papaya-green-tea-extract/02.jpg",
+        "uploads/products/private-label/spf-50-pa-enriched-with-papaya-green-tea-extract/03.jpg",
+        "uploads/products/private-label/spf-50-pa-enriched-with-papaya-green-tea-extract/04.jpg",
+        "uploads/products/private-label/spf-50-pa-enriched-with-papaya-green-tea-extract/05.jpg",
+        "uploads/products/private-label/spf-50-pa-enriched-with-papaya-green-tea-extract/06.jpg",
+        "uploads/products/private-label/spf-50-pa-enriched-with-papaya-green-tea-extract/07.jpg",
+        "uploads/products/private-label/spf-50-pa-enriched-with-papaya-green-tea-extract/08.jpg",
+        "uploads/products/private-label/spf-50-pa-enriched-with-papaya-green-tea-extract/09.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/SPF_s/SPF 50PA+++ Papaya Extract Sunscreen Gel.pdf",
+      "name": "SPF 50PA+++ Papaya Extract Sunscreen Gel",
+      "name_fallback": "SPF 50PA+++ Papaya Extract Sunscreen Gel",
+      "product_slug": "spf-50pa-papaya-extract-sunscreen-gel",
+      "top_category": "Skin Care Collections",
+      "sub_category": "SPF s",
+      "images": [
+        "uploads/products/private-label/spf-50pa-papaya-extract-sunscreen-gel/01.jpg",
+        "uploads/products/private-label/spf-50pa-papaya-extract-sunscreen-gel/02.jpg",
+        "uploads/products/private-label/spf-50pa-papaya-extract-sunscreen-gel/03.jpg",
+        "uploads/products/private-label/spf-50pa-papaya-extract-sunscreen-gel/04.jpg",
+        "uploads/products/private-label/spf-50pa-papaya-extract-sunscreen-gel/05.jpg",
+        "uploads/products/private-label/spf-50pa-papaya-extract-sunscreen-gel/06.jpg",
+        "uploads/products/private-label/spf-50pa-papaya-extract-sunscreen-gel/07.jpg",
+        "uploads/products/private-label/spf-50pa-papaya-extract-sunscreen-gel/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/SPF_s/SPF 50PA+++ Salicylic Acid Sunscreen Gel.pdf",
+      "name": "SPF 50PA+++ Salicylic Acid Sunscreen Gel",
+      "name_fallback": "SPF 50PA+++ Salicylic Acid Sunscreen Gel",
+      "product_slug": "spf-50pa-salicylic-acid-sunscreen-gel",
+      "top_category": "Skin Care Collections",
+      "sub_category": "SPF s",
+      "images": [
+        "uploads/products/private-label/spf-50pa-salicylic-acid-sunscreen-gel/01.jpg",
+        "uploads/products/private-label/spf-50pa-salicylic-acid-sunscreen-gel/02.jpg",
+        "uploads/products/private-label/spf-50pa-salicylic-acid-sunscreen-gel/03.jpg",
+        "uploads/products/private-label/spf-50pa-salicylic-acid-sunscreen-gel/04.jpg",
+        "uploads/products/private-label/spf-50pa-salicylic-acid-sunscreen-gel/05.jpg",
+        "uploads/products/private-label/spf-50pa-salicylic-acid-sunscreen-gel/06.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/SPF_s/SPF 50PA+++ Vitamin C & Kakadu Plum_ Invisible Sunscreen.pdf",
+      "name": "SPF 50PA+++ Vitamin C & Kakadu Plum Invisible Sunscreen",
+      "name_fallback": "SPF 50PA+++ Vitamin C & Kakadu Plum Invisible Sunscreen",
+      "product_slug": "spf-50pa-vitamin-c-kakadu-plum-invisible-sunscreen",
+      "top_category": "Skin Care Collections",
+      "sub_category": "SPF s",
+      "images": [
+        "uploads/products/private-label/spf-50pa-vitamin-c-kakadu-plum-invisible-sunscreen/01.jpg",
+        "uploads/products/private-label/spf-50pa-vitamin-c-kakadu-plum-invisible-sunscreen/02.jpg",
+        "uploads/products/private-label/spf-50pa-vitamin-c-kakadu-plum-invisible-sunscreen/03.jpg",
+        "uploads/products/private-label/spf-50pa-vitamin-c-kakadu-plum-invisible-sunscreen/04.jpg",
+        "uploads/products/private-label/spf-50pa-vitamin-c-kakadu-plum-invisible-sunscreen/05.jpg",
+        "uploads/products/private-label/spf-50pa-vitamin-c-kakadu-plum-invisible-sunscreen/06.jpg",
+        "uploads/products/private-label/spf-50pa-vitamin-c-kakadu-plum-invisible-sunscreen/07.jpg",
+        "uploads/products/private-label/spf-50pa-vitamin-c-kakadu-plum-invisible-sunscreen/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/SPF_s/SPF 50PA+++ Watermelon Extract Sunscreen Gel.pdf",
+      "name": "SPF 50PA+++ Watermelon Extract Sunscreen Gel",
+      "name_fallback": "SPF 50PA+++ Watermelon Extract Sunscreen Gel",
+      "product_slug": "spf-50pa-watermelon-extract-sunscreen-gel",
+      "top_category": "Skin Care Collections",
+      "sub_category": "SPF s",
+      "images": [
+        "uploads/products/private-label/spf-50pa-watermelon-extract-sunscreen-gel/01.jpg",
+        "uploads/products/private-label/spf-50pa-watermelon-extract-sunscreen-gel/02.jpg",
+        "uploads/products/private-label/spf-50pa-watermelon-extract-sunscreen-gel/03.jpg",
+        "uploads/products/private-label/spf-50pa-watermelon-extract-sunscreen-gel/04.jpg",
+        "uploads/products/private-label/spf-50pa-watermelon-extract-sunscreen-gel/05.jpg",
+        "uploads/products/private-label/spf-50pa-watermelon-extract-sunscreen-gel/06.jpg",
+        "uploads/products/private-label/spf-50pa-watermelon-extract-sunscreen-gel/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/SPF_s/SPF 60 PA+++ Enriched with Apple & Peony Flower Extract.pdf",
+      "name": "SPF 60 PA+++ Enriched with Apple & Peony Flower Extract",
+      "name_fallback": "SPF 60 PA+++ Enriched with Apple & Peony Flower Extract",
+      "product_slug": "spf-60-pa-enriched-with-apple-peony-flower-extract",
+      "top_category": "Skin Care Collections",
+      "sub_category": "SPF s",
+      "images": [
+        "uploads/products/private-label/spf-60-pa-enriched-with-apple-peony-flower-extract/01.jpg",
+        "uploads/products/private-label/spf-60-pa-enriched-with-apple-peony-flower-extract/02.jpg",
+        "uploads/products/private-label/spf-60-pa-enriched-with-apple-peony-flower-extract/03.jpg",
+        "uploads/products/private-label/spf-60-pa-enriched-with-apple-peony-flower-extract/04.jpg",
+        "uploads/products/private-label/spf-60-pa-enriched-with-apple-peony-flower-extract/05.jpg",
+        "uploads/products/private-label/spf-60-pa-enriched-with-apple-peony-flower-extract/06.jpg",
+        "uploads/products/private-label/spf-60-pa-enriched-with-apple-peony-flower-extract/07.jpg",
+        "uploads/products/private-label/spf-60-pa-enriched-with-apple-peony-flower-extract/08.jpg",
+        "uploads/products/private-label/spf-60-pa-enriched-with-apple-peony-flower-extract/09.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/SPF_s/SPF 60PA+++ 7in1 Sunscreen Serum.pdf",
+      "name": "SPF 60PA+++ 7in1 Sunscreen Serum",
+      "name_fallback": "SPF 60PA+++ 7in1 Sunscreen Serum",
+      "product_slug": "spf-60pa-7in1-sunscreen-serum",
+      "top_category": "Skin Care Collections",
+      "sub_category": "SPF s",
+      "images": [
+        "uploads/products/private-label/spf-60pa-7in1-sunscreen-serum/01.jpg",
+        "uploads/products/private-label/spf-60pa-7in1-sunscreen-serum/02.jpg",
+        "uploads/products/private-label/spf-60pa-7in1-sunscreen-serum/03.jpg",
+        "uploads/products/private-label/spf-60pa-7in1-sunscreen-serum/04.jpg",
+        "uploads/products/private-label/spf-60pa-7in1-sunscreen-serum/05.jpg",
+        "uploads/products/private-label/spf-60pa-7in1-sunscreen-serum/06.jpg",
+        "uploads/products/private-label/spf-60pa-7in1-sunscreen-serum/07.jpg",
+        "uploads/products/private-label/spf-60pa-7in1-sunscreen-serum/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/SPF_s/SPF 70 PA+++ Enriched with Avocado & Watermelon Extract.pdf",
+      "name": "SPF 70 PA+++ Enriched with Avocado & Watermelon Extract",
+      "name_fallback": "SPF 70 PA+++ Enriched with Avocado & Watermelon Extract",
+      "product_slug": "spf-70-pa-enriched-with-avocado-watermelon-extract",
+      "top_category": "Skin Care Collections",
+      "sub_category": "SPF s",
+      "images": [
+        "uploads/products/private-label/spf-70-pa-enriched-with-avocado-watermelon-extract/01.jpg",
+        "uploads/products/private-label/spf-70-pa-enriched-with-avocado-watermelon-extract/02.jpg",
+        "uploads/products/private-label/spf-70-pa-enriched-with-avocado-watermelon-extract/03.jpg",
+        "uploads/products/private-label/spf-70-pa-enriched-with-avocado-watermelon-extract/04.jpg",
+        "uploads/products/private-label/spf-70-pa-enriched-with-avocado-watermelon-extract/05.jpg",
+        "uploads/products/private-label/spf-70-pa-enriched-with-avocado-watermelon-extract/06.jpg",
+        "uploads/products/private-label/spf-70-pa-enriched-with-avocado-watermelon-extract/07.jpg",
+        "uploads/products/private-label/spf-70-pa-enriched-with-avocado-watermelon-extract/08.jpg",
+        "uploads/products/private-label/spf-70-pa-enriched-with-avocado-watermelon-extract/09.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/SPF_s/SPF30 PA+++ Enriched with Aloevera & Licorice Extract.pdf",
+      "name": "SPF30 PA+++ Enriched with Aloevera & Licorice Extract",
+      "name_fallback": "SPF30 PA+++ Enriched with Aloevera & Licorice Extract",
+      "product_slug": "spf30-pa-enriched-with-aloevera-licorice-extract",
+      "top_category": "Skin Care Collections",
+      "sub_category": "SPF s",
+      "images": [
+        "uploads/products/private-label/spf30-pa-enriched-with-aloevera-licorice-extract/01.jpg",
+        "uploads/products/private-label/spf30-pa-enriched-with-aloevera-licorice-extract/02.jpg",
+        "uploads/products/private-label/spf30-pa-enriched-with-aloevera-licorice-extract/03.jpg",
+        "uploads/products/private-label/spf30-pa-enriched-with-aloevera-licorice-extract/04.jpg",
+        "uploads/products/private-label/spf30-pa-enriched-with-aloevera-licorice-extract/05.jpg",
+        "uploads/products/private-label/spf30-pa-enriched-with-aloevera-licorice-extract/06.jpg",
+        "uploads/products/private-label/spf30-pa-enriched-with-aloevera-licorice-extract/07.jpg",
+        "uploads/products/private-label/spf30-pa-enriched-with-aloevera-licorice-extract/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Toners/Age Reversal Skin Balancing Toner.pdf",
+      "name": "Age Reversal Skin Balancing Toner",
+      "name_fallback": "Age Reversal Skin Balancing Toner",
+      "product_slug": "age-reversal-skin-balancing-toner",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Toners",
+      "images": [
+        "uploads/products/private-label/age-reversal-skin-balancing-toner/01.jpg",
+        "uploads/products/private-label/age-reversal-skin-balancing-toner/02.jpg",
+        "uploads/products/private-label/age-reversal-skin-balancing-toner/03.jpg",
+        "uploads/products/private-label/age-reversal-skin-balancing-toner/04.jpg",
+        "uploads/products/private-label/age-reversal-skin-balancing-toner/05.jpg",
+        "uploads/products/private-label/age-reversal-skin-balancing-toner/06.jpg",
+        "uploads/products/private-label/age-reversal-skin-balancing-toner/07.jpg",
+        "uploads/products/private-label/age-reversal-skin-balancing-toner/08.jpg",
+        "uploads/products/private-label/age-reversal-skin-balancing-toner/09.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Toners/Brightening Skin Toner Enriched with Vitamin C & Lemon Peel Extract.pdf",
+      "name": "Brightening Skin Toner Enriched with Vitamin C & Lemon Peel Extract",
+      "name_fallback": "Brightening Skin Toner Enriched with Vitamin C & Lemon Peel Extract",
+      "product_slug": "brightening-skin-toner-enriched-with-vitamin-c-lemon-peel-extract",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Toners",
+      "images": [
+        "uploads/products/private-label/brightening-skin-toner-enriched-with-vitamin-c-lemon-peel-extract/01.jpg",
+        "uploads/products/private-label/brightening-skin-toner-enriched-with-vitamin-c-lemon-peel-extract/02.jpg",
+        "uploads/products/private-label/brightening-skin-toner-enriched-with-vitamin-c-lemon-peel-extract/03.jpg",
+        "uploads/products/private-label/brightening-skin-toner-enriched-with-vitamin-c-lemon-peel-extract/04.jpg",
+        "uploads/products/private-label/brightening-skin-toner-enriched-with-vitamin-c-lemon-peel-extract/05.jpg",
+        "uploads/products/private-label/brightening-skin-toner-enriched-with-vitamin-c-lemon-peel-extract/06.jpg",
+        "uploads/products/private-label/brightening-skin-toner-enriched-with-vitamin-c-lemon-peel-extract/07.jpg",
+        "uploads/products/private-label/brightening-skin-toner-enriched-with-vitamin-c-lemon-peel-extract/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Toners/Facial Skin Toner Enriched with Rhodiola Rosea & Chamomile Extract.pdf",
+      "name": "Facial Skin Toner Enriched with Rhodiola Rosea & Chamomile Extract",
+      "name_fallback": "Facial Skin Toner Enriched with Rhodiola Rosea & Chamomile Extract",
+      "product_slug": "facial-skin-toner-enriched-with-rhodiola-rosea-chamomile-extract",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Toners",
+      "images": [
+        "uploads/products/private-label/facial-skin-toner-enriched-with-rhodiola-rosea-chamomile-extract/01.jpg",
+        "uploads/products/private-label/facial-skin-toner-enriched-with-rhodiola-rosea-chamomile-extract/02.jpg",
+        "uploads/products/private-label/facial-skin-toner-enriched-with-rhodiola-rosea-chamomile-extract/03.jpg",
+        "uploads/products/private-label/facial-skin-toner-enriched-with-rhodiola-rosea-chamomile-extract/04.jpg",
+        "uploads/products/private-label/facial-skin-toner-enriched-with-rhodiola-rosea-chamomile-extract/05.jpg",
+        "uploads/products/private-label/facial-skin-toner-enriched-with-rhodiola-rosea-chamomile-extract/06.jpg",
+        "uploads/products/private-label/facial-skin-toner-enriched-with-rhodiola-rosea-chamomile-extract/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Toners/Rice Water Toner.pdf",
+      "name": "Rice Water Toner",
+      "name_fallback": "Rice Water Toner",
+      "product_slug": "rice-water-toner",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Toners",
+      "images": [
+        "uploads/products/private-label/rice-water-toner/01.jpg",
+        "uploads/products/private-label/rice-water-toner/02.jpg",
+        "uploads/products/private-label/rice-water-toner/03.jpg",
+        "uploads/products/private-label/rice-water-toner/04.jpg",
+        "uploads/products/private-label/rice-water-toner/05.jpg",
+        "uploads/products/private-label/rice-water-toner/06.jpg",
+        "uploads/products/private-label/rice-water-toner/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Toners/Skin Toner Enriched with Tea Tree & Neem Extract.pdf",
+      "name": "Skin Toner Enriched with Tea Tree & Neem Extract",
+      "name_fallback": "Skin Toner Enriched with Tea Tree & Neem Extract",
+      "product_slug": "skin-toner-enriched-with-tea-tree-neem-extract",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Toners",
+      "images": [
+        "uploads/products/private-label/skin-toner-enriched-with-tea-tree-neem-extract/01.jpg",
+        "uploads/products/private-label/skin-toner-enriched-with-tea-tree-neem-extract/02.jpg",
+        "uploads/products/private-label/skin-toner-enriched-with-tea-tree-neem-extract/03.jpg",
+        "uploads/products/private-label/skin-toner-enriched-with-tea-tree-neem-extract/04.jpg",
+        "uploads/products/private-label/skin-toner-enriched-with-tea-tree-neem-extract/05.jpg",
+        "uploads/products/private-label/skin-toner-enriched-with-tea-tree-neem-extract/06.jpg",
+        "uploads/products/private-label/skin-toner-enriched-with-tea-tree-neem-extract/07.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Toners/Under Eye Gel Cream.pdf",
+      "name": "Under Eye Gel Cream",
+      "name_fallback": "Under Eye Gel Cream",
+      "product_slug": "under-eye-gel-cream",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Toners",
+      "images": [
+        "uploads/products/private-label/under-eye-gel-cream/01.jpg",
+        "uploads/products/private-label/under-eye-gel-cream/02.jpg",
+        "uploads/products/private-label/under-eye-gel-cream/03.jpg",
+        "uploads/products/private-label/under-eye-gel-cream/04.jpg",
+        "uploads/products/private-label/under-eye-gel-cream/05.jpg",
+        "uploads/products/private-label/under-eye-gel-cream/06.jpg",
+        "uploads/products/private-label/under-eye-gel-cream/07.jpg",
+        "uploads/products/private-label/under-eye-gel-cream/08.jpg"
+      ]
+    },
+    {
+      "pdf": "Skin Care Collections/Toners/Vitamin C Brightening Toner.pdf",
+      "name": "Vitamin C Brightening Toner",
+      "name_fallback": "Vitamin C Brightening Toner",
+      "product_slug": "vitamin-c-brightening-toner",
+      "top_category": "Skin Care Collections",
+      "sub_category": "Toners",
+      "images": [
+        "uploads/products/private-label/vitamin-c-brightening-toner/01.jpg",
+        "uploads/products/private-label/vitamin-c-brightening-toner/02.jpg",
+        "uploads/products/private-label/vitamin-c-brightening-toner/03.jpg",
+        "uploads/products/private-label/vitamin-c-brightening-toner/04.jpg",
+        "uploads/products/private-label/vitamin-c-brightening-toner/05.jpg",
+        "uploads/products/private-label/vitamin-c-brightening-toner/06.jpg",
+        "uploads/products/private-label/vitamin-c-brightening-toner/07.jpg",
+        "uploads/products/private-label/vitamin-c-brightening-toner/08.jpg"
+      ]
+    }
+  ],
+  "skipped": []
+}

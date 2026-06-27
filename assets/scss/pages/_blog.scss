@@ -1,0 +1,129 @@
+@use "../utils" as *;
+/* === Blog Section (page) === */
+.blog2 {
+  &-card {
+    &__thumb {
+      img {
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        width: 100%;
+      }
+    }
+
+    &__content {
+      padding: 25px 24px 28px;
+      background: $color-primary;
+      border-bottom-left-radius: 16px;
+      border-bottom-right-radius: 16px;
+
+      @media #{$md} {
+        padding: 20px 20px 24px;
+      }
+
+      @media #{$xs} {
+        padding: 18px 16px 20px;
+      }
+
+      &-tipsitems {
+        padding: 7px 15px;
+        background: $primary-200;
+        border-radius: 88px;
+        color: $text-color-one;
+        font-family: var(--font_Playfair);
+        font-weight: 500;
+        font-style: Medium;
+        font-size: 16px;
+        line-height: 22px;
+        letter-spacing: 0px;
+        text-align: center;
+
+        @media #{$md} {
+          padding: 6px 12px;
+          font-size: 14px;
+          line-height: 20px;
+        }
+
+        @media #{$xs} {
+          padding: 5px 10px;
+          font-size: 12px;
+          line-height: 18px;
+        }
+      }
+
+      &-title {
+        margin-top: 20px;
+
+        a {
+          font-family: var(--font_Playfair);
+          font-weight: 700;
+          font-style: Bold;
+          font-size: 24px;
+          line-height: 30%;
+          letter-spacing: 0px;
+          text-transform: capitalize;
+          transition: all 0.4s ease-in-out;
+
+          @media #{$md} {
+            font-size: 21px;
+          }
+
+          @media #{$xs} {
+            font-size: 17px;
+          }
+
+          &:hover {
+            color: $color-primary-two;
+          }
+        }
+      }
+
+      &-meta {
+        display: flex;
+        align-items: center;
+        gap: 32px;
+        margin-top: 18px;
+
+        @media #{$xs} {
+          gap: 7px;
+        }
+
+        &-item {
+          color: $text-color-two;
+          font-family: var(--font_Lato);
+          font-weight: 400;
+          font-style: Regular;
+          font-size: 16px;
+          line-height: 26px;
+          letter-spacing: 0px;
+          text-align: center;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+
+          @media #{$xs} {
+            gap: 4px;
+          }
+        }
+      }
+    }
+  }
+  .pagination {
+    margin-top: 48px;
+
+    @media #{$lg} {
+      margin-top: 40px;
+    }
+
+    @media #{$md} {
+      margin-top: 35px;
+    }
+
+    @media #{$sm} {
+      margin-top: 30px;
+    }
+
+    @media #{$xs} {
+      margin-top: 25px;
+    }
+  }
+}

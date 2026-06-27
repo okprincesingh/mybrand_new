@@ -1,0 +1,15 @@
+USE mybrandplease;
+
+CREATE TABLE IF NOT EXISTS why_page_accordions (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  page_id BIGINT UNSIGNED NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  body_html LONGTEXT NULL,
+  is_open TINYINT(1) NOT NULL DEFAULT 0,
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  sort_order INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_why_page_accordions_page (page_id, is_active, sort_order, id),
+  CONSTRAINT fk_why_page_accordions_page FOREIGN KEY (page_id) REFERENCES pages(id) ON DELETE CASCADE
+) ENGINE=InnoDB;

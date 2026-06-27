@@ -1,0 +1,379 @@
+@use "../utils" as *;
+// =============================================================================
+// Modern sidebar (off-canvas) panel – mobile menu
+// Adapted from Petly for Beauten
+// =============================================================================
+
+// ---- Overlay ----
+.offcanvas-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1050;
+    background: rgba(7, 7, 19, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+
+.offcanvas-overlay.overlay-open {
+    opacity: 1;
+    visibility: visible;
+}
+
+// ---- Panel ----
+.side-info {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    overflow-y: auto;
+    background: $white;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 40px 32px;
+    width: min(420px, 90vw);
+    max-width: 420px;
+    box-shadow: -20px 0 60px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.05) inset;
+    border-left: 1px solid rgba(0, 0, 0, 0.08);
+    transform: translateX(100%);
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+    z-index: 1100;
+
+    @media #{$xs} {
+        width: min(340px, 94vw);
+        padding: 32px 24px;
+    }
+
+    &.info-open {
+        transform: translateX(0);
+    }
+}
+
+// ---- Close button ----
+.side-info-close {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: rgba(0, 0, 0, 0.8);
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+
+    &:hover {
+        background: rgba(0, 0, 0, 0.1);
+        color: $text-950;
+        transform: scale(1.05);
+    }
+}
+
+// ---- Header (logo + close) ----
+.side-info .offset-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.side-info .offset-logo {
+    width: 140px;
+
+    @media #{$xs} {
+        width: 120px;
+    }
+
+    img {
+        width: 100%;
+        height: auto;
+        opacity: 0.95;
+    }
+}
+
+// ---- Mobile nav (modern list) ----
+.side-info .mobile-menu {
+    margin-top: 0;
+    margin-bottom: 28px;
+}
+
+.side-info .mobile-menu .mobile-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+
+    >li {
+        border-bottom: none;
+        margin-bottom: 4px;
+
+        >a {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            color: rgba(0, 0, 0, 0.8);
+            font-family: $font-playfair;
+            font-weight: 600;
+            font-size: 16px;
+            letter-spacing: 0.02em;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: background 0.25s ease, color 0.25s ease;
+
+            &:hover {
+                background: rgba(0, 0, 0, 0.04);
+                color: $text-950;
+            }
+        }
+    }
+
+    .menu-item-has-children {
+        >a {
+            padding-right: 44px;
+            position: relative;
+
+            // Plus icon – animated toggle
+            &::after {
+                content: '+';
+                position: absolute;
+                right: 14px;
+                top: 50%;
+                transform: translateY(-50%) rotate(0deg);
+                width: 24px;
+                height: 24px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 18px;
+                font-weight: 400;
+                color: rgba(0, 0, 0, 0.5);
+                border: 1px solid rgba(0, 0, 0, 0.15);
+                border-radius: 6px;
+                transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+            }
+
+            &:hover::after {
+                color: rgba(0, 0, 0, 0.8);
+                border-color: rgba(0, 0, 0, 0.25);
+            }
+        }
+
+        &.open>a::after {
+            content: '−';
+            transform: translateY(-50%) rotate(0deg);
+            color: $primary-950;
+            border-color: rgba(0, 0, 0, 0.1);
+            background: rgba(0, 0, 0, 0.04);
+        }
+
+        // Submenu – animatable open/close
+        .dp-menu,
+        ul {
+            display: block;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            padding: 0 0 0 8px;
+            margin: 0 0 0 0;
+            list-style: none;
+            border-left: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 0 8px 8px 0;
+            background: rgba(0, 0, 0, 0.02);
+            transform: translateY(-6px);
+            transition: max-height 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease 0.05s, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) 0.02s;
+
+            li {
+                opacity: 0;
+                transform: translateY(-8px);
+                transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+                a {
+                    display: block;
+                    padding: 10px 14px;
+                    color: rgba(0, 0, 0, 0.7);
+                    font-size: 14px;
+                    font-weight: 500;
+                    border-radius: 8px;
+                    transition: color 0.2s ease, background 0.2s ease;
+
+                    &:hover {
+                        color: $primary-950;
+                        background: rgba(0, 0, 0, 0.04);
+                    }
+                }
+            }
+        }
+
+        &.open {
+
+            >.dp-menu,
+            >ul {
+                max-height: 320px;
+                opacity: 1;
+                transform: translateY(0);
+                padding: 8px 0 8px 8px;
+                margin: 8px 0 0 0;
+                transition-delay: 0s;
+            }
+
+            >.dp-menu li,
+            >ul li {
+                opacity: 1;
+                transform: translateY(0);
+
+                &:nth-child(1) {
+                    transition-delay: 0.06s;
+                }
+
+                &:nth-child(2) {
+                    transition-delay: 0.12s;
+                }
+
+                &:nth-child(3) {
+                    transition-delay: 0.18s;
+                }
+
+                &:nth-child(4) {
+                    transition-delay: 0.24s;
+                }
+
+                &:nth-child(5) {
+                    transition-delay: 0.30s;
+                }
+
+                &:nth-child(6) {
+                    transition-delay: 0.36s;
+                }
+
+                &:nth-child(7) {
+                    transition-delay: 0.42s;
+                }
+
+                &:nth-child(8) {
+                    transition-delay: 0.48s;
+                }
+            }
+
+            >a {
+                color: $primary-950;
+                background: rgba(0, 0, 0, 0.04);
+            }
+        }
+    }
+}
+
+// ---- Reach / contact block ----
+.side-info .offset-widget-box {
+    margin-top: 8px;
+    padding-top: 32px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+
+    .title {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: rgba(0, 0, 0, 0.5);
+        margin-bottom: 20px;
+        font-family: $font-playfair;
+    }
+}
+
+// Modern Social Buttons for Sidebar
+.side-info .offset-social {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 32px;
+
+    a {
+        width: 42px;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.03);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        border-radius: 12px;
+        color: rgba(0, 0, 0, 0.7);
+        font-size: 16px;
+        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+
+        &:hover {
+            background: $primary-950;
+            border-color: $primary-950;
+            color: $white;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+    }
+}
+
+// Modern Contact Items for Sidebar
+.side-info .contact-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.side-info .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px;
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 16px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+
+    &:hover {
+        background: rgba(0, 0, 0, 0.05);
+        border-color: rgba(0, 0, 0, 0.1);
+        transform: translateX(6px);
+    }
+
+    .icon {
+        width: 44px;
+        min-width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: rgba(0, 0, 0, 0.04);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $primary-950;
+        font-size: 18px;
+        transition: all 0.3s ease;
+    }
+
+    &:hover .icon {
+        background: $primary-950;
+        color: $white;
+    }
+
+    .text {
+        flex: 1;
+
+        a,
+        span {
+            display: block;
+            color: rgba(0, 0, 0, 0.8);
+            font-size: 14px;
+            font-weight: 500;
+            font-family: $font-lato;
+            transition: color 0.2s ease;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: $primary-950;
+        }
+    }
+}

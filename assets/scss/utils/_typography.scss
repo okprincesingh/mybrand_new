@@ -1,0 +1,155 @@
+ @use "variables" as *;
+ @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
+
+ :root {
+   --font_Playfair: "Playfair Display", serif;
+   --font_Lato: "Lato", sans-serif;
+   --font_awesome: "Font Awesome 6 Pro";
+ }
+
+ * {
+   margin: 0;
+   padding: 0;
+ }
+
+ body {
+   font-family: var(--font_Lato);
+   line-height: 1;
+   font-size: 16px;
+   font-weight: 400;
+   line-height: 20px;
+   letter-spacing: -0.48px;
+   color: var(--secondary);
+ }
+
+ html {
+   scroll-behavior: smooth;
+ }
+
+ h1,
+ h2,
+ h3,
+ h4,
+ h5,
+ h6 {
+   padding: 0;
+   margin: 0;
+   color: var(--text-color-one);
+   font-family: var(--font_Playfair);
+   font-weight: 700;
+ }
+
+ ul,
+ ol {
+   padding: 0;
+   margin: 0;
+ }
+
+ a {
+   text-decoration: none;
+   transition: all 0.3s;
+   color: inherit;
+
+   &:hover {
+     color: $color-primary-two;
+   }
+ }
+
+ button {
+   background-color: transparent;
+   border: 0;
+ }
+
+ p {
+   padding: 0;
+   margin: 0;
+ }
+
+ strong {
+   font-weight: 500;
+ }
+
+ video,
+ iframe,
+ img {
+   margin: 0;
+   padding: 0;
+ }
+
+ img {
+   max-width: 100%;
+ }
+
+ .medium {
+   font-weight: 600;
+ }
+
+ .bold {
+   font-weight: 700;
+ }
+
+ /* === Gutter scss (index 03) === */
+ @media #{$sm} {
+   .g-0 {
+     padding-right: 15px;
+     padding-left: 15px;
+   }
+
+   .row.g-0 {
+     padding-right: 0;
+     padding-left: 0;
+   }
+
+   br {
+     display: none;
+   }
+ }
+
+ main {
+   display: inline-block;
+   width: 100%;
+   overflow: hidden;
+ }
+
+ h1 {
+   font-size: 48px;
+ }
+
+ h2 {
+   font-size: 40px;
+ }
+
+ h3 {
+   font-size: 24px;
+ }
+
+ h4 {
+   font-size: 20px;
+ }
+
+ h5 {
+   font-size: 22px;
+ }
+
+ h6 {
+   font-size: 18px;
+ }
+
+ .container {
+   padding: 0 15px;
+
+   @media (min-width: 1800px) {
+     max-width: 1800px;
+     margin: 0 auto;
+   }
+ }
+
+ .container-1600 {
+   padding: 0 15px;
+
+   @media (min-width: 1800px) {
+     max-width: 1630px;
+     margin: 0 auto;
+   }
+ }

@@ -1,0 +1,25 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /mybrandplease/
+
+    # Serve static files and folders directly
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Pretty URL for data-sheets
+    RewriteRule ^data-sheets/?$ data-sheets.php [L,QSA,NC]
+
+    # Pretty URL for category sub-category product pages
+    RewriteRule ^([^/]+)/([^/]+)/?$ shop.php?category=$1&subcategory=$2 [B,L,QSA,NC]
+
+    # Pretty URL for slug pages
+    RewriteRule ^([a-z0-9-]+)/?$ why-page.php?slug=$1 [L,QSA,NC]
+</IfModule>
+
+# php -- BEGIN cPanel-generated handler, do not edit
+# Set the “ea-php82” package as the default “PHP” programming language.
+<IfModule mime_module>
+  AddHandler application/x-httpd-ea-php82 .php .php8 .phtml
+</IfModule>
+# php -- END cPanel-generated handler, do not edit

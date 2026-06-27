@@ -1,0 +1,190 @@
+@use "../utils" as *;
+
+/* === Testimonial Section (Home 01) === */
+.testimonial1 {
+    position: relative;
+    padding-bottom: rem(120);
+
+    @media #{$xl} {
+        padding-bottom: rem(100);
+    }
+
+    @media #{$lg} {
+        padding-bottom: rem(80);
+    }
+
+    @media #{$md} {
+        padding-bottom: rem(60);
+    }
+
+    @media #{$sm} {
+        padding-bottom: rem(50);
+    }
+
+    &-card {
+        position: relative;
+        border-radius: rem(20);
+        overflow: hidden;
+        height: 100%;
+        padding: rem(50) rem(40);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        transition: all 0.4s ease;
+
+        @media #{$xl} {
+            padding: rem(40) rem(30);
+            min-height: rem(380);
+        }
+
+        @media #{$sm} {
+            padding: rem(30);
+            min-height: rem(350);
+        }
+
+        &.dark-card {
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            z-index: 1;
+
+            &::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.45);
+                z-index: -1;
+                transition: all 0.4s ease;
+            }
+
+            .testimonial1-card__text {
+                color: var(--white);
+            }
+
+            .testimonial1-card__author-name {
+                color: var(--white);
+            }
+
+            .testimonial1-card__author-designation {
+                color: #CDCDCD;
+            }
+
+            &:hover {
+                &::after {
+                    background: rgba(0, 0, 0, 0.55);
+                }
+            }
+        }
+
+        &.light-card {
+            background-color: #FFF0F3; // Very light pink matching the project theme
+            position: relative;
+
+            .testimonial1-card__product-img {
+                position: absolute;
+                bottom: rem(20);
+                right: rem(20);
+                width: rem(160);
+                opacity: 0.1;
+                pointer-events: none;
+                transform: rotate(15deg);
+
+                img {
+                    width: 100%;
+                    height: auto;
+                }
+            }
+
+            .testimonial1-card__text {
+                color: var(--text-color-one);
+            }
+
+            .testimonial1-card__author-name {
+                color: var(--text-color-one);
+            }
+
+            .testimonial1-card__author-designation {
+                color: var(--text-color-two);
+            }
+
+            .testimonial1-card__author-thumb {
+                width: rem(50);
+                height: rem(50);
+                border-radius: 50%;
+                overflow: hidden;
+                flex-shrink: 0;
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+            }
+
+            &:hover {
+                background-color: #ffe6eb;
+            }
+        }
+
+        &__quote {
+            font-size: rem(32);
+            color: $primary-950;
+            margin-bottom: rem(25);
+
+            @media #{$sm} {
+                font-size: rem(28);
+                margin-bottom: rem(20);
+            }
+        }
+
+        &__text {
+            font-size: rem(20);
+            line-height: 1.5;
+            font-weight: 500;
+            margin-bottom: rem(35);
+            font-style: italic;
+            font-family: var(--font_Lato);
+
+            @media #{$xl} {
+                font-size: rem(18);
+            }
+
+            @media #{$sm} {
+                font-size: rem(16);
+                margin-bottom: rem(25);
+            }
+        }
+
+        &__author {
+            &-meta {
+                margin-top: auto;
+            }
+
+            &-name {
+                font-size: rem(18);
+                font-family: var(--font_Playfair);
+                font-weight: 700;
+                margin-bottom: 0;
+                text-transform: capitalize;
+
+                @media #{$sm} {
+                    font-size: rem(16);
+                }
+            }
+
+            &-designation {
+                font-size: rem(14);
+                font-family: var(--font_Lato);
+                font-weight: 400;
+            }
+        }
+
+        &:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        }
+    }
+}

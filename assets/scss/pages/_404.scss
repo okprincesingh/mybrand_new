@@ -1,0 +1,87 @@
+@use "../utils" as *;
+
+/* === 404 Error Page Section === */
+.error {
+    text-align: center;
+
+    &-items {
+        &__thumb {
+            max-width: 500px;
+            margin: 0 auto 50px;
+
+            @media #{$md} {
+                max-width: 400px;
+                margin-bottom: 40px;
+            }
+
+            @media #{$xs} {
+                max-width: 100%;
+                margin-bottom: 30px;
+            }
+
+            img {
+                width: 100%;
+                height: auto;
+            }
+        }
+
+        &__title {
+            color: $text-950;
+            font-family: $font-playfair;
+            font-weight: 700;
+            font-size: 80px;
+            line-height: normal;
+            margin-bottom: 15px;
+
+            @media #{$lg} {
+                font-size: 60px;
+            }
+
+            @media #{$md} {
+                font-size: 50px;
+            }
+
+            @media #{$xs} {
+                font-size: 40px;
+            }
+        }
+
+        &__title2 {
+            color: $text-950;
+            font-family: $font-playfair;
+            font-weight: 600;
+            font-size: 36px;
+            line-height: 44px;
+            margin-bottom: 25px;
+
+            @media #{$lg} {
+                font-size: 32px;
+            }
+
+            @media #{$md} {
+                font-size: 28px;
+                line-height: 36px;
+            }
+
+            @media #{$xs} {
+                font-size: 24px;
+                line-height: 32px;
+            }
+        }
+
+        &__text {
+            max-width: 600px;
+            margin: 0 auto 40px;
+            color: $text-600;
+            font-family: $font-lato;
+            font-size: 18px;
+            line-height: 28px;
+
+            @media #{$xs} {
+                font-size: 16px;
+                line-height: 26px;
+                margin-bottom: 30px;
+            }
+        }
+    }
+}

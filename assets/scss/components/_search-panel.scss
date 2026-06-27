@@ -1,0 +1,175 @@
+@use "../utils" as *;
+// =============================================================================
+// Search Panel Overlay – Adapted from Petly
+// =============================================================================
+
+.header__search {
+    position: relative;
+    z-index: 10;
+
+    .search-open-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        background: transparent;
+        border: 0;
+        padding: .5rem .8rem;
+        cursor: pointer;
+        font-weight: 600;
+        letter-spacing: .02em;
+    }
+
+    // the overlay panel
+    .search-panel {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+        z-index: 9999;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+        // backdrop layer
+        .search-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(15, 10, 28, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .search-inner {
+            position: relative;
+            z-index: 2;
+            width: min(720px, 90vw);
+            background: $white;
+            border-radius: 20px;
+            padding: 12px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform: translateY(20px) scale(0.95);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+        }
+
+        // close button
+        .search-close {
+            position: absolute;
+            top: -60px;
+            right: 0;
+            background: $primary-950;
+            border: 0;
+            font-size: 20px;
+            cursor: pointer;
+            width: 44px;
+            height: 44px;
+            color: $text-primary;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+
+            &:hover {
+                background: $white;
+                transform: rotate(90deg);
+            }
+
+            @media #{$sm} {
+                top: -50px;
+                width: 38px;
+                height: 38px;
+            }
+        }
+
+        // form
+        .search-form {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0;
+        }
+
+        .search-input {
+            flex: 1;
+            font-size: 18px;
+            padding: 15px 20px;
+            border: none;
+            background: transparent;
+            outline: none;
+            font-family: $font-lato;
+            color: $text-primary;
+
+            &::placeholder {
+                color: rgba(7, 7, 19, 0.4);
+            }
+
+            @media #{$sm} {
+                font-size: 16px;
+                padding: 12px 15px;
+            }
+        }
+
+        .search-submit {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 54px;
+            height: 54px;
+            border-radius: 14px;
+            border: 0;
+            background: $primary-950;
+            color: $text-primary;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s;
+
+            &:hover {
+                background: $text-primary;
+                color: $white;
+            }
+
+            @media #{$sm} {
+                width: 44px;
+                height: 44px;
+                font-size: 16px;
+            }
+        }
+
+        // visible/open state
+        &.open {
+            pointer-events: auto;
+            opacity: 1;
+            visibility: visible;
+
+            .search-backdrop {
+                opacity: 1;
+            }
+
+            .search-inner {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+    }
+}
+
+/* Responsive: on small screens make search full width */
+@media (max-width: 575px) {
+    .header__search .search-inner {
+        width: calc(100% - 20px);
+        border-radius: 6px;
+        padding: 12px;
+    }
+}

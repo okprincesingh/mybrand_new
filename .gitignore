@@ -1,0 +1,17 @@
+vendor/
+.env
+.env.*
+!.env.example
+storage/
+storage/cache/190e15372241bb022618d3aa47354db283a2af2b.cache.php
+storage/cache/190e15372241bb022618d3aa47354db283a2af2b.cache.php
+storage/cache/b1e5af65ad7c4adb9ae04c760c03e3693ad9bfd9.cache.php
+
+storage/
+Private Label Products Line/
+wp-content/
+uploads/
+!uploads/
+!uploads/.gitkeep
+!uploads/instagram-reels/
+!uploads/instagram-reels/.gitkeep
