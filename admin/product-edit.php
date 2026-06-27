@@ -103,6 +103,7 @@ if ($pdo && $_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   }
 
+  catalog_invalidate_cache();
   admin_flash('success', 'Product saved.');
   header('Location: products.php');
   exit;

@@ -30,9 +30,10 @@ if ($pdo && $_SERVER['REQUEST_METHOD']==='POST') {
         cms_invalidate_settings_cache($k1);
         cms_invalidate_settings_cache($k2);
       }
+      catalog_invalidate_cache();
       admin_flash('success','Category saved.'); header('Location: categories.php'); exit;
     }
-    if($action==='delete'){ $id=(int)$_POST['id']; $pdo->prepare('DELETE FROM categories WHERE id=:id')->execute([':id'=>$id]); if($id>0){$k1='category_shop_heading_'.$id;$k2='category_shop_subtitle_'.$id;$pdo->prepare('DELETE FROM site_settings WHERE setting_key IN (:k1,:k2)')->execute([':k1'=>$k1,':k2'=>$k2]);cms_invalidate_settings_cache($k1);cms_invalidate_settings_cache($k2);} admin_flash('success','Category deleted.'); header('Location: categories.php'); exit; }
+    if($action==='delete'){ $id=(int)$_POST['id']; $pdo->prepare('DELETE FROM categories WHERE id=:id')->execute([':id'=>$id]); if($id>0){$k1='category_shop_heading_'.$id;$k2='category_shop_subtitle_'.$id;$pdo->prepare('DELETE FROM site_settings WHERE setting_key IN (:k1,:k2)')->execute([':k1'=>$k1,':k2'=>$k2]);cms_invalidate_settings_cache($k1);cms_invalidate_settings_cache($k2);} catalog_invalidate_cache(); admin_flash('success','Category deleted.'); header('Location: categories.php'); exit; }
 }
 $editId=(int)($_GET['edit']??0);$edit=['id'=>0,'name'=>'','slug'=>'','parent_id'=>0,'description'=>'','is_active'=>1,'image_path'=>'','sort_order'=>0,'shop_heading'=>'','shop_subtitle'=>''];
 if($pdo && $editId>0){$s=$pdo->prepare('SELECT * FROM categories WHERE id=:id');$s->execute([':id'=>$editId]);$r=$s->fetch();if($r){$edit=$r;$edit['shop_heading']=(string)(cms_get_setting('category_shop_heading_'.$editId,'') ?? '');$edit['shop_subtitle']=(string)(cms_get_setting('category_shop_subtitle_'.$editId,'') ?? '');}}

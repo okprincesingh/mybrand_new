@@ -22,6 +22,7 @@ if($pdo && $_SERVER['REQUEST_METHOD']==='POST'){
           admin_flash('error','Unable to delete product: ' . $e->getMessage());
         }
       }
+      catalog_invalidate_cache();
     }
     header('Location: products.php');
     exit;

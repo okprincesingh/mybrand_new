@@ -2,6 +2,17 @@
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/url.php';
 require_once __DIR__ . '/security.php';
+require_once __DIR__ . '/cache.php';
+
+function catalog_cache_key(string $key): string
+{
+    return 'catalog:' . $key;
+}
+
+function catalog_invalidate_cache(): void
+{
+    cache_clear_prefix('catalog:');
+}
 
 function catalog_fallback_categories(): array
 {
@@ -121,6 +132,12 @@ function catalog_find_subcategory_by_aliases(array $category, array $aliases): ?
 
 function catalog_categories(): array
 {
+    $cacheKey = catalog_cache_key('categories');
+    $cached = cache_get($cacheKey);
+    if (is_array($cached)) {
+        return $cached;
+    }
+
     $pdo = db();
     if (!$pdo) {
         return catalog_fallback_categories();
@@ -161,7 +178,9 @@ function catalog_categories(): array
         }
     }
 
-    return array_values($top);
+    $categories = array_values($top);
+    cache_set($cacheKey, $categories, 600);
+    return $categories;
 }
 
 function get_products(array $filters = [], array $pagination = []): array
@@ -302,7 +321,15 @@ function get_products(array $filters = [], array $pagination = []): array
 
 function catalog_products(): array
 {
-    return get_products([], ['limit' => 1000, 'offset' => 0])['items'];
+    $cacheKey = catalog_cache_key('products:published:1000');
+    $cached = cache_get($cacheKey);
+    if (is_array($cached)) {
+        return $cached;
+    }
+
+    $items = get_products(['status' => 'published'], ['limit' => 1000, 'offset' => 0])['items'];
+    cache_set($cacheKey, $items, 600);
+    return $items;
 }
 
 function catalog_related_products(string $currentSlug, ?string $category = null, ?string $subcategory = null, int $limit = 4): array
@@ -399,6 +426,12 @@ function catalog_related_products(string $currentSlug, ?string $category = null,
 
 function catalog_filtered_products(?string $category = null, ?string $subcategory = null, ?string $search = null): array
 {
+    $cacheKey = catalog_cache_key('filtered:' . sha1(json_encode([$category, $subcategory, $search])));
+    $cached = cache_get($cacheKey);
+    if (is_array($cached)) {
+        return $cached;
+    }
+
     $result = get_products([
         'category' => $category,
         'subcategory' => $subcategory,
@@ -406,7 +439,9 @@ function catalog_filtered_products(?string $category = null, ?string $subcategor
         'status' => 'published',
     ], ['limit' => 1000, 'offset' => 0]);
 
-    return $result['items'];
+    $items = $result['items'];
+    cache_set($cacheKey, $items, 600);
+    return $items;
 }
 
 function get_product_by_slug(string $slug): ?array
@@ -532,5 +567,4 @@ function catalog_subcategory_page_link(string $categorySlug, string $subcategory
 
     return url(rawurlencode($categorySlug) . '/' . rawurlencode($subcategoryNameOrSlug) . '/');
 }
-
 
