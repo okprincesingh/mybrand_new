@@ -22592,26 +22592,18 @@ iframe {
   margin: 0 auto 14px;
   background: linear-gradient(90deg, transparent, rgba(238, 45, 122, 0.35), transparent);
 }
-.social-reels__track {
+.social-reels__slider {
   position: relative;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: hidden;
   max-width: 100%;
   margin: 0 auto;
   padding: 14px 10px 20px;
   cursor: default;
   user-select: none;
-  touch-action: pan-x pan-y pinch-zoom;
-  scroll-behavior: smooth;
-  scrollbar-width: none;
+  touch-action: pan-y pinch-zoom;
 }
-.social-reels__track::-webkit-scrollbar {
-  display: none;
-}
-.social-reels__rail {
-  display: flex;
-  gap: 24px;
-  width: max-content;
+.social-reels__slider .swiper-wrapper {
+  align-items: stretch;
 }
 .social-reels__nav {
   position: absolute;
@@ -22654,9 +22646,29 @@ iframe {
   outline: 3px solid rgba(238, 45, 122, 0.28);
   outline-offset: 3px;
 }
+.social-reels__scrollbar {
+  position: relative;
+  left: auto;
+  bottom: auto;
+  width: min(520px, calc(100% - 48px));
+  height: 6px;
+  margin: 2px auto 0;
+  border-radius: 999px;
+  background: rgba(238, 45, 122, 0.12);
+}
+.social-reels__scrollbar .swiper-scrollbar-drag {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #ee2d7a, #ff8a4e);
+  cursor: grab;
+}
+.social-reels__scrollbar .swiper-scrollbar-drag:active {
+  cursor: grabbing;
+}
 .social-reels__card {
   position: relative;
-  flex: 0 0 clamp(300px, calc((100vw - 120px) / 4), 390px);
+  width: clamp(300px, calc((100vw - 120px) / 4), 390px);
+  height: auto;
   aspect-ratio: 9 / 16;
   border-radius: 28px;
   overflow: hidden;
@@ -22901,6 +22913,10 @@ iframe {
   background: #000;
   object-fit: cover;
 }
+.social-reels__modal-iframe {
+  display: none;
+  border: 0;
+}
 .social-reels__modal-close {
   position: fixed;
   top: 20px;
@@ -22968,7 +22984,7 @@ iframe {
     line-height: 1.7;
   }
   .social-reels__card {
-    flex-basis: 58vw;
+    width: 58vw;
     border-radius: 20px;
   }
   .social-reels__nav {
@@ -22990,11 +23006,11 @@ iframe {
 }
 
 @media (min-width: 768px) and (max-width: 1199px) {
-  .social-reels__track {
+  .social-reels__slider {
     max-width: 1100px;
   }
   .social-reels__card {
-    flex-basis: clamp(260px, 32vw, 340px);
+    width: clamp(260px, 32vw, 340px);
   }
 }
 

@@ -1022,7 +1022,7 @@ document.addEventListener('DOMContentLoaded', function () {
         </section>
 
        
-        <section class="social-reels rr-ov-hidden">
+        <section class="social-reels rr-ov-hidden" id="video-showcase">
           <div class="container rr-container-1350">
             <div class="social-reels__intro">
               <span class="social-reels__eyebrow">Video Showcase</span>
@@ -1034,12 +1034,12 @@ document.addEventListener('DOMContentLoaded', function () {
             <button class="social-reels__nav social-reels__nav--prev" type="button" aria-label="Previous video">
               <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
             </button>
-            <div class="social-reels__track" aria-label="Customer social reels">
-              <div class="social-reels__rail">
+            <div class="social-reels__slider swiper js-video-showcase-slider" aria-label="Customer social reels">
+              <div class="swiper-wrapper">
               <?php $renderedReels = 0; ?>
               <?php foreach ($homeInstagramReels as $idx => $reel): ?>
                 <?php
-                  if ($renderedReels >= 5) {
+                  if ($renderedReels >= 8) {
                     break;
                   }
                   $reelUrl = (string) ($reel['reel_url'] ?? '');
@@ -1062,10 +1062,12 @@ document.addEventListener('DOMContentLoaded', function () {
                   $renderedReels++;
                 ?>
                 <div
-                  class="social-reels__card js-reel-card"
+                  class="social-reels__card js-reel-card swiper-slide"
                   aria-label="Open reel <?php echo $renderedReels; ?>"
                   <?php if ($videoUrl !== ''): ?>
                     data-video-src="<?php echo htmlspecialchars($videoUrl, ENT_QUOTES, 'UTF-8'); ?>"
+                  <?php elseif ($embedUrl !== ''): ?>
+                    data-embed-src="<?php echo htmlspecialchars($embedUrl, ENT_QUOTES, 'UTF-8'); ?>"
                   <?php endif; ?>>
                   <?php if ($videoUrl !== ''): ?>
                     <video
@@ -1073,6 +1075,7 @@ document.addEventListener('DOMContentLoaded', function () {
                       class="social-reels__video"
                       playsinline
                       muted
+                      autoplay
                       loop
                       preload="metadata"></video>
                     <button class="social-reels__volume-btn" type="button" aria-label="Unmute reel" aria-pressed="false">
@@ -1102,6 +1105,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <button class="social-reels__nav social-reels__nav--next" type="button" aria-label="Next video">
               <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
             </button>
+            <div class="social-reels__scrollbar swiper-scrollbar" aria-label="Video showcase slider"></div>
           </div>
           <div class="container rr-container-1350">
             <div class="social-reels__outro">
@@ -1110,19 +1114,31 @@ document.addEventListener('DOMContentLoaded', function () {
           </div>
         </section>
 
+        <div class="social-reels__modal" id="social-reels-modal" aria-hidden="true">
+          <div class="social-reels__modal-backdrop" data-social-reels-close></div>
+          <div class="social-reels__modal-dialog" role="dialog" aria-modal="true" aria-label="Video showcase">
+            <button class="social-reels__modal-close" type="button" data-social-reels-close aria-label="Close video">&times;</button>
+            <div class="social-reels__modal-shell">
+              <div class="social-reels__modal-bar">
+                <span class="social-reels__modal-pill">Video Showcase</span>
+                <span class="social-reels__modal-meta">mybrandplease.com</span>
+              </div>
+              <video class="social-reels__modal-video" controls playsinline></video>
+              <iframe class="social-reels__modal-video social-reels__modal-iframe" title="Video showcase reel" allow="autoplay; encrypted-media; picture-in-picture; clipboard-write" allowfullscreen></iframe>
+            </div>
+          </div>
+        </div>
+
         <script>
-          document.addEventListener('DOMContentLoaded', function () {
-            const section = document.querySelector('.social-reels');
+          window.addEventListener('load', function () {
+            const section = document.getElementById('video-showcase');
             if (!section) return;
 
-            const track = section.querySelector('.social-reels__track');
-            const rail = section.querySelector('.social-reels__rail');
-            const prevButton = section.querySelector('.social-reels__nav--prev');
-            const nextButton = section.querySelector('.social-reels__nav--next');
-            if (!track || !rail || !prevButton || !nextButton) return;
+            const swiperEl = section.querySelector('.js-video-showcase-slider');
+            if (!swiperEl || typeof Swiper === 'undefined') return;
 
-            const originalCards = Array.from(rail.querySelectorAll('.social-reels__card'));
-            if (originalCards.length === 0) return;
+            const cards = Array.from(swiperEl.querySelectorAll('.social-reels__card'));
+            if (cards.length === 0) return;
 
             function prepareCard(card) {
               const video = card.querySelector('video');
@@ -1131,104 +1147,180 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
               }
               video.muted = true;
+              video.autoplay = true;
+              video.loop = true;
               video.addEventListener('loadeddata', function () {
                 card.classList.add('is-ready');
               }, { once: true });
               if (video.readyState >= 2) {
                 card.classList.add('is-ready');
               }
+              const playPromise = video.play();
+              if (playPromise && typeof playPromise.catch === 'function') {
+                playPromise.catch(function () {});
+              }
             }
 
-            originalCards.forEach(prepareCard);
+            cards.forEach(prepareCard);
 
-            originalCards.forEach(function (card) {
-              const clone = card.cloneNode(true);
-              clone.setAttribute('aria-hidden', 'true');
-              clone.querySelectorAll('video').forEach(function (video) {
+            function playCardVideos() {
+              section.querySelectorAll('.social-reels__video').forEach(function (video) {
                 video.muted = true;
-              });
-              rail.appendChild(clone);
-              prepareCard(clone);
-            });
-
-            let cardStep = 0;
-            let autoTimer = null;
-            let paused = false;
-            const autoDelay = 3200;
-
-            function calculateStep() {
-              const first = rail.querySelector('.social-reels__card');
-              const second = first ? first.nextElementSibling : null;
-              if (first && second) {
-                cardStep = second.getBoundingClientRect().left - first.getBoundingClientRect().left;
-              } else if (first) {
-                cardStep = first.getBoundingClientRect().width + 24;
-              }
-            }
-
-            function loopStartPoint() {
-              return cardStep * originalCards.length;
-            }
-
-            function normalizePosition() {
-              const loopPoint = loopStartPoint();
-              if (!loopPoint) return;
-
-              if (track.scrollLeft >= loopPoint) {
-                track.scrollLeft = track.scrollLeft - loopPoint;
-              } else if (track.scrollLeft <= 0) {
-                track.scrollLeft = loopPoint;
-              }
-            }
-
-            function move(direction) {
-              if (!cardStep) calculateStep();
-              normalizePosition();
-              track.scrollBy({
-                left: cardStep * direction,
-                behavior: 'smooth'
+                const playPromise = video.play();
+                if (playPromise && typeof playPromise.catch === 'function') {
+                  playPromise.catch(function () {});
+                }
               });
             }
 
-            function startAutoSlide() {
-              stopAutoSlide();
-              autoTimer = window.setInterval(function () {
-                if (!paused) move(1);
-              }, autoDelay);
+            function updateVolumeButton(button, video) {
+              const isMuted = video.muted;
+              button.setAttribute('aria-pressed', isMuted ? 'false' : 'true');
+              button.setAttribute('aria-label', isMuted ? 'Unmute reel' : 'Mute reel');
+              button.classList.toggle('is-unmuted', !isMuted);
+              button.innerHTML = isMuted
+                ? '<i class="fa-solid fa-volume-xmark" aria-hidden="true"></i>'
+                : '<i class="fa-solid fa-volume-high" aria-hidden="true"></i>';
             }
 
-            function stopAutoSlide() {
-              if (autoTimer) {
-                window.clearInterval(autoTimer);
-                autoTimer = null;
+            section.querySelectorAll('.social-reels__volume-btn').forEach(function (button) {
+              button.addEventListener('click', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                const card = button.closest('.social-reels__card');
+                const video = card ? card.querySelector('video') : null;
+                if (!video) return;
+                video.muted = !video.muted;
+                if (!video.muted) {
+                  const playPromise = video.play();
+                  if (playPromise && typeof playPromise.catch === 'function') {
+                    playPromise.catch(function () {});
+                  }
+                }
+                updateVolumeButton(button, video);
+              });
+            });
+
+            const modal = document.getElementById('social-reels-modal');
+            const modalVideo = modal ? modal.querySelector('video') : null;
+            const modalIframe = modal ? modal.querySelector('iframe') : null;
+
+            function closeModal() {
+              if (!modal || !modalVideo || !modalIframe) return;
+              modal.classList.remove('is-open');
+              modal.setAttribute('aria-hidden', 'true');
+              document.body.style.overflow = '';
+              modalVideo.pause();
+              modalVideo.removeAttribute('src');
+              modalVideo.load();
+              modalIframe.removeAttribute('src');
+              modalVideo.style.display = '';
+              modalIframe.style.display = 'none';
+            }
+
+            function openModal(card) {
+              if (!modal || !modalVideo || !modalIframe) return;
+              const videoSrc = card.getAttribute('data-video-src') || '';
+              const embedSrc = card.getAttribute('data-embed-src') || '';
+              if (videoSrc !== '') {
+                modalIframe.style.display = 'none';
+                modalIframe.removeAttribute('src');
+                modalVideo.style.display = 'block';
+                modalVideo.src = videoSrc;
+                modalVideo.currentTime = 0;
+                modalVideo.muted = false;
+                const playPromise = modalVideo.play();
+                if (playPromise && typeof playPromise.catch === 'function') {
+                  playPromise.catch(function () {});
+                }
+              } else if (embedSrc !== '') {
+                modalVideo.pause();
+                modalVideo.removeAttribute('src');
+                modalVideo.style.display = 'none';
+                modalIframe.style.display = 'block';
+                modalIframe.src = embedSrc;
+              } else {
+                return;
               }
+              modal.classList.add('is-open');
+              modal.setAttribute('aria-hidden', 'false');
+              document.body.style.overflow = 'hidden';
             }
 
-            prevButton.addEventListener('click', function () {
-              move(-1);
-              startAutoSlide();
-            });
-            nextButton.addEventListener('click', function () {
-              move(1);
-              startAutoSlide();
+            cards.forEach(function (card) {
+              card.setAttribute('role', 'button');
+              card.setAttribute('tabindex', '0');
             });
 
-            track.addEventListener('scroll', function () {
-              window.clearTimeout(track._socialReelsScrollTimer);
-              track._socialReelsScrollTimer = window.setTimeout(normalizePosition, 120);
-            }, { passive: true });
-
-            section.addEventListener('mouseenter', function () { paused = true; });
-            section.addEventListener('mouseleave', function () { paused = false; });
-            section.addEventListener('focusin', function () { paused = true; });
-            section.addEventListener('focusout', function () { paused = false; });
-            window.addEventListener('resize', function () {
-              calculateStep();
-              normalizePosition();
+            section.addEventListener('click', function (event) {
+              if (event.target.closest('a, button')) return;
+              const card = event.target.closest('.social-reels__card');
+              if (card) {
+                openModal(card);
+              }
             });
 
-            calculateStep();
-            startAutoSlide();
+            section.addEventListener('keydown', function (event) {
+              if (event.key !== 'Enter' && event.key !== ' ') return;
+              const card = event.target.closest('.social-reels__card');
+              if (!card) return;
+              event.preventDefault();
+              openModal(card);
+            });
+
+            if (modal) {
+              modal.querySelectorAll('[data-social-reels-close]').forEach(function (closeButton) {
+                closeButton.addEventListener('click', closeModal);
+              });
+              document.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape' && modal.classList.contains('is-open')) {
+                  closeModal();
+                }
+              });
+            }
+
+            if (swiperEl.swiper) {
+              swiperEl.swiper.destroy(true, true);
+            }
+
+            new Swiper(swiperEl, {
+              loop: cards.length > 1,
+              speed: 700,
+              grabCursor: true,
+              watchOverflow: true,
+              slidesPerView: 'auto',
+              spaceBetween: 24,
+              centeredSlides: false,
+              observer: true,
+              observeParents: true,
+              loopAdditionalSlides: cards.length,
+              autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+                pauseOnMouseEnter: true
+              },
+              navigation: {
+                prevEl: section.querySelector('.social-reels__nav--prev'),
+                nextEl: section.querySelector('.social-reels__nav--next')
+              },
+              scrollbar: {
+                el: section.querySelector('.social-reels__scrollbar'),
+                draggable: true,
+                dragSize: 90
+              },
+              on: {
+                init: playCardVideos,
+                slideChangeTransitionEnd: playCardVideos
+              },
+              breakpoints: {
+                0: {
+                  spaceBetween: 16
+                },
+                768: {
+                  spaceBetween: 24
+                }
+              }
+            });
           });
         </script>
 
