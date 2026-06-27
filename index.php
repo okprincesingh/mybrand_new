@@ -990,7 +990,7 @@ document.addEventListener('DOMContentLoaded', function () {
           <div class="row align-items-center">
             <div class="col-12 col-md-5 reviews-section__intro">
               <p class="rv-label">Verified Reviews</p>
-              <h2 class="rv-heading">Trusted by Brands Worldwide</h2>
+              <h2 class="rv-heading">mybrandplease.com is rated <b>Excellent</b></h2>
               <div class="rv-platform-badge" id="rvPlatformBadge" aria-hidden="true">
                 <img src="" alt="" id="rvPlatformBadgeLogo">
               </div>
@@ -1031,7 +1031,11 @@ document.addEventListener('DOMContentLoaded', function () {
             </div>
           </div>
           <div class="social-reels__viewport">
+            <button class="social-reels__nav social-reels__nav--prev" type="button" aria-label="Previous video">
+              <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+            </button>
             <div class="social-reels__track" aria-label="Customer social reels">
+              <div class="social-reels__rail">
               <?php $renderedReels = 0; ?>
               <?php foreach ($homeInstagramReels as $idx => $reel): ?>
                 <?php
@@ -1068,6 +1072,8 @@ document.addEventListener('DOMContentLoaded', function () {
                       src="<?php echo htmlspecialchars($videoUrl, ENT_QUOTES, 'UTF-8'); ?>"
                       class="social-reels__video"
                       playsinline
+                      muted
+                      loop
                       preload="metadata"></video>
                     <button class="social-reels__volume-btn" type="button" aria-label="Unmute reel" aria-pressed="false">
                       <i class="fa-solid fa-volume-xmark" aria-hidden="true"></i>
@@ -1091,7 +1097,11 @@ document.addEventListener('DOMContentLoaded', function () {
                   <?php endif; ?>
                 </div>
               <?php endforeach; ?>
+              </div>
             </div>
+            <button class="social-reels__nav social-reels__nav--next" type="button" aria-label="Next video">
+              <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+            </button>
           </div>
           <div class="container rr-container-1350">
             <div class="social-reels__outro">
@@ -1099,6 +1109,128 @@ document.addEventListener('DOMContentLoaded', function () {
             </div>
           </div>
         </section>
+
+        <script>
+          document.addEventListener('DOMContentLoaded', function () {
+            const section = document.querySelector('.social-reels');
+            if (!section) return;
+
+            const track = section.querySelector('.social-reels__track');
+            const rail = section.querySelector('.social-reels__rail');
+            const prevButton = section.querySelector('.social-reels__nav--prev');
+            const nextButton = section.querySelector('.social-reels__nav--next');
+            if (!track || !rail || !prevButton || !nextButton) return;
+
+            const originalCards = Array.from(rail.querySelectorAll('.social-reels__card'));
+            if (originalCards.length === 0) return;
+
+            function prepareCard(card) {
+              const video = card.querySelector('video');
+              if (!video) {
+                card.classList.add('is-ready');
+                return;
+              }
+              video.muted = true;
+              video.addEventListener('loadeddata', function () {
+                card.classList.add('is-ready');
+              }, { once: true });
+              if (video.readyState >= 2) {
+                card.classList.add('is-ready');
+              }
+            }
+
+            originalCards.forEach(prepareCard);
+
+            originalCards.forEach(function (card) {
+              const clone = card.cloneNode(true);
+              clone.setAttribute('aria-hidden', 'true');
+              clone.querySelectorAll('video').forEach(function (video) {
+                video.muted = true;
+              });
+              rail.appendChild(clone);
+              prepareCard(clone);
+            });
+
+            let cardStep = 0;
+            let autoTimer = null;
+            let paused = false;
+            const autoDelay = 3200;
+
+            function calculateStep() {
+              const first = rail.querySelector('.social-reels__card');
+              const second = first ? first.nextElementSibling : null;
+              if (first && second) {
+                cardStep = second.getBoundingClientRect().left - first.getBoundingClientRect().left;
+              } else if (first) {
+                cardStep = first.getBoundingClientRect().width + 24;
+              }
+            }
+
+            function loopStartPoint() {
+              return cardStep * originalCards.length;
+            }
+
+            function normalizePosition() {
+              const loopPoint = loopStartPoint();
+              if (!loopPoint) return;
+
+              if (track.scrollLeft >= loopPoint) {
+                track.scrollLeft = track.scrollLeft - loopPoint;
+              } else if (track.scrollLeft <= 0) {
+                track.scrollLeft = loopPoint;
+              }
+            }
+
+            function move(direction) {
+              if (!cardStep) calculateStep();
+              normalizePosition();
+              track.scrollBy({
+                left: cardStep * direction,
+                behavior: 'smooth'
+              });
+            }
+
+            function startAutoSlide() {
+              stopAutoSlide();
+              autoTimer = window.setInterval(function () {
+                if (!paused) move(1);
+              }, autoDelay);
+            }
+
+            function stopAutoSlide() {
+              if (autoTimer) {
+                window.clearInterval(autoTimer);
+                autoTimer = null;
+              }
+            }
+
+            prevButton.addEventListener('click', function () {
+              move(-1);
+              startAutoSlide();
+            });
+            nextButton.addEventListener('click', function () {
+              move(1);
+              startAutoSlide();
+            });
+
+            track.addEventListener('scroll', function () {
+              window.clearTimeout(track._socialReelsScrollTimer);
+              track._socialReelsScrollTimer = window.setTimeout(normalizePosition, 120);
+            }, { passive: true });
+
+            section.addEventListener('mouseenter', function () { paused = true; });
+            section.addEventListener('mouseleave', function () { paused = false; });
+            section.addEventListener('focusin', function () { paused = true; });
+            section.addEventListener('focusout', function () { paused = false; });
+            window.addEventListener('resize', function () {
+              calculateStep();
+              normalizePosition();
+            });
+
+            calculateStep();
+            startAutoSlide();
+          });
+        </script>
 
         <!-- Office Section Start -->
         <section class="office-showcase section-spacing-120 rr-ov-hidden">

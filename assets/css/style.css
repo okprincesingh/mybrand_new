@@ -19378,9 +19378,10 @@ iframe {
 }
 .office-grid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 290px));
   gap: 0.9rem;
   align-items: stretch;
+  justify-content: center;
 }
 .office-card {
   position: relative;
@@ -22574,6 +22575,7 @@ iframe {
 .social-reels__viewport {
   position: relative;
   padding: 4px 0 10px;
+  isolation: isolate;
 }
 .social-reels__outro {
   max-width: 920px;
@@ -22592,19 +22594,65 @@ iframe {
 }
 .social-reels__track {
   position: relative;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   max-width: 100%;
   margin: 0 auto;
   padding: 14px 10px 20px;
   cursor: default;
   user-select: none;
-  touch-action: pan-y pinch-zoom;
+  touch-action: pan-x pan-y pinch-zoom;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+.social-reels__track::-webkit-scrollbar {
+  display: none;
 }
 .social-reels__rail {
   display: flex;
   gap: 24px;
   width: max-content;
-  will-change: transform;
+}
+.social-reels__nav {
+  position: absolute;
+  top: 50%;
+  z-index: 6;
+  width: 46px;
+  height: 46px;
+  border: 0;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.92);
+  color: #ee2d7a;
+  box-shadow: 0 12px 28px rgba(47, 28, 34, 0.18);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-50%) scale(0.94);
+  transition: opacity .22s ease, transform .22s ease, background .22s ease, color .22s ease;
+}
+.social-reels__nav--prev {
+  left: clamp(12px, 3vw, 44px);
+}
+.social-reels__nav--next {
+  right: clamp(12px, 3vw, 44px);
+}
+.social-reels__viewport:hover .social-reels__nav,
+.social-reels__viewport:focus-within .social-reels__nav {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(-50%) scale(1);
+}
+.social-reels__nav:hover,
+.social-reels__nav:focus-visible {
+  background: #ee2d7a;
+  color: #fff;
+}
+.social-reels__nav:focus-visible {
+  outline: 3px solid rgba(238, 45, 122, 0.28);
+  outline-offset: 3px;
 }
 .social-reels__card {
   position: relative;
@@ -22922,6 +22970,10 @@ iframe {
   .social-reels__card {
     flex-basis: 58vw;
     border-radius: 20px;
+  }
+  .social-reels__nav {
+    width: 40px;
+    height: 40px;
   }
   .social-reels__modal-bar {
     top: 12px;
