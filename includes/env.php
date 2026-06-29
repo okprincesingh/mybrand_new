@@ -47,11 +47,9 @@ function app_load_env(?string $path = null): void
             }
         }
 
-        if (getenv($key) === false) {
-            putenv($key . '=' . $value);
-            $_ENV[$key] = $value;
-            $_SERVER[$key] = $value;
-        }
+        putenv($key . '=' . $value);
+        $_ENV[$key] = $value;
+        $_SERVER[$key] = $value;
     }
 
     $loaded[$realPath] = true;
