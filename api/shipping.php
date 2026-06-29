@@ -35,6 +35,8 @@ foreach ($cart as $slug => $quantity) {
 }
 $subtotal = round($subtotal, 2);
 $cartWeight = shipping_calculate_cart_weight($cart);
+$destinationState = trim((string) ($input['state'] ?? $input['destination_state'] ?? ''));
+$postalCode = trim((string) ($input['postal_code'] ?? $input['zip'] ?? ''));
 
 if ($action === 'list') {
     $available = getAvailableShippingMethods($subtotal, $cartWeight, $destinationState, $postalCode);
@@ -69,6 +71,7 @@ if ($action === 'list') {
         'summary' => [
             'subtotal' => $subtotal,
             'shipping_cost' => $shippingCost,
+            'has_shipping_method' => !empty($selected),
             'discount_amount' => $discountAmount,
             'total' => $total,
             'cart_weight' => $cartWeight,
@@ -106,6 +109,7 @@ if ($action === 'select') {
         'summary' => [
             'subtotal' => $subtotal,
             'shipping_cost' => (float) $method['cost'],
+            'has_shipping_method' => true,
             'discount_amount' => $discountAmount,
             'total' => $total,
             'cart_weight' => $cartWeight,

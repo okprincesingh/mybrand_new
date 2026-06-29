@@ -81,6 +81,7 @@ if (!$selectedShippingMethod && !empty($shippingMethods)) {
     shipping_save_selection_to_session($selectedShippingMethod);
 }
 $shippingCost = (float) ($selectedShippingMethod['cost'] ?? 0.0);
+$hasShippingMethod = is_array($selectedShippingMethod) && !empty($selectedShippingMethod['id']);
 $couponSummary = coupon_refresh_session($subtotal);
 $couponCode = (string) ($couponSummary['coupon_code'] ?? '');
 $discountAmount = (float) ($couponSummary['discount_amount'] ?? 0.0);
@@ -368,7 +369,7 @@ include 'includes/header.php';
                                 <div class="checkout-page__order-summary-totals-row">
                                     <span class="checkout-page__order-summary-totals-label">Selected Shipping</span>
                                     <span class="checkout-page__order-summary-totals-value" id="shipping-cost">
-                                        <?php echo $shippingCost > 0 ? ('$' . number_format((float)$shippingCost, 2)) : 'Free'; ?>
+                                        <?php echo $hasShippingMethod ? ($shippingCost > 0 ? ('$' . number_format((float)$shippingCost, 2)) : 'Free') : 'Unavailable'; ?>
                                     </span>
                                 </div>
                                 <div class="checkout-page__order-summary-totals-row checkout-page__order-summary-totals-row--discount">
@@ -708,7 +709,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const totalEl = document.getElementById('total');
         if (subtotalEl) subtotalEl.textContent = formatMoney(summary.subtotal || 0);
         if (shippingCostEl && Object.prototype.hasOwnProperty.call(summary, 'shipping_cost')) {
-            shippingCostEl.textContent = Number(summary.shipping_cost || 0) > 0 ? formatMoney(summary.shipping_cost) : 'Free';
+            shippingCostEl.textContent = summary.has_shipping_method === false
+                ? 'Unavailable'
+                : (Number(summary.shipping_cost || 0) > 0 ? formatMoney(summary.shipping_cost) : 'Free');
         }
         if (discountEl) discountEl.textContent = '-' + formatMoney(summary.discount_amount || 0);
         if (totalEl) totalEl.textContent = formatMoney(summary.total || 0);
@@ -726,7 +729,7 @@ document.addEventListener('DOMContentLoaded', function() {
         applySummary(summary);
 
         const shippingText = (document.getElementById('shipping-cost')?.textContent || '').trim().toLowerCase();
-        const shippingNumber = shippingText === 'free' ? 0 : Number(String(shippingText).replace(/[^0-9.]/g, '')) || 0;
+        const shippingNumber = (shippingText === 'free' || shippingText === 'unavailable') ? 0 : Number(String(shippingText).replace(/[^0-9.]/g, '')) || 0;
         const adjustedTotal = Math.max(0, Number(summary.subtotal || 0) + shippingNumber - Number(summary.discount_amount || 0));
         const totalEl = document.getElementById('total');
         if (totalEl) totalEl.textContent = formatMoney(adjustedTotal);

@@ -30,25 +30,31 @@ function coupon_cart_subtotal(): float
 
 function coupon_find_valid(string $code, float $subtotal): ?array
 {
+    $result = coupon_validate($code, $subtotal);
+    return $result['coupon'];
+}
+
+function coupon_validate(string $code, float $subtotal): array
+{
     $code = strtoupper(trim($code));
     if ($code === '') {
-        return null;
+        return ['coupon' => null, 'message' => 'Enter a coupon code.'];
     }
 
     $pdo = db();
     if (!$pdo) {
-        return null;
+        return ['coupon' => null, 'message' => 'Coupon service is unavailable.'];
     }
 
     $stmt = $pdo->prepare('SELECT * FROM coupons WHERE code = :code LIMIT 1');
     $stmt->execute([':code' => $code]);
     $coupon = $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     if (!$coupon) {
-        return null;
+        return ['coupon' => null, 'message' => 'Coupon code was not found.'];
     }
 
     if ((int) ($coupon['is_active'] ?? 0) !== 1) {
-        return null;
+        return ['coupon' => null, 'message' => 'This coupon is not active.'];
     }
 
     $now = time();
@@ -56,24 +62,24 @@ function coupon_find_valid(string $code, float $subtotal): ?array
     $expiresAt = !empty($coupon['expires_at']) ? strtotime((string) $coupon['expires_at']) : null;
 
     if ($startsAt !== null && $startsAt > $now) {
-        return null;
+        return ['coupon' => null, 'message' => 'This coupon starts on ' . date('M j, Y g:i A', $startsAt) . '.'];
     }
     if ($expiresAt !== null && $expiresAt < $now) {
-        return null;
+        return ['coupon' => null, 'message' => 'This coupon expired on ' . date('M j, Y g:i A', $expiresAt) . '.'];
     }
 
     $usageLimit = isset($coupon['usage_limit']) ? (int) $coupon['usage_limit'] : null;
     $usageCount = (int) ($coupon['usage_count'] ?? 0);
     if ($usageLimit !== null && $usageLimit > 0 && $usageCount >= $usageLimit) {
-        return null;
+        return ['coupon' => null, 'message' => 'This coupon has reached its usage limit.'];
     }
 
     $minOrder = isset($coupon['minimum_order_amount']) ? (float) $coupon['minimum_order_amount'] : null;
     if ($minOrder !== null && $minOrder > 0 && $subtotal < $minOrder) {
-        return null;
+        return ['coupon' => null, 'message' => 'This coupon requires a minimum order of $' . number_format($minOrder, 2) . '.'];
     }
 
-    return $coupon;
+    return ['coupon' => $coupon, 'message' => 'Coupon is valid.'];
 }
 
 function coupon_calculate_discount(array $coupon, float $subtotal): float
@@ -102,12 +108,13 @@ function coupon_calculate_discount(array $coupon, float $subtotal): float
 
 function coupon_apply_to_session(string $code, float $subtotal): array
 {
-    $coupon = coupon_find_valid($code, $subtotal);
+    $validation = coupon_validate($code, $subtotal);
+    $coupon = $validation['coupon'];
     if (!$coupon) {
         coupon_clear_session();
         return [
             'success' => false,
-            'message' => 'Invalid or expired coupon code.',
+            'message' => (string) $validation['message'],
             'data' => coupon_totals_summary($subtotal),
         ];
     }

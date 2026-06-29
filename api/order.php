@@ -112,6 +112,10 @@ $postalCode = (string) ((!empty($data['use_shipping_address']) && $data['use_shi
         }
     }
 
+    if (!$selectedShippingMethod) {
+        return ['success' => false, 'message' => 'No shipping method is available for this order.'];
+    }
+
     $shippingCost = (float) ($selectedShippingMethod['cost'] ?? 0.0);
     $shippingMethodName = (string) ($selectedShippingMethod['method_name'] ?? 'Standard Shipping');
     $shippingMethodId = (int) ($selectedShippingMethod['id'] ?? 0);

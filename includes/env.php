@@ -58,3 +58,12 @@ function app_load_env(?string $path = null): void
 }
 
 app_load_env();
+
+$appTimezone = getenv('APP_TIMEZONE') ?: 'Asia/Kolkata';
+if (is_string($appTimezone) && $appTimezone !== '') {
+    try {
+        date_default_timezone_set($appTimezone);
+    } catch (Throwable $e) {
+        date_default_timezone_set('Asia/Kolkata');
+    }
+}
