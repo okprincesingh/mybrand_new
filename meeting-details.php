@@ -325,7 +325,7 @@ body { font-family: 'Inter', sans-serif; background: #fff; }
 
                             <p class="privacy-text">
                                 By proceeding, you confirm that you have read and agree to<br>
-                                <a href="#">Calendly's Terms of Use</a> and <a href="#">Privacy Notice</a>.
+                                <a href="#">Mybrandplease Terms of Use</a> and <a href="#">Privacy Notice</a>.
                             </p>
 
                             <button type="submit" class="btn-schedule">Schedule Event</button>
