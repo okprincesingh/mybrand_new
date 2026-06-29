@@ -20051,7 +20051,9 @@ iframe {
 @media only screen and (max-width: 991px) {
   .global-map-stage {
     min-height: auto;
-    height: auto;
+    height: 40vh;
+    display: flex;
+    align-items: center;
     padding: 0;
   }
   .global-presence .map-image {
@@ -24531,6 +24533,12 @@ iframe {
     linear-gradient(180deg, #fffbfe 0%, #fff7fa 100%);
   padding: clamp(52px, 6vw, 86px) clamp(18px, 4vw, 56px);
   font-family: var(--font_Lato);
+  overflow: hidden;
+}
+
+.reviews-section,
+.reviews-section * {
+  box-sizing: border-box;
 }
 
 .reviews-section__grid {
@@ -24546,6 +24554,11 @@ iframe {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  min-width: 0;
+}
+
+.reviews-section__content {
+  min-width: 0;
 }
 
 .rv-label {
@@ -24579,6 +24592,7 @@ iframe {
   letter-spacing: -0.02em;
   margin: 0 0 18px;
   line-height: 1.16;
+  overflow-wrap: anywhere;
 }
 
 .rv-heading b {
@@ -25044,44 +25058,159 @@ iframe {
 
 @media (max-width: 767px) {
   .reviews-section {
-    padding: 42px 16px;
+    padding: 40px 14px;
   }
 
   .reviews-section__grid {
     grid-template-columns: 1fr;
-    gap: 28px;
+    gap: 24px;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
   }
 
   .reviews-section__intro {
     align-items: stretch;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .rv-label {
+    font-size: 0.74rem;
+    letter-spacing: 0.06em;
+    margin-bottom: 12px;
+  }
+
+  .rv-label span {
+    width: 30px;
+    height: 30px;
   }
 
   .rv-heading {
-    font-size: 2.25rem;
+    max-width: 100%;
+    font-size: clamp(1.85rem, 9vw, 2.35rem);
+    line-height: 1.18;
+    margin-bottom: 12px;
+  }
+
+  .rv-sub {
+    max-width: 100%;
+    font-size: 0.96rem;
+    margin-bottom: 18px;
+  }
+
+  .rv-score-card {
+    width: 100%;
+    max-width: 100%;
+    padding: 18px;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .rv-score-card__brand {
+    gap: 10px;
+    font-size: 1.55rem;
+  }
+
+  .rv-score-card__brand img {
+    width: 38px;
+    height: 38px;
+  }
+
+  .rv-score-card__blocks {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 5px;
+    margin: 15px 0 10px;
+    width: 100%;
+  }
+
+  .rv-score-card__blocks span {
+    min-height: 34px;
+    font-size: 0.9rem;
+    min-width: 0;
+  }
+
+  .rv-score-card p {
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+  }
+
+  .rv-score-card__verified {
+    align-items: flex-start;
+    font-size: 0.82rem;
+    line-height: 1.35;
+    padding: 10px 12px;
   }
 
   .rv-tabs {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 100%;
   }
 
   .rv-tab {
-    min-width: calc(50% - 5px);
-    font-size: 0.92rem;
+    min-width: 0 !important;
+    width: 100% !important;
+    min-height: 44px;
+    padding: 9px 10px;
+    font-size: 0.86rem;
+    border-radius: 9px;
+    white-space: nowrap;
+  }
+
+  .rv-tab img {
+    width: 15px;
+    height: 15px;
   }
 
   .rv-trust-strip {
+    width: 100%;
+    max-width: 100%;
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 9px;
+    padding: 12px;
   }
 
   .rv-trust-strip span {
     border-right: 0;
     padding: 0;
+    font-size: 0.82rem;
   }
 
   .rv-card {
+    width: 100%;
+    max-width: 100%;
     min-height: 0;
-    padding: 26px 20px;
+    padding: 24px 18px;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .rv-outer,
+  .rv-wrap,
+  .rv-track {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .rv-qmark {
+    width: 44px;
+    height: 36px;
+    margin-bottom: 10px;
+  }
+
+  .rv-qmark::before {
+    font-size: 62px;
+  }
+
+  .rv-text {
+    font-size: 0.95rem;
+    line-height: 1.62;
+    margin-bottom: 22px;
+    overflow-wrap: anywhere;
   }
 
   .rv-footer,
@@ -25090,8 +25219,43 @@ iframe {
     align-items: flex-start;
   }
 
+  .rv-footer {
+    gap: 16px;
+    padding-top: 20px;
+  }
+
+  .rv-avatar {
+    width: 46px;
+    height: 46px;
+  }
+
   .rv-right {
     text-align: left;
+  }
+
+  .rv-pill .rv-platform-logo {
+    width: 112px;
+    max-height: 40px;
+  }
+
+  .rv-readmore {
+    min-height: 42px;
+    margin-top: 18px;
+    padding: 8px 16px;
+  }
+
+  .rv-bottom {
+    width: 100%;
+    margin-top: 18px;
+  }
+
+  .rv-arrows {
+    align-self: flex-end;
+  }
+
+  .rv-arr {
+    width: 42px;
+    height: 42px;
   }
 }
 
@@ -25103,5 +25267,25 @@ iframe {
 
   .rv-outer {
     max-width: 100%;
+  }
+}
+
+@media (max-width: 380px) {
+  .rv-heading {
+    font-size: 1.72rem;
+  }
+
+  .rv-score-card__brand {
+    font-size: 1.35rem;
+  }
+
+  .rv-score-card__blocks span {
+    min-height: 30px;
+    font-size: 0.78rem;
+  }
+
+  .rv-tab {
+    font-size: 0.78rem;
+    padding-inline: 6px;
   }
 }
