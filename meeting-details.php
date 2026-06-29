@@ -106,6 +106,9 @@ if ($isPost) {
         $meetWarning = meeting_google_meet_last_error() !== ''
             ? '<p><strong>Google Meet Note:</strong><br>' . e(meeting_google_meet_last_error()) . ' Default Google Meet link was used for this booking.</p>'
             : '';
+        $meetLinkHtml = $googleMeetLink !== ''
+            ? '<p><strong>Google Meet Link:</strong><br><a href="' . e($googleMeetLink) . '">' . e($googleMeetLink) . '</a></p>'
+            : '';
 
         $adminBody = '
             <p>Hi NIMISHA IMPEX WORLDWIDE (P) LIMITED,</p>
@@ -116,6 +119,7 @@ if ($isPost) {
             <p><strong>Additional Guests:</strong>' . $guestHtml . '</p>
             <p><strong>Event Date/Time:</strong><br>' . e($eventDisplay) . ' (' . e($timezone) . ')</p>
             <p><strong>Location:</strong><br>This is a Google Meet web conference. <a href="' . e($googleMeetLink) . '">Join now</a></p>
+            ' . $meetLinkHtml . '
             ' . $meetWarning . '
             <p><strong>Invitee Time Zone:</strong><br>' . e($timezone) . '</p>
             <p><strong>Notes:</strong><br>' . $notesHtml . '</p>
@@ -128,32 +132,28 @@ if ($isPost) {
             <p><strong>Event Date/Time:</strong><br>' . e($eventDisplay) . ' (' . e($timezone) . ')</p>
             <p><strong>Additional Guests:</strong>' . $guestHtml . '</p>
             <p><strong>Location:</strong><br>This is a Google Meet web conference. <a href="' . e($googleMeetLink) . '">Join now</a></p>
+            ' . $meetLinkHtml . '
             <p><strong>Notes:</strong><br>' . $notesHtml . '</p>
         ';
 
         $adminEmail = meeting_mail_admin_email();
-        $sameRecipient = strcasecmp($adminEmail, $email) === 0;
 
         $adminSent = meeting_send_html_mail($adminEmail, 'New Event Scheduled - 30 Minute Meeting', $adminBody, $email, $name);
         $adminStatus = meeting_mail_last_error();
 
-        $userSent = $adminSent;
-        $userStatus = $adminStatus;
-        if (!$sameRecipient) {
-            if (meeting_mail_hit_gmail_quota($adminStatus)) {
-                $userSent = false;
-                $userStatus = $adminStatus;
-            } else {
-                $userSent = meeting_send_html_mail($email, 'Meeting Confirmation - 30 Minute Meeting', $userBody);
-                $userStatus = meeting_mail_last_error();
-            }
+        if (meeting_mail_hit_gmail_quota($adminStatus)) {
+            $userSent = false;
+            $userStatus = $adminStatus;
+        } else {
+            $userSent = meeting_send_html_mail($email, 'Meeting Confirmation - 30 Minute Meeting', $userBody);
+            $userStatus = meeting_mail_last_error();
         }
 
         $success = 'Meeting scheduled successfully. Your Google Meet link is ready below.';
         if (!$adminSent) {
             $warnings[] = 'Admin email failed (' . e($adminEmail) . '): ' . e(meeting_mail_human_error($adminStatus));
         }
-        if (!$userSent && !$sameRecipient) {
+        if (!$userSent) {
             $warnings[] = 'User email failed (' . e($email) . '): ' . e(meeting_mail_human_error($userStatus));
         }
     }
