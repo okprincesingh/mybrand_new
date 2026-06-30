@@ -11,6 +11,58 @@ if (!$product) {
 
 $categoryInfo = $product ? catalog_find_category((string) $product['category']) : null;
 $currentProductSlug = (string) ($product['slug'] ?? '');
+$currentProductId = (int) ($product['id'] ?? 0);
+$reviewNotice = '';
+$reviewError = '';
+
+if ($product && $_SERVER['REQUEST_METHOD'] === 'POST' && (string) ($_POST['form_type'] ?? '') === 'product_review') {
+  try {
+    verify_csrf_or_fail();
+    $reviewerName = trim((string) ($_POST['reviewer_name'] ?? ''));
+    $reviewerEmail = trim((string) ($_POST['reviewer_email'] ?? ''));
+    $reviewRating = max(1, min(5, (int) ($_POST['rating'] ?? 5)));
+    $reviewText = trim((string) ($_POST['review_text'] ?? ''));
+
+    if ($currentProductId <= 0) {
+      $reviewError = 'Review could not be submitted for this product.';
+    } elseif ($reviewerName === '' || $reviewerEmail === '' || $reviewText === '') {
+      $reviewError = 'Please enter your name, email, and review message.';
+    } elseif (!filter_var($reviewerEmail, FILTER_VALIDATE_EMAIL)) {
+      $reviewError = 'Please enter a valid email address.';
+    } else {
+      $pdo = db();
+      if (!$pdo) {
+        $reviewError = 'Review could not be submitted right now. Please try again later.';
+      } else {
+        db_execute(
+          $pdo,
+          "INSERT INTO product_reviews (product_id, reviewer_name, reviewer_email, rating, review_text, status) VALUES (:product_id, :name, :email, :rating, :review_text, 'pending')",
+          [
+            ':product_id' => $currentProductId,
+            ':name' => $reviewerName,
+            ':email' => $reviewerEmail,
+            ':rating' => $reviewRating,
+            ':review_text' => $reviewText,
+          ]
+        );
+        $reviewNotice = 'Thank you. Your review has been submitted and will appear after approval.';
+        $_POST = [];
+      }
+    }
+  } catch (Throwable $e) {
+    $reviewError = 'Review could not be submitted. Please refresh and try again.';
+  }
+}
+
+$productReviews = [];
+if ($currentProductId > 0 && ($pdo = db())) {
+  $productReviews = db_fetch_all(
+    $pdo,
+    "SELECT reviewer_name, rating, review_text, created_at FROM product_reviews WHERE product_id = :product_id AND status = 'approved' ORDER BY created_at DESC, id DESC",
+    [':product_id' => $currentProductId]
+  );
+}
+$reviewCount = count($productReviews);
 
 $gallery = [];
 $attributes = [];
@@ -253,7 +305,7 @@ include 'includes/header.php';
               </li>
               <li class="nav-item" role="presentation">
                 <button class="nav-link" id="three-tab" data-bs-toggle="tab" data-bs-target="#three-tab-pane"
-                  type="button" role="tab" aria-controls="three-tab-pane" aria-selected="false">Reviews (1)</button>
+                  type="button" role="tab" aria-controls="three-tab-pane" aria-selected="false">Reviews (<?php echo (int) $reviewCount; ?>)</button>
               </li>
             </ul>
             <div class="tab-content" id="myTabContent">
@@ -306,81 +358,82 @@ include 'includes/header.php';
                   <div class="row g-4 d-flex justify-content-between">
                     <div class="col-xl-7">
                       <div class="product-tab-items">
-                        <p class="product-tab-items__text">05 review for Denim Jean Top Jacket Sleeve Crop Women</p>
-                        <div class="product-tab-items__card d-flex align-items-start justify-content-between gap-3">
-
-                          <div
-                            class="product-tab-items__card-info d-flex align-items-center justify-content-between gap-3">
-                            <div class="product-tab-items__card-thumb">
-                              <img src="<?php echo url('assets/imgs/inner/product-details/image-1.png'); ?>" alt="img">
+                        <p class="product-tab-items__text"><?php echo (int) $reviewCount; ?> review<?php echo $reviewCount === 1 ? '' : 's'; ?> for <?php echo htmlspecialchars((string) ($product['name'] ?? 'Product'), ENT_QUOTES, 'UTF-8'); ?></p>
+                        <?php if ($productReviews): ?>
+                          <?php foreach ($productReviews as $review): ?>
+                            <?php
+                              $reviewerName = trim((string) ($review['reviewer_name'] ?? 'Customer'));
+                              $reviewText = trim((string) ($review['review_text'] ?? ''));
+                              $reviewRating = max(1, min(5, (int) ($review['rating'] ?? 5)));
+                              $reviewDate = !empty($review['created_at']) ? date('F j, Y', strtotime((string) $review['created_at'])) : '';
+                              $initials = strtoupper(substr($reviewerName, 0, 1));
+                            ?>
+                            <div class="product-tab-items__card d-flex align-items-start justify-content-between gap-3">
+                              <div class="product-tab-items__card-info d-flex align-items-center justify-content-between gap-3">
+                                <div class="product-tab-items__card-thumb product-tab-items__card-avatar">
+                                  <span><?php echo htmlspecialchars($initials, ENT_QUOTES, 'UTF-8'); ?></span>
+                                </div>
+                                <div class="product-tab-items__card-info-content">
+                                  <p class="product-tab-items__card-info-content-text"><?php echo htmlspecialchars($reviewerName, ENT_QUOTES, 'UTF-8'); ?><?php echo $reviewDate !== '' ? ' - ' . htmlspecialchars($reviewDate, ENT_QUOTES, 'UTF-8') : ''; ?></p>
+                                  <div class="product-tab-items__card-info-content-name"><?php echo htmlspecialchars($reviewText, ENT_QUOTES, 'UTF-8'); ?></div>
+                                </div>
+                              </div>
+                              <div class="product-tab-items__card-info-star product-tab-items__card-stars" aria-label="<?php echo (int) $reviewRating; ?> out of 5 stars">
+                                <?php for ($star = 1; $star <= 5; $star++): ?>
+                                  <i class="fa-solid fa-star<?php echo $star <= $reviewRating ? '' : ' product-tab-items__star-muted'; ?>"></i>
+                                <?php endfor; ?>
+                              </div>
                             </div>
-                            <div class="product-tab-items__card-info-content">
-                              <p class="product-tab-items__card-info-content-text">George – October 13, 2023</p>
-                              <div class="product-tab-items__card-info-content-name">Amazing Quility 😍</div>
-                            </div>
+                          <?php endforeach; ?>
+                        <?php else: ?>
+                          <div class="product-tab-items__card product-tab-items__card--empty">
+                            <div class="product-tab-items__card-info-content-name">No approved reviews yet. Be the first to review this product.</div>
                           </div>
-
-                          <div class="product-tab-items__card-info-star">
-                            <img src="assets/imgs/inner/product-details/star.png" alt="stat">
-                          </div>
-                        </div>
-                        <div class="product-tab-items__card d-flex align-items-start justify-content-between gap-3">
-                          <div
-                            class="product-tab-items__card-info d-flex align-items-center justify-content-between gap-3">
-                            <div class="product-tab-items__card-thumb">
-                              <img src="<?php echo url('assets/imgs/inner/product-details/image-2.png'); ?>" alt="img">
-                            </div>
-                            <div class="product-tab-items__card-info-content">
-                              <p class="product-tab-items__card-info-content-text">George – October 13, 2023</p>
-                              <div class="product-tab-items__card-info-content-name">Amazing Quility 😍</div>
-                            </div>
-                          </div>
-                          <div class="product-tab-items__card-info-star">
-                            <img src="assets/imgs/inner/product-details/star.png" alt="stat">
-                          </div>
-                        </div>
-                        <div class="product-tab-items__card  d-flex align-items-start justify-content-between gap-3">
-                          <div
-                            class="product-tab-items__card-info d-flex align-items-center justify-content-between gap-3">
-                            <div class="product-tab-items__card-thumb">
-                              <img src="<?php echo url('assets/imgs/inner/product-details/image-3.png'); ?>" alt="img">
-                            </div>
-                            <div class="product-tab-items__card-info-content">
-                              <p class="product-tab-items__card-info-content-text">George – October 13, 2023</p>
-                              <div class="product-tab-items__card-info-content-name">Amazing Quility 😍</div>
-                            </div>
-                          </div>
-                          <div class="product-tab-items__card-info-star">
-                            <img src="assets/imgs/inner/product-details/star.png" alt="stat">
-                          </div>
-                        </div>
+                        <?php endif; ?>
                       </div>
                     </div>
                     <div class="col-xl-5">
                       <div class="product-tab-contact">
                         <div class="product-tab-contact__title">Add a review</div>
-                        <form action="contact.php" id="contact-form" method="POST" class="product-tab-contact__form">
+                        <form action="<?php echo htmlspecialchars(url('product-details.php?slug=' . urlencode((string) ($product['slug'] ?? ''))), ENT_QUOTES, 'UTF-8'); ?>" id="contact-form" method="POST" class="product-tab-contact__form">
                           <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+                          <input type="hidden" name="form_type" value="product_review">
+                          <?php if ($reviewNotice !== ''): ?>
+                            <div class="alert alert-success"><?php echo htmlspecialchars($reviewNotice, ENT_QUOTES, 'UTF-8'); ?></div>
+                          <?php endif; ?>
+                          <?php if ($reviewError !== ''): ?>
+                            <div class="alert alert-danger"><?php echo htmlspecialchars($reviewError, ENT_QUOTES, 'UTF-8'); ?></div>
+                          <?php endif; ?>
                           <div class="row g-4">
                             <div class="col-lg-12">
                               <div class="product-tab-contact__form_input">
                                 <span class="product-tab-contact__form-input-name">Your Name</span>
-                                <input type="text" class="product-tab-contact__form-input-field" name="name" id="name"
-                                  placeholder="Enter Your Name">
+                                <input type="text" class="product-tab-contact__form-input-field" name="reviewer_name" id="name" required
+                                  placeholder="Enter Your Name" value="<?php echo htmlspecialchars((string) ($_POST['reviewer_name'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>">
                               </div>
                             </div>
                             <div class="col-lg-12">
                               <div class="product-tab-contact__form_input">
                                 <span class="product-tab-contact__form-input-name">Your Email</span>
-                                <input type="text" class="product-tab-contact__form-input-field" name="email"
-                                  id="email1" placeholder="Email Here">
+                                <input type="email" class="product-tab-contact__form-input-field" name="reviewer_email"
+                                  id="email1" required placeholder="Email Here" value="<?php echo htmlspecialchars((string) ($_POST['reviewer_email'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>">
+                              </div>
+                            </div>
+                            <div class="col-lg-12">
+                              <div class="product-tab-contact__form_input">
+                                <span class="product-tab-contact__form-input-name">Rating</span>
+                                <select class="product-tab-contact__form-input-field" name="rating" required>
+                                  <?php for ($ratingOption = 5; $ratingOption >= 1; $ratingOption--): ?>
+                                    <option value="<?php echo $ratingOption; ?>" <?php echo (int) ($_POST['rating'] ?? 5) === $ratingOption ? 'selected' : ''; ?>><?php echo $ratingOption; ?> Star<?php echo $ratingOption === 1 ? '' : 's'; ?></option>
+                                  <?php endfor; ?>
+                                </select>
                               </div>
                             </div>
                             <div class="col-lg-12">
                               <div class="product-tab-contact__form_input">
                                 <span class="product-tab-contact__form-input-name">Your Message</span>
-                                <textarea name="message" class="product-tab-contact__form-input-field textarea"
-                                  id="message" placeholder="Enter Your Message"></textarea>
+                                <textarea name="review_text" class="product-tab-contact__form-input-field textarea"
+                                  id="message" required placeholder="Enter Your Message"><?php echo htmlspecialchars((string) ($_POST['review_text'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></textarea>
                               </div>
                             </div>
                             <div class="col-lg-6">

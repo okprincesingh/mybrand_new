@@ -446,6 +446,44 @@
     resetProg();
   })();
 
+  (function () {
+    const selectors = [
+      ".section-heading__title",
+      ".offer1__content-title",
+      ".gs-process__title",
+      ".milestone-highlight__title",
+      ".rv-heading",
+      ".social-reels__title",
+      ".office-showcase__title",
+      ".partners-carousel-section__title"
+    ];
+    const titles = Array.from(document.querySelectorAll(selectors.join(",")));
+    if (!titles.length) return;
+
+    titles.forEach((title, index) => {
+      title.classList.add("section-title-animate");
+      title.classList.add(index % 2 === 0 ? "section-title-from-left" : "section-title-from-right");
+    });
+
+    if (!("IntersectionObserver" in window)) {
+      titles.forEach((title) => title.classList.add("is-title-visible"));
+      return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-title-visible");
+        observer.unobserve(entry.target);
+      });
+    }, {
+      threshold: 0.22,
+      rootMargin: "0px 0px -8% 0px"
+    });
+
+    titles.forEach((title) => observer.observe(title));
+  })();
+
 
   // Offertwo Slider
   var swiper = new Swiper(".offertwo-slider", {
