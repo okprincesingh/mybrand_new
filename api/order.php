@@ -112,13 +112,9 @@ $postalCode = (string) ((!empty($data['use_shipping_address']) && $data['use_shi
         }
     }
 
-    if (!$selectedShippingMethod) {
-        return ['success' => false, 'message' => 'No shipping method is available for this order.'];
-    }
-
-    $shippingCost = (float) ($selectedShippingMethod['cost'] ?? 0.0);
-    $shippingMethodName = (string) ($selectedShippingMethod['method_name'] ?? 'Standard Shipping');
-    $shippingMethodId = (int) ($selectedShippingMethod['id'] ?? 0);
+    $shippingCost = $selectedShippingMethod ? (float) ($selectedShippingMethod['cost'] ?? 0.0) : 0.0;
+    $shippingMethodName = $selectedShippingMethod ? (string) ($selectedShippingMethod['method_name'] ?? 'Standard Shipping') : 'Shipping quote after order';
+    $shippingMethodId = $selectedShippingMethod ? (int) ($selectedShippingMethod['id'] ?? 0) : 0;
 
     $discountAmount = max(0.0, (float) ($_SESSION['checkout_discount_amount'] ?? 0.0));
     $taxAmount = 0.0;

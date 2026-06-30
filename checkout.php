@@ -362,14 +362,14 @@ include 'includes/header.php';
                                                 </label>
                                             <?php endforeach; ?>
                                         <?php else: ?>
-                                            <span class="checkout-page__order-summary-totals-value checkout-page__order-summary-totals-value--muted">No shipping methods available</span>
+                                            <span class="checkout-page__order-summary-totals-value checkout-page__order-summary-totals-value--muted">Shipping quote after order</span>
                                         <?php endif; ?>
                                     </div>
                                 </div>
                                 <div class="checkout-page__order-summary-totals-row">
                                     <span class="checkout-page__order-summary-totals-label">Selected Shipping</span>
                                     <span class="checkout-page__order-summary-totals-value" id="shipping-cost">
-                                        <?php echo $hasShippingMethod ? ($shippingCost > 0 ? ('$' . number_format((float)$shippingCost, 2)) : 'Free') : 'Unavailable'; ?>
+                                        <?php echo $hasShippingMethod ? ($shippingCost > 0 ? ('$' . number_format((float)$shippingCost, 2)) : 'Free') : 'To be quoted'; ?>
                                     </span>
                                 </div>
                                 <div class="checkout-page__order-summary-totals-row checkout-page__order-summary-totals-row--discount">

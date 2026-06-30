@@ -71,12 +71,7 @@ if (!$shippingMethod) {
     }
 }
 
-if (!$shippingMethod) {
-    echo json_encode(['success' => false, 'message' => 'No shipping method is available for this order.']);
-    exit;
-}
-
-$shippingCost = (float) ($shippingMethod['cost'] ?? 0.0);
+$shippingCost = $shippingMethod ? (float) ($shippingMethod['cost'] ?? 0.0) : 0.0;
 $discountAmount = max(0.0, (float) ($_SESSION['checkout_discount_amount'] ?? 0.0));
 $taxAmount = 0.0;
 $totalAmount = $subtotal + $shippingCost + $taxAmount - $discountAmount;
