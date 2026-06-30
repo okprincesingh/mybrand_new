@@ -3,6 +3,7 @@ require_once __DIR__ . '/includes/security.php';
 require_once __DIR__ . '/includes/mailer.php';
 require_once __DIR__ . '/includes/url.php';
 require_once __DIR__ . '/includes/cms.php';
+require_once __DIR__ . '/includes/enquiries.php';
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
@@ -26,6 +27,7 @@ $formData = [
     'address' => '',
     'requirements' => '',
     'product_id' => '',
+    'bulk_quantity' => '',
 ];
 $errors = [];
 $success = '';
@@ -45,6 +47,7 @@ if (strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')) === 'POST') {
         'address' => contact_post_value('address'),
         'requirements' => contact_post_value('requirements'),
         'product_id' => contact_post_value('product_id'),
+        'bulk_quantity' => contact_post_value('bulk_quantity'),
     ];
     if ($formData['name'] === '') {
         $formData['name'] = trim($formData['first_name'] . ' ' . $formData['last_name']);
@@ -54,6 +57,7 @@ if (strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')) === 'POST') {
     }
 
     $isConsultationForm = $formData['requirements'] !== '' || $formData['address'] !== '' || $formData['product_id'] !== '';
+    $enquiryType = $formData['product_id'] !== '' ? 'product' : ($isConsultationForm ? 'consultation' : 'contact');
     $mailSubject = $formData['subject'] !== '' ? $formData['subject'] : ($isConsultationForm ? 'New Website Consultation Request' : 'New Contact Form Submission');
 
     if ($formData['name'] === '') {
@@ -99,6 +103,9 @@ if (strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')) === 'POST') {
         if ($formData['product_id'] !== '') {
             $adminBodyParts[] = '<p><strong>Product:</strong><br>' . e($formData['product_id']) . '</p>';
         }
+        if (($formData['bulk_quantity'] ?? '') !== '') {
+            $adminBodyParts[] = '<p><strong>Bulk Quantity:</strong><br>' . e($formData['bulk_quantity']) . '</p>';
+        }
         if ($formData['address'] !== '') {
             $adminBodyParts[] = '<p><strong>Address:</strong><br>' . nl2br(e($formData['address'])) . '</p>';
         }
@@ -110,6 +117,20 @@ if (strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')) === 'POST') {
         }
 
         $adminBody = implode("\n", $adminBodyParts);
+        $enquiryId = enquiries_create([
+            'enquiry_type' => $enquiryType,
+            'name' => $formData['name'],
+            'email' => $formData['email'],
+            'phone' => $formData['phone'],
+            'country' => $formData['country'],
+            'subject' => $mailSubject,
+            'message' => $formData['message'],
+            'requirements' => $formData['requirements'],
+            'product_id' => $formData['product_id'],
+            'address' => $formData['address'],
+            'bulk_quantity' => $formData['bulk_quantity'] ?? '',
+            'status' => 'new',
+        ]);
 
         $userBody = implode("\n", [
             '<p>Hi ' . e($formData['name']) . ',</p>',
@@ -132,9 +153,16 @@ if (strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')) === 'POST') {
             $userBody
         );
         $userStatus = meeting_mail_last_error();
+        $mailStatusParts = [
+            'Admin: ' . ($adminSent ? $adminStatus : $adminStatus),
+            'User: ' . ($userSent ? $userStatus : $userStatus),
+        ];
+        enquiries_update_mail_status($enquiryId, $adminSent, $userSent, implode(' | ', $mailStatusParts));
 
-        if ($adminSent && $userSent) {
-            $success = 'Your enquiry was submitted successfully. We have also sent a confirmation email to you.';
+        if ($enquiryId > 0) {
+            $success = ($adminSent && $userSent)
+                ? 'Your enquiry was submitted successfully. We have also sent a confirmation email to you.'
+                : 'Your enquiry was submitted successfully. Our team will contact you soon.';
             $formData = [
                 'first_name' => '',
                 'last_name' => '',
@@ -147,9 +175,11 @@ if (strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')) === 'POST') {
                 'address' => '',
                 'requirements' => '',
                 'product_id' => '',
+                'bulk_quantity' => '',
             ];
             csrf_regenerate_token();
         } else {
+            $errors[] = 'Your enquiry could not be saved. Please try again.';
             if (!$adminSent) {
                 $errors[] = 'Admin email failed: ' . e($adminStatus);
             }

@@ -47,6 +47,7 @@ $currentPage = basename($_SERVER['PHP_SELF'] ?? '');
 
       <div class="nav-group-label">Users</div>
       <a class="admin-nav-link <?= $currentPage==='users.php'?'active':'' ?>" href="users.php"><i class="bi bi-people"></i><span>Users</span></a>
+      <a class="admin-nav-link <?= $currentPage==='enquiries.php'?'active':'' ?>" href="enquiries.php"><i class="bi bi-envelope-paper"></i><span>Enquiries</span></a>
 
       <div class="nav-group-label">Orders</div>
       <a class="admin-nav-link <?= $currentPage==='orders.php'?'active':'' ?>" href="orders.php"><i class="bi bi-receipt"></i><span>Orders</span></a>
