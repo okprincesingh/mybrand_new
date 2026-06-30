@@ -7,7 +7,7 @@ if ($pdo) {
   cms_ensure_home_offices_registration_columns($pdo);
 }
 
-$defaults = ['id'=>0,'country'=>'','address'=>'','email'=>'','phone'=>'','registration_label'=>'','registration_number'=>'','sort_order'=>0,'is_active'=>1,'image_path'=>''];
+$defaults = ['id'=>0,'country'=>'','company_name'=>'','address'=>'','email'=>'','phone'=>'','registration_label'=>'','registration_number'=>'','sort_order'=>0,'is_active'=>1,'image_path'=>''];
 $formData = $defaults;
 $editId = (int) ($_GET['edit'] ?? 0);
 if ($pdo && $editId > 0) {
@@ -30,6 +30,7 @@ if ($pdo && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
   $id = (int) ($_POST['id'] ?? 0);
   $country = trim((string) ($_POST['country'] ?? ''));
+  $companyName = trim((string) ($_POST['company_name'] ?? ''));
   $address = trim((string) ($_POST['address'] ?? ''));
   $email = trim((string) ($_POST['email'] ?? ''));
   $phone = trim((string) ($_POST['phone'] ?? ''));
@@ -52,13 +53,13 @@ if ($pdo && $_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   if ($id > 0) {
-    db_execute($pdo, 'UPDATE home_offices SET country=:country, address=:address, email=:email, phone=:phone, registration_label=:registration_label, registration_number=:registration_number, image_path=:image, sort_order=:sort_order, is_active=:is_active WHERE id=:id', [
-      ':country'=>$country, ':address'=>$address, ':email'=>$email, ':phone'=>$phone, ':registration_label'=>$registrationLabel, ':registration_number'=>$registrationNumber, ':image'=>$imagePath, ':sort_order'=>$sortOrder, ':is_active'=>$isActive, ':id'=>$id
+    db_execute($pdo, 'UPDATE home_offices SET country=:country, company_name=:company_name, address=:address, email=:email, phone=:phone, registration_label=:registration_label, registration_number=:registration_number, image_path=:image, sort_order=:sort_order, is_active=:is_active WHERE id=:id', [
+      ':country'=>$country, ':company_name'=>$companyName, ':address'=>$address, ':email'=>$email, ':phone'=>$phone, ':registration_label'=>$registrationLabel, ':registration_number'=>$registrationNumber, ':image'=>$imagePath, ':sort_order'=>$sortOrder, ':is_active'=>$isActive, ':id'=>$id
     ]);
     admin_flash('success', 'Office updated.');
   } else {
-    db_execute($pdo, 'INSERT INTO home_offices (country, address, email, phone, registration_label, registration_number, image_path, sort_order, is_active) VALUES (:country,:address,:email,:phone,:registration_label,:registration_number,:image,:sort_order,:is_active)', [
-      ':country'=>$country, ':address'=>$address, ':email'=>$email, ':phone'=>$phone, ':registration_label'=>$registrationLabel, ':registration_number'=>$registrationNumber, ':image'=>$imagePath, ':sort_order'=>$sortOrder, ':is_active'=>$isActive
+    db_execute($pdo, 'INSERT INTO home_offices (country, company_name, address, email, phone, registration_label, registration_number, image_path, sort_order, is_active) VALUES (:country,:company_name,:address,:email,:phone,:registration_label,:registration_number,:image,:sort_order,:is_active)', [
+      ':country'=>$country, ':company_name'=>$companyName, ':address'=>$address, ':email'=>$email, ':phone'=>$phone, ':registration_label'=>$registrationLabel, ':registration_number'=>$registrationNumber, ':image'=>$imagePath, ':sort_order'=>$sortOrder, ':is_active'=>$isActive
     ]);
     admin_flash('success', 'Office added.');
   }
@@ -83,6 +84,11 @@ include __DIR__ . '/_layout_top.php';
         <div class="form-group">
           <label class="form-label">Country</label>
           <input class="form-control" name="country" value="<?= e((string) $formData['country']) ?>" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Company Name</label>
+          <input class="form-control" name="company_name" value="<?= e((string) $formData['company_name']) ?>" placeholder="Company / registered entity name">
         </div>
         
         <div class="form-group">
@@ -155,6 +161,7 @@ include __DIR__ . '/_layout_top.php';
           <thead>
             <tr>
               <th>Country</th>
+              <th>Company</th>
               <th>Email</th>
               <th>Registration</th>
               <th>Status</th>
@@ -165,6 +172,7 @@ include __DIR__ . '/_layout_top.php';
             <?php foreach($rows as $r): ?>
               <tr>
                 <td><?= e((string)$r['country']) ?></td>
+                <td><?= e((string)($r['company_name'] ?? '')) ?></td>
                 <td><?= e((string)$r['email']) ?></td>
                 <td><?= e(trim((string)($r['registration_label'] ?? '') . ' ' . (string)($r['registration_number'] ?? ''))) ?></td>
                 <td>
@@ -191,7 +199,7 @@ include __DIR__ . '/_layout_top.php';
             <?php endforeach; ?>
             <?php if(!$rows): ?>
               <tr>
-                <td colspan="5" class="text-center text-muted py-4">No offices found.</td>
+                <td colspan="6" class="text-center text-muted py-4">No offices found.</td>
               </tr>
             <?php endif; ?>
           </tbody>

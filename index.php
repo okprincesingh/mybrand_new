@@ -1368,6 +1368,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (count($displayOffices) < 2) {
                   $displayOffices[] = [
                     'country' => 'United Kingdom',
+                    'company_name' => 'Mybrandplease UK',
                     'address' => 'Unit 1, Durham Way South, Newton Aycliffe, DL5 6ZF, UNITED KINGDOM',
                     'email' => 'info@mybrandplease.com',
                     'phone' => '+44 7940 359995',
@@ -1375,7 +1376,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     'website' => 'https://www.mybrandplease.com',
                   ];
                 }
-                $displayOffices = array_slice($displayOffices, 0, 5);
                 usort($displayOffices, function ($a, $b) {
                   $aIsAustralia = strcasecmp(trim((string) ($a['country'] ?? '')), 'Australia') === 0;
                   $bIsAustralia = strcasecmp(trim((string) ($b['country'] ?? '')), 'Australia') === 0;
@@ -1384,6 +1384,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 $officeDelay = 0.1;
                 foreach ($displayOffices as $office):
                   $officeCountry = trim((string) ($office['country'] ?? 'Office'));
+                  $officeCompanyName = trim((string) ($office['company_name'] ?? ''));
                   $officeAddress = trim((string) ($office['address'] ?? ''));
                   $officeEmail = trim((string) ($office['email'] ?? ''));
                   $officePhone = trim((string) ($office['phone'] ?? ''));
@@ -1404,6 +1405,9 @@ document.addEventListener('DOMContentLoaded', function () {
                   </div>
                   <div class="office-card__body">
                     <h3 class="office-card__title"><?php echo htmlspecialchars($officeCountry, ENT_QUOTES, 'UTF-8'); ?></h3>
+                    <?php if ($officeCompanyName !== ''): ?>
+                      <p class="office-card__company"><?php echo htmlspecialchars($officeCompanyName, ENT_QUOTES, 'UTF-8'); ?></p>
+                    <?php endif; ?>
                     <p class="office-card__address"><?php echo nl2br(htmlspecialchars($officeAddress, ENT_QUOTES, 'UTF-8')); ?></p>
                     <div class="office-card__meta-list">
                       <?php if ($officeRegistrationLabel !== '' || $officeRegistrationNumber !== ''): ?>

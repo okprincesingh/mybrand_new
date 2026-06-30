@@ -19378,7 +19378,7 @@ iframe {
 }
 .office-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 290px));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 0.9rem;
   align-items: stretch;
   justify-content: center;
@@ -19448,6 +19448,14 @@ iframe {
   text-transform: capitalize;
   font-size: 1.5rem;
   line-height: 1.1;
+}
+.office-card__company {
+  margin: -0.2rem 0 0.55rem;
+  color: #7a6670;
+  font-family: var(--font_Lato);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.35;
 }
 .office-card__address {
   margin: 0 0 0.75rem;

@@ -551,11 +551,18 @@ function cms_ensure_home_offices_registration_columns(PDO $pdo): bool
             $existing[strtolower((string) ($column['Field'] ?? ''))] = true;
         }
 
+        if (empty($existing['company_name'])) {
+            $afterColumn = !empty($existing['country']) ? ' AFTER country' : '';
+            $pdo->exec('ALTER TABLE home_offices ADD COLUMN company_name VARCHAR(180) NULL' . $afterColumn);
+            $existing['company_name'] = true;
+        }
         if (empty($existing['registration_label'])) {
             $pdo->exec('ALTER TABLE home_offices ADD COLUMN registration_label VARCHAR(40) NULL AFTER phone');
+            $existing['registration_label'] = true;
         }
         if (empty($existing['registration_number'])) {
             $pdo->exec('ALTER TABLE home_offices ADD COLUMN registration_number VARCHAR(120) NULL AFTER registration_label');
+            $existing['registration_number'] = true;
         }
         $available = true;
         return true;
@@ -641,6 +648,7 @@ function cms_get_home_offices(): array
     $fallback = [
         [
             'country' => 'India',
+            'company_name' => 'NIMISHA IMPEX WORLDWIDE (P) LIMITED',
             'address' => 'D-226, 10th Avenue, Gaur City 2,\nGr. Noida West, UP - 201301, IN',
             'email' => 'customersupport@nimishaimpex.com',
             'phone' => '+91 (971) 700 4615',
@@ -650,6 +658,7 @@ function cms_get_home_offices(): array
         ],
         [
             'country' => 'United States',
+            'company_name' => 'Mybrandplease USA',
             'address' => '30 N Gould St, Ste R,\nSheridan, WY 82801, USA',
             'email' => 'customersupport@nimishaimpex.com',
             'phone' => '+1 (343) 322 5866',
@@ -659,6 +668,7 @@ function cms_get_home_offices(): array
         ],
         [
             'country' => 'United Kingdom',
+            'company_name' => 'Mybrandplease UK',
             'address' => '128, City Rd, London,\nEC1V 2NX, UNITED KINGDOM',
             'email' => 'customersupport@nimishaimpex.com',
             'phone' => '+91 (120) 518 5637',
@@ -673,10 +683,10 @@ function cms_get_home_offices(): array
         return $fallback;
     }
 
-    $hasRegistrationColumns = cms_ensure_home_offices_registration_columns($pdo);
+    $hasExtendedOfficeColumns = cms_ensure_home_offices_registration_columns($pdo);
 
-    $rows = db_fetch_all($pdo, $hasRegistrationColumns
-        ? 'SELECT id, country, address, email, phone, registration_label, registration_number, image_path FROM home_offices WHERE is_active = 1 ORDER BY sort_order ASC, id ASC'
+    $rows = db_fetch_all($pdo, $hasExtendedOfficeColumns
+        ? 'SELECT id, country, company_name, address, email, phone, registration_label, registration_number, image_path FROM home_offices WHERE is_active = 1 ORDER BY sort_order ASC, id ASC'
         : 'SELECT id, country, address, email, phone, image_path FROM home_offices WHERE is_active = 1 ORDER BY sort_order ASC, id ASC'
     );
     if (!$rows) {
@@ -689,6 +699,7 @@ function cms_get_home_offices(): array
         $out[] = [
             'id' => (int) $row['id'],
             'country' => (string) ($row['country'] ?? ''),
+            'company_name' => (string) ($row['company_name'] ?? ''),
             'address' => (string) ($row['address'] ?? ''),
             'email' => (string) ($row['email'] ?? ''),
             'phone' => (string) ($row['phone'] ?? ''),
