@@ -219,7 +219,7 @@ if (!function_exists('render_header_menu_items')) {
                     </div>
                   </div>
 
-                  <a href="<?php echo url('contact.php'); ?>" class="header-meta-link d-none d-lg-inline-flex">
+                  <a href="<?php echo url('meeting-schedule.php'); ?>" class="header-meta-link d-none d-lg-inline-flex">
                     Get Free Consultation
                   </a>
 
