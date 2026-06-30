@@ -127,9 +127,13 @@ $postalCode = (string) ((!empty($data['use_shipping_address']) && $data['use_shi
     $stripeCustomerId = '';
 
     if ($paymentMethod === 'stripe') {
-        if ($totalAmount <= 0 && $transactionId === 'TEST_ZERO_AMOUNT') {
+        $allowZeroAmountCheckout = in_array(strtolower((string) getenv('ALLOW_ZERO_AMOUNT_CHECKOUT')), ['1', 'true', 'yes'], true);
+        if ($totalAmount <= 0 && $transactionId === 'TEST_ZERO_AMOUNT' && $allowZeroAmountCheckout) {
             $paymentStatus = 'paid';
         } else {
+        if ($totalAmount <= 0) {
+            return ['success' => false, 'message' => 'Order amount must be greater than zero.'];
+        }
         if ($transactionId === '') {
             return ['success' => false, 'message' => 'Stripe transaction is required.'];
         }
