@@ -421,7 +421,20 @@ include 'includes/header.php';
 
                             <div id="stripe-card-section" class="checkout-page__stripe-card" style="display:none;">
                                 <label class="checkout-page__billing-form-label">Card Details</label>
-                                <div id="stripe-card-element" class="checkout-page__stripe-element"></div>
+                                <div class="checkout-page__stripe-fields">
+                                    <div class="checkout-page__stripe-field checkout-page__stripe-field--full">
+                                        <span class="checkout-page__stripe-field-label">Card Number</span>
+                                        <div id="stripe-card-number" class="checkout-page__stripe-element"></div>
+                                    </div>
+                                    <div class="checkout-page__stripe-field">
+                                        <span class="checkout-page__stripe-field-label">Expiry Date</span>
+                                        <div id="stripe-card-expiry" class="checkout-page__stripe-element"></div>
+                                    </div>
+                                    <div class="checkout-page__stripe-field">
+                                        <span class="checkout-page__stripe-field-label">CVC</span>
+                                        <div id="stripe-card-cvc" class="checkout-page__stripe-element"></div>
+                                    </div>
+                                </div>
                                 <div id="stripe-card-errors" class="checkout-page__stripe-error" role="alert"></div>
                             </div>
                         </div>
@@ -594,21 +607,56 @@ include 'includes/header.php';
 }
 .checkout-page__stripe-card {
     margin-top: 12px;
-    padding: 14px;
+    padding: 18px;
     border: 1px solid #e5e7eb;
     border-radius: 8px;
     background: #fff;
 }
+.checkout-page__stripe-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+.checkout-page__stripe-field {
+    min-width: 0;
+}
+.checkout-page__stripe-field--full {
+    grid-column: 1 / -1;
+}
+.checkout-page__stripe-field-label {
+    display: block;
+    margin-bottom: 7px;
+    color: #0C0C0C;
+    font-size: 13px;
+    font-weight: 700;
+}
 .checkout-page__stripe-element {
-    padding: 12px;
+    min-height: 48px;
+    padding: 14px 12px;
     border: 1px solid #d1d5db;
     border-radius: 8px;
-    background: #fafafa;
+    background: #fff;
+}
+.checkout-page__stripe-element.StripeElement--focus {
+    border-color: #EE2D7A;
+    box-shadow: 0 0 0 3px rgba(238, 45, 122, 0.12);
+}
+.checkout-page__stripe-element.StripeElement--invalid {
+    border-color: #dc2626;
 }
 .checkout-page__stripe-error {
     margin-top: 8px;
     color: #dc2626;
     font-size: 13px;
+}
+@media (max-width: 575px) {
+    .checkout-page__stripe-card {
+        padding: 14px;
+    }
+    .checkout-page__stripe-fields {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
 }
 
 </style>
@@ -629,32 +677,51 @@ document.addEventListener('DOMContentLoaded', function() {
     const couponBadgeCode = document.getElementById('checkout-applied-coupon-code');
     const stripeCardSection = document.getElementById('stripe-card-section');
     const stripeCardErrors = document.getElementById('stripe-card-errors');
-    const stripeCardElementContainer = document.getElementById('stripe-card-element');
+    const stripeCardNumberContainer = document.getElementById('stripe-card-number');
+    const stripeCardExpiryContainer = document.getElementById('stripe-card-expiry');
+    const stripeCardCvcContainer = document.getElementById('stripe-card-cvc');
 
     const stripePublishableKey = <?php echo json_encode($stripePublishableKey, JSON_UNESCAPED_SLASHES); ?>;
     let stripe = null;
     let elements = null;
-    let cardElement = null;
+    let cardNumberElement = null;
+    let cardExpiryElement = null;
+    let cardCvcElement = null;
 
-    if (stripePublishableKey && stripeCardElementContainer) {
+    if (stripePublishableKey && stripeCardNumberContainer && stripeCardExpiryContainer && stripeCardCvcContainer) {
         stripe = Stripe(stripePublishableKey);
         elements = stripe.elements();
-        cardElement = elements.create('card', {
-            hidePostalCode: true,
-            style: {
-                base: {
-                    color: '#111827',
-                    fontFamily: 'Arial, sans-serif',
-                    fontSize: '16px',
-                    '::placeholder': { color: '#9ca3af' }
-                },
-                invalid: { color: '#dc2626' }
-            }
+        const stripeElementStyle = {
+            base: {
+                color: '#111827',
+                fontFamily: 'Arial, sans-serif',
+                fontSize: '16px',
+                lineHeight: '20px',
+                '::placeholder': { color: '#9ca3af' }
+            },
+            invalid: { color: '#dc2626' }
+        };
+        cardNumberElement = elements.create('cardNumber', {
+            showIcon: true,
+            placeholder: '1234 1234 1234 1234',
+            style: stripeElementStyle
         });
-        cardElement.mount('#stripe-card-element');
-        cardElement.on('change', function(event) {
-            if (!stripeCardErrors) return;
-            stripeCardErrors.textContent = event.error ? event.error.message : '';
+        cardExpiryElement = elements.create('cardExpiry', {
+            placeholder: 'MM / YY',
+            style: stripeElementStyle
+        });
+        cardCvcElement = elements.create('cardCvc', {
+            placeholder: 'CVC',
+            style: stripeElementStyle
+        });
+        cardNumberElement.mount('#stripe-card-number');
+        cardExpiryElement.mount('#stripe-card-expiry');
+        cardCvcElement.mount('#stripe-card-cvc');
+        [cardNumberElement, cardExpiryElement, cardCvcElement].forEach(function(element) {
+            element.on('change', function(event) {
+                if (!stripeCardErrors) return;
+                stripeCardErrors.textContent = event.error ? event.error.message : '';
+            });
         });
     }
 
@@ -889,7 +956,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         try {
             if (orderData.payment_method === 'stripe') {
-                if (!stripe || !cardElement) {
+                if (!stripe || !cardNumberElement) {
                     throw new Error('Stripe is not available. Please contact support.');
                 }
 
@@ -901,7 +968,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const billingName = [orderData.billing.first_name, orderData.billing.last_name].filter(Boolean).join(' ').trim();
                 const stripeResult = await stripe.confirmCardPayment(intentRes.data.client_secret, {
                     payment_method: {
-                        card: cardElement,
+                        card: cardNumberElement,
                         billing_details: {
                             name: billingName,
                             email: orderData.billing.email,
