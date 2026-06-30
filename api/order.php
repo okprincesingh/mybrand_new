@@ -167,6 +167,10 @@ $postalCode = (string) ((!empty($data['use_shipping_address']) && $data['use_shi
     }
 
     $orderNumber = 'ORD-' . strtoupper(uniqid()) . '-' . rand(1000, 9999);
+    $hasOrderUserId = order_has_user_id_column($pdo);
+    $hasTransactionId = order_has_transaction_id_column($pdo);
+    $hasStripeCustomerId = order_has_stripe_customer_id_column($pdo);
+    $shippingColumns = shipping_order_has_columns($pdo);
 
     try {
         $pdo->beginTransaction();
@@ -203,11 +207,6 @@ $postalCode = (string) ((!empty($data['use_shipping_address']) && $data['use_shi
         } else {
             order_sync_user_address((int) $user['id'], $billing, 'both');
         }
-
-        $hasOrderUserId = order_has_user_id_column($pdo);
-        $hasTransactionId = order_has_transaction_id_column($pdo);
-        $hasStripeCustomerId = order_has_stripe_customer_id_column($pdo);
-        $shippingColumns = shipping_order_has_columns($pdo);
 
         $orderColumns = '
                 order_number, customer_id, session_id, status, payment_method, payment_status,
@@ -355,7 +354,9 @@ $postalCode = (string) ((!empty($data['use_shipping_address']) && $data['use_shi
             }
         }
 
-        $pdo->commit();
+        if ($pdo->inTransaction()) {
+            $pdo->commit();
+        }
 
         $_SESSION['cart'] = [];
         shipping_clear_session_selection();
@@ -396,8 +397,12 @@ $postalCode = (string) ((!empty($data['use_shipping_address']) && $data['use_shi
         ];
 
     } catch (\Exception $e) {
-        if ($pdo->inTransaction()) {
-            $pdo->rollBack();
+        try {
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
+        } catch (Throwable $rollbackError) {
+            error_log('Order rollback failed: ' . $rollbackError->getMessage());
         }
         return ['success' => false, 'message' => 'Failed to create order: ' . $e->getMessage()];
     }
