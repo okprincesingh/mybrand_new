@@ -1303,11 +1303,11 @@ document.addEventListener('DOMContentLoaded', function () {
               swiperEl.swiper.destroy(true, true);
             }
 
-            new Swiper(swiperEl, {
+            const reelsSwiper = new Swiper(swiperEl, {
               loop: cards.length > 1,
               speed: 700,
               grabCursor: true,
-              watchOverflow: true,
+              watchOverflow: false,
               slidesPerView: 'auto',
               spaceBetween: 24,
               centeredSlides: false,
@@ -1317,7 +1317,7 @@ document.addEventListener('DOMContentLoaded', function () {
               autoplay: {
                 delay: 3000,
                 disableOnInteraction: false,
-                pauseOnMouseEnter: true
+                pauseOnMouseEnter: false
               },
               navigation: {
                 prevEl: section.querySelector('.social-reels__nav--prev'),
@@ -1339,6 +1339,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 768: {
                   spaceBetween: 24
                 }
+              }
+            });
+
+            if (reelsSwiper.autoplay && typeof reelsSwiper.autoplay.start === 'function') {
+              reelsSwiper.autoplay.start();
+            }
+
+            document.addEventListener('visibilitychange', function () {
+              if (!document.hidden && reelsSwiper.autoplay && typeof reelsSwiper.autoplay.start === 'function') {
+                reelsSwiper.autoplay.start();
               }
             });
           });
