@@ -988,9 +988,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         <section class="reviews-section">
           <div class="reviews-section__grid">
-            <div class="reviews-section__intro">
+            <div class="reviews-section__intro" id="rvIntroPanel">
               <p class="rv-label"><span><i class="fa-solid fa-shield-halved"></i></span> Verified Reviews</p>
-              <h2 class="rv-heading">mybrandplease.com is rated <b>Excellent</b></h2>
+              <h2 class="rv-heading" id="rvHeading">mybrandplease.com is rated <b>Excellent</b></h2>
               <div class="rv-score-card">
                 <div class="rv-score-card__brand">
                   <img src="<?php echo url('uploads/logo/trusp.png'); ?>" alt="Trustpilot" id="rvScoreLogo">

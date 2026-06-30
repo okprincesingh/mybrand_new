@@ -255,6 +255,12 @@
     const scoreLabel = { all: "Trustpilot", tp: "Trustpilot", goog: "Google", ali: "Alibaba" };
     const scoreValue = { all: "4.4", tp: "4.4", goog: "4.8", ali: "4.7" };
     const scoreText = { all: "Excellent", tp: "Excellent", goog: "Excellent", ali: "Excellent" };
+    const headingHTML = {
+      all: "Here's what our customers say after <b>Excellent</b>",
+      tp: "mybrandplease.com is rated <b>Excellent</b>",
+      goog: "mybrandplease.com is rated <b>Excellent</b>",
+      ali: "mybrandplease.com is rated <b>Excellent</b>"
+    };
 
     allReviews.forEach((review) => {
       review.platform = platformKey[review.p] || review.p;
@@ -330,6 +336,22 @@
       }, 140);
     }
 
+    function animateIntroPanel(platform) {
+      const intro = document.getElementById("rvIntroPanel");
+      const heading = document.getElementById("rvHeading");
+      const normalized = platform === "goog" || platform === "ali" || platform === "tp" ? platform : "all";
+      if (!intro || !heading) return;
+
+      intro.classList.remove("is-opening");
+      intro.classList.add("is-switching");
+
+      window.setTimeout(() => {
+        heading.innerHTML = headingHTML[normalized] || headingHTML.all;
+        intro.classList.remove("is-switching");
+        intro.classList.add("is-opening");
+      }, 170);
+    }
+
     function render() {
       document.getElementById("track").innerHTML = list.map((r) => `
         <div class="rv-card">
@@ -403,6 +425,7 @@
       list = p === "all" ? [...allReviews] : allReviews.filter((r) => r.p === p);
       cur = 0;
       hasReviewInteraction = true;
+      animateIntroPanel(p);
       updateScoreCard(p);
       render();
       resetProg();

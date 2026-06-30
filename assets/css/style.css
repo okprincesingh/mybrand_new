@@ -24563,6 +24563,18 @@ iframe {
   flex-direction: column;
   align-items: flex-start;
   min-width: 0;
+  transform-origin: left center;
+  transition: opacity 0.28s ease, transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.reviews-section__intro.is-switching {
+  opacity: 0;
+  transform: translateX(-34px) scale(0.98);
+}
+
+.reviews-section__intro.is-opening {
+  animation: reviewIntroOpen 0.48s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .reviews-section__content {
@@ -24605,6 +24617,17 @@ iframe {
 
 .rv-heading b {
   color: #e73b87;
+}
+
+@keyframes reviewIntroOpen {
+  from {
+    opacity: 0;
+    transform: translateX(-42px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
 }
 
 .rv-platform-badge {
