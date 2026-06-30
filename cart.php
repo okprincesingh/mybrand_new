@@ -206,7 +206,7 @@ include 'includes/header.php';
   <div class="container container-1352">
     <div class="row g-4">
       <!-- Cart Items -->
-      <div class="col-lg-8">
+      <div class="<?php echo $cartRows ? 'col-lg-8' : 'col-lg-12'; ?>">
         <div class="cart-box">
           <div class="cart-header">
             <h2 class="cart-title">Your Items (<?php echo count($cartRows); ?>)</h2>
@@ -297,6 +297,7 @@ include 'includes/header.php';
         </div>
       </div>
 
+      <?php if ($cartRows): ?>
       <!-- Order Summary -->
       <div class="col-lg-4">
         <div class="order-summary">
@@ -360,6 +361,7 @@ include 'includes/header.php';
           <p id="cart-coupon-message" style="margin-top:8px;font-size:13px;color:#666;"></p>
         </div>
       </div>
+      <?php endif; ?>
     </div>
   </div>
 </section>

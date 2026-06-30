@@ -2,6 +2,7 @@
 require_once __DIR__ . '/includes/security.php';
 require_once __DIR__ . '/includes/mailer.php';
 require_once __DIR__ . '/includes/url.php';
+require_once __DIR__ . '/includes/cms.php';
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
@@ -14,10 +15,14 @@ function contact_post_value(string $key): string
 }
 
 $formData = [
+    'first_name' => '',
+    'last_name' => '',
     'name' => '',
     'email' => '',
+    'country' => '',
     'message' => '',
     'phone' => '',
+    'subject' => '',
     'address' => '',
     'requirements' => '',
     'product_id' => '',
@@ -29,23 +34,36 @@ if (strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')) === 'POST') {
     verify_csrf_or_fail();
 
     $formData = [
+        'first_name' => contact_post_value('first_name'),
+        'last_name' => contact_post_value('last_name'),
         'name' => contact_post_value('name'),
         'email' => contact_post_value('email'),
+        'country' => contact_post_value('country'),
         'message' => contact_post_value('message'),
         'phone' => contact_post_value('phone'),
+        'subject' => contact_post_value('subject'),
         'address' => contact_post_value('address'),
         'requirements' => contact_post_value('requirements'),
         'product_id' => contact_post_value('product_id'),
     ];
+    if ($formData['name'] === '') {
+        $formData['name'] = trim($formData['first_name'] . ' ' . $formData['last_name']);
+    }
+    if ($formData['message'] === '') {
+        $formData['message'] = contact_post_value('comment');
+    }
 
-    $isConsultationForm = $formData['requirements'] !== '' || $formData['address'] !== '' || $formData['product_id'] !== '' || $formData['phone'] !== '';
-    $mailSubject = $isConsultationForm ? 'New Website Consultation Request' : 'New Contact Form Submission';
+    $isConsultationForm = $formData['requirements'] !== '' || $formData['address'] !== '' || $formData['product_id'] !== '';
+    $mailSubject = $formData['subject'] !== '' ? $formData['subject'] : ($isConsultationForm ? 'New Website Consultation Request' : 'New Contact Form Submission');
 
     if ($formData['name'] === '') {
         $errors[] = 'Name is required.';
     }
     if (!filter_var($formData['email'], FILTER_VALIDATE_EMAIL)) {
         $errors[] = 'A valid email address is required.';
+    }
+    if ($formData['country'] === '' && !$isConsultationForm) {
+        $errors[] = 'Country is required.';
     }
     if ($isConsultationForm) {
         if ($formData['phone'] === '') {
@@ -71,6 +89,12 @@ if (strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')) === 'POST') {
 
         if ($formData['phone'] !== '') {
             $adminBodyParts[] = '<p><strong>Phone:</strong><br>' . e($formData['phone']) . '</p>';
+        }
+        if ($formData['country'] !== '') {
+            $adminBodyParts[] = '<p><strong>Country:</strong><br>' . e($formData['country']) . '</p>';
+        }
+        if ($formData['subject'] !== '') {
+            $adminBodyParts[] = '<p><strong>Subject:</strong><br>' . e($formData['subject']) . '</p>';
         }
         if ($formData['product_id'] !== '') {
             $adminBodyParts[] = '<p><strong>Product:</strong><br>' . e($formData['product_id']) . '</p>';
@@ -112,10 +136,14 @@ if (strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')) === 'POST') {
         if ($adminSent && $userSent) {
             $success = 'Your enquiry was submitted successfully. We have also sent a confirmation email to you.';
             $formData = [
+                'first_name' => '',
+                'last_name' => '',
                 'name' => '',
                 'email' => '',
+                'country' => '',
                 'message' => '',
                 'phone' => '',
+                'subject' => '',
                 'address' => '',
                 'requirements' => '',
                 'product_id' => '',
@@ -131,6 +159,8 @@ if (strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')) === 'POST') {
         }
     }
 }
+
+$contactOffices = cms_get_home_offices();
 
 $meta = [
   'title' => 'Mybrandplease | contact',
@@ -197,46 +227,98 @@ include 'includes/header.php';
                   <input type="hidden" name="csrf_token" value="<?php echo e(csrf_token()); ?>">
                   <div class="contact2-form__content">
                     <div class="row g-4">
-                      <div class="col-lg-6 wow fadeInUp" data-wow-delay=".3s">
-                        <div class="contact2-form__input">
-                          <span class="contact2-form__input-name">Your Name</span>
-                          <input
-                            type="text"
-                            class="contact2-form__input-field"
-                            name="name"
-                            id="name"
-                            placeholder="Your name"
-                            value="<?php echo e($formData['name']); ?>"
-                            required>
+                      <div class="col-lg-12 wow fadeInUp" data-wow-delay=".3s">
+                        <span class="contact2-form__input-name">Name <em>*</em></span>
+                        <div class="row g-4">
+                          <div class="col-md-6">
+                            <div class="contact2-form__input">
+                              <input
+                                type="text"
+                                class="contact2-form__input-field"
+                                name="first_name"
+                                id="first_name"
+                                placeholder="First Name"
+                                value="<?php echo e($formData['first_name']); ?>"
+                                required>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="contact2-form__input">
+                              <input
+                                type="text"
+                                class="contact2-form__input-field"
+                                name="last_name"
+                                id="last_name"
+                                placeholder="Last Name"
+                                value="<?php echo e($formData['last_name']); ?>">
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      <div class="col-lg-6 wow fadeInUp" data-wow-delay=".5s">
+                      <div class="col-lg-12 wow fadeInUp" data-wow-delay=".4s">
                         <div class="contact2-form__input">
-                          <span class="contact2-form__input-name">Your Email</span>
+                          <span class="contact2-form__input-name">Your Email <em>*</em></span>
                           <input
                             type="email"
                             class="contact2-form__input-field"
                             name="email"
                             id="email1"
-                            placeholder="Email address"
+                            placeholder="Your Email"
                             value="<?php echo e($formData['email']); ?>"
                             required>
                         </div>
                       </div>
+                      <div class="col-lg-12 wow fadeInUp" data-wow-delay=".5s">
+                        <div class="contact2-form__input">
+                          <span class="contact2-form__input-name">Where are you located? <em>*</em></span>
+                          <input
+                            type="text"
+                            class="contact2-form__input-field"
+                            name="country"
+                            id="country"
+                            placeholder="Country"
+                            value="<?php echo e($formData['country']); ?>"
+                            required>
+                        </div>
+                      </div>
+                      <div class="col-lg-12 wow fadeInUp" data-wow-delay=".6s">
+                        <div class="contact2-form__input">
+                          <span class="contact2-form__input-name">Phone Number</span>
+                          <input
+                            type="tel"
+                            class="contact2-form__input-field"
+                            name="phone"
+                            id="phone"
+                            placeholder="Phone Number"
+                            value="<?php echo e($formData['phone']); ?>">
+                        </div>
+                      </div>
                       <div class="col-lg-12 wow fadeInUp" data-wow-delay=".7s">
                         <div class="contact2-form__input">
-                          <span class="contact2-form__input-name">Your Message</span>
+                          <span class="contact2-form__input-name">Subject</span>
+                          <input
+                            type="text"
+                            class="contact2-form__input-field"
+                            name="subject"
+                            id="subject"
+                            placeholder="Subject"
+                            value="<?php echo e($formData['subject']); ?>">
+                        </div>
+                      </div>
+                      <div class="col-lg-12 wow fadeInUp" data-wow-delay=".8s">
+                        <div class="contact2-form__input">
+                          <span class="contact2-form__input-name">Comment or Message</span>
                           <textarea
                             name="message"
                             class="contact2-form__input-field textarea"
                             id="message"
-                            placeholder="Type your message"
+                            placeholder="Your Message"
                             required><?php echo e($formData['message']); ?></textarea>
                         </div>
                       </div>
                       <div class="col-lg-12 wow fadeInUp" data-wow-delay=".9s">
                         <div class="contact2-form__button">
-                          <button class="btn-orange" type="submit">SEND MESSAGE</button>
+                          <button class="btn-orange" type="submit">SUBMIT</button>
                         </div>
                       </div>
                     </div>
@@ -248,9 +330,74 @@ include 'includes/header.php';
         </section>
 
 
-        <div class="map fix">
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d52872517.59607392!2d-161.691169406869!3d36.018281840171966!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x54eab584e432360b%3A0x1c3bb99243deb742!2sUnited%20States!5e0!3m2!1sen!2sbd!4v1769883541208!5m2!1sen!2sbd"></iframe>
-        </div>
+        <section class="office-showcase contact-offices section-spacing-120 rr-ov-hidden">
+          <div class="container">
+            <div class="office-showcase__intro wow fadeInUp" data-wow-delay=".2s">
+              <h2 class="office-showcase__title">~ Our Offices ~</h2>
+            </div>
+            <div class="office-grid">
+              <?php foreach ($contactOffices as $office): ?>
+                <?php
+                  $officeCountry = trim((string) ($office['country'] ?? 'Office'));
+                  $officeCompanyName = trim((string) ($office['company_name'] ?? ''));
+                  $officeAddress = trim((string) ($office['address'] ?? ''));
+                  $officeEmail = trim((string) ($office['email'] ?? ''));
+                  $officePhone = trim((string) ($office['phone'] ?? ''));
+                  $officeRegistrationLabel = trim((string) ($office['registration_label'] ?? ''));
+                  $officeRegistrationNumber = trim((string) ($office['registration_number'] ?? ''));
+                  $officeWebsite = trim((string) ($office['website'] ?? ''));
+                  if ($officeWebsite === '') {
+                    $officeWebsite = 'https://www.mybrandplease.com';
+                  }
+                  $officeImage = trim((string) ($office['image_path'] ?? ''));
+                  $officeImageUrl = $officeImage !== '' ? url($officeImage) : url('assets/imgs/home/office/Flag-United-Kingdom.webp');
+                  $officePhoneHref = preg_replace('/\D+/', '', $officePhone);
+                ?>
+                <article class="office-card wow fadeInUp" data-wow-delay=".1s">
+                  <div class="office-card__topline"></div>
+                  <div class="office-card__flag">
+                    <img src="<?php echo htmlspecialchars($officeImageUrl, ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($officeCountry, ENT_QUOTES, 'UTF-8'); ?> Office">
+                  </div>
+                  <div class="office-card__body">
+                    <h3 class="office-card__title"><?php echo htmlspecialchars($officeCountry, ENT_QUOTES, 'UTF-8'); ?></h3>
+                    <?php if ($officeCompanyName !== ''): ?>
+                      <p class="office-card__company"><?php echo htmlspecialchars($officeCompanyName, ENT_QUOTES, 'UTF-8'); ?></p>
+                    <?php endif; ?>
+                    <p class="office-card__address"><?php echo nl2br(htmlspecialchars($officeAddress, ENT_QUOTES, 'UTF-8')); ?></p>
+                    <div class="office-card__meta-list">
+                      <?php if ($officeRegistrationLabel !== '' || $officeRegistrationNumber !== ''): ?>
+                        <div class="office-card__meta office-card__meta--plain">
+                          <span class="office-card__meta-icon"><i class="fa-regular fa-building"></i></span>
+                          <span>
+                            <?php if ($officeRegistrationLabel !== ''): ?>
+                              <strong><?php echo htmlspecialchars($officeRegistrationLabel, ENT_QUOTES, 'UTF-8'); ?>:</strong>
+                            <?php endif; ?>
+                            <?php echo htmlspecialchars($officeRegistrationNumber, ENT_QUOTES, 'UTF-8'); ?>
+                          </span>
+                        </div>
+                      <?php endif; ?>
+                      <?php if ($officePhone !== ''): ?>
+                        <a class="office-card__meta" href="https://wa.me/<?php echo htmlspecialchars($officePhoneHref ?: $officePhone, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" rel="noopener noreferrer">
+                          <span class="office-card__meta-icon"><i class="fa-brands fa-whatsapp"></i></span>
+                          <span><?php echo htmlspecialchars($officePhone, ENT_QUOTES, 'UTF-8'); ?></span>
+                        </a>
+                      <?php endif; ?>
+                      <?php if ($officeEmail !== ''): ?>
+                        <a class="office-card__meta" href="mailto:<?php echo htmlspecialchars($officeEmail, ENT_QUOTES, 'UTF-8'); ?>">
+                          <span class="office-card__meta-icon"><i class="fa-regular fa-envelope"></i></span>
+                          <span><?php echo htmlspecialchars($officeEmail, ENT_QUOTES, 'UTF-8'); ?></span>
+                        </a>
+                      <?php endif; ?>
+                      <a class="office-card__meta" href="<?php echo htmlspecialchars($officeWebsite, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" rel="noopener noreferrer">
+                        <span class="office-card__meta-icon"><i class="fa-solid fa-globe"></i></span>
+                        <span><?php echo htmlspecialchars(preg_replace('#^https?://#', '', $officeWebsite), ENT_QUOTES, 'UTF-8'); ?></span>
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              <?php endforeach; ?>
+            </div>
+          </div>
+        </section>
 
 <?php include 'includes/footer.php'; ?>

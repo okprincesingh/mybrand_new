@@ -140,7 +140,7 @@ if (!function_exists('render_header_menu_items')) {
                           </li>
                         <?php endforeach; ?>
                         <li class="moc-cta-item">
-                          <a class="moc-cta-btn" href="<?php echo url('meeting-schedule.php'); ?>">Get In Touch</a>
+                          <a class="moc-cta-btn" href="<?php echo url('contact.php'); ?>">Get In Touch</a>
                         </li>
                       </ul>
                     </nav>
@@ -219,11 +219,11 @@ if (!function_exists('render_header_menu_items')) {
                     </div>
                   </div>
 
-                  <a href="<?php echo url('meeting-schedule.php'); ?>" class="header-meta-link d-none d-lg-inline-flex">
+                  <a href="<?php echo url('contact.php'); ?>" class="header-meta-link d-none d-lg-inline-flex">
                     Get Free Consultation
                   </a>
 
-                  <a href="<?php echo url('meeting-schedule.php'); ?>" class="btn-orange d-inline-flex header-get-touch-btn">
+                  <a href="<?php echo url('contact.php'); ?>" class="btn-orange d-inline-flex header-get-touch-btn">
                     Get In Touch
                   </a>
 
