@@ -915,6 +915,20 @@ document.addEventListener('DOMContentLoaded', function() {
         spinner.style.display = isLoading ? 'block' : 'none';
     }
 
+    async function readJsonResponse(response, fallbackMessage) {
+        const text = await response.text();
+        if (!text.trim()) {
+            throw new Error(fallbackMessage || 'Server returned an empty response.');
+        }
+
+        try {
+            return JSON.parse(text);
+        } catch (error) {
+            const cleanText = text.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+            throw new Error(cleanText || fallbackMessage || 'Server returned an invalid response.');
+        }
+    }
+
     async function createStripePaymentIntent(orderData) {
         const response = await fetch('<?php echo url("ajax/create-payment.php"); ?>', {
             method: 'POST',
@@ -930,7 +944,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 currency: orderData.currency
             })
         });
-        return response.json();
+        return readJsonResponse(response, 'Payment request failed. Please check Stripe settings.');
     }
 
     async function submitOrder(orderData) {
@@ -942,7 +956,7 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             body: JSON.stringify(orderData)
         });
-        return response.json();
+        return readJsonResponse(response, 'Order request failed. Please try again.');
     }
 
     form.addEventListener('submit', async function(e) {

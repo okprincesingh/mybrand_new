@@ -155,26 +155,30 @@ function stripe_get_config(): ?array
 
 function payment_log_event(string $paymentMethod, string $eventType, ?string $transactionId, $requestPayload, $responsePayload, string $status = 'info', ?int $orderId = null, ?string $providerEventId = null, ?string $currency = null, ?float $amount = null): void
 {
-    $pdo = db();
-    if (!$pdo) {
-        return;
+    try {
+        $pdo = db();
+        if (!$pdo) {
+            return;
+        }
+
+        payment_ensure_tables($pdo);
+
+        $stmt = $pdo->prepare('INSERT INTO payment_logs (order_id, payment_method, event_type, provider_event_id, transaction_id, currency, amount, request_payload, response_payload, status) VALUES (:order_id, :payment_method, :event_type, :provider_event_id, :transaction_id, :currency, :amount, :request_payload, :response_payload, :status)');
+        $stmt->execute([
+            ':order_id' => $orderId,
+            ':payment_method' => $paymentMethod,
+            ':event_type' => $eventType,
+            ':provider_event_id' => $providerEventId,
+            ':transaction_id' => $transactionId,
+            ':currency' => $currency,
+            ':amount' => $amount,
+            ':request_payload' => is_string($requestPayload) ? $requestPayload : json_encode($requestPayload, JSON_UNESCAPED_UNICODE),
+            ':response_payload' => is_string($responsePayload) ? $responsePayload : json_encode($responsePayload, JSON_UNESCAPED_UNICODE),
+            ':status' => $status,
+        ]);
+    } catch (Throwable $e) {
+        error_log('Payment log failed: ' . $e->getMessage());
     }
-
-    payment_ensure_tables($pdo);
-
-    $stmt = $pdo->prepare('INSERT INTO payment_logs (order_id, payment_method, event_type, provider_event_id, transaction_id, currency, amount, request_payload, response_payload, status) VALUES (:order_id, :payment_method, :event_type, :provider_event_id, :transaction_id, :currency, :amount, :request_payload, :response_payload, :status)');
-    $stmt->execute([
-        ':order_id' => $orderId,
-        ':payment_method' => $paymentMethod,
-        ':event_type' => $eventType,
-        ':provider_event_id' => $providerEventId,
-        ':transaction_id' => $transactionId,
-        ':currency' => $currency,
-        ':amount' => $amount,
-        ':request_payload' => is_string($requestPayload) ? $requestPayload : json_encode($requestPayload, JSON_UNESCAPED_UNICODE),
-        ':response_payload' => is_string($responsePayload) ? $responsePayload : json_encode($responsePayload, JSON_UNESCAPED_UNICODE),
-        ':status' => $status,
-    ]);
 }
 
 function stripe_require_sdk(): bool
