@@ -32,13 +32,13 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
                   <div class="plf-follow mt-4">
                     <a href="<?php echo url('contact.php'); ?>" class="plf-follow-btn">FOLLOW US <i class="fa-solid fa-user"></i></a>
                   <div class="plf-social mt-3">
-                    <a href="<?php echo url('https://www.youtube.com/@mybrandplease'); ?>" aria-label="Youtube"><i class="fa-brands fa-youtube"></i></a>
-                    <a href="<?php echo url('https://www.facebook.com/mybrandplease'); ?>" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a href="<?php echo url('https://www.instagram.com/mybrandplease_/'); ?>" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="https://www.tiktok.com/@mybrandplease.com" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-                    <a href="<?php echo url('https://x.com/mybrandplease'); ?>" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
-                    <a href="<?php echo url('https://www.linkedin.com/in/mybrandplease'); ?>" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-                    <a href="<?php echo url('https://in.pinterest.com/mybrandplease/'); ?>" aria-label="Pinterest"><i class="fa-brands fa-pinterest-p"></i></a>
+                    <a target="_blank" href="<?php echo url('https://www.youtube.com/@mybrandplease'); ?>" aria-label="Youtube"><i class="fa-brands fa-youtube"></i></a>
+                    <a target="_blank" href="<?php echo url('https://www.facebook.com/mybrandplease'); ?>" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a target="_blank" href="<?php echo url('https://www.instagram.com/mybrandplease_/'); ?>" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                    <a target="_blank" href="https://www.tiktok.com/@mybrandplease.com" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+                    <a target="_blank" href="<?php echo url('https://x.com/mybrandplease'); ?>" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a target="_blank" href="<?php echo url('https://www.linkedin.com/in/mybrandplease'); ?>" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a target="_blank" href="<?php echo url('https://in.pinterest.com/mybrandplease/'); ?>" aria-label="Pinterest"><i class="fa-brands fa-pinterest-p"></i></a>
                   </div>
                 </div>
                 <div class="plf-review mt-4">
