@@ -256,10 +256,16 @@
     const scoreValue = { all: "4.4", tp: "4.4", goog: "4.8", ali: "4.7" };
     const scoreText = { all: "Excellent", tp: "Excellent", goog: "Excellent", ali: "Excellent" };
     const headingHTML = {
-      all: "Here's what our customers say after <b>Excellent</b>",
+      all: "mybrandplease.com is rated <b>Excellent</b>",
       tp: "mybrandplease.com is rated <b>Excellent</b>",
       goog: "mybrandplease.com is rated <b>Excellent</b>",
       ali: "mybrandplease.com is rated <b>Excellent</b>"
+    };
+    const subText = {
+      all: "Here's what our customers say",
+      tp: "",
+      goog: "",
+      ali: ""
     };
 
     allReviews.forEach((review) => {
@@ -339,6 +345,7 @@
     function animateIntroPanel(platform) {
       const intro = document.getElementById("rvIntroPanel");
       const heading = document.getElementById("rvHeading");
+      const sub = document.getElementById("rvSubText");
       const normalized = platform === "goog" || platform === "ali" || platform === "tp" ? platform : "all";
       if (!intro || !heading) return;
 
@@ -347,6 +354,10 @@
 
       window.setTimeout(() => {
         heading.innerHTML = headingHTML[normalized] || headingHTML.all;
+        if (sub) {
+          sub.textContent = subText[normalized] || "";
+        }
+        reviewsSection.classList.toggle("is-all-reviews", normalized === "all");
         intro.classList.remove("is-switching");
         intro.classList.add("is-opening");
       }, 170);

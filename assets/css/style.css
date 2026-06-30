@@ -24667,10 +24667,23 @@ iframe {
 
 .rv-sub {
   max-width: 520px;
-  color: #5e6478;
-  font-size: clamp(1rem, 1.4vw, 1.22rem);
-  line-height: 1.55;
-  margin: 0 0 26px;
+  color: #121a36;
+  font-family: var(--font_Lato);
+  font-size: clamp(2.05rem, 4vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.16;
+  margin: -4px 0 26px;
+}
+
+.reviews-section.is-all-reviews .rv-score-card,
+.reviews-section.is-all-reviews .rv-trust-strip,
+.reviews-section.is-all-reviews .rv-platform-badge {
+  display: none;
+}
+
+.reviews-section:not(.is-all-reviews) .rv-sub {
+  display: none;
 }
 
 .rv-score-card {
