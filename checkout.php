@@ -985,11 +985,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
         try {
             if (orderData.payment_method === 'stripe') {
-                if (!stripe || !cardNumberElement) {
-                    throw new Error('Stripe is not available. Please contact support.');
-                }
-
                 const intentRes = await createStripePaymentIntent(orderData);
+                if (intentRes.success && intentRes.data && intentRes.data.skip_payment) {
+                    orderData.payment_method = 'stripe';
+                    orderData.transaction_id = intentRes.data.payment_intent_id || 'TEST_ZERO_AMOUNT';
+                    orderData.payment_intent_id = intentRes.data.payment_intent_id || 'TEST_ZERO_AMOUNT';
+                } else {
+                    if (!stripe || !cardNumberElement) {
+                        throw new Error('Stripe is not available. Please contact support.');
+                    }
+
                 if (!intentRes.success || !intentRes.data || !intentRes.data.client_secret) {
                     throw new Error(intentRes.message || 'Unable to initialize Stripe payment.');
                 }
@@ -1024,6 +1029,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 orderData.transaction_id = stripeResult.paymentIntent.id;
                 orderData.payment_intent_id = stripeResult.paymentIntent.id;
+                }
             }
 
             const data = await submitOrder(orderData);

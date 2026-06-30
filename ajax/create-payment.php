@@ -75,6 +75,20 @@ $shippingCost = $shippingMethod ? (float) ($shippingMethod['cost'] ?? 0.0) : 0.0
 $discountAmount = max(0.0, (float) ($_SESSION['checkout_discount_amount'] ?? 0.0));
 $taxAmount = 0.0;
 $totalAmount = $subtotal + $shippingCost + $taxAmount - $discountAmount;
+if ($totalAmount <= 0) {
+    echo json_encode([
+        'success' => true,
+        'message' => 'Zero amount test order. Payment skipped.',
+        'data' => [
+            'skip_payment' => true,
+            'payment_intent_id' => 'TEST_ZERO_AMOUNT',
+            'amount' => 0,
+            'currency' => $currency,
+            'total_amount' => 0,
+        ],
+    ]);
+    exit;
+}
 
 $userId = (int) ($user['id'] ?? 0);
 $email = (string) ($user['email'] ?? ($billing['email'] ?? ''));
