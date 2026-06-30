@@ -83,10 +83,10 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
               <h4 class="plf-title">LEGAL DISCLAIMERS</h4>
               <ul class="plf-list list-unstyled mb-4">
                 <!-- CMS legal links intentionally not rendered here; static links below are used instead. -->
-                 <li><a href="<?php echo url('contact.php'); ?>">Terms of Service</a></li>
+                 <li><a href="<?php echo url('terms-conditions.php'); ?>">Terms &amp; Conditions</a></li>
                   <li><a href="<?php echo url('privacy.php'); ?>">Privacy Policy</a></li>
                   <li><a href="<?php echo url('contact.php'); ?>">Refund Policy</a></li>
-                  <li><a href="<?php echo url('contact.php'); ?>">Shipping Policy</a></li>
+                  <li><a href="<?php echo url('shipping-policy.php'); ?>">Shipping Policy</a></li>
                   <li><a href="<?php echo url('contact.php'); ?>">Form Center</a></li>
               </ul>
 

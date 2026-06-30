@@ -130,8 +130,8 @@ $defaultTimezone = isset($_GET['timezone']) ? $_GET['timezone'] : 'Asia/Kolkata'
                     <div class="cal-sidebar">
                         <img src="<?php echo url('assets/imgs/logo/logo.gif'); ?>" alt="Logo" class="brand-logo">
                         <hr class="my-4" style="opacity: 0.1;">
-                        <p class="text-muted small fw-bold mb-1">NIMISHA IMPEX WORLDWIDE</p>
-                        <h2 class="h4 fw-bold mb-4">30 Minute Meeting</h2>
+                        <p class="text-muted small fw-bold mb-1">NIMISHA IMPEX WORLDWIDE (P) LIMITED</p>
+                        <h2 class="h4 text-muted fw-bold mb-4">30 Minute Meeting</h2>
                         <div class="meta-item">
                             <i class="fa-regular fa-clock"></i>
                             <span>30 min</span>
