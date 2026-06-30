@@ -632,10 +632,16 @@ include 'includes/header.php';
 }
 .checkout-page__stripe-element {
     min-height: 48px;
-    padding: 14px 12px;
+    padding: 13px 12px;
     border: 1px solid #d1d5db;
     border-radius: 8px;
     background: #fff;
+    overflow: hidden;
+}
+.checkout-page__stripe-element iframe {
+    display: block !important;
+    min-height: 22px !important;
+    background: #fff !important;
 }
 .checkout-page__stripe-element.StripeElement--focus {
     border-color: #EE2D7A;
@@ -694,12 +700,21 @@ document.addEventListener('DOMContentLoaded', function() {
         const stripeElementStyle = {
             base: {
                 color: '#111827',
+                backgroundColor: '#ffffff',
                 fontFamily: 'Arial, sans-serif',
                 fontSize: '16px',
                 lineHeight: '20px',
+                iconColor: '#111827',
                 '::placeholder': { color: '#9ca3af' }
             },
-            invalid: { color: '#dc2626' }
+            invalid: {
+                color: '#dc2626',
+                iconColor: '#dc2626'
+            },
+            complete: {
+                color: '#111827',
+                iconColor: '#10b981'
+            }
         };
         cardNumberElement = elements.create('cardNumber', {
             showIcon: true,
