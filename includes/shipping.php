@@ -175,6 +175,40 @@ function shipping_cache_set(string $key, array $data): void
     @file_put_contents($file, json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
 }
 
+function shipping_cache_clear(): void
+{
+    foreach (glob(shipping_cache_dir() . '/*.json') ?: [] as $file) {
+        if (is_file($file)) {
+            @unlink($file);
+        }
+    }
+}
+
+function shipping_cache_version(PDO $pdo): string
+{
+    $methodVersion = db_fetch_one(
+        $pdo,
+        'SELECT COUNT(*) AS row_count, COALESCE(MAX(UNIX_TIMESTAMP(updated_at)), 0) AS last_update FROM shipping_methods'
+    ) ?: [];
+    $zoneVersion = db_fetch_one(
+        $pdo,
+        'SELECT COUNT(*) AS row_count, COALESCE(MAX(UNIX_TIMESTAMP(updated_at)), 0) AS last_update FROM shipping_zones'
+    ) ?: [];
+    $stateVersion = db_fetch_one(
+        $pdo,
+        'SELECT COUNT(*) AS row_count, COALESCE(MAX(UNIX_TIMESTAMP(created_at)), 0) AS last_update FROM shipping_zone_states'
+    ) ?: [];
+
+    return implode(':', [
+        (int) ($methodVersion['row_count'] ?? 0),
+        (int) ($methodVersion['last_update'] ?? 0),
+        (int) ($zoneVersion['row_count'] ?? 0),
+        (int) ($zoneVersion['last_update'] ?? 0),
+        (int) ($stateVersion['row_count'] ?? 0),
+        (int) ($stateVersion['last_update'] ?? 0),
+    ]);
+}
+
 function shipping_method_matches_zone(PDO $pdo, array $method, string $destinationState, string $destinationCountry = ''): bool
 {
     $destinationState = shipping_normalize_state($destinationState);
@@ -337,6 +371,7 @@ function getAvailableShippingMethods($cartTotal, $cartWeight, ?string $destinati
 
     $cacheKey = implode('|', [
         'shipping-methods',
+        shipping_cache_version($pdo),
         number_format($cartTotal, 2, '.', ''),
         number_format($cartWeight, 3, '.', ''),
         shipping_normalize_state($destinationState),

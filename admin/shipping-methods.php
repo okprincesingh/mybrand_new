@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/_init.php';
+require_once __DIR__ . '/../includes/shipping.php';
 $adminUser = admin_require_auth();
 $title = 'Shipping Methods';
 $pdo = db();
@@ -100,6 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             $pdo->commit();
+            shipping_cache_clear();
             admin_flash_set('success', $zoneId > 0 ? 'Shipping zone saved.' : 'Shipping zone created.');
         } catch (Throwable $e) {
             if ($pdo->inTransaction()) $pdo->rollBack();
@@ -115,6 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($zoneId > 0) {
             $pdo->prepare('UPDATE shipping_methods SET zone_id = NULL WHERE zone_id = :zone_id')->execute([':zone_id' => $zoneId]);
             $pdo->prepare('DELETE FROM shipping_zones WHERE id = :id')->execute([':id' => $zoneId]);
+            shipping_cache_clear();
             admin_flash_set('success', 'Zone deleted.');
         }
         header('Location: shipping-methods.php');
@@ -152,6 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($action === 'delete' && $id > 0) {
         $pdo->prepare('DELETE FROM shipping_methods WHERE id = :id')->execute([':id' => $id]);
+        shipping_cache_clear();
         admin_flash_set('success', 'Shipping method deleted.');
         header('Location: shipping-methods.php');
         exit;
@@ -163,6 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $current = (string) ($stmt->fetchColumn() ?: 'inactive');
         $next = $current === 'active' ? 'inactive' : 'active';
         $pdo->prepare('UPDATE shipping_methods SET status = :status WHERE id = :id')->execute([':status' => $next, ':id' => $id]);
+        shipping_cache_clear();
         admin_flash_set('success', 'Shipping method status updated.');
         header('Location: shipping-methods.php');
         exit;
@@ -227,10 +232,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $sql = 'UPDATE shipping_methods SET method_name=:method_name, shipping_type=:shipping_type, cost=:cost, min_order_amount=:min_order_amount, weight_min=:weight_min, weight_max=:weight_max, price_min=:price_min, price_max=:price_max, status=:status, priority=:priority, estimated_delivery_days=:estimated_delivery_days, zone_states=:zone_states, zone_id=:zone_id, rate_source=:rate_source, provider_code=:provider_code, provider_service_code=:provider_service_code, cache_ttl_seconds=:cache_ttl_seconds WHERE id=:id';
             $params[':id'] = $id;
             $pdo->prepare($sql)->execute($params);
+            shipping_cache_clear();
             admin_flash_set('success', 'Shipping method updated.');
         } else {
             $sql = 'INSERT INTO shipping_methods (method_name, shipping_type, cost, min_order_amount, weight_min, weight_max, price_min, price_max, status, priority, estimated_delivery_days, zone_states, zone_id, rate_source, provider_code, provider_service_code, cache_ttl_seconds) VALUES (:method_name,:shipping_type,:cost,:min_order_amount,:weight_min,:weight_max,:price_min,:price_max,:status,:priority,:estimated_delivery_days,:zone_states,:zone_id,:rate_source,:provider_code,:provider_service_code,:cache_ttl_seconds)';
             $pdo->prepare($sql)->execute($params);
+            shipping_cache_clear();
             admin_flash_set('success', 'Shipping method created.');
         }
 
