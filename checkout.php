@@ -65,7 +65,7 @@ $billingPrefill = [
 ];
 
 $cartWeight = shipping_calculate_cart_weight((array) ($_SESSION['cart'] ?? []));
-$shippingMethods = getAvailableShippingMethods($subtotal, $cartWeight, (string) ($billingPrefill['state'] ?? ''), (string) ($billingPrefill['zip'] ?? ''));
+$shippingMethods = getAvailableShippingMethods($subtotal, $cartWeight, (string) ($billingPrefill['state'] ?? ''), (string) ($billingPrefill['zip'] ?? ''), (string) ($billingPrefill['country'] ?? ''));
 $selectedShippingSession = shipping_get_session_selection();
 $selectedShippingMethod = null;
 if (is_array($selectedShippingSession) && !empty($selectedShippingSession['id'])) {
@@ -211,6 +211,14 @@ include 'includes/header.php';
                                     <option value="ES" <?php echo $billingPrefill['country'] === 'ES' ? 'selected' : ''; ?>>Spain</option>
                                     <option value="NL" <?php echo $billingPrefill['country'] === 'NL' ? 'selected' : ''; ?>>Netherlands</option>
                                     <option value="BD" <?php echo $billingPrefill['country'] === 'BD' ? 'selected' : ''; ?>>Bangladesh</option>
+                                    <option value="AE" <?php echo $billingPrefill['country'] === 'AE' ? 'selected' : ''; ?>>United Arab Emirates</option>
+                                    <option value="SA" <?php echo $billingPrefill['country'] === 'SA' ? 'selected' : ''; ?>>Saudi Arabia</option>
+                                    <option value="QA" <?php echo $billingPrefill['country'] === 'QA' ? 'selected' : ''; ?>>Qatar</option>
+                                    <option value="ZA" <?php echo $billingPrefill['country'] === 'ZA' ? 'selected' : ''; ?>>South Africa</option>
+                                    <option value="NG" <?php echo $billingPrefill['country'] === 'NG' ? 'selected' : ''; ?>>Nigeria</option>
+                                    <option value="BR" <?php echo $billingPrefill['country'] === 'BR' ? 'selected' : ''; ?>>Brazil</option>
+                                    <option value="AR" <?php echo $billingPrefill['country'] === 'AR' ? 'selected' : ''; ?>>Argentina</option>
+                                    <option value="CL" <?php echo $billingPrefill['country'] === 'CL' ? 'selected' : ''; ?>>Chile</option>
                                 </select>
                             </div>
 
@@ -304,6 +312,19 @@ include 'includes/header.php';
                                         <option value="UK">United Kingdom</option>
                                         <option value="AU">Australia</option>
                                         <option value="IN">India</option>
+                                        <option value="DE">Germany</option>
+                                        <option value="FR">France</option>
+                                        <option value="IT">Italy</option>
+                                        <option value="ES">Spain</option>
+                                        <option value="NL">Netherlands</option>
+                                        <option value="AE">United Arab Emirates</option>
+                                        <option value="SA">Saudi Arabia</option>
+                                        <option value="QA">Qatar</option>
+                                        <option value="ZA">South Africa</option>
+                                        <option value="NG">Nigeria</option>
+                                        <option value="BR">Brazil</option>
+                                        <option value="AR">Argentina</option>
+                                        <option value="CL">Chile</option>
                                     </select>
                                 </div>
                             </div>
@@ -341,36 +362,10 @@ include 'includes/header.php';
                                 </div>
                                 <div class="checkout-page__order-summary-totals-row" style="align-items:flex-start;">
                                     <span class="checkout-page__order-summary-totals-label">Shipping</span>
-                                    <div class="checkout-page__shipping-options" id="shipping-options">
-                                        <?php if (!empty($shippingMethods)): ?>
-                                            <?php foreach ($shippingMethods as $method): ?>
-                                                <?php $isSelected = (int)($selectedShippingMethod['id'] ?? 0) === (int)$method['id']; ?>
-                                                <label class="checkout-page__shipping-option">
-                                                    <input type="radio" name="shipping_method_id" value="<?php echo (int)$method['id']; ?>" <?php echo $isSelected ? 'checked' : ''; ?>>
-                                                    <span>
-                                                        <?php echo htmlspecialchars((string)$method['method_name'], ENT_QUOTES, 'UTF-8'); ?>
-                                                        <?php if ((int)($method['estimated_delivery_days'] ?? 0) > 0): ?>
-                                                            (<?php echo (int)$method['estimated_delivery_days']; ?> days)
-                                                        <?php endif; ?>
-                                                        -
-                                                        <?php if ((float)$method['cost'] <= 0): ?>
-                                                            Free
-                                                        <?php else: ?>
-                                                            $<?php echo number_format((float)$method['cost'], 2); ?>
-                                                        <?php endif; ?>
-                                                    </span>
-                                                </label>
-                                            <?php endforeach; ?>
-                                        <?php else: ?>
-                                            <span class="checkout-page__order-summary-totals-value checkout-page__order-summary-totals-value--muted">Shipping quote after order</span>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                                <div class="checkout-page__order-summary-totals-row">
-                                    <span class="checkout-page__order-summary-totals-label">Selected Shipping</span>
                                     <span class="checkout-page__order-summary-totals-value" id="shipping-cost">
-                                        <?php echo $hasShippingMethod ? ($shippingCost > 0 ? ('$' . number_format((float)$shippingCost, 2)) : 'Free') : 'To be quoted'; ?>
+                                        <?php echo $hasShippingMethod ? ($shippingCost > 0 ? ('$' . number_format((float)$shippingCost, 2)) : 'Free') : 'Shipping quote after order'; ?>
                                     </span>
+                                    <input type="hidden" name="shipping_method_id" id="shipping-method-id" value="<?php echo (int) ($selectedShippingMethod['id'] ?? 0); ?>">
                                 </div>
                                 <div class="checkout-page__order-summary-totals-row checkout-page__order-summary-totals-row--discount">
                                     <span class="checkout-page__order-summary-totals-label">Discount</span>
@@ -751,6 +746,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     shipToDifferentCheck.addEventListener('change', function() {
         shippingAddressSection.style.display = this.checked ? 'block' : 'none';
+        refreshShippingOptions();
     });
 
     document.getElementById('coupon-toggle')?.addEventListener('click', function(e) {
@@ -842,30 +838,50 @@ document.addEventListener('DOMContentLoaded', function() {
     couponApplyBtn?.addEventListener('click', function() { applyCoupon('apply'); });
     couponRemoveBtn?.addEventListener('click', function() { applyCoupon('remove'); });
 
-    document.querySelectorAll('input[name="shipping_method_id"]').forEach(function(radio) {
-        radio.addEventListener('change', function() {
-            fetch('<?php echo url("api/shipping.php"); ?>', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    action: 'select',
-                    method_id: parseInt(this.value || '0', 10),
-                    state: (form.querySelector('[name="billing[state]"]')?.value || '').trim(),
-                    postal_code: (form.querySelector('[name="billing[zip]"]')?.value || '').trim()
-                })
+    function renderShippingOptions(methods, selected) {
+        const methodIdInput = document.getElementById('shipping-method-id');
+        const shippingCostEl = document.getElementById('shipping-cost');
+        if (!Array.isArray(methods) || methods.length === 0) {
+            if (methodIdInput) methodIdInput.value = '0';
+            if (shippingCostEl) shippingCostEl.textContent = 'Shipping quote after order';
+            return;
+        }
+        const selectedId = Number(selected && selected.id ? selected.id : methods[0].id);
+        const selectedMethod = methods.find(function(method) {
+            return Number(method.id || 0) === selectedId;
+        }) || methods[0];
+        const cost = Number(selectedMethod.cost || 0);
+        if (methodIdInput) methodIdInput.value = String(Number(selectedMethod.id || 0));
+        if (shippingCostEl) shippingCostEl.textContent = cost > 0 ? formatMoney(cost) : 'Free';
+    }
+
+    function refreshShippingOptions() {
+        const useShippingAddress = document.getElementById('ship-to-different-check')?.checked;
+        const prefix = useShippingAddress ? 'shipping' : 'billing';
+        fetch('<?php echo url("api/shipping.php"); ?>', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                action: 'list',
+                state: (form.querySelector('[name="' + prefix + '[state]"]')?.value || '').trim(),
+                postal_code: (form.querySelector('[name="' + prefix + '[zip]"]')?.value || '').trim(),
+                country: (form.querySelector('[name="' + prefix + '[country]"]')?.value || '').trim()
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data && data.success) {
-                    applySummary(data.summary || null);
-                } else {
-                    showToast((data && data.message) || 'Could not update shipping', 'error');
-                }
-            })
-            .catch(function() {
-                showToast('Shipping update failed. Try again.', 'error');
-            });
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data && data.success) {
+                renderShippingOptions(data.methods || [], data.selected || null);
+                applySummary(data.summary || null);
+            }
+        })
+        .catch(function() {
+            showToast('Shipping options could not be refreshed.', 'error');
         });
+    }
+
+    ['billing[country]', 'billing[state]', 'billing[zip]', 'shipping[country]', 'shipping[state]', 'shipping[zip]'].forEach(function(name) {
+        form.querySelector('[name="' + name + '"]')?.addEventListener('change', refreshShippingOptions);
     });
 
     function buildOrderData(formData) {

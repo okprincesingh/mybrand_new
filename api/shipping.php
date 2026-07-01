@@ -37,10 +37,26 @@ $subtotal = round($subtotal, 2);
 $cartWeight = shipping_calculate_cart_weight($cart);
 $destinationState = trim((string) ($input['state'] ?? $input['destination_state'] ?? ''));
 $postalCode = trim((string) ($input['postal_code'] ?? $input['zip'] ?? ''));
+$destinationCountry = trim((string) ($input['country'] ?? $input['destination_country'] ?? ''));
 
 if ($action === 'list') {
-    $available = getAvailableShippingMethods($subtotal, $cartWeight, $destinationState, $postalCode);
+    $available = getAvailableShippingMethods($subtotal, $cartWeight, $destinationState, $postalCode, $destinationCountry);
     $selected = shipping_get_session_selection();
+    if ($selected) {
+        $selectedId = (int) ($selected['id'] ?? 0);
+        $stillAvailable = false;
+        foreach ($available as $method) {
+            if ((int) ($method['id'] ?? 0) === $selectedId) {
+                $selected = $method;
+                $stillAvailable = true;
+                break;
+            }
+        }
+        if (!$stillAvailable) {
+            shipping_clear_session_selection();
+            $selected = null;
+        }
+    }
 
     if (!$selected && !empty($available)) {
         $selected = [
@@ -88,7 +104,7 @@ if ($action === 'select') {
         exit;
     }
 
-    $method = shipping_get_method_by_id($methodId, $subtotal, $cartWeight, $destinationState, $postalCode);
+    $method = shipping_get_method_by_id($methodId, $subtotal, $cartWeight, $destinationState, $postalCode, $destinationCountry);
     if (!$method) {
         shipping_clear_session_selection();
         echo json_encode(['success' => false, 'message' => 'Shipping method is not available']);

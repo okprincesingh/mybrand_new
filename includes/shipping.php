@@ -116,6 +116,33 @@ function shipping_normalize_state(string $state): string
     return strtolower(trim(preg_replace('/\s+/', ' ', $state)));
 }
 
+function shipping_normalize_country(string $country): string
+{
+    $country = strtoupper(trim($country));
+    return $country === 'UK' ? 'GB' : $country;
+}
+
+function shipping_country_in_region(string $country, string $region): bool
+{
+    $country = shipping_normalize_country($country);
+    $region = strtoupper(trim($region));
+    if ($country === '' || $region === '') {
+        return true;
+    }
+    if ($country === $region) {
+        return true;
+    }
+
+    $regions = [
+        'EU' => ['AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'GB', 'CH', 'NO'],
+        'ME' => ['AE', 'BH', 'CY', 'EG', 'IQ', 'IR', 'IL', 'JO', 'KW', 'LB', 'OM', 'PS', 'QA', 'SA', 'SY', 'TR', 'YE'],
+        'AF' => ['DZ', 'AO', 'BJ', 'BW', 'BF', 'BI', 'CM', 'CV', 'CF', 'TD', 'KM', 'CG', 'CD', 'CI', 'DJ', 'EG', 'GQ', 'ER', 'SZ', 'ET', 'GA', 'GM', 'GH', 'GN', 'GW', 'KE', 'LS', 'LR', 'LY', 'MG', 'MW', 'ML', 'MR', 'MU', 'MA', 'MZ', 'NA', 'NE', 'NG', 'RW', 'ST', 'SN', 'SC', 'SL', 'SO', 'ZA', 'SS', 'SD', 'TZ', 'TG', 'TN', 'UG', 'ZM', 'ZW'],
+        'SA' => ['AR', 'BO', 'BR', 'CL', 'CO', 'EC', 'FK', 'GF', 'GY', 'PY', 'PE', 'SR', 'UY', 'VE'],
+    ];
+
+    return in_array($country, $regions[$region] ?? [], true);
+}
+
 function shipping_cache_dir(): string
 {
     $dir = __DIR__ . '/../storage/cache/shipping';
@@ -148,20 +175,34 @@ function shipping_cache_set(string $key, array $data): void
     @file_put_contents($file, json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
 }
 
-function shipping_method_matches_zone(PDO $pdo, array $method, string $destinationState): bool
+function shipping_method_matches_zone(PDO $pdo, array $method, string $destinationState, string $destinationCountry = ''): bool
 {
     $destinationState = shipping_normalize_state($destinationState);
+    $destinationCountry = shipping_normalize_country($destinationCountry);
     if ($destinationState === '') {
-        return true;
+        if (empty($method['zone_id']) || $destinationCountry === '') {
+            return true;
+        }
+        $zone = db_fetch_one($pdo, 'SELECT country_code FROM shipping_zones WHERE id = :zone_id AND is_active = 1 LIMIT 1', [':zone_id' => (int) $method['zone_id']]);
+        return $zone ? shipping_country_in_region($destinationCountry, (string) ($zone['country_code'] ?? '')) : false;
     }
 
     if (!empty($method['zone_id'])) {
+        $zone = db_fetch_one($pdo, 'SELECT country_code FROM shipping_zones WHERE id = :zone_id AND is_active = 1 LIMIT 1', [':zone_id' => (int) $method['zone_id']]);
+        if (!$zone || !shipping_country_in_region($destinationCountry, (string) ($zone['country_code'] ?? ''))) {
+            return false;
+        }
         $count = (int) (db_fetch_value(
             $pdo,
             'SELECT COUNT(*) FROM shipping_zone_states WHERE zone_id = :zone_id AND LOWER(state_name) = :state_name',
             [':zone_id' => (int) $method['zone_id'], ':state_name' => $destinationState]
         ) ?? 0);
-        return $count > 0;
+        $stateCount = (int) (db_fetch_value(
+            $pdo,
+            'SELECT COUNT(*) FROM shipping_zone_states WHERE zone_id = :zone_id',
+            [':zone_id' => (int) $method['zone_id']]
+        ) ?? 0);
+        return $stateCount === 0 || $count > 0;
     }
 
     $zoneStatesRaw = trim((string) ($method['zone_states'] ?? ''));
@@ -200,7 +241,7 @@ function shipping_http_json(string $url, array $headers = [], int $timeout = 8):
     return is_array($json) ? $json : null;
 }
 
-function shipping_fetch_provider_rate(array $method, float $cartTotal, float $cartWeight, string $destinationState, string $postalCode): ?float
+function shipping_fetch_provider_rate(array $method, float $cartTotal, float $cartWeight, string $destinationState, string $postalCode, string $destinationCountry = ''): ?float
 {
     $providerCode = strtolower(trim((string) ($method['provider_code'] ?? '')));
     if ($providerCode === '') {
@@ -229,6 +270,7 @@ function shipping_fetch_provider_rate(array $method, float $cartTotal, float $ca
         number_format($cartTotal, 2, '.', ''),
         number_format($cartWeight, 3, '.', ''),
         shipping_normalize_state($destinationState),
+        shipping_normalize_country($destinationCountry),
         trim($postalCode),
     ]);
 
@@ -246,6 +288,7 @@ function shipping_fetch_provider_rate(array $method, float $cartTotal, float $ca
             'weight' => $cartWeight,
             'amount' => $cartTotal,
             'state' => $destinationState,
+            'country' => $destinationCountry,
             'pincode' => $postalCode,
             'service_code' => (string) ($method['provider_service_code'] ?? ''),
         ]);
@@ -279,7 +322,7 @@ function shipping_fetch_provider_rate(array $method, float $cartTotal, float $ca
     return null;
 }
 
-function getAvailableShippingMethods($cartTotal, $cartWeight, ?string $destinationState = null, ?string $postalCode = null): array
+function getAvailableShippingMethods($cartTotal, $cartWeight, ?string $destinationState = null, ?string $postalCode = null, ?string $destinationCountry = null): array
 {
     $pdo = db();
     if (!$pdo || !shipping_table_exists($pdo)) {
@@ -290,12 +333,14 @@ function getAvailableShippingMethods($cartTotal, $cartWeight, ?string $destinati
     $cartWeight = max(0.0, (float) $cartWeight);
     $destinationState = trim((string) ($destinationState ?? ''));
     $postalCode = trim((string) ($postalCode ?? ''));
+    $destinationCountry = shipping_normalize_country((string) ($destinationCountry ?? ''));
 
     $cacheKey = implode('|', [
         'shipping-methods',
         number_format($cartTotal, 2, '.', ''),
         number_format($cartWeight, 3, '.', ''),
         shipping_normalize_state($destinationState),
+        $destinationCountry,
         $postalCode,
     ]);
 
@@ -312,7 +357,7 @@ function getAvailableShippingMethods($cartTotal, $cartWeight, ?string $destinati
 
     $available = [];
     foreach ($methods as $method) {
-        if (!shipping_method_matches_zone($pdo, $method, $destinationState)) {
+        if (!shipping_method_matches_zone($pdo, $method, $destinationState, $destinationCountry)) {
             continue;
         }
 
@@ -347,7 +392,7 @@ function getAvailableShippingMethods($cartTotal, $cartWeight, ?string $destinati
         }
 
         if (($method['rate_source'] ?? 'manual') === 'api') {
-            $apiCost = shipping_fetch_provider_rate($method, $cartTotal, $cartWeight, $destinationState, $postalCode);
+            $apiCost = shipping_fetch_provider_rate($method, $cartTotal, $cartWeight, $destinationState, $postalCode, $destinationCountry);
             if ($apiCost !== null) {
                 $cost = $apiCost;
             }
@@ -362,13 +407,13 @@ function getAvailableShippingMethods($cartTotal, $cartWeight, ?string $destinati
     return $available;
 }
 
-function shipping_get_method_by_id(int $methodId, float $cartTotal, float $cartWeight, ?string $destinationState = null, ?string $postalCode = null): ?array
+function shipping_get_method_by_id(int $methodId, float $cartTotal, float $cartWeight, ?string $destinationState = null, ?string $postalCode = null, ?string $destinationCountry = null): ?array
 {
     if ($methodId <= 0) {
         return null;
     }
 
-    $available = getAvailableShippingMethods($cartTotal, $cartWeight, $destinationState, $postalCode);
+    $available = getAvailableShippingMethods($cartTotal, $cartWeight, $destinationState, $postalCode, $destinationCountry);
     foreach ($available as $method) {
         if ((int) ($method['id'] ?? 0) === $methodId) {
             return $method;

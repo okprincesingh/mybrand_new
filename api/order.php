@@ -91,9 +91,10 @@ function order_create($data) {
     $requestedMethodId = (int) ($data['shipping_method_id'] ?? 0);
 $destinationState = (string) ((!empty($data['use_shipping_address']) && $data['use_shipping_address'] === true) ? ($data['shipping']['state'] ?? '') : ($data['billing']['state'] ?? ''));
 $postalCode = (string) ((!empty($data['use_shipping_address']) && $data['use_shipping_address'] === true) ? ($data['shipping']['zip'] ?? '') : ($data['billing']['zip'] ?? ''));
+$destinationCountry = (string) ((!empty($data['use_shipping_address']) && $data['use_shipping_address'] === true) ? ($data['shipping']['country'] ?? '') : ($data['billing']['country'] ?? ''));
 
     if ($requestedMethodId > 0) {
-        $selectedShippingMethod = shipping_get_method_by_id($requestedMethodId, $subtotal, $cartWeight, $destinationState, $postalCode);
+        $selectedShippingMethod = shipping_get_method_by_id($requestedMethodId, $subtotal, $cartWeight, $destinationState, $postalCode, $destinationCountry);
         if (!$selectedShippingMethod) {
             return ['success' => false, 'message' => 'Selected shipping method is no longer available.'];
         }
@@ -101,10 +102,10 @@ $postalCode = (string) ((!empty($data['use_shipping_address']) && $data['use_shi
     } else {
         $sessionSelection = shipping_get_session_selection();
         if (is_array($sessionSelection) && !empty($sessionSelection['id'])) {
-            $selectedShippingMethod = shipping_get_method_by_id((int) $sessionSelection['id'], $subtotal, $cartWeight, $destinationState, $postalCode);
+            $selectedShippingMethod = shipping_get_method_by_id((int) $sessionSelection['id'], $subtotal, $cartWeight, $destinationState, $postalCode, $destinationCountry);
         }
         if (!$selectedShippingMethod) {
-            $available = getAvailableShippingMethods($subtotal, $cartWeight, $destinationState, $postalCode);
+            $available = getAvailableShippingMethods($subtotal, $cartWeight, $destinationState, $postalCode, $destinationCountry);
             if (!empty($available)) {
                 $selectedShippingMethod = $available[0];
                 shipping_save_selection_to_session($selectedShippingMethod);

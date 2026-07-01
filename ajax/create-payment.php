@@ -52,20 +52,21 @@ $shipping = $input['shipping'] ?? [];
 $useShippingAddress = !empty($input['use_shipping_address']) && $input['use_shipping_address'] === true;
 $destinationState = (string) (($useShippingAddress ? ($shipping['state'] ?? '') : ($billing['state'] ?? '')) ?: '');
 $postalCode = (string) (($useShippingAddress ? ($shipping['zip'] ?? '') : ($billing['zip'] ?? '')) ?: '');
+$destinationCountry = (string) (($useShippingAddress ? ($shipping['country'] ?? '') : ($billing['country'] ?? '')) ?: '');
 
 $shippingMethod = null;
 $requestedMethodId = (int) ($input['shipping_method_id'] ?? 0);
 if ($requestedMethodId > 0) {
-    $shippingMethod = shipping_get_method_by_id($requestedMethodId, $subtotal, $cartWeight, $destinationState, $postalCode);
+    $shippingMethod = shipping_get_method_by_id($requestedMethodId, $subtotal, $cartWeight, $destinationState, $postalCode, $destinationCountry);
 }
 if (!$shippingMethod) {
     $sessionSelection = shipping_get_session_selection();
     if (is_array($sessionSelection) && !empty($sessionSelection['id'])) {
-        $shippingMethod = shipping_get_method_by_id((int) $sessionSelection['id'], $subtotal, $cartWeight, $destinationState, $postalCode);
+        $shippingMethod = shipping_get_method_by_id((int) $sessionSelection['id'], $subtotal, $cartWeight, $destinationState, $postalCode, $destinationCountry);
     }
 }
 if (!$shippingMethod) {
-    $available = getAvailableShippingMethods($subtotal, $cartWeight, $destinationState, $postalCode);
+    $available = getAvailableShippingMethods($subtotal, $cartWeight, $destinationState, $postalCode, $destinationCountry);
     if (!empty($available)) {
         $shippingMethod = $available[0];
     }
