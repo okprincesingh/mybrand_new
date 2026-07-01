@@ -367,9 +367,9 @@ include 'includes/header.php';
                                     </span>
                                     <input type="hidden" name="shipping_method_id" id="shipping-method-id" value="<?php echo (int) ($selectedShippingMethod['id'] ?? 0); ?>">
                                 </div>
-                                <div class="checkout-page__order-summary-totals-row checkout-page__order-summary-totals-row--discount">
+                                <div class="checkout-page__order-summary-totals-row checkout-page__order-summary-totals-row--discount" id="discount-row" style="<?php echo $discountAmount > 0 ? '' : 'display:none;'; ?>">
                                     <span class="checkout-page__order-summary-totals-label">Discount</span>
-                                    <span class="checkout-page__order-summary-totals-value" id="discount">-$0.00</span>
+                                    <span class="checkout-page__order-summary-totals-value" id="discount">-<?php echo '$' . number_format((float) $discountAmount, 2); ?></span>
                                 </div>
                                 <div class="checkout-page__order-summary-totals-row checkout-page__order-summary-totals-row--total">
                                     <span class="checkout-page__order-summary-totals-label">Total</span>
@@ -783,15 +783,18 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!summary) return;
         const subtotalEl = document.getElementById('subtotal');
         const shippingCostEl = document.getElementById('shipping-cost');
+        const discountRow = document.getElementById('discount-row');
         const discountEl = document.getElementById('discount');
         const totalEl = document.getElementById('total');
+        const discountAmount = Number(summary.discount_amount || 0);
         if (subtotalEl) subtotalEl.textContent = formatMoney(summary.subtotal || 0);
         if (shippingCostEl && Object.prototype.hasOwnProperty.call(summary, 'shipping_cost')) {
             shippingCostEl.textContent = summary.has_shipping_method === false
                 ? 'Unavailable'
                 : (Number(summary.shipping_cost || 0) > 0 ? formatMoney(summary.shipping_cost) : 'Free');
         }
-        if (discountEl) discountEl.textContent = '-' + formatMoney(summary.discount_amount || 0);
+        if (discountRow) discountRow.style.display = discountAmount > 0 ? '' : 'none';
+        if (discountEl) discountEl.textContent = '-' + formatMoney(discountAmount);
         if (totalEl) totalEl.textContent = formatMoney(summary.total || 0);
     }
 
