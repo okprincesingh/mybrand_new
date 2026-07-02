@@ -6,12 +6,19 @@ require_once __DIR__ . '/../includes/catalog.php';
 require_once __DIR__ . '/../includes/shipping.php';
 require_once __DIR__ . '/../includes/user.php';
 require_once __DIR__ . '/../includes/stripe-config.php';
+require_once __DIR__ . '/../includes/security.php';
 
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+    exit;
+}
+
+if (!hash_equals(csrf_token(), csrf_request_token())) {
+    http_response_code(419);
+    echo json_encode(['success' => false, 'message' => 'Invalid CSRF token.']);
     exit;
 }
 
@@ -24,6 +31,10 @@ if (!$user) {
 
 $input = json_decode(file_get_contents('php://input'), true) ?? $_POST;
 $currency = payment_currency_normalize((string) ($input['currency'] ?? 'usd'));
+$requestedAmount = isset($input['amount']) ? (float) $input['amount'] : null;
+$requestedOrderId = trim((string) ($input['order_id'] ?? ''));
+$requestedName = trim((string) ($input['customer_name'] ?? ''));
+$requestedEmail = trim((string) ($input['email'] ?? ''));
 
 if (empty($_SESSION['cart']) || !is_array($_SESSION['cart'])) {
     echo json_encode(['success' => false, 'message' => 'Your cart is empty.']);
@@ -96,15 +107,30 @@ if ($totalAmount <= 0) {
     exit;
 }
 
+if ($requestedAmount !== null && payment_amount_to_minor_units($requestedAmount, $currency) !== payment_amount_to_minor_units($totalAmount, $currency)) {
+    payment_log_event('stripe', 'payment_intent_amount_rejected', null, ['requested_amount' => $requestedAmount], ['server_total' => $totalAmount], 'failed', null, null, $currency, $totalAmount);
+    http_response_code(422);
+    echo json_encode(['success' => false, 'message' => 'Order total changed. Please review your order and try again.']);
+    exit;
+}
+
 $userId = (int) ($user['id'] ?? 0);
-$email = (string) ($user['email'] ?? ($billing['email'] ?? ''));
+$email = (string) ($user['email'] ?? ($billing['email'] ?? $requestedEmail));
+if ($requestedEmail !== '' && filter_var($requestedEmail, FILTER_VALIDATE_EMAIL)) {
+    $email = $requestedEmail;
+}
 $name = trim((string) (($billing['first_name'] ?? '') . ' ' . ($billing['last_name'] ?? '')));
+if ($requestedName !== '') {
+    $name = substr($requestedName, 0, 120);
+}
 $customerId = stripe_get_or_create_customer($userId, $email, $name, ['user_id' => (string) $userId]);
 
 try {
     $intent = createPaymentIntent($totalAmount, $currency, [
         'user_id' => (string) $userId,
         'email' => $email,
+        'customer_name' => $name,
+        'order_id' => $requestedOrderId !== '' ? substr($requestedOrderId, 0, 80) : 'checkout',
     ], $customerId);
 
     echo json_encode([

@@ -6,6 +6,8 @@ require_once __DIR__ . '/includes/url.php';
 require_once __DIR__ . '/includes/shipping.php';
 require_once __DIR__ . '/includes/stripe-config.php';
 require_once __DIR__ . '/includes/coupons.php';
+require_once __DIR__ . '/includes/security.php';
+require_once __DIR__ . '/includes/stripe-checkout-modal.php';
 
 $user = user_current();
 if (!$user) {
@@ -108,6 +110,8 @@ include 'includes/head.php';
 include 'includes/header.php';
 ?>
 
+<link rel="stylesheet" href="<?php echo url('assets/css/stripe-checkout-modal.css'); ?>">
+
 <div class="breadcumb">
     <div class="container rr-container-1895">
         <div class="breadcumb-wrapper section-spacing-120 fix" data-bg-src="<?php echo url('assets/imgs/breadcumbBg.jpg'); ?>">
@@ -143,6 +147,7 @@ include 'includes/header.php';
     <div class="container container-1352">
         <form id="checkout-form" class="checkout-form" method="post">
             <input type="hidden" name="action" value="create-order">
+            <input type="hidden" name="csrf_token" value="<?php echo e(csrf_token()); ?>">
             <div class="row">
                 <div class="col-lg-7 col-md-12">
                     <div class="checkout-page__billing">
@@ -415,22 +420,7 @@ include 'includes/header.php';
                             <?php endforeach; ?>
 
                             <div id="stripe-card-section" class="checkout-page__stripe-card" style="display:none;">
-                                <label class="checkout-page__billing-form-label">Card Details</label>
-                                <div class="checkout-page__stripe-fields">
-                                    <div class="checkout-page__stripe-field checkout-page__stripe-field--full">
-                                        <span class="checkout-page__stripe-field-label">Card Number</span>
-                                        <div id="stripe-card-number" class="checkout-page__stripe-element"></div>
-                                    </div>
-                                    <div class="checkout-page__stripe-field">
-                                        <span class="checkout-page__stripe-field-label">Expiry Date</span>
-                                        <div id="stripe-card-expiry" class="checkout-page__stripe-element"></div>
-                                    </div>
-                                    <div class="checkout-page__stripe-field">
-                                        <span class="checkout-page__stripe-field-label">CVC</span>
-                                        <div id="stripe-card-cvc" class="checkout-page__stripe-element"></div>
-                                    </div>
-                                </div>
-                                <div id="stripe-card-errors" class="checkout-page__stripe-error" role="alert"></div>
+                                <p class="checkout-page__payment-option-description mb-0">A secure Stripe checkout window will open after you place the order.</p>
                             </div>
                         </div>
 
@@ -458,6 +448,15 @@ include 'includes/header.php';
         </form>
     </div>
 </section>
+
+<?php
+stripe_checkout_modal_render([
+    'id' => 'stripeCheckoutModal',
+    'title' => 'Stripe checkout',
+    'pay_button_text' => 'Pay now',
+    'csrf_token' => csrf_token(),
+]);
+?>
 
 <style>
 .checkout-page__order-summary-item {
@@ -663,6 +662,7 @@ include 'includes/header.php';
 </style>
 
 <script src="https://js.stripe.com/v3/"></script>
+<script src="<?php echo url('assets/js/stripe-checkout-modal.js'); ?>"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('checkout-form');
@@ -677,63 +677,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const couponBadge = document.getElementById('checkout-applied-coupon-badge');
     const couponBadgeCode = document.getElementById('checkout-applied-coupon-code');
     const stripeCardSection = document.getElementById('stripe-card-section');
-    const stripeCardErrors = document.getElementById('stripe-card-errors');
-    const stripeCardNumberContainer = document.getElementById('stripe-card-number');
-    const stripeCardExpiryContainer = document.getElementById('stripe-card-expiry');
-    const stripeCardCvcContainer = document.getElementById('stripe-card-cvc');
 
     const stripePublishableKey = <?php echo json_encode($stripePublishableKey, JSON_UNESCAPED_SLASHES); ?>;
-    let stripe = null;
-    let elements = null;
-    let cardNumberElement = null;
-    let cardExpiryElement = null;
-    let cardCvcElement = null;
-
-    if (stripePublishableKey && stripeCardNumberContainer && stripeCardExpiryContainer && stripeCardCvcContainer) {
-        stripe = Stripe(stripePublishableKey);
-        elements = stripe.elements();
-        const stripeElementStyle = {
-            base: {
-                color: '#111827',
-                backgroundColor: '#ffffff',
-                fontFamily: 'Arial, sans-serif',
-                fontSize: '16px',
-                lineHeight: '20px',
-                iconColor: '#111827',
-                '::placeholder': { color: '#9ca3af' }
-            },
-            invalid: {
-                color: '#dc2626',
-                iconColor: '#dc2626'
-            },
-            complete: {
-                color: '#111827',
-                iconColor: '#10b981'
-            }
-        };
-        cardNumberElement = elements.create('cardNumber', {
-            showIcon: true,
-            placeholder: '1234 1234 1234 1234',
-            style: stripeElementStyle
-        });
-        cardExpiryElement = elements.create('cardExpiry', {
-            placeholder: 'MM / YY',
-            style: stripeElementStyle
-        });
-        cardCvcElement = elements.create('cardCvc', {
-            placeholder: 'CVC',
-            style: stripeElementStyle
-        });
-        cardNumberElement.mount('#stripe-card-number');
-        cardExpiryElement.mount('#stripe-card-expiry');
-        cardCvcElement.mount('#stripe-card-cvc');
-        [cardNumberElement, cardExpiryElement, cardCvcElement].forEach(function(element) {
-            element.on('change', function(event) {
-                if (!stripeCardErrors) return;
-                stripeCardErrors.textContent = event.error ? event.error.message : '';
-            });
-        });
-    }
+    const csrfToken = String(form.querySelector('[name="csrf_token"]')?.value || '');
+    const stripeCheckout = stripePublishableKey && window.StripeCheckoutModal
+        ? new window.StripeCheckoutModal({
+            modalId: 'stripeCheckoutModal',
+            publishableKey: stripePublishableKey,
+            createPaymentUrl: '<?php echo url("ajax/create-payment.php"); ?>',
+            csrfToken: csrfToken
+        })
+        : null;
 
     const overlay = document.createElement('div');
     overlay.className = 'checkout-overlay';
@@ -825,7 +779,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         fetch('<?php echo url("api/coupon.php"); ?>', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
             body: JSON.stringify({ action: action, code: code })
         })
         .then(r => r.json())
@@ -863,7 +817,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const prefix = useShippingAddress ? 'shipping' : 'billing';
         fetch('<?php echo url("api/shipping.php"); ?>', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
             body: JSON.stringify({
                 action: 'list',
                 state: (form.querySelector('[name="' + prefix + '[state]"]')?.value || '').trim(),
@@ -921,8 +875,14 @@ document.addEventListener('DOMContentLoaded', function() {
             payment_method: String(formData.get('payment_method') || 'cod').toLowerCase(),
             notes: formData.get('notes') || '',
             currency: String(formData.get('currency') || 'usd').toLowerCase(),
-            coupon_code: String(couponInput?.value || '').trim()
+            coupon_code: String(couponInput?.value || '').trim(),
+            csrf_token: csrfToken
         };
+    }
+
+    function currentDisplayedTotal() {
+        const totalText = document.getElementById('total')?.textContent || '0';
+        return Number(String(totalText).replace(/[^0-9.-]/g, '')) || 0;
     }
 
     function setLoading(isLoading) {
@@ -948,30 +908,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    async function createStripePaymentIntent(orderData) {
-        const response = await fetch('<?php echo url("ajax/create-payment.php"); ?>', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            body: JSON.stringify({
-                billing: orderData.billing,
-                shipping: orderData.shipping,
-                use_shipping_address: orderData.use_shipping_address,
-                shipping_method_id: orderData.shipping_method_id,
-                currency: orderData.currency
-            })
-        });
-        return readJsonResponse(response, 'Payment request failed. Please check Stripe settings.');
-    }
-
     async function submitOrder(orderData) {
         const response = await fetch('<?php echo url("api/order.php"); ?>', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest'
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-Token': csrfToken
             },
             body: JSON.stringify(orderData)
         });
@@ -1004,51 +947,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
         try {
             if (orderData.payment_method === 'stripe') {
-                const intentRes = await createStripePaymentIntent(orderData);
-                if (intentRes.success && intentRes.data && intentRes.data.skip_payment) {
-                    orderData.payment_method = 'stripe';
-                    orderData.transaction_id = intentRes.data.payment_intent_id || 'TEST_ZERO_AMOUNT';
-                    orderData.payment_intent_id = intentRes.data.payment_intent_id || 'TEST_ZERO_AMOUNT';
-                } else {
-                    if (!stripe || !cardNumberElement) {
-                        throw new Error('Stripe is not available. Please contact support.');
-                    }
-
-                if (!intentRes.success || !intentRes.data || !intentRes.data.client_secret) {
-                    throw new Error(intentRes.message || 'Unable to initialize Stripe payment.');
+                if (!stripeCheckout) {
+                    throw new Error('Stripe is not available. Please contact support.');
                 }
 
-                const billingName = [orderData.billing.first_name, orderData.billing.last_name].filter(Boolean).join(' ').trim();
-                const stripeResult = await stripe.confirmCardPayment(intentRes.data.client_secret, {
-                    payment_method: {
-                        card: cardNumberElement,
-                        billing_details: {
-                            name: billingName,
-                            email: orderData.billing.email,
-                            phone: orderData.billing.phone,
-                            address: {
-                                line1: orderData.billing.address1,
-                                line2: orderData.billing.address2 || undefined,
-                                city: orderData.billing.city,
-                                state: orderData.billing.state,
-                                postal_code: orderData.billing.zip,
-                                country: orderData.billing.country || 'US'
-                            }
-                        }
-                    }
+                setLoading(false);
+                const paymentResult = await stripeCheckout.open({
+                    amount: currentDisplayedTotal(),
+                    currency: orderData.currency,
+                    customer_name: [orderData.billing.first_name, orderData.billing.last_name].filter(Boolean).join(' ').trim(),
+                    email: orderData.billing.email,
+                    order_id: 'checkout',
+                    billing: orderData.billing,
+                    shipping: orderData.shipping,
+                    use_shipping_address: orderData.use_shipping_address,
+                    shipping_method_id: orderData.shipping_method_id
                 });
 
-                if (stripeResult.error) {
-                    throw new Error(stripeResult.error.message || 'Card payment failed.');
-                }
-
-                if (!stripeResult.paymentIntent || stripeResult.paymentIntent.status !== 'succeeded') {
-                    throw new Error('Payment was not completed.');
-                }
-
-                orderData.transaction_id = stripeResult.paymentIntent.id;
-                orderData.payment_intent_id = stripeResult.paymentIntent.id;
-                }
+                orderData.transaction_id = paymentResult.payment_intent_id;
+                orderData.payment_intent_id = paymentResult.payment_intent_id;
+                setLoading(true);
             }
 
             const data = await submitOrder(orderData);

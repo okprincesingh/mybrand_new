@@ -285,7 +285,10 @@ function createPaymentIntent(float $amount, string $currency = 'usd', array $met
     $payload = [
         'amount' => $amountMinor,
         'currency' => $currency,
-        'automatic_payment_methods' => ['enabled' => true],
+        'automatic_payment_methods' => [
+            'enabled' => true,
+            'allow_redirects' => 'never',
+        ],
         'metadata' => $metadata,
     ];
 
