@@ -75,7 +75,7 @@ include __DIR__ . '/_layout_top.php';
   <div class="col-lg-5">
     <div class="form-section">
       <h5 class="mb-3"><?= $formData['id'] ? 'Edit Office' : 'Add Office' ?></h5>
-      <form method="post" enctype="multipart/form-data" class="form-row">
+      <form method="post" enctype="multipart/form-data" style="display:flex;flex-direction:column;gap:0.5rem;">
         <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
         <input type="hidden" name="action" value="save">
         <input type="hidden" name="id" value="<?= (int) $formData['id'] ?>">

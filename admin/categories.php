@@ -77,7 +77,7 @@ include __DIR__ . '/_layout_top.php';
   <div class="col-lg-12">
     <div class="form-section">
       <h5 class="mb-3"><?= $editId?'Edit':'Add' ?> Category</h5>
-      <form method="post" enctype="multipart/form-data" class="form-row">
+      <form method="post" enctype="multipart/form-data" style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
         <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
         <input type="hidden" name="action" value="save">
         <input type="hidden" name="id" value="<?= (int)$edit['id'] ?>">
@@ -110,7 +110,7 @@ include __DIR__ . '/_layout_top.php';
           </select>
         </div>
         
-        <div class="form-group">
+        <div class="form-group" style="grid-column:1/-1;">
           <label class="form-label">Category / Sub-category Image</label>
           <input type="file" name="image" class="form-control" accept="image/jpeg,image/png,image/webp">
           <?php if ((string)$edit['image_path'] !== ''): ?>
@@ -120,7 +120,7 @@ include __DIR__ . '/_layout_top.php';
           <?php endif; ?>
         </div>
         
-        <div class="form-group">
+        <div class="form-group" style="grid-column:1/-1;">
           <label class="form-label">Description</label>
           <textarea name="description" class="form-control" rows="3"><?= e($edit['description']) ?></textarea>
         </div>
@@ -143,7 +143,7 @@ include __DIR__ . '/_layout_top.php';
           </div>
         </div>
         
-        <div class="form-group">
+        <div class="form-group" style="grid-column:1/-1;">
           <div class="d-flex gap-2">
             <button class="btn btn-primary-modern">Save Category</button>
             <?php if($editId): ?>

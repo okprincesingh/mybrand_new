@@ -227,42 +227,42 @@ include __DIR__ . '/_layout_top.php';
         </div>
       <?php endif; ?>
     </div>
-</div>
-
-<div class="form-section mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h6 class="mb-0">Additional Information (Attributes)</h6>
-    <button type="button" class="btn btn-primary-modern btn-sm" id="add_attr_btn">
-      <i class="bi bi-plus-circle me-2"></i>Add Attribute
-    </button>
   </div>
 
-  <div class="table-responsive">
-    <table class="modern-table" id="attrs_table">
-      <thead>
-        <tr>
-          <th style="width:40%">Attribute Name</th>
-          <th style="width:55%">Attribute Value</th>
-          <th style="width:5%">Action</th>
-        </tr>
-      </thead>
-      <tbody id="attrs_body">
-        <?php foreach($attrs as $a): ?>
+  <div class="form-section mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h6 class="mb-0">Additional Information (Attributes)</h6>
+      <button type="button" class="btn btn-primary-modern btn-sm" id="add_attr_btn">
+        <i class="bi bi-plus-circle me-2"></i>Add Attribute
+      </button>
+    </div>
+
+    <div class="table-responsive">
+      <table class="modern-table" id="attrs_table">
+        <thead>
           <tr>
-            <td><input name="attr_key[]" class="form-control" value="<?= e((string)$a['attribute_key']) ?>" placeholder="e.g. Skin Type"></td>
-            <td><input name="attr_value[]" class="form-control" value="<?= e((string)$a['attribute_value']) ?>" placeholder="e.g. All Skin Types"></td>
-            <td><button type="button" class="btn btn-outline-danger btn-sm remove-attr" title="Remove"><i class="bi bi-trash"></i></button></td>
+            <th style="width:40%">Attribute Name</th>
+            <th style="width:55%">Attribute Value</th>
+            <th style="width:5%">Action</th>
           </tr>
-        <?php endforeach; ?>
-      </tbody>
-    </table>
-  </div>
+        </thead>
+        <tbody id="attrs_body">
+          <?php foreach($attrs as $a): ?>
+            <tr>
+              <td><input name="attr_key[]" class="form-control" value="<?= e((string)$a['attribute_key']) ?>" placeholder="e.g. Skin Type"></td>
+              <td><input name="attr_value[]" class="form-control" value="<?= e((string)$a['attribute_value']) ?>" placeholder="e.g. All Skin Types"></td>
+              <td><button type="button" class="btn btn-outline-danger btn-sm remove-attr" title="Remove"><i class="bi bi-trash"></i></button></td>
+            </tr>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
 
-  <div class="mt-4 d-flex gap-3">
-    <button type="submit" class="btn btn-primary-modern">Save Product</button>
-    <a class="btn btn-secondary-modern" href="products.php">Back to Products</a>
+    <div class="mt-4 d-flex gap-3">
+      <button type="submit" class="btn btn-primary-modern">Save Product</button>
+      <a class="btn btn-secondary-modern" href="products.php">Back to Products</a>
+    </div>
   </div>
-</div>
 </form>
 
 <script>

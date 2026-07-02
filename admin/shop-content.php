@@ -57,7 +57,7 @@ include __DIR__ . '/_layout_top.php';
   <div class="col-lg-10">
     <div class="form-section">
       <h5 class="mb-3">Edit Shop Page Content</h5>
-      <form method="post" class="form-row">
+      <form method="post" style="display:flex;flex-direction:column;gap:0.75rem;">
         <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
 
         <div class="form-group">

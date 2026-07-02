@@ -58,13 +58,64 @@ $stmt = $pdo->prepare('
 $stmt->execute();
 $coupons = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// Calculate stats
+$totalCoupons = count($coupons);
+$activeCoupons = count(array_filter($coupons, fn($c) => $c['is_active']));
+$totalUsage = array_sum(array_column($coupons, 'used_count'));
+$totalDiscountGiven = array_sum(array_column($coupons, 'total_discount'));
+
 include __DIR__ . '/_layout_top.php';
 ?>
+
+<!-- Coupon Stats Row -->
+<div class="dashboard-grid mb-4">
+    <div class="stat-card">
+        <div class="stat-header">
+            <span class="stat-title">Total Coupons</span>
+            <span class="stat-icon"><i class="bi bi-tag"></i></span>
+        </div>
+        <div class="stat-value"><?= (int) $totalCoupons ?></div>
+        <div class="stat-trend">
+            <span>All time</span>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-header">
+            <span class="stat-title">Active</span>
+            <span class="stat-icon" style="background: var(--success-soft); color: var(--success);"><i class="bi bi-check-circle"></i></span>
+        </div>
+        <div class="stat-value"><?= (int) $activeCoupons ?></div>
+        <div class="stat-trend trend-up">
+            <span>Currently active</span>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-header">
+            <span class="stat-title">Total Used</span>
+            <span class="stat-icon" style="background: var(--primary-soft); color: var(--primary);"><i class="bi bi-cart-check"></i></span>
+        </div>
+        <div class="stat-value"><?= (int) $totalUsage ?></div>
+        <div class="stat-trend">
+            <span>Times redeemed</span>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-header">
+            <span class="stat-title">Discount Given</span>
+            <span class="stat-icon" style="background: #fef3c7; color: #d97706;"><i class="bi bi-cash-stack"></i></span>
+        </div>
+        <div class="stat-value">$<?= number_format((float) $totalDiscountGiven, 2) ?></div>
+        <div class="stat-trend">
+            <span>Total savings</span>
+        </div>
+    </div>
+</div>
+
 <div class="widget-card">
     <div class="widget-header">
-        <h5 class="widget-title">All Coupons</h5>
+        <h5 class="widget-title">All Coupons <span class="text-muted fs-6 fw-normal">(<?= count($coupons) ?>)</span></h5>
         <div class="widget-actions">
-            <a href="coupon-edit.php" class="btn btn-primary btn-sm">Add New Coupon</a>
+            <a href="coupon-edit.php" class="btn btn-primary-modern btn-sm"><i class="bi bi-plus-circle me-1"></i>Add New Coupon</a>
         </div>
     </div>
     <div class="table-responsive">
@@ -85,70 +136,82 @@ include __DIR__ . '/_layout_top.php';
                 <?php foreach ($coupons as $coupon): ?>
                 <tr>
                     <td>
-                        <div>
-                            <strong><?= e($coupon['code']) ?></strong>
-                            <?php if ($coupon['minimum_order_amount']): ?>
-                                <br><small class="text-muted">Min: $<?= number_format((float)$coupon['minimum_order_amount'], 2) ?></small>
-                            <?php endif; ?>
-                        </div>
+                        <strong style="font-family: monospace; letter-spacing: 0.05em;"><?= e($coupon['code']) ?></strong>
+                        <?php if ($coupon['minimum_order_amount']): ?>
+                            <br><small class="text-muted">Min: $<?= number_format((float)$coupon['minimum_order_amount'], 2) ?></small>
+                        <?php endif; ?>
                     </td>
-                    <td><?= e($coupon['description'] ?? 'No description') ?></td>
                     <td>
-                        <?php if ($coupon['discount_type'] === 'percent'): ?>
-                            <span class="badge bg-primary">Percentage</span>
+                        <?php if ($coupon['description']): ?>
+                            <?= e($coupon['description']) ?>
                         <?php else: ?>
-                            <span class="badge bg-info">Fixed Amount</span>
+                            <span class="text-muted">—</span>
                         <?php endif; ?>
                     </td>
                     <td>
                         <?php if ($coupon['discount_type'] === 'percent'): ?>
-                            <?= e($coupon['discount_value']) ?>%
+                            <span class="status-badge" style="background: var(--primary-soft); color: var(--primary);">% Percentage</span>
+                        <?php else: ?>
+                            <span class="status-badge" style="background: var(--success-soft); color: var(--success);">$ Fixed</span>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <strong>
+                        <?php if ($coupon['discount_type'] === 'percent'): ?>
+                            <?= (float) $coupon['discount_value'] ?>%
                             <?php if ($coupon['maximum_discount_amount']): ?>
-                                <br><small class="text-muted">Max: $<?= number_format((float)$coupon['maximum_discount_amount'], 2) ?></small>
+                                <br><small class="text-muted">Max $<?= number_format((float)$coupon['maximum_discount_amount'], 2) ?></small>
                             <?php endif; ?>
                         <?php else: ?>
                             $<?= number_format((float)$coupon['discount_value'], 2) ?>
                         <?php endif; ?>
+                        </strong>
                     </td>
                     <td>
-                        <?= e($coupon['used_count']) ?> / <?= $coupon['usage_limit'] ? e($coupon['usage_limit']) : 'Unlimited' ?>
+                        <?= (int) $coupon['used_count'] ?> / <?= $coupon['usage_limit'] ? (int) $coupon['usage_limit'] : '∞' ?>
                         <?php if ($coupon['total_discount']): ?>
-                            <br><small class="text-muted">Total: $<?= number_format((float)$coupon['total_discount'], 2) ?></small>
+                            <br><small class="text-muted">$<?= number_format((float)$coupon['total_discount'], 2) ?> saved</small>
                         <?php endif; ?>
                     </td>
                     <td>
-                        <?php if ($coupon['starts_at']): ?>
-                            <small class="text-muted">From: <?= date('M j, Y', strtotime($coupon['starts_at'])) ?></small><br>
-                        <?php endif; ?>
-                        <?php if ($coupon['expires_at']): ?>
-                            <small class="text-muted">To: <?= date('M j, Y', strtotime($coupon['expires_at'])) ?></small>
+                        <?php if ($coupon['starts_at'] || $coupon['expires_at']): ?>
+                            <?php if ($coupon['starts_at']): ?>
+                                <small class="text-muted d-block">From: <?= date('M j, Y', strtotime($coupon['starts_at'])) ?></small>
+                            <?php endif; ?>
+                            <?php if ($coupon['expires_at']): ?>
+                                <small class="text-muted d-block">To: <?= date('M j, Y', strtotime($coupon['expires_at'])) ?></small>
+                            <?php endif; ?>
                         <?php else: ?>
-                            <small class="text-muted">No expiry</small>
+                            <small class="text-muted">No time limit</small>
                         <?php endif; ?>
                     </td>
                     <td>
                         <?php if ($coupon['is_active']): ?>
                             <span class="status-badge status-active">Active</span>
                         <?php else: ?>
-                            <span class="status-badge status-draft">Inactive</span>
+                            <span class="status-badge status-inactive">Inactive</span>
                         <?php endif; ?>
                     </td>
                     <td>
-                        <div class="btn-group" role="group">
-                            <a href="coupon-edit.php?id=<?= (int) $coupon['id'] ?>" class="btn btn-outline-primary btn-sm">Edit</a>
-                            <form method="POST" style="display: inline;">
+                        <div class="d-flex gap-1">
+                            <a href="coupon-edit.php?id=<?= (int) $coupon['id'] ?>" class="btn btn-outline-primary btn-sm" title="Edit">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <form method="POST" class="d-inline">
                                 <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
-                                <input type="hidden" name="coupon_id" value="<?= e($coupon['id']) ?>">
+                                <input type="hidden" name="coupon_id" value="<?= (int) $coupon['id'] ?>">
                                 <input type="hidden" name="action" value="toggle_active">
-                                <button type="submit" class="btn <?= $coupon['is_active'] ? 'btn-outline-warning' : 'btn-outline-success' ?> btn-sm">
-                                    <?= $coupon['is_active'] ? 'Deactivate' : 'Activate' ?>
+                                <button type="submit" class="btn <?= $coupon['is_active'] ? 'btn-outline-warning' : 'btn-outline-success' ?> btn-sm" title="<?= $coupon['is_active'] ? 'Deactivate' : 'Activate' ?>">
+                                    <i class="bi <?= $coupon['is_active'] ? 'bi-pause-circle' : 'bi-play-circle' ?>"></i>
                                 </button>
                             </form>
-                            <form method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this coupon?');">
+                            <form method="POST" class="d-inline" onsubmit="return confirm('Delete this coupon?');">
                                 <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
-                                <input type="hidden" name="coupon_id" value="<?= e($coupon['id']) ?>">
+                                <input type="hidden" name="coupon_id" value="<?= (int) $coupon['id'] ?>">
                                 <input type="hidden" name="action" value="delete">
-                                <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+                                <button type="submit" class="btn btn-outline-danger btn-sm" title="Delete">
+                                    <i class="bi bi-trash"></i>
+                                </button>
                             </form>
                         </div>
                     </td>
@@ -156,7 +219,10 @@ include __DIR__ . '/_layout_top.php';
                 <?php endforeach; ?>
                 <?php if (empty($coupons)): ?>
                 <tr>
-                    <td colspan="8" class="text-center text-muted">No coupons found</td>
+                    <td colspan="8" class="text-center text-muted py-5">
+                        <i class="bi bi-tag" style="font-size:2rem;display:block;margin-bottom:0.5rem;opacity:0.3;"></i>
+                        No coupons found. <a href="coupon-edit.php" class="text-decoration-none">Create your first coupon</a>
+                    </td>
                 </tr>
                 <?php endif; ?>
             </tbody>

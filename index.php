@@ -1002,7 +1002,7 @@ document.addEventListener('DOMContentLoaded', function () {
                   <span><i class="fa-solid fa-star"></i></span>
                   <span><i class="fa-solid fa-star"></i></span>
                   <span><i class="fa-solid fa-star"></i></span>
-                  <span class="is-half"><i class="fa-solid fa-star"></i></span>
+                  <span><i class="fa-solid fa-star"></i></span>
                 </div>
                 <p>Rated <strong id="rvScoreValue">4.4</strong> &bull; <span id="rvScoreText">Excellent</span></p>
                 <div class="rv-score-card__verified"><i class="fa-solid fa-shield-halved"></i> Verified reviews from real customers</div>
@@ -1360,7 +1360,7 @@ document.addEventListener('DOMContentLoaded', function () {
           <div class="container">
             <div class="office-showcase__intro wow fadeInUp" data-wow-delay=".3s">
               <span class="office-showcase__eyebrow">Global Presence</span>
-              <h2 class="office-showcase__title">~ Our Offices ~</h2>
+              <h2 class="office-showcase__title">~ Our Global Network ~</h2>
               <p class="office-showcase__lead">Meet the teams supporting our private label partners across key markets with direct access to local guidance, production coordination, and faster communication.</p>
             </div>
             <div class="office-grid">

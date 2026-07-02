@@ -253,7 +253,7 @@
       ali: "uploads/logo/ali.png"
     };
     const scoreLabel = { all: "Trustpilot", tp: "Trustpilot", goog: "Google", ali: "Alibaba" };
-    const scoreValue = { all: "4.4", tp: "4.4", goog: "4.8", ali: "4.7" };
+    const scoreValue = { all: "4.4", tp: "4.4", goog: "5", ali: "4.7" };
     const scoreText = { all: "Excellent", tp: "Excellent", goog: "Excellent", ali: "Excellent" };
     const headingHTML = {
       all: "mybrandplease.com is rated <b>Excellent</b>",

@@ -568,6 +568,51 @@ body.admin-body {
 
 .form-group {
   margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Fix form-group containing only a checkbox (no label above) */
+.form-group:has(.form-check):not(:has(.form-label)) {
+  justify-content: flex-end;
+  padding-bottom: 0.25rem;
+}
+
+/* Fix form-group containing buttons - align to bottom */
+.form-group:has(.btn):not(:has(.form-label)) {
+  justify-content: flex-end;
+  padding-bottom: 0.15rem;
+}
+
+/* Fix form-group with both label and form-check (e.g. Status + Active checkbox) */
+.form-group:has(.form-label):has(.form-check) .form-check {
+  margin-top: 0.35rem;
+  padding-left: 1.6rem;
+  min-height: 1.2rem;
+}
+
+.form-group:has(.form-label):has(.form-check) .form-check .form-check-input {
+  margin-left: -1.6rem;
+  margin-top: 0.15rem;
+}
+
+.form-group .form-check {
+  padding-left: 1.6rem;
+  min-height: 1.2rem;
+  margin-bottom: 0;
+}
+
+.form-group .form-check .form-check-input {
+  margin-left: -1.6rem;
+  margin-top: 0.15rem;
+}
+
+.form-group .form-check .form-check-label {
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: var(--text);
+  text-transform: none;
+  letter-spacing: normal;
 }
 
 .form-label {
@@ -590,6 +635,7 @@ body.admin-body {
   font-size: 0.9rem;
   transition: var(--transition);
   box-shadow: none;
+  line-height: 1.5;
 }
 
 .form-control:focus, .form-select:focus {
@@ -606,6 +652,30 @@ body.admin-body {
 textarea.form-control {
   min-height: 100px;
   resize: vertical;
+}
+
+/* Form helper text */
+.form-text {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+/* Ensure buttons in form-group don't have extra gap from flex column */
+.form-group .d-flex {
+  margin-top: auto;
+}
+
+/* Ensure form-group wrapping a single button doesn't look empty */
+.form-group:has(> .btn):not(:has(.form-label)) {
+  justify-content: flex-end;
+}
+
+/* Accordion item admin spacing */
+.accordion-item-admin {
+  background: var(--surface);
 }
 
 /* Modern Buttons */
