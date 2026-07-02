@@ -143,6 +143,62 @@ function shipping_country_in_region(string $country, string $region): bool
     return in_array($country, $regions[$region] ?? [], true);
 }
 
+function shipping_country_label(string $countryCode): string
+{
+    $countryCode = shipping_normalize_country($countryCode);
+    $labels = [
+        'US' => 'United States',
+        'CA' => 'Canada',
+        'GB' => 'United Kingdom',
+        'UK' => 'United Kingdom',
+        'AU' => 'Australia',
+        'IN' => 'India',
+        'DE' => 'Germany',
+        'FR' => 'France',
+        'IT' => 'Italy',
+        'ES' => 'Spain',
+        'NL' => 'Netherlands',
+        'BD' => 'Bangladesh',
+        'AE' => 'United Arab Emirates',
+        'SA' => 'Saudi Arabia',
+        'QA' => 'Qatar',
+        'ZA' => 'South Africa',
+        'NG' => 'Nigeria',
+        'BR' => 'Brazil',
+        'AR' => 'Argentina',
+        'CL' => 'Chile',
+        'EU' => 'European Union / Europe',
+        'ME' => 'Middle East',
+        'AF' => 'Africa',
+    ];
+
+    return $labels[$countryCode] ?? $countryCode;
+}
+
+function shipping_get_checkout_countries(): array
+{
+    $pdo = db();
+    if (!$pdo || !shipping_table_exists($pdo)) {
+        return [];
+    }
+
+    $rows = db_fetch_all(
+        $pdo,
+        'SELECT DISTINCT country_code FROM shipping_zones WHERE is_active = 1 ORDER BY country_code ASC'
+    );
+
+    $countries = [];
+    foreach ($rows as $row) {
+        $code = shipping_normalize_country((string) ($row['country_code'] ?? ''));
+        if ($code === '') {
+            continue;
+        }
+        $countries[$code] = shipping_country_label($code);
+    }
+
+    return $countries;
+}
+
 function shipping_cache_dir(): string
 {
     $dir = __DIR__ . '/../storage/cache/shipping';

@@ -65,6 +65,13 @@ $billingPrefill = [
     'phone' => (string) ($user['phone'] ?? ''),
     'email' => (string) ($user['email'] ?? ''),
 ];
+$shippingCountries = shipping_get_checkout_countries();
+if (empty($shippingCountries)) {
+    $shippingCountries = ['IN' => 'India'];
+}
+if (!isset($shippingCountries[shipping_normalize_country($billingPrefill['country'])])) {
+    $billingPrefill['country'] = (string) array_key_first($shippingCountries);
+}
 
 $cartWeight = shipping_calculate_cart_weight((array) ($_SESSION['cart'] ?? []));
 $shippingMethods = getAvailableShippingMethods($subtotal, $cartWeight, (string) ($billingPrefill['state'] ?? ''), (string) ($billingPrefill['zip'] ?? ''), (string) ($billingPrefill['country'] ?? ''));
@@ -205,25 +212,11 @@ include 'includes/header.php';
                                     Country / Region <span class="checkout-page__billing-form-required">*</span>
                                 </label>
                                 <select name="billing[country]" class="checkout-page__billing-form-select" required>
-                                    <option value="US" <?php echo $billingPrefill['country'] === 'US' ? 'selected' : ''; ?>>United States</option>
-                                    <option value="CA" <?php echo $billingPrefill['country'] === 'CA' ? 'selected' : ''; ?>>Canada</option>
-                                    <option value="UK" <?php echo $billingPrefill['country'] === 'UK' ? 'selected' : ''; ?>>United Kingdom</option>
-                                    <option value="AU" <?php echo $billingPrefill['country'] === 'AU' ? 'selected' : ''; ?>>Australia</option>
-                                    <option value="IN" <?php echo $billingPrefill['country'] === 'IN' ? 'selected' : ''; ?>>India</option>
-                                    <option value="DE" <?php echo $billingPrefill['country'] === 'DE' ? 'selected' : ''; ?>>Germany</option>
-                                    <option value="FR" <?php echo $billingPrefill['country'] === 'FR' ? 'selected' : ''; ?>>France</option>
-                                    <option value="IT" <?php echo $billingPrefill['country'] === 'IT' ? 'selected' : ''; ?>>Italy</option>
-                                    <option value="ES" <?php echo $billingPrefill['country'] === 'ES' ? 'selected' : ''; ?>>Spain</option>
-                                    <option value="NL" <?php echo $billingPrefill['country'] === 'NL' ? 'selected' : ''; ?>>Netherlands</option>
-                                    <option value="BD" <?php echo $billingPrefill['country'] === 'BD' ? 'selected' : ''; ?>>Bangladesh</option>
-                                    <option value="AE" <?php echo $billingPrefill['country'] === 'AE' ? 'selected' : ''; ?>>United Arab Emirates</option>
-                                    <option value="SA" <?php echo $billingPrefill['country'] === 'SA' ? 'selected' : ''; ?>>Saudi Arabia</option>
-                                    <option value="QA" <?php echo $billingPrefill['country'] === 'QA' ? 'selected' : ''; ?>>Qatar</option>
-                                    <option value="ZA" <?php echo $billingPrefill['country'] === 'ZA' ? 'selected' : ''; ?>>South Africa</option>
-                                    <option value="NG" <?php echo $billingPrefill['country'] === 'NG' ? 'selected' : ''; ?>>Nigeria</option>
-                                    <option value="BR" <?php echo $billingPrefill['country'] === 'BR' ? 'selected' : ''; ?>>Brazil</option>
-                                    <option value="AR" <?php echo $billingPrefill['country'] === 'AR' ? 'selected' : ''; ?>>Argentina</option>
-                                    <option value="CL" <?php echo $billingPrefill['country'] === 'CL' ? 'selected' : ''; ?>>Chile</option>
+                                    <?php foreach ($shippingCountries as $countryCode => $countryName): ?>
+                                    <option value="<?php echo htmlspecialchars($countryCode, ENT_QUOTES, 'UTF-8'); ?>" <?php echo shipping_normalize_country($billingPrefill['country']) === $countryCode ? 'selected' : ''; ?>>
+                                        <?php echo htmlspecialchars($countryName, ENT_QUOTES, 'UTF-8'); ?>
+                                    </option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
 
@@ -312,24 +305,11 @@ include 'includes/header.php';
                                 <div class="checkout-page__billing-form-group">
                                     <label class="checkout-page__billing-form-label">Country</label>
                                     <select name="shipping[country]" class="checkout-page__billing-form-select">
-                                        <option value="US">United States</option>
-                                        <option value="CA">Canada</option>
-                                        <option value="UK">United Kingdom</option>
-                                        <option value="AU">Australia</option>
-                                        <option value="IN">India</option>
-                                        <option value="DE">Germany</option>
-                                        <option value="FR">France</option>
-                                        <option value="IT">Italy</option>
-                                        <option value="ES">Spain</option>
-                                        <option value="NL">Netherlands</option>
-                                        <option value="AE">United Arab Emirates</option>
-                                        <option value="SA">Saudi Arabia</option>
-                                        <option value="QA">Qatar</option>
-                                        <option value="ZA">South Africa</option>
-                                        <option value="NG">Nigeria</option>
-                                        <option value="BR">Brazil</option>
-                                        <option value="AR">Argentina</option>
-                                        <option value="CL">Chile</option>
+                                        <?php foreach ($shippingCountries as $countryCode => $countryName): ?>
+                                        <option value="<?php echo htmlspecialchars($countryCode, ENT_QUOTES, 'UTF-8'); ?>">
+                                            <?php echo htmlspecialchars($countryName, ENT_QUOTES, 'UTF-8'); ?>
+                                        </option>
+                                        <?php endforeach; ?>
                                     </select>
                                 </div>
                             </div>
@@ -837,8 +817,22 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    let shippingRefreshTimer = null;
+    function scheduleShippingRefresh() {
+        clearTimeout(shippingRefreshTimer);
+        shippingRefreshTimer = setTimeout(refreshShippingOptions, 150);
+    }
+
     ['billing[country]', 'billing[state]', 'billing[zip]', 'shipping[country]', 'shipping[state]', 'shipping[zip]'].forEach(function(name) {
-        form.querySelector('[name="' + name + '"]')?.addEventListener('change', refreshShippingOptions);
+        const field = form.querySelector('[name="' + name + '"]');
+        field?.addEventListener('change', scheduleShippingRefresh);
+        field?.addEventListener('input', scheduleShippingRefresh);
+    });
+
+    document.addEventListener('click', function(event) {
+        if (event.target.closest('.nice-select .option')) {
+            scheduleShippingRefresh();
+        }
     });
 
     function buildOrderData(formData) {

@@ -205,19 +205,25 @@ function stripe_get_or_create_customer(int $userId, string $email = '', string $
 
     payment_ensure_tables($pdo);
 
-    $stmt = $pdo->prepare('SELECT provider_customer_id FROM payment_customers WHERE user_id = :user_id AND payment_method = :payment_method LIMIT 1');
-    $stmt->execute([':user_id' => $userId, ':payment_method' => 'stripe']);
-    $existing = (string) ($stmt->fetchColumn() ?: '');
-    if ($existing !== '') {
-        return $existing;
-    }
-
     $config = stripe_get_config();
     if (!$config || !stripe_require_sdk()) {
         return null;
     }
 
     $client = new \Stripe\StripeClient($config['secret_key']);
+
+    $stmt = $pdo->prepare('SELECT provider_customer_id FROM payment_customers WHERE user_id = :user_id AND payment_method = :payment_method LIMIT 1');
+    $stmt->execute([':user_id' => $userId, ':payment_method' => 'stripe']);
+    $existing = (string) ($stmt->fetchColumn() ?: '');
+    if ($existing !== '') {
+        try {
+            $client->customers->retrieve($existing);
+            return $existing;
+        } catch (Throwable $e) {
+            payment_log_event('stripe', 'customer_not_found_recreate', null, ['user_id' => $userId, 'customer_id' => $existing], ['error' => $e->getMessage()], 'info');
+        }
+    }
+
     $customer = $client->customers->create([
         'email' => $email !== '' ? $email : null,
         'name' => $name !== '' ? $name : null,
