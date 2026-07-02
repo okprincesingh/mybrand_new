@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $coupons = [];
 $stmt = $pdo->prepare('
     SELECT c.*, 
-           COUNT(cu.id) as usage_count,
+           COUNT(cu.id) as used_count,
            SUM(cu.discount_amount) as total_discount
     FROM coupons c 
     LEFT JOIN coupon_usage cu ON c.id = cu.coupon_id 
@@ -111,7 +111,7 @@ include __DIR__ . '/_layout_top.php';
                         <?php endif; ?>
                     </td>
                     <td>
-                        <?= e($coupon['usage_count']) ?> / <?= $coupon['usage_limit'] ? e($coupon['usage_limit']) : 'Unlimited' ?>
+                        <?= e($coupon['used_count']) ?> / <?= $coupon['usage_limit'] ? e($coupon['usage_limit']) : 'Unlimited' ?>
                         <?php if ($coupon['total_discount']): ?>
                             <br><small class="text-muted">Total: $<?= number_format((float)$coupon['total_discount'], 2) ?></small>
                         <?php endif; ?>
@@ -135,7 +135,9 @@ include __DIR__ . '/_layout_top.php';
                     </td>
                     <td>
                         <div class="btn-group" role="group">
+                            <a href="coupon-edit.php?id=<?= (int) $coupon['id'] ?>" class="btn btn-outline-primary btn-sm">Edit</a>
                             <form method="POST" style="display: inline;">
+                                <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
                                 <input type="hidden" name="coupon_id" value="<?= e($coupon['id']) ?>">
                                 <input type="hidden" name="action" value="toggle_active">
                                 <button type="submit" class="btn <?= $coupon['is_active'] ? 'btn-outline-warning' : 'btn-outline-success' ?> btn-sm">
@@ -143,6 +145,7 @@ include __DIR__ . '/_layout_top.php';
                                 </button>
                             </form>
                             <form method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this coupon?');">
+                                <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
                                 <input type="hidden" name="coupon_id" value="<?= e($coupon['id']) ?>">
                                 <input type="hidden" name="action" value="delete">
                                 <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>

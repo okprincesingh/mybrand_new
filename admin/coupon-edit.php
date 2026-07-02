@@ -1,12 +1,39 @@
 <?php
 require_once __DIR__ . '/_init.php';
 $adminUser = admin_require_auth();
-$title = 'Add Coupon';
+$title = 'Coupon';
 $pdo = db();
+$couponId = (int) ($_GET['id'] ?? $_POST['coupon_id'] ?? 0);
+$isEdit = $couponId > 0;
+$coupon = [
+    'id' => 0,
+    'code' => '',
+    'description' => '',
+    'discount_type' => 'percent',
+    'discount_value' => '',
+    'minimum_order_amount' => '',
+    'maximum_discount_amount' => '',
+    'usage_limit' => '',
+    'starts_at' => '',
+    'expires_at' => '',
+    'is_active' => 1,
+];
+
+if ($isEdit && $_SERVER['REQUEST_METHOD'] !== 'POST') {
+    $stmt = $pdo->prepare('SELECT * FROM coupons WHERE id = :id LIMIT 1');
+    $stmt->execute([':id' => $couponId]);
+    $loadedCoupon = $stmt->fetch(PDO::FETCH_ASSOC);
+    if (!$loadedCoupon) {
+        admin_flash_set('error', 'Coupon not found.');
+        header('Location: coupons.php');
+        exit;
+    }
+    $coupon = array_merge($coupon, $loadedCoupon);
+}
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $code = trim($_POST['code'] ?? '');
+    $code = strtoupper(trim($_POST['code'] ?? ''));
     $description = trim($_POST['description'] ?? '');
     $discount_type = $_POST['discount_type'] ?? 'percent';
     $discount_value = (float)($_POST['discount_value'] ?? 0);
@@ -20,54 +47,76 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validation
     if (empty($code)) {
         admin_flash_set('error', 'Coupon code is required.');
-        header('Location: coupon-edit.php');
+        header('Location: coupon-edit.php' . ($isEdit ? '?id=' . $couponId : ''));
         exit;
     }
     
     if (!in_array($discount_type, ['percent', 'fixed'])) {
         admin_flash_set('error', 'Invalid discount type.');
-        header('Location: coupon-edit.php');
+        header('Location: coupon-edit.php' . ($isEdit ? '?id=' . $couponId : ''));
         exit;
     }
     
     if ($discount_value <= 0) {
         admin_flash_set('error', 'Discount value must be greater than 0.');
-        header('Location: coupon-edit.php');
+        header('Location: coupon-edit.php' . ($isEdit ? '?id=' . $couponId : ''));
         exit;
     }
     
     if ($discount_type === 'percent' && $discount_value > 100) {
         admin_flash_set('error', 'Percentage discount cannot exceed 100%.');
-        header('Location: coupon-edit.php');
+        header('Location: coupon-edit.php' . ($isEdit ? '?id=' . $couponId : ''));
+        exit;
+    }
+
+    if ($starts_at && $expires_at && strtotime($expires_at) <= strtotime($starts_at)) {
+        admin_flash_set('error', 'Expiry date must be after start date.');
+        header('Location: coupon-edit.php' . ($isEdit ? '?id=' . $couponId : ''));
         exit;
     }
     
     try {
         // Check if code already exists
-        $stmt = $pdo->prepare('SELECT id FROM coupons WHERE code = :code');
-        $stmt->execute([':code' => $code]);
+        $stmt = $pdo->prepare('SELECT id FROM coupons WHERE code = :code AND id <> :id');
+        $stmt->execute([':code' => $code, ':id' => $couponId]);
         if ($stmt->fetch()) {
             admin_flash_set('error', 'Coupon code already exists.');
-            header('Location: coupon-edit.php');
+            header('Location: coupon-edit.php' . ($isEdit ? '?id=' . $couponId : ''));
             exit;
         }
         
-        // Insert coupon
-        $stmt = $pdo->prepare('
-            INSERT INTO coupons (
-                code, description, discount_type, discount_value, 
-                minimum_order_amount, maximum_discount_amount, 
-                usage_limit, starts_at, expires_at, is_active
-            ) VALUES (
-                :code, :description, :discount_type, :discount_value,
-                :minimum_order_amount, :maximum_discount_amount,
-                :usage_limit, :starts_at, :expires_at, :is_active
-            )
-        ');
+        if ($isEdit) {
+            $stmt = $pdo->prepare('
+                UPDATE coupons SET
+                    code = :code,
+                    description = :description,
+                    discount_type = :discount_type,
+                    discount_value = :discount_value,
+                    minimum_order_amount = :minimum_order_amount,
+                    maximum_discount_amount = :maximum_discount_amount,
+                    usage_limit = :usage_limit,
+                    starts_at = :starts_at,
+                    expires_at = :expires_at,
+                    is_active = :is_active
+                WHERE id = :id
+            ');
+        } else {
+            $stmt = $pdo->prepare('
+                INSERT INTO coupons (
+                    code, description, discount_type, discount_value,
+                    minimum_order_amount, maximum_discount_amount,
+                    usage_limit, starts_at, expires_at, is_active
+                ) VALUES (
+                    :code, :description, :discount_type, :discount_value,
+                    :minimum_order_amount, :maximum_discount_amount,
+                    :usage_limit, :starts_at, :expires_at, :is_active
+                )
+            ');
+        }
         
-        $stmt->execute([
+        $params = [
             ':code' => $code,
-            ':description' => $description,
+            ':description' => $description !== '' ? $description : null,
             ':discount_type' => $discount_type,
             ':discount_value' => $discount_value,
             ':minimum_order_amount' => $minimum_order_amount,
@@ -76,23 +125,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':starts_at' => $starts_at,
             ':expires_at' => $expires_at,
             ':is_active' => $is_active
-        ]);
+        ];
+        if ($isEdit) {
+            $params[':id'] = $couponId;
+        }
+        $stmt->execute($params);
         
-        admin_flash_set('success', 'Coupon created successfully.');
+        admin_flash_set('success', $isEdit ? 'Coupon updated successfully.' : 'Coupon created successfully.');
         header('Location: coupons.php');
         exit;
     } catch (Exception $e) {
-        admin_flash_set('error', 'Failed to create coupon: ' . $e->getMessage());
-        header('Location: coupon-edit.php');
+        admin_flash_set('error', 'Failed to save coupon: ' . $e->getMessage());
+        header('Location: coupon-edit.php' . ($isEdit ? '?id=' . $couponId : ''));
         exit;
     }
+}
+
+function coupon_datetime_local($value): string
+{
+    if (empty($value)) {
+        return '';
+    }
+    $timestamp = strtotime((string) $value);
+    return $timestamp ? date('Y-m-d\TH:i', $timestamp) : '';
 }
 
 include __DIR__ . '/_layout_top.php';
 ?>
 <div class="widget-card">
     <div class="widget-header">
-        <h5 class="widget-title">Add New Coupon</h5>
+        <h5 class="widget-title"><?= $isEdit ? 'Edit Coupon' : 'Add New Coupon' ?></h5>
         <div class="widget-actions">
             <a href="coupons.php" class="btn btn-outline-secondary btn-sm">Back to Coupons</a>
         </div>
@@ -100,11 +162,12 @@ include __DIR__ . '/_layout_top.php';
     <div class="widget-body">
         <form method="POST">
             <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+            <input type="hidden" name="coupon_id" value="<?= (int) $couponId ?>">
             <div class="row g-4">
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label class="form-label">Coupon Code <span class="text-danger">*</span></label>
-                        <input type="text" name="code" class="form-control" required maxlength="50" placeholder="e.g., SAVE10, WELCOME20">
+                        <input type="text" name="code" class="form-control" required maxlength="50" placeholder="e.g., SAVE10, WELCOME20" value="<?= e((string) $coupon['code']) ?>">
                         <div class="form-text">Unique code customers will enter at checkout</div>
                     </div>
                 </div>
@@ -112,7 +175,7 @@ include __DIR__ . '/_layout_top.php';
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label class="form-label">Description</label>
-                        <input type="text" name="description" class="form-control" maxlength="255" placeholder="e.g., 10% off for first-time customers">
+                        <input type="text" name="description" class="form-control" maxlength="255" placeholder="e.g., 10% off for first-time customers" value="<?= e((string) ($coupon['description'] ?? '')) ?>">
                         <div class="form-text">Internal description for admin reference</div>
                     </div>
                 </div>
@@ -121,8 +184,8 @@ include __DIR__ . '/_layout_top.php';
                     <div class="mb-3">
                         <label class="form-label">Discount Type <span class="text-danger">*</span></label>
                         <select name="discount_type" class="form-select" required>
-                            <option value="percent">Percentage (%)</option>
-                            <option value="fixed">Fixed Amount ($)</option>
+                            <option value="percent" <?= (string) $coupon['discount_type'] === 'percent' ? 'selected' : '' ?>>Percentage (%)</option>
+                            <option value="fixed" <?= (string) $coupon['discount_type'] === 'fixed' ? 'selected' : '' ?>>Fixed Amount ($)</option>
                         </select>
                         <div class="form-text">Choose percentage or fixed amount discount</div>
                     </div>
@@ -131,7 +194,7 @@ include __DIR__ . '/_layout_top.php';
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label class="form-label">Discount Value <span class="text-danger">*</span></label>
-                        <input type="number" name="discount_value" class="form-control" required min="0.01" step="0.01" placeholder="10 or 20.50">
+                        <input type="number" name="discount_value" class="form-control" required min="0.01" step="0.01" placeholder="10 or 20.50" value="<?= e((string) $coupon['discount_value']) ?>">
                         <div class="form-text">For percentage: 10 = 10%, For fixed: 20.50 = $20.50</div>
                     </div>
                 </div>
@@ -139,7 +202,7 @@ include __DIR__ . '/_layout_top.php';
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label class="form-label">Minimum Order Amount</label>
-                        <input type="number" name="minimum_order_amount" class="form-control" min="0" step="0.01" placeholder="e.g., 50.00">
+                        <input type="number" name="minimum_order_amount" class="form-control" min="0" step="0.01" placeholder="e.g., 50.00" value="<?= e((string) ($coupon['minimum_order_amount'] ?? '')) ?>">
                         <div class="form-text">Leave empty for no minimum order requirement</div>
                     </div>
                 </div>
@@ -147,7 +210,7 @@ include __DIR__ . '/_layout_top.php';
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label class="form-label">Maximum Discount Amount</label>
-                        <input type="number" name="maximum_discount_amount" class="form-control" min="0" step="0.01" placeholder="e.g., 100.00">
+                        <input type="number" name="maximum_discount_amount" class="form-control" min="0" step="0.01" placeholder="e.g., 100.00" value="<?= e((string) ($coupon['maximum_discount_amount'] ?? '')) ?>">
                         <div class="form-text">Only for percentage discounts. Leave empty for no limit</div>
                     </div>
                 </div>
@@ -155,7 +218,7 @@ include __DIR__ . '/_layout_top.php';
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label class="form-label">Usage Limit</label>
-                        <input type="number" name="usage_limit" class="form-control" min="1" placeholder="e.g., 100">
+                        <input type="number" name="usage_limit" class="form-control" min="1" placeholder="e.g., 100" value="<?= e((string) ($coupon['usage_limit'] ?? '')) ?>">
                         <div class="form-text">Total number of times this coupon can be used. Leave empty for unlimited</div>
                     </div>
                 </div>
@@ -164,7 +227,7 @@ include __DIR__ . '/_layout_top.php';
                     <div class="mb-3">
                         <label class="form-label">Active Status</label>
                         <div class="form-check">
-                            <input type="checkbox" name="is_active" class="form-check-input" value="1" checked>
+                            <input type="checkbox" name="is_active" class="form-check-input" value="1" <?= (int) ($coupon['is_active'] ?? 0) === 1 ? 'checked' : '' ?>>
                             <label class="form-check-label">Coupon is active and can be used</label>
                         </div>
                     </div>
@@ -173,7 +236,7 @@ include __DIR__ . '/_layout_top.php';
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label class="form-label">Start Date</label>
-                        <input type="datetime-local" name="starts_at" class="form-control">
+                        <input type="datetime-local" name="starts_at" class="form-control" value="<?= e(coupon_datetime_local($coupon['starts_at'] ?? '')) ?>">
                         <div class="form-text">When the coupon becomes active. Leave empty for immediate activation</div>
                     </div>
                 </div>
@@ -181,14 +244,14 @@ include __DIR__ . '/_layout_top.php';
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label class="form-label">Expiry Date</label>
-                        <input type="datetime-local" name="expires_at" class="form-control">
+                        <input type="datetime-local" name="expires_at" class="form-control" value="<?= e(coupon_datetime_local($coupon['expires_at'] ?? '')) ?>">
                         <div class="form-text">When the coupon expires. Leave empty for no expiry</div>
                     </div>
                 </div>
             </div>
             
             <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-primary">Create Coupon</button>
+                <button type="submit" class="btn btn-primary"><?= $isEdit ? 'Update Coupon' : 'Create Coupon' ?></button>
                 <a href="coupons.php" class="btn btn-outline-secondary">Cancel</a>
             </div>
         </form>
