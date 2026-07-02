@@ -817,6 +817,54 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    function updateSelectValue(select, value) {
+        if (!select || !value) return false;
+        const normalizedValue = String(value).toUpperCase();
+        const option = Array.from(select.options).find(function(item) {
+            return String(item.value || '').toUpperCase() === normalizedValue;
+        });
+        if (!option) return false;
+        select.value = option.value;
+        if (window.jQuery && window.jQuery.fn && window.jQuery.fn.niceSelect) {
+            window.jQuery(select).niceSelect('update');
+        }
+        return true;
+    }
+
+    function lookupPostalAddress(prefix) {
+        const zipField = form.querySelector('[name="' + prefix + '[zip]"]');
+        const countryField = form.querySelector('[name="' + prefix + '[country]"]');
+        const stateField = form.querySelector('[name="' + prefix + '[state]"]');
+        const cityField = form.querySelector('[name="' + prefix + '[city]"]');
+        const zip = String(zipField?.value || '').trim();
+        if (zip.length < 3) return;
+
+        const country = String(countryField?.value || '').trim();
+        const url = '<?php echo url("api/postal-lookup.php"); ?>'
+            + '?zip=' + encodeURIComponent(zip)
+            + (country ? '&country=' + encodeURIComponent(country) : '');
+
+        fetch(url, { headers: { 'Accept': 'application/json' } })
+            .then(response => response.json())
+            .then(data => {
+                if (!data || !data.success || !data.data) return;
+                const info = data.data;
+                updateSelectValue(countryField, info.country);
+                if (stateField && info.state) stateField.value = info.state;
+                if (cityField && info.city && !cityField.value.trim()) cityField.value = info.city;
+                scheduleShippingRefresh();
+            })
+            .catch(function() {});
+    }
+
+    let postalLookupTimer = null;
+    function schedulePostalLookup(prefix) {
+        clearTimeout(postalLookupTimer);
+        postalLookupTimer = setTimeout(function() {
+            lookupPostalAddress(prefix);
+        }, 450);
+    }
+
     let shippingRefreshTimer = null;
     function scheduleShippingRefresh() {
         clearTimeout(shippingRefreshTimer);
@@ -827,6 +875,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const field = form.querySelector('[name="' + name + '"]');
         field?.addEventListener('change', scheduleShippingRefresh);
         field?.addEventListener('input', scheduleShippingRefresh);
+    });
+
+    ['billing', 'shipping'].forEach(function(prefix) {
+        const zipField = form.querySelector('[name="' + prefix + '[zip]"]');
+        zipField?.addEventListener('blur', function() { lookupPostalAddress(prefix); });
+        zipField?.addEventListener('input', function() { schedulePostalLookup(prefix); });
     });
 
     document.addEventListener('click', function(event) {

@@ -201,6 +201,13 @@
                     type: 'tabs',
                     defaultCollapsed: false
                 },
+                fields: {
+                    billingDetails: {
+                        address: {
+                            country: 'never'
+                        }
+                    }
+                },
                 defaultValues: this.defaultValues()
             });
             this.paymentElement.mount(this.modalEl.querySelector('[data-stripe-payment-element]'));
