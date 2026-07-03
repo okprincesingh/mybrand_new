@@ -822,6 +822,250 @@ document.addEventListener('DOMContentLoaded', function () {
           </div>
         </section>
 
+        <style>
+          .brand-builder {
+            background: #f8f3ed;
+            padding: 70px 0;
+            overflow: hidden;
+          }
+
+          .brand-builder__shell {
+            display: grid;
+            grid-template-columns: minmax(280px, 0.9fr) minmax(320px, 1.25fr);
+            gap: clamp(32px, 5vw, 70px);
+            align-items: center;
+          }
+
+          .brand-builder__media {
+            position: relative;
+            border-radius: 22px;
+            overflow: hidden;
+            aspect-ratio: 0.82;
+            background: #efe7de;
+          }
+
+          .brand-builder__image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: opacity 0.35s ease, transform 0.6s ease;
+          }
+
+          .brand-builder__media.is-changing .brand-builder__image {
+            opacity: 0;
+            transform: scale(1.03);
+          }
+
+          .brand-builder__kicker {
+            margin: 0 0 28px;
+            text-align: right;
+            color: #3d1f18;
+            font-size: 17px;
+            line-height: 1.35;
+            font-weight: 600;
+          }
+
+          .brand-builder__title {
+            margin: 0;
+            color: #3a1f18;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(44px, 6vw, 88px);
+            line-height: 0.96;
+            letter-spacing: 0;
+            max-width: 720px;
+          }
+
+          .brand-builder__changing-word {
+            color: #df725f;
+            display: inline-block;
+            min-width: 0;
+            transition: opacity 0.25s ease, transform 0.25s ease;
+          }
+
+          .brand-builder__changing-word.is-changing {
+            opacity: 0;
+            transform: translateY(8px);
+          }
+
+          .brand-builder__subtitle {
+            margin: 18px 0 20px;
+            color: #271b17;
+            font-size: 22px;
+            line-height: 1.35;
+          }
+
+          .brand-builder__actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin: 0 0 34px;
+          }
+
+          .brand-builder__btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+            padding: 0 28px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 800;
+            text-transform: uppercase;
+            text-decoration: none;
+            line-height: 1;
+          }
+
+          .brand-builder__btn--primary {
+            background: #df725f;
+            color: #fff;
+          }
+
+          .brand-builder__btn--secondary {
+            background: #eee8df;
+            color: #2d1d18;
+          }
+
+          .brand-builder__stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: clamp(28px, 5vw, 58px);
+          }
+
+          .brand-builder__stat-number {
+            display: block;
+            color: #2f1b16;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 34px;
+            line-height: 1;
+            font-weight: 700;
+          }
+
+          .brand-builder__stat-label {
+            display: block;
+            margin-top: 8px;
+            color: #3b241d;
+            font-size: 14px;
+          }
+
+          .brand-builder__star {
+            color: #4d835f;
+            font-size: 20px;
+            vertical-align: 12%;
+          }
+
+          @media (max-width: 991px) {
+            .brand-builder {
+              padding: 56px 0;
+            }
+
+            .brand-builder__shell {
+              grid-template-columns: 1fr;
+            }
+
+            .brand-builder__media {
+              max-width: 540px;
+              aspect-ratio: 1;
+            }
+
+            .brand-builder__kicker {
+              text-align: left;
+              margin-bottom: 18px;
+            }
+          }
+
+          @media (max-width: 575px) {
+            .brand-builder__title {
+              font-size: 42px;
+            }
+
+            .brand-builder__btn {
+              width: 100%;
+            }
+
+            .brand-builder__stats {
+              gap: 24px;
+            }
+          }
+        </style>
+
+        <section class="brand-builder section-spacing-120" aria-labelledby="brandBuilderTitle">
+          <div class="container rr-container-1350">
+            <div class="brand-builder__shell">
+              <div class="brand-builder__media">
+                <img
+                  class="brand-builder__image"
+                  src="<?php echo url('assets/imgs/products/Skin-Care-1-1024x888.webp'); ?>"
+                  alt="Private label beauty product"
+                  data-brand-builder-image
+                >
+              </div>
+
+              <div class="brand-builder__content">
+                <p class="brand-builder__kicker">Just add your brand.<br>MyBrandPlease handles the rest.</p>
+                <h2 class="brand-builder__title" id="brandBuilderTitle">
+                  The modern<br>
+                  way to build a<br>
+                  <span class="brand-builder__changing-word" data-brand-builder-word>beauty</span> brand
+                </h2>
+                <p class="brand-builder__subtitle">Start free today!</p>
+
+                <div class="brand-builder__actions">
+                  <a class="brand-builder__btn brand-builder__btn--primary" href="<?php echo url('shop.php'); ?>">Explore Private Label</a>
+                  <a class="brand-builder__btn brand-builder__btn--secondary" href="<?php echo url('contact.php'); ?>">Explore Custom Formulation</a>
+                </div>
+
+                <div class="brand-builder__stats" aria-label="Brand growth highlights">
+                  <div class="brand-builder__stat">
+                    <span class="brand-builder__stat-number">100K+</span>
+                    <span class="brand-builder__stat-label">Brands built</span>
+                  </div>
+                  <div class="brand-builder__stat">
+                    <span class="brand-builder__stat-number">4.9 <span class="brand-builder__star">★</span></span>
+                    <span class="brand-builder__stat-label">Over 400 reviews</span>
+                  </div>
+                  <div class="brand-builder__stat">
+                    <span class="brand-builder__stat-number">1M+</span>
+                    <span class="brand-builder__stat-label">Orders shipped</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <script>
+          document.addEventListener('DOMContentLoaded', function () {
+            var wordEl = document.querySelector('[data-brand-builder-word]');
+            var imageEl = document.querySelector('[data-brand-builder-image]');
+            if (!wordEl || !imageEl) return;
+
+            var mediaEl = imageEl.closest('.brand-builder__media');
+            var items = [
+              { word: 'beauty', image: '<?php echo url('assets/imgs/products/Skin-Care-1-1024x888.webp'); ?>', alt: 'Private label beauty product' },
+              { word: 'skin care', image: '<?php echo url('assets/imgs/product/skin-care.webp'); ?>', alt: 'Private label skin care product' },
+              { word: 'hair care', image: '<?php echo url('assets/imgs/product/hair-care.webp'); ?>', alt: 'Private label hair care product' },
+              { word: 'wellness', image: '<?php echo url('assets/imgs/products/Body_Care-1024x888.webp'); ?>', alt: 'Private label wellness product' }
+            ];
+            var index = 0;
+
+            setInterval(function () {
+              index = (index + 1) % items.length;
+              wordEl.classList.add('is-changing');
+              if (mediaEl) mediaEl.classList.add('is-changing');
+
+              setTimeout(function () {
+                var item = items[index];
+                wordEl.textContent = item.word;
+                imageEl.src = item.image;
+                imageEl.alt = item.alt;
+                wordEl.classList.remove('is-changing');
+                if (mediaEl) mediaEl.classList.remove('is-changing');
+              }, 260);
+            }, 2000);
+          });
+        </script>
+
         <!-- new section -->
         <section class="gs-process gs-section section-spacing-120 mt-md-4">
           <div class="petal petal--1"></div>
