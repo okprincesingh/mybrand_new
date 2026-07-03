@@ -5,10 +5,10 @@ $title = 'Page SEO Editor';
 $pdo = db();
 $id = (int)($_GET['id'] ?? 0);
 $previousSlug = '';
-$pageData = ['title'=>'','slug'=>'','status'=>'draft','meta_title'=>'','meta_description'=>'','meta_keywords'=>'','canonical_url'=>''];
+$pageData = ['title'=>'','slug'=>'','status'=>'draft','page_group'=>'general','template_key'=>'default','meta_title'=>'','meta_description'=>'','meta_keywords'=>'','canonical_url'=>''];
 
 if ($pdo && $id > 0) {
-    $stmt = $pdo->prepare('SELECT p.id,p.title,p.slug,p.status,pm.meta_title,pm.meta_description,pm.meta_keywords,pm.canonical_url FROM pages p LEFT JOIN page_meta pm ON pm.page_id=p.id WHERE p.id=:id');
+    $stmt = $pdo->prepare('SELECT p.id,p.title,p.slug,p.status,p.page_group,p.template_key,pm.meta_title,pm.meta_description,pm.meta_keywords,pm.canonical_url FROM pages p LEFT JOIN page_meta pm ON pm.page_id=p.id WHERE p.id=:id');
     $stmt->execute([':id' => $id]);
     $row = $stmt->fetch();
     if ($row) {
@@ -23,6 +23,10 @@ if ($pdo && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $titleIn = trim((string) ($_POST['title'] ?? ''));
     $slug = slugify(trim((string) (($_POST['slug'] ?? '') !== '' ? $_POST['slug'] : $titleIn)));
     $status = in_array($_POST['status'] ?? '', ['draft', 'published'], true) ? $_POST['status'] : 'draft';
+    $pageGroup = strtolower(trim((string) (($_POST['page_group'] ?? '') !== '' ? $_POST['page_group'] : 'general')));
+    $pageGroup = preg_replace('/[^a-z0-9_-]+/', '_', $pageGroup) ?: 'general';
+    $templateKey = strtolower(trim((string) (($_POST['template_key'] ?? '') !== '' ? $_POST['template_key'] : 'default')));
+    $templateKey = preg_replace('/[^a-z0-9_-]+/', '_', $templateKey) ?: 'default';
 
     $metaTitle = trim((string) ($_POST['meta_title'] ?? ''));
     $metaDesc = trim((string) ($_POST['meta_description'] ?? ''));
@@ -30,12 +34,12 @@ if ($pdo && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $canonical = trim((string) ($_POST['canonical_url'] ?? ''));
 
     if ($id > 0) {
-        $u = $pdo->prepare('UPDATE pages SET title=:t, slug=:s, status=:st WHERE id=:id');
-        $u->execute([':t' => $titleIn, ':s' => $slug, ':st' => $status, ':id' => $id]);
+        $u = $pdo->prepare('UPDATE pages SET title=:t, slug=:s, status=:st, page_group=:pg, template_key=:tk WHERE id=:id');
+        $u->execute([':t' => $titleIn, ':s' => $slug, ':st' => $status, ':pg' => $pageGroup, ':tk' => $templateKey, ':id' => $id]);
         $pid = $id;
     } else {
-        $u = $pdo->prepare('INSERT INTO pages (title, slug, status) VALUES (:t, :s, :st)');
-        $u->execute([':t' => $titleIn, ':s' => $slug, ':st' => $status]);
+        $u = $pdo->prepare('INSERT INTO pages (title, slug, status, page_group, template_key) VALUES (:t, :s, :st, :pg, :tk)');
+        $u->execute([':t' => $titleIn, ':s' => $slug, ':st' => $status, ':pg' => $pageGroup, ':tk' => $templateKey]);
         $pid = (int) $pdo->lastInsertId();
     }
 
@@ -72,6 +76,14 @@ include __DIR__ . '/_layout_top.php';
         <option value="draft" <?= $pageData['status']==='draft'?'selected':'' ?>>Draft</option>
         <option value="published" <?= $pageData['status']==='published'?'selected':'' ?>>Published</option>
       </select>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Page Group</label>
+      <input name="page_group" class="form-control" value="<?= e($pageData['page_group']) ?>" placeholder="general">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Template Key</label>
+      <input name="template_key" class="form-control" value="<?= e($pageData['template_key']) ?>" placeholder="default">
     </div>
   </div>
 

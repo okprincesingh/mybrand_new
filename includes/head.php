@@ -10,7 +10,8 @@ $requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 $scriptBase = basename((string) $requestPath);
 $slugCandidate = strtolower(pathinfo($scriptBase, PATHINFO_FILENAME));
 if ($slugCandidate === 'index') {
-    $slugCandidate = 'home';
+    $pathParts = array_values(array_filter(explode('/', trim((string) $requestPath, '/'))));
+    $slugCandidate = count($pathParts) > 1 ? strtolower((string) $pathParts[count($pathParts) - 2]) : 'home';
 }
 
 $seoRow = null;
@@ -28,7 +29,14 @@ if ($pdo) {
 if (is_array($seoRow) && (($seoRow['status'] ?? 'draft') === 'published')) {
     $meta['title'] = (string) (($seoRow['meta_title'] ?? '') !== '' ? $seoRow['meta_title'] : ($seoRow['title'] ?? 'Mybrandplease'));
     $meta['description'] = (string) ($seoRow['meta_description'] ?? '');
-    $meta['canonical'] = (string) (($seoRow['canonical_url'] ?? '') !== '' ? $seoRow['canonical_url'] : (($seoRow['slug'] ?? '') . '.php'));
+    $seoCanonical = (string) ($seoRow['canonical_url'] ?? '');
+    if ($seoCanonical === '') {
+        $seoSlug = (string) ($seoRow['slug'] ?? '');
+        $seoCanonical = $seoSlug === 'home' ? 'index.php' : ($seoSlug !== '' ? ($seoSlug . '.php') : '');
+    }
+    if ($seoCanonical !== '') {
+        $meta['canonical'] = $seoCanonical;
+    }
     $meta['keywords'] = (string) ($seoRow['meta_keywords'] ?? '');
 }
 

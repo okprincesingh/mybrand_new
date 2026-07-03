@@ -94,7 +94,7 @@ if (!function_exists('why_page_url')) {
     function why_page_url(string $slug): string
     {
         $slug = trim($slug, "/ \t\n\r\0\x0B");
-        return url('why-page.php?slug=' . urlencode($slug));
+        return url($slug . '/');
     }
 }
 
