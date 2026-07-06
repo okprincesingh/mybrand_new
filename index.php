@@ -731,10 +731,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
             var mediaEl = imageEl.closest('.brand-builder__media');
             var items = [
-              { word: 'beauty', image: '<?php echo url('assets/imgs/products/Skin-Care-1-1024x888.webp'); ?>', alt: 'Private label beauty product' },
-              { word: 'skin care', image: '<?php echo url('assets/imgs/product/skin-care.webp'); ?>', alt: 'Private label skin care product' },
-              { word: 'hair care', image: '<?php echo url('assets/imgs/product/hair-care.webp'); ?>', alt: 'Private label hair care product' },
-              { word: 'wellness', image: '<?php echo url('assets/imgs/products/Body_Care-1024x888.webp'); ?>', alt: 'Private label wellness product' }
+              { word: 'beauty', image: '<?php echo url('assets/imgs/product/beauty.png'); ?>', alt: 'Private label beauty product' },
+              { word: 'skin care', image: '<?php echo url('assets/imgs/product/skin.png'); ?>', alt: 'Private label skin care product' },
+              { word: 'hair care', image: '<?php echo url('assets/imgs/product/hair.png'); ?>', alt: 'Private label hair care product' },
+              { word: 'wellness', image: '<?php echo url('assets/imgs/product/welness.png'); ?>', alt: 'Private label wellness product' }
             ];
             var index = 0;
 
