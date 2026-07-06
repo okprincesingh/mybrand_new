@@ -1672,4 +1672,99 @@ document.addEventListener('DOMContentLoaded', function () {
   </div>
 </section>
 
+<section class="handshake-section" aria-label="Let's Work Together">
+  <div class="handshake-section__background background" aria-hidden="true"></div>
+  <div class="handshake-section__content">
+    <h2 class="handshake-section__heading heading">
+      <span>Let's Work</span>
+      <span>Together!</span>
+    </h2>
+    <div class="handshake-section__actions">
+      <a href="<?php echo url('contact.php'); ?>" class="handshake-section__primary">
+        <span>Get started today</span>
+        <span class="handshake-section__arrow" aria-hidden="true">&rarr;</span>
+      </a>
+      <a href="<?php echo url('meeting-schedule.php'); ?>" class="handshake-section__secondary">
+        <span>Book an appointment</span>
+        <span aria-hidden="true">&nearr;</span>
+      </a>
+    </div>
+  </div>
+  <figure class="handshake-section__card handshake-section__card--left left-card" aria-hidden="true">
+    <img src="<?php echo url('assets/imgs/cta/handshake-card-left.jpg'); ?>" alt="">
+  </figure>
+  <figure class="handshake-section__card handshake-section__card--right right-card" aria-hidden="true">
+    <img src="<?php echo url('assets/imgs/cta/handshake-card-right.jpg'); ?>" alt="">
+  </figure>
+  <img class="handshake-section__hand handshake-section__hand--top top-hand" src="<?php echo url('assets/imgs/cta/cta1-hand-1.webp'); ?>" alt="" aria-hidden="true">
+  <img class="handshake-section__hand handshake-section__hand--bottom bottom-hand" src="<?php echo url('assets/imgs/cta/cta1-hand-2.webp'); ?>" alt="" aria-hidden="true">
+  <div class="handshake-section__scroll" aria-hidden="true">
+    <span></span>
+    <small>Go Down</small>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (!window.gsap || !window.ScrollTrigger) return;
+
+    // Handshake section elements
+    const section = document.querySelector('.handshake-section');
+    if (!section) return;
+
+    window.gsap.registerPlugin(window.ScrollTrigger);
+
+    const content = section.querySelector('.handshake-section__content');
+    const actions = section.querySelector('.handshake-section__actions');
+    const scrollHint = section.querySelector('.handshake-section__scroll');
+    const topHand = section.querySelector('.handshake-section__hand--top');
+    const bottomHand = section.querySelector('.handshake-section__hand--bottom');
+    const leftCard = section.querySelector('.handshake-section__card--left');
+    const rightCard = section.querySelector('.handshake-section__card--right');
+
+    // Initial reference state: hands are closed, content/cards are tucked away.
+    window.gsap.set(content, { autoAlpha: 0, x: 130, y: 74, scale: 0.82, force3D: true });
+    window.gsap.set(actions, { autoAlpha: 0, y: 34, scale: 0.9, force3D: true });
+    window.gsap.set(scrollHint, { autoAlpha: 0, y: 24, force3D: true });
+    window.gsap.set(topHand, { xPercent: 19, yPercent: 42, rotate: 2.4, force3D: true });
+    window.gsap.set(bottomHand, { xPercent: -22, yPercent: -28, rotate: -2.2, force3D: true });
+    window.gsap.set(leftCard, { autoAlpha: 0, xPercent: 112, yPercent: 74, rotate: -1.5, scale: 0.72, force3D: true });
+    window.gsap.set(rightCard, { autoAlpha: 0, xPercent: -105, yPercent: 82, rotate: 1.5, scale: 0.72, force3D: true });
+
+    // Scroll-controlled pinned timeline. Motion depends only on scroll progress.
+    window.gsap.timeline({
+      defaults: { ease: 'none' },
+      scrollTrigger: {
+        trigger: section,
+        start: 'top top',
+        end: '+=125%',
+        scrub: true,
+        pin: true,
+        pinSpacing: true,
+        invalidateOnRefresh: true,
+        anticipatePin: 1
+      }
+    })
+      .to(topHand, { xPercent: 0, yPercent: 0, rotate: 0, duration: 0.86 }, 0)
+      .to(bottomHand, { xPercent: 0, yPercent: 0, rotate: 0, duration: 0.86 }, 0)
+      .to(content, { autoAlpha: 1, x: 0, y: 0, scale: 1, duration: 0.52 }, 0.2)
+      .to(actions, { autoAlpha: 1, y: 0, scale: 1, duration: 0.42 }, 0.3)
+      .to(leftCard, { autoAlpha: 1, xPercent: 0, yPercent: 0, rotate: 0, scale: 1, duration: 0.58 }, 0.22)
+      .to(rightCard, { autoAlpha: 1, xPercent: 0, yPercent: 0, rotate: 0, scale: 1, duration: 0.58 }, 0.25)
+      .to(scrollHint, { autoAlpha: 1, y: 0, duration: 0.26 }, 0.42)
+      .to([topHand, bottomHand, leftCard, rightCard, content, actions, scrollHint], { duration: 0.14 }, 0.86);
+
+    section.querySelectorAll('img').forEach(function (image) {
+      if (!image.complete) {
+        image.addEventListener('load', function () {
+          window.ScrollTrigger.refresh();
+        }, { once: true });
+      }
+    });
+
+    window.addEventListener('load', function () {
+      window.ScrollTrigger.refresh();
+    });
+  });
+</script>
 <?php include 'includes/footer.php'; ?>
