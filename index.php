@@ -146,7 +146,7 @@ foreach ($homeCategoryConfigs as $config) {
     $cards[] = [
       'name' => (string) $category['display_name'],
       'image' => (string) ($category['image'] ?? 'assets/imgs/product/skin-care.webp'),
-      'href' => url('shop.php') . '?category=' . rawurlencode((string) $category['slug']),
+      'href' => catalog_shop_link((string) $category['slug']),
     ];
   }
 
@@ -178,7 +178,7 @@ foreach ($allHomeCategories as $category) {
     $cards[] = [
       'name' => (string) $category['display_name'],
       'image' => (string) ($category['image'] ?? 'assets/imgs/product/skin-care.webp'),
-      'href' => url('shop.php') . '?category=' . rawurlencode((string) ($category['slug'] ?? '')),
+      'href' => catalog_shop_link((string) ($category['slug'] ?? '')),
     ];
   }
   $category['home_cards'] = $cards;
@@ -473,7 +473,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <?php
                   $itemName = (string) ($item['name'] ?? '');
                   $itemImage = (string) ($item['image'] ?? ($homeInitialCategory['image'] ?? 'assets/imgs/product/skin-care.webp'));
-                  $itemHref = (string) ($item['href'] ?? url('shop.php') . '?category=' . rawurlencode((string) ($homeInitialCategory['slug'] ?? '')));
+                  $itemHref = (string) ($item['href'] ?? catalog_shop_link((string) ($homeInitialCategory['slug'] ?? '')));
                 ?>
                 <a href="<?= htmlspecialchars($itemHref, ENT_QUOTES, 'UTF-8') ?>" class="cat-card" aria-label="<?= htmlspecialchars($itemName, ENT_QUOTES, 'UTF-8') ?>">
                   <span class="cat-card__flip">
@@ -511,6 +511,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const normalized = raw.replace(/^\/+/, '').replace(/^mybrand\//i, '');
                 return appBase + '/' + normalized;
               };
+              const categoryUrl = (slug) => appBase + '/' + encodeURIComponent(String(slug || '').trim()) + '/';
 
               function moveIndicator(target) {
                 if (!indicator || !target) return;
@@ -544,7 +545,7 @@ document.addEventListener('DOMContentLoaded', function () {
                   : [{
                       name: active.display_name || active.name,
                       image: active.image,
-                      href: <?= json_encode(url('shop.php'), JSON_UNESCAPED_SLASHES) ?> + '?category=' + encodeURIComponent(active.slug)
+                      href: categoryUrl(active.slug)
                     }];
 
                 const cards = items.map((item) => `

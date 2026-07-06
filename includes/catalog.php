@@ -543,15 +543,18 @@ function catalog_product_link(string $slug): string
 
 function catalog_shop_link(?string $category = null, ?string $subcategory = null): string
 {
-    $query = [];
-    if ($category) {
-        $query['category'] = $category;
-    }
-    if ($subcategory) {
-        $query['subcategory'] = $subcategory;
+    $category = trim((string) $category);
+    $subcategory = trim((string) $subcategory);
+
+    if ($category !== '') {
+        if ($subcategory !== '') {
+            return url(rawurlencode($category) . '/' . rawurlencode($subcategory) . '/');
+        }
+
+        return url(rawurlencode($category) . '/');
     }
 
-    return url('shop.php') . ($query ? ('?' . http_build_query($query)) : '');
+    return url('shop.php');
 }
 
 function catalog_subcategory_page_link(string $categorySlug, string $subcategoryNameOrSlug): string
@@ -567,4 +570,3 @@ function catalog_subcategory_page_link(string $categorySlug, string $subcategory
 
     return url(rawurlencode($categorySlug) . '/' . rawurlencode($subcategoryNameOrSlug) . '/');
 }
-

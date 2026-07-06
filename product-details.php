@@ -122,7 +122,7 @@ include 'includes/header.php';
                   <i class="fa-regular fa-chevron-right"></i>
                 </li>
                 <li class="breadcumb2-wrapper__items-list">
-                  <a href="<?php echo htmlspecialchars(url('shop.php' . ($product ? ('?category=' . urlencode((string) $product['category'])) : '')), ENT_QUOTES, 'UTF-8'); ?>" class="breadcumb2-wrapper__items-list-title">
+                  <a href="<?php echo htmlspecialchars($product ? catalog_shop_link((string) $product['category']) : url('shop.php'), ENT_QUOTES, 'UTF-8'); ?>" class="breadcumb2-wrapper__items-list-title">
                     <?php echo htmlspecialchars($categoryInfo['name'] ?? 'Category', ENT_QUOTES, 'UTF-8'); ?>
                   </a>
                 </li>
