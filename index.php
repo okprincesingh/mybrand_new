@@ -200,6 +200,7 @@ $meta = [
   'canonical' => 'index.php'
 ];
 include 'includes/head.php';
+$homeHeaderOverlay = true;
 include 'includes/header.php';
 ?>
 
@@ -221,6 +222,20 @@ include 'includes/header.php';
 </div>
 <?php unset($_SESSION['logout_message']); ?>
 <?php endif; ?>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const header = document.querySelector('.header-area.home-header-overlay');
+    if (!header) return;
+
+    function updateHomeHeader() {
+        header.classList.toggle('is-home-header-visible', window.scrollY > 40);
+    }
+
+    updateHomeHeader();
+    window.addEventListener('scroll', updateHomeHeader, { passive: true });
+});
+</script>
 
 <script>
 // Auto-hide logout message after 5 seconds

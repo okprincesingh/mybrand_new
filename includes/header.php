@@ -60,6 +60,11 @@ if ($headerCartCount === 0 && session_id()) {
     }
 }
 
+$headerClasses = 'header-area header-layoutone header-sticky';
+if (!empty($homeHeaderOverlay)) {
+    $headerClasses .= ' home-header-overlay';
+}
+
 if (!function_exists('render_header_menu_items')) {
     function render_header_menu_items(array $items): void
     {
@@ -168,7 +173,7 @@ if (!function_exists('render_header_menu_items')) {
       <div class="offcanvas-overlay"></div>
 
       <!-- Header start -->
-      <header class="header-area header-layoutone header-sticky">
+      <header class="<?php echo htmlspecialchars($headerClasses, ENT_QUOTES, 'UTF-8'); ?>">
         <div class="header-main">
           <div class="container">
             <div class="header-shell">
