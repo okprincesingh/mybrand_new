@@ -290,6 +290,45 @@ function closeLogoutMessage() {
 
 </section>
 
+<section class="hero-marquee" aria-label="Services">
+    <div class="hero-marquee__strip hero-marquee__strip--back">
+        <div class="hero-marquee__track hero-marquee__track--slow">
+            <?php for ($i = 0; $i < 2; $i++): ?>
+                <span>Web Design</span>
+                <span class="hero-marquee__star">✦</span>
+                <span>Website Marketing</span>
+                <span class="hero-marquee__star">✦</span>
+                <span>Apps Design</span>
+                <span class="hero-marquee__star">✦</span>
+                <span>SEO</span>
+                <span class="hero-marquee__star">✦</span>
+                <span>Digital Marketing</span>
+                <span class="hero-marquee__star">✦</span>
+                <span>Branding</span>
+                <span class="hero-marquee__star">✦</span>
+            <?php endfor; ?>
+        </div>
+    </div>
+    <div class="hero-marquee__strip hero-marquee__strip--front">
+        <div class="hero-marquee__track">
+            <?php for ($i = 0; $i < 2; $i++): ?>
+                <span>Digital Marketing</span>
+                <span class="hero-marquee__star">✦</span>
+                <span>Branding</span>
+                <span class="hero-marquee__star">✦</span>
+                <span>Website Marketing</span>
+                <span class="hero-marquee__star">✦</span>
+                <span>Apps Design</span>
+                <span class="hero-marquee__star">✦</span>
+                <span>SEO</span>
+                <span class="hero-marquee__star">✦</span>
+                <span>Web Design</span>
+                <span class="hero-marquee__star">✦</span>
+            <?php endfor; ?>
+        </div>
+    </div>
+</section>
+
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const desktopVideo = document.querySelector('[data-hero-video="desktop"]');
@@ -920,7 +959,7 @@ document.addEventListener('DOMContentLoaded', function () {
         <section class="global-presence section-spacing-120 rr-ov-hidden js-global-presence">
           <div class="container-fluid" id="section-map">
             <div class="section-heading wow fadeInUp" data-wow-delay=".2s">
-              <h2 class="section-heading__title">~ Our Global Presence ~</h2>
+              <h2 class="section-heading__title">~ Our Global Footprint ~</h2>
             </div>
             <div class="global-map-stage wow fadeInUp" data-wow-delay=".3s">
               <div class="map-wrapper">
