@@ -4696,8 +4696,7 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  background: #FFFFFF;
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+  background: transparent;
   animation: slideDown 0.3s ease-out;
   z-index: 999;
 }
@@ -25981,8 +25980,7 @@ iframe {
   left: 0;
   right: 0;
   z-index: 999;
-  background: #FFFFFF;
-  box-shadow: 0 10px 30px rgba(37, 31, 26, 0.08);
+  background: transparent;
   transform: translateY(-120%);
   opacity: 0;
   pointer-events: none;
