@@ -26157,12 +26157,20 @@ iframe {
   filter: drop-shadow(0 24px 38px rgba(0, 0, 0, 0.42));
 }
 
+.handshake-section__hand--top {
+  z-index: 8;
+}
+
+.handshake-section__hand--bottom {
+  z-index: 5;
+}
+
 .handshake-section__content {
   position: absolute;
-  left: 18.2vw;
+  left: clamp(24px, 18.2vw, 350px);
   top: 41.5vh;
   z-index: 6;
-  width: min(47vw, 850px);
+  width: min(50vw, 860px);
   will-change: transform, opacity;
 }
 
@@ -26170,11 +26178,12 @@ iframe {
   position: static;
   color: #fff;
   font-family: var(--font_Lato);
-  font-size: clamp(70px, 8.05vw, 138px);
+  font-size: clamp(60px, 7.5vw, 132px);
   font-weight: 800;
   line-height: 0.86;
   text-align: left;
   white-space: normal;
+  overflow-wrap: normal;
 }
 
 .handshake-section__heading span {
@@ -26276,13 +26285,13 @@ iframe {
 }
 
 .handshake-section__card--left {
-  left: 16.9vw;
+  left: clamp(24px, 16.9vw, 324px);
   top: 17vh;
   z-index: 7;
 }
 
 .handshake-section__card--right {
-  right: 21.2vw;
+  right: clamp(24px, 21.2vw, 405px);
   top: 10.7vh;
   z-index: 3;
 }
@@ -26325,12 +26334,12 @@ iframe {
 
 @media (max-width: 1199px) {
   .handshake-section__content {
-    left: 9vw;
-    width: min(58vw, 680px);
+    left: 7vw;
+    width: min(62vw, 680px);
   }
 
   .handshake-section__heading {
-    font-size: clamp(62px, 10vw, 110px);
+    font-size: clamp(52px, 9vw, 100px);
   }
 
   .handshake-section__hand--top {
@@ -26355,12 +26364,12 @@ iframe {
 
   .handshake-section__content {
     left: 7vw;
-    top: 34vh;
-    width: 82vw;
+    top: 36vh;
+    width: 86vw;
   }
 
   .handshake-section__heading {
-    font-size: clamp(46px, 15vw, 76px);
+    font-size: clamp(38px, 13vw, 66px);
   }
 
   .handshake-section__actions {

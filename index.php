@@ -1722,6 +1722,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const leftCard = section.querySelector('.handshake-section__card--left');
     const rightCard = section.querySelector('.handshake-section__card--right');
 
+    window.gsap.set(topHand, { zIndex: 8 });
+    window.gsap.set(bottomHand, { zIndex: 5 });
+
     // Initial reference state: hands are closed, content/cards are tucked away.
     window.gsap.set(content, { autoAlpha: 0, x: 130, y: 74, scale: 0.82, force3D: true });
     window.gsap.set(actions, { autoAlpha: 0, y: 34, scale: 0.9, force3D: true });
