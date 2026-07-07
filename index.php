@@ -290,44 +290,6 @@ function closeLogoutMessage() {
 
 </section>
 
-<section class="hero-marquee" aria-label="Private label manufacturing services">
-    <div class="hero-marquee__strip hero-marquee__strip--back">
-        <div class="hero-marquee__track hero-marquee__track--slow">
-            <?php for ($i = 0; $i < 2; $i++): ?>
-                <span>Private Label Skin Care</span>
-                <span class="hero-marquee__star">&bull;</span>
-                <span>Custom Formulation</span>
-                <span class="hero-marquee__star">&bull;</span>
-                <span>Hair Care Manufacturing</span>
-                <span class="hero-marquee__star">&bull;</span>
-                <span>Body Care Products</span>
-                <span class="hero-marquee__star">&bull;</span>
-                <span>Bathing Soaps</span>
-                <span class="hero-marquee__star">&bull;</span>
-                <span>Cosmetic Packaging</span>
-                <span class="hero-marquee__star">&bull;</span>
-            <?php endfor; ?>
-        </div>
-    </div>
-    <div class="hero-marquee__strip hero-marquee__strip--front">
-        <div class="hero-marquee__track">
-            <?php for ($i = 0; $i < 2; $i++): ?>
-                <span>Private Label Cosmetics</span>
-                <span class="hero-marquee__star">&bull;</span>
-                <span>Skin Care</span>
-                <span class="hero-marquee__star">&bull;</span>
-                <span>Hair Care</span>
-                <span class="hero-marquee__star">&bull;</span>
-                <span>Body Care</span>
-                <span class="hero-marquee__star">&bull;</span>
-                <span>Fragrances</span>
-                <span class="hero-marquee__star">&bull;</span>
-                <span>Low MOQ Manufacturing</span>
-                <span class="hero-marquee__star">&bull;</span>
-            <?php endfor; ?>
-        </div>
-    </div>
-</section>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -1770,4 +1732,42 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 </script>
+<section class="hero-marquee" aria-label="Private label manufacturing services">
+    <div class="hero-marquee__strip hero-marquee__strip--back">
+        <div class="hero-marquee__track hero-marquee__track--slow">
+            <?php for ($i = 0; $i < 2; $i++): ?>
+                <span>Private Label Skin Care</span>
+                <span class="hero-marquee__star">&bull;</span>
+                <span>Custom Formulation</span>
+                <span class="hero-marquee__star">&bull;</span>
+                <span>Hair Care Manufacturing</span>
+                <span class="hero-marquee__star">&bull;</span>
+                <span>Body Care Products</span>
+                <span class="hero-marquee__star">&bull;</span>
+                <span>Bathing Soaps</span>
+                <span class="hero-marquee__star">&bull;</span>
+                <span>Cosmetic Packaging</span>
+                <span class="hero-marquee__star">&bull;</span>
+            <?php endfor; ?>
+        </div>
+    </div>
+    <div class="hero-marquee__strip hero-marquee__strip--front">
+        <div class="hero-marquee__track">
+            <?php for ($i = 0; $i < 2; $i++): ?>
+                <span>Private Label Cosmetics</span>
+                <span class="hero-marquee__star">&bull;</span>
+                <span>Skin Care</span>
+                <span class="hero-marquee__star">&bull;</span>
+                <span>Hair Care</span>
+                <span class="hero-marquee__star">&bull;</span>
+                <span>Body Care</span>
+                <span class="hero-marquee__star">&bull;</span>
+                <span>Fragrances</span>
+                <span class="hero-marquee__star">&bull;</span>
+                <span>Low MOQ Manufacturing</span>
+                <span class="hero-marquee__star">&bull;</span>
+            <?php endfor; ?>
+        </div>
+    </div>
+</section>
 <?php include 'includes/footer.php'; ?>

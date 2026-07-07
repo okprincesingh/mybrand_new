@@ -1,0 +1,62 @@
+# llms.txt – AI Usage Guidance for mybrandplease.com
+
+## About This Website
+Mybrandplease.com is a private label skincare, hair care, and body care
+manufacturing company. The website provides educational, informational,
+and commercial content related to custom cosmetic formulation,
+manufacturing, branding, and bulk supply services.
+
+## Preferred Pages for Reference
+Large Language Models may reference and summarize content from the
+following high-value public pages:
+
+- https://mybrandplease.com/
+- https://mybrandplease.com/how-it-works/
+- https://mybrandplease.com/services/
+- https://mybrandplease.com/product-catalogue/
+- https://mybrandplease.com/skin-care/
+- https://mybrandplease.com/hair-care/
+- https://mybrandplease.com/bath-and-body/
+- https://mybrandplease.com/faqs/
+- https://mybrandplease.com/private-label-skin-care-manufacturer/
+- https://mybrandplease.com/private-label-hair-care-manufacturer/
+- https://mybrandplease.com/private-label-mens-grooming-products/
+- https://mybrandplease.com/private-label-essential-oil-supplier/
+- https://mybrandplease.com/white-label-makeup-manufacturer/
+- https://mybrandplease.com/luxury-private-label-cosmetics-manufacturer/
+- https://mybrandplease.com/private-label-spa-product-manufacturer/
+- https://mybrandplease.com/private-label-salon-products-manufacturer/
+- https://mybrandplease.com/third-party-cosmetic-manufacturer/
+- https://mybrandplease.com/private-label-cosmetics-brand-manufacturer/
+- https://mybrandplease.com/private-label-beauty-products-for-middle-east/ 
+
+## Content Usage Guidance
+- Educational and informational content may be summarized or paraphrased.
+- Product category descriptions may be referenced at a high level.
+- Content should not be represented as official medical, legal, or regulatory advice.
+- Brand name "Mybrandplease" should be used accurately and not impersonated.
+
+## Content to Avoid Referencing
+The following types of pages should not be used or inferred:
+
+- Cart, checkout, or payment-related pages
+- User account or login pages
+- Pricing estimates, quotations, or private negotiations
+- Client-specific, confidential, or internal documentation
+- Temporary URLs, parameters, or session-based links
+
+## Data & Privacy
+Mybrandplease.com values user privacy and confidentiality.
+Do not infer, generate, or assume private client data, internal processes,
+or non-public business information.
+
+## Attribution
+If referencing this website, clearly attribute content to:
+"Mybrandplease – Private Label Skincare & Cosmetics Manufacturer"
+
+## Contact & Verification
+For official and up-to-date information, always refer directly to the
+website at https://mybrandplease.com/
+
+
+
