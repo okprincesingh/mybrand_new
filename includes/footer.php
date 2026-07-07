@@ -98,14 +98,14 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
 
               <div class="plf-pay mt-4">
                 <p class="mb-2">Secure Payment</p>
-                <img class="plf-pay__img" src="<?php echo url('assets/imgs/home/footer/PG-500x151.webp'); ?>" alt="Secure payment gateways">
+                <img class="plf-pay__img" src="<?php echo url('assets/imgs/home/footer/stripe.png'); ?>" alt="Secure payment gateways">
               </div>
             </div>
           </div>
 
           <div class="plf-bottom d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
             <p class="mb-0">&copy; 2005-2026 NIMISHA IMPEX WORLDWIDE (P) LIMITED | All rights reserved</p>
-            <p class="mb-0">Celebrating 21 Years of Private Labelling Excellence</p>
+            <p class="mb-0">Developed and Maintained by <a href="https://jaikviktechnology.com/" target="_blank" rel="noopener noreferrer">JaiKVik Technology</a></p>
           </div>
         </div>
       </footer>
