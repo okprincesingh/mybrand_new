@@ -26154,7 +26154,7 @@ iframe {
   position: relative;
   height: 100vh;
   min-height: 760px;
-  margin-bottom: clamp(40px, 5vw, 84px);
+  margin-bottom: 0;
   overflow: hidden;
   background: #000;
   border-radius: 0;
@@ -26167,6 +26167,11 @@ iframe {
 .pin-spacer + .pl-footer {
   position: relative;
   z-index: 1;
+}
+
+.handshake-section + .hero-marquee,
+.pin-spacer + .hero-marquee {
+  margin-top: 0;
 }
 
 .handshake-section__background {
