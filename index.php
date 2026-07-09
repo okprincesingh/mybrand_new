@@ -288,6 +288,15 @@ function closeLogoutMessage() {
         playsinline
         preload="none"></video>
 
+    <button
+        class="hero-video-mute-toggle"
+        type="button"
+        aria-label="Unmute hero video"
+        aria-pressed="false"
+        data-hero-video-mute>
+        <i class="fa-solid fa-volume-xmark" aria-hidden="true"></i>
+    </button>
+
 </section>
 
 
@@ -295,8 +304,10 @@ function closeLogoutMessage() {
 document.addEventListener('DOMContentLoaded', function () {
     const desktopVideo = document.querySelector('[data-hero-video="desktop"]');
     const mobileVideo = document.querySelector('[data-hero-video="mobile"]');
+    const muteButton = document.querySelector('[data-hero-video-mute]');
     const mobileQuery = window.matchMedia('(max-width: 1024px)');
     const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    let heroAudioEnabled = false;
 
     function stopVideo(video) {
         if (!video) return;
@@ -329,10 +340,26 @@ document.addEventListener('DOMContentLoaded', function () {
         return video.getAttribute('data-src') || '';
     }
 
+    function getActiveHeroVideo() {
+        return mobileQuery.matches ? mobileVideo : desktopVideo;
+    }
+
+    function updateMuteButton() {
+        if (!muteButton) return;
+        const activeVideo = getActiveHeroVideo();
+        const isMuted = !activeVideo || activeVideo.muted;
+        muteButton.classList.toggle('is-unmuted', !isMuted);
+        muteButton.setAttribute('aria-label', isMuted ? 'Unmute hero video' : 'Mute hero video');
+        muteButton.setAttribute('aria-pressed', isMuted ? 'false' : 'true');
+        muteButton.innerHTML = '<i class="fa-solid ' + (isMuted ? 'fa-volume-xmark' : 'fa-volume-high') + '" aria-hidden="true"></i>';
+    }
+
     function startVideo(video) {
         if (!video) return;
         const source = getVideoSource(video);
         if (!source) return;
+        video.muted = !heroAudioEnabled;
+        video.volume = heroAudioEnabled ? 1 : 0;
         if (video.getAttribute('src') === source) return;
         video.preload = 'auto';
         video.setAttribute('src', source);
@@ -351,6 +378,36 @@ document.addEventListener('DOMContentLoaded', function () {
             stopVideo(mobileVideo);
             startVideo(desktopVideo);
         }
+        updateMuteButton();
+    }
+
+    if (muteButton) {
+        muteButton.addEventListener('click', function () {
+            const activeVideo = getActiveHeroVideo();
+            if (!activeVideo) return;
+
+            heroAudioEnabled = activeVideo.muted;
+            activeVideo.muted = !heroAudioEnabled;
+            activeVideo.volume = heroAudioEnabled ? 1 : 0;
+
+            const inactiveVideo = activeVideo === desktopVideo ? mobileVideo : desktopVideo;
+            if (inactiveVideo) {
+                inactiveVideo.muted = true;
+                inactiveVideo.volume = 0;
+            }
+
+            const playPromise = activeVideo.play();
+            if (playPromise && typeof playPromise.catch === 'function') {
+                playPromise.catch(function () {
+                    heroAudioEnabled = false;
+                    activeVideo.muted = true;
+                    activeVideo.volume = 0;
+                    updateMuteButton();
+                });
+            }
+
+            updateMuteButton();
+        });
     }
 
     loadCurrentHeroVideo();
