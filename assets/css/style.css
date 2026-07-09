@@ -575,25 +575,35 @@ h6 {
 
 @media (max-width: 767px) {
     .hero-marquee {
-        min-height: 150px;
+        min-height: 190px;
     }
 
     .hero-marquee__strip {
-        left: -18vw;
-        width: 136vw;
-        height: 46px;
+        left: -24vw;
+        width: 148vw;
+        height: 44px;
     }
 
     .hero-marquee__strip--back {
         top: 50px;
+        transform: rotate(5deg);
     }
 
     .hero-marquee__strip--front {
-        top: 62px;
+        top: 86px;
+        transform: rotate(-5deg);
     }
 
     .hero-marquee__track {
-        gap: 24px;
+        gap: 22px;
+    }
+
+    .hero-marquee__track span {
+        font-size: clamp(20px, 5vw, 28px);
+    }
+
+    .hero-marquee__star {
+        font-size: clamp(18px, 5.5vw, 24px) !important;
     }
 }
 
