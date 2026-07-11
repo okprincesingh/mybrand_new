@@ -25955,24 +25955,115 @@ iframe {
 
 /* Brand builder rotating homepage section */
 .brand-builder {
+  position: relative;
   background: var(--primary);
-  padding: 70px 0;
+  padding: 62px 0;
+  padding-left: clamp(150px, 11vw, 185px);
   overflow: hidden;
 }
 
 .brand-builder__shell {
   display: grid;
-  grid-template-columns: minmax(280px, 0.9fr) minmax(320px, 1.25fr);
-  gap: clamp(32px, 5vw, 70px);
+  grid-template-columns: minmax(250px, 0.78fr) minmax(300px, 1.05fr);
+  gap: clamp(28px, 4vw, 56px);
   align-items: center;
+  max-width: 1180px;
+  margin: 0 auto;
 }
 
 .brand-builder__media {
   position: relative;
   border-radius: 22px;
   overflow: hidden;
-  aspect-ratio: 0.82;
+  aspect-ratio: 0.84;
+  max-height: 640px;
   background: var(--white);
+}
+
+.brand-builder__strip {
+  position: absolute;
+  z-index: 2;
+  top: 54px;
+  bottom: 0;
+  left: 0;
+  width: clamp(150px, 11vw, 185px);
+  background:
+    linear-gradient(90deg, #050203 0 36%, rgba(75, 15, 31, 0.96) 36% 100%),
+    linear-gradient(180deg, #16050b, #38111f 48%, #120306);
+  color: var(--white);
+  overflow: hidden;
+  isolation: isolate;
+  box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.08), 18px 0 36px rgba(40, 5, 18, 0.16);
+}
+
+.brand-builder__strip::before {
+  position: absolute;
+  content: "";
+  inset: 0;
+  background:
+    radial-gradient(circle at 24% 16%, rgba(238, 45, 122, 0.95) 0 2px, transparent 3px),
+    radial-gradient(circle at 76% 27%, rgba(20, 210, 99, 0.9) 0 2px, transparent 3px),
+    radial-gradient(circle at 70% 66%, rgba(255, 188, 0, 0.7) 0 1px, transparent 3px),
+    linear-gradient(180deg, rgba(238, 45, 122, 0.28), transparent 32%, rgba(238, 45, 122, 0.25));
+  opacity: 0.85;
+}
+
+.brand-builder__strip::after {
+  position: absolute;
+  content: "";
+  inset: 16px 18px;
+  z-index: 1;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 0;
+  border-bottom: 0;
+  pointer-events: none;
+}
+
+.brand-builder__strip-services {
+  position: absolute;
+  z-index: 4;
+  top: 0;
+  left: 18px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  animation: brandBuilderStripMarquee 20s linear infinite;
+  color: var(--white);
+  font-size: clamp(16px, 1.25vw, 21px);
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.45);
+}
+
+.brand-builder__strip-dot {
+  color: #febc00;
+  font-size: 26px;
+  line-height: 1;
+}
+
+.brand-builder__strip-brand {
+  position: absolute;
+  z-index: 3;
+  top: 22px;
+  right: 22px;
+  bottom: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  color: rgba(255, 255, 255, 0.38);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(32px, 3.1vw, 52px);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: none;
+  white-space: nowrap;
+  text-shadow: 0 0 22px rgba(255, 255, 255, 0.14), 0 8px 26px rgba(0, 0, 0, 0.35);
 }
 
 .brand-builder__image {
@@ -25988,6 +26079,16 @@ iframe {
   transform: scale(1.03);
 }
 
+@keyframes brandBuilderStripMarquee {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(-50%);
+  }
+}
+
 .brand-builder__kicker {
   margin: 0 0 28px;
   text-align: right;
@@ -25997,11 +26098,15 @@ iframe {
   font-weight: 600;
 }
 
+.brand-builder__content {
+  max-width: 650px;
+}
+
 .brand-builder__title {
   margin: 0;
   color: var(--text-color-one);
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(44px, 6vw, 88px);
+  font-size: clamp(40px, 5vw, 76px);
   line-height: 0.96;
   letter-spacing: 0;
   max-width: 720px;
@@ -26096,6 +26201,7 @@ iframe {
 @media (max-width: 991px) {
   .brand-builder {
     padding: 56px 0;
+    padding-left: 112px;
   }
 
   .brand-builder__shell {
@@ -26107,6 +26213,22 @@ iframe {
     aspect-ratio: 1;
   }
 
+  .brand-builder__strip {
+    top: 42px;
+    width: 112px;
+  }
+
+  .brand-builder__strip-services {
+    font-size: 15px;
+    gap: 15px;
+    left: 12px;
+  }
+
+  .brand-builder__strip-brand {
+    right: 16px;
+    font-size: 32px;
+  }
+
   .brand-builder__kicker {
     text-align: left;
     margin-bottom: 18px;
@@ -26114,8 +26236,36 @@ iframe {
 }
 
 @media (max-width: 575px) {
+  .brand-builder {
+    padding-left: 86px;
+  }
+
+  .brand-builder__strip {
+    top: 36px;
+    width: 86px;
+  }
+
+  .brand-builder__strip::after {
+    inset: 14px 13px;
+  }
+
+  .brand-builder__strip-services {
+    left: 8px;
+    gap: 13px;
+    font-size: 13px;
+  }
+
+  .brand-builder__strip-dot {
+    font-size: 20px;
+  }
+
+  .brand-builder__strip-brand {
+    right: 10px;
+    font-size: 25px;
+  }
+
   .brand-builder__title {
-    font-size: 42px;
+    font-size: 36px;
   }
 
   .brand-builder__btn {

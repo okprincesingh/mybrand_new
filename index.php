@@ -753,6 +753,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
         
         <section class="brand-builder section-spacing-120" aria-labelledby="brandBuilderTitle">
+          <div class="brand-builder__strip" aria-label="Mybrandplease creative services">
+            <div class="brand-builder__strip-services">
+              <?php for ($stripLoop = 0; $stripLoop < 2; $stripLoop++): ?>
+                <span>Mockups</span>
+                <span class="brand-builder__strip-dot">*</span>
+                <span>Creative Strategy</span>
+                <span class="brand-builder__strip-dot">*</span>
+                <span>Brand Identity</span>
+                <span class="brand-builder__strip-dot">*</span>
+                <span>Packaging Design</span>
+                <span class="brand-builder__strip-dot">*</span>
+                <span>Social Media</span>
+                <span class="brand-builder__strip-dot">*</span>
+              <?php endfor; ?>
+            </div>
+            <div class="brand-builder__strip-brand">Mybrandplease</div>
+          </div>
           <div class="container rr-container-1350">
             <div class="brand-builder__shell">
               <div class="brand-builder__media">
