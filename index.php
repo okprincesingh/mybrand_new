@@ -1847,10 +1847,10 @@ document.addEventListener('DOMContentLoaded', function () {
     </div>
   </div>
   <figure class="handshake-section__card handshake-section__card--left left-card" aria-hidden="true">
-    <img src="<?php echo url('assets/imgs/cta/handshake-card-left.jpg'); ?>" alt="">
+    <img src="<?php echo url('assets/imgs/about/How-do-we-Formulate-min-2048x1241.jpg'); ?>" alt="">
   </figure>
   <figure class="handshake-section__card handshake-section__card--right right-card" aria-hidden="true">
-    <img src="<?php echo url('assets/imgs/cta/handshake-card-right.jpg'); ?>" alt="">
+    <img src="<?php echo url('assets/imgs/about/what-do-we-offer-min-2048x1241.jpg'); ?>" alt="">
   </figure>
   <img class="handshake-section__hand handshake-section__hand--top top-hand" src="<?php echo url('assets/imgs/cta/cta1-hand-1.webp'); ?>" alt="" aria-hidden="true">
   <img class="handshake-section__hand handshake-section__hand--bottom bottom-hand" src="<?php echo url('assets/imgs/cta/cta1-hand-2.webp'); ?>" alt="" aria-hidden="true">
