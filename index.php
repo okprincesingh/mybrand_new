@@ -425,92 +425,69 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-
-
-        <section class="category1 section-spacing-120 rr-ov-hidden">
-          <div class="category1-wrapper">
-            <div class="container rr-container-1350">
-              <!-- <div class="section-heading wow fadeInRight" data-wow-delay="0.3s">
-                <h2 class="section-heading__title">OUR CATEGORY</h2>
-              </div> -->
-              <div class="row g-4">
-                <div class="col-md-3 col-xl-3">
-                  <div class="category1-item wow fadeInRight" data-wow-delay="0.2s">
-                    <div class="category1-item__thumb">
-                      <img src="<?php echo url('assets/imgs/category/category_thumb1_2.png'); ?>" alt="thumb">
-                    </div>
-                    <div class="category1-item__content2">
-                      </h2>
-                      <div class="category1-item__button">
-                        <a href="shop.php" class="rr-btn-button2">
-                          <span class="text">Explore now</span>
-                          <span class="icon">
-                            <svg width="11" height="7" viewBox="0 0 11 7" fill="none"
-                              xmlns="http://www.w3.org/2000/svg">
-                              <path
-                                d="M0.419556 3.21674H10.2097M10.2097 3.21674L7.41253 6.01393M10.2097 3.21674L7.41253 0.419556"
-                                stroke="#0C0C0C" stroke-width="0.839157" stroke-linecap="round" stroke-linejoin="round">
-                              </path>
-                            </svg>
-                          </span>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6 col-xl-6">
-                  <div class="category1-item wow fadeInRight" data-wow-delay="0.3s">
-                    <div class="category1-item__thumb">
-                      <img src="<?php echo url('assets/imgs/category/category_thumb1_1.png'); ?>" alt="thumb">
-                    </div>
-                    <div class="category1-item__content2">
-                      </h2>
-                      <div class="category1-item__button">
-                        <a href="shop.php" class="rr-btn-button2">
-                          <span class="text">Try Our Products</span>
-                          <span class="icon">
-                            <svg width="11" height="7" viewBox="0 0 11 7" fill="none"
-                              xmlns="http://www.w3.org/2000/svg">
-                              <path
-                                d="M0.419556 3.21674H10.2097M10.2097 3.21674L7.41253 6.01393M10.2097 3.21674L7.41253 0.419556"
-                                stroke="#0C0C0C" stroke-width="0.839157" stroke-linecap="round" stroke-linejoin="round">
-                              </path>
-                            </svg>
-                          </span>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-3 col-xl-3">
-                  <div class="category1-item wow fadeInRight" data-wow-delay="0.5s">
-                    <div class="category1-item__thumb">
-                      <img src="<?php echo url('assets/imgs/category/category_thumb1_3.png'); ?>" alt="thumb">
-                    </div>
-                    <div class="category1-item__content2">
-                      </h2>
-                      <div class="category1-item__button">
-                        <a href="shop.php" class="rr-btn-button2">
-                          <span class="text">Contact Us</span>
-                          <span class="icon">
-                            <svg width="11" height="7" viewBox="0 0 11 7" fill="none"
-                              xmlns="http://www.w3.org/2000/svg">
-                              <path
-                                d="M0.419556 3.21674H10.2097M10.2097 3.21674L7.41253 6.01393M10.2097 3.21674L7.41253 0.419556"
-                                stroke="#0C0C0C" stroke-width="0.839157" stroke-linecap="round" stroke-linejoin="round">
-                              </path>
-                            </svg>
-                          </span>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="intro1-slider__dots"></div>
+        <!-- Working Process Section Start -->
+        <section class="working-process-section" aria-label="Why launch your own brand">
+          <div class="working-process-section__inner">
+            <div class="working-process-section__intro">
+              <span class="working-process-section__eyebrow">[ Private Label ]</span>
+              <h2 class="working-process-section__title">Why launch<br>your own brand</h2>
+              <p class="working-process-section__lead">
+                Enhance your brand reputation and profitability with premium private label cosmetic products, low minimum order quantity, and competitive pricing.
+              </p>
             </div>
+            <div class="working-process-section__track-wrap">
+              <div class="working-process-section__track" data-working-process-track>
+                <?php
+                  $workingProcessSteps = [
+                    [
+                      'step' => 'Step 01',
+                      'title' => 'Higher Profits',
+                      'text' => 'Our high-quality natural and organic-based skin and hair care products are offered at costs comparable to or lower than leading brands, while you set the sale price.',
+                      'href' => 'contact.php',
+                    ],
+                    [
+                      'step' => 'Step 02',
+                      'title' => 'Increased Sales',
+                      'text' => 'Market your own brand with margin and product sale price in your control, giving you stronger flexibility in marketing approach and decisions.',
+                      'href' => 'contact.php',
+                    ],
+                    [
+                      'step' => 'Step 03',
+                      'title' => 'Client Retention',
+                      'text' => 'Retain customers with your own brand while offering premium product experiences at strong pricing, helping you create brand loyalty.',
+                      'href' => 'contact.php',
+                    ],
+                    [
+                      'step' => 'Step 04',
+                      'title' => 'Brand Equity',
+                      'text' => 'Building sales of your own skin and hair care brand strengthens your prestige with customers and in the market.',
+                      'href' => 'contact.php',
+                    ],
+                  ];
+                ?>
+                <?php foreach ($workingProcessSteps as $processStep): ?>
+                  <article class="working-process-card">
+                    <div class="working-process-card__top">
+                      <span class="working-process-card__step"><?php echo htmlspecialchars($processStep['step'], ENT_QUOTES, 'UTF-8'); ?></span>
+                      <span class="working-process-card__spark" aria-hidden="true">&starf;</span>
+                      <a class="working-process-card__link" href="<?php echo url($processStep['href']); ?>">
+                        <span>Explore</span>
+                        <span aria-hidden="true">&nearr;</span>
+                      </a>
+                    </div>
+                    <h3 class="working-process-card__title"><?php echo htmlspecialchars($processStep['title'], ENT_QUOTES, 'UTF-8'); ?></h3>
+                    <p class="working-process-card__text"><?php echo htmlspecialchars($processStep['text'], ENT_QUOTES, 'UTF-8'); ?></p>
+                  </article>
+                <?php endforeach; ?>
+              </div>
+            </div>
+            <div class="working-process-section__steps-bg" aria-hidden="true">Mybrandplease</div>
           </div>
         </section>
+        <!-- Working Process Section End -->
+
+
+        
 
         <section class="category-section section-spacing-120 rr-ov-hidden pt-0 js-category-showcase">
           <div class="container rr-container-1350">
@@ -684,7 +661,92 @@ document.addEventListener('DOMContentLoaded', function () {
           </script>
         </section>
 
-        <section class="py-5 bg-light js-why-business">
+        <section class="category1 section-spacing-120 rr-ov-hidden">
+          <div class="category1-wrapper">
+            <div class="container rr-container-1350">
+              <!-- <div class="section-heading wow fadeInRight" data-wow-delay="0.3s">
+                <h2 class="section-heading__title">OUR CATEGORY</h2>
+              </div> -->
+              <div class="row g-4">
+                <div class="col-md-3 col-xl-3">
+                  <div class="category1-item wow fadeInRight" data-wow-delay="0.2s">
+                    <div class="category1-item__thumb">
+                      <img src="<?php echo url('assets/imgs/category/category_thumb1_2.png'); ?>" alt="thumb">
+                    </div>
+                    <div class="category1-item__content2">
+                      </h2>
+                      <div class="category1-item__button">
+                        <a href="shop.php" class="rr-btn-button2">
+                          <span class="text">Explore now</span>
+                          <span class="icon">
+                            <svg width="11" height="7" viewBox="0 0 11 7" fill="none"
+                              xmlns="http://www.w3.org/2000/svg">
+                              <path
+                                d="M0.419556 3.21674H10.2097M10.2097 3.21674L7.41253 6.01393M10.2097 3.21674L7.41253 0.419556"
+                                stroke="#0C0C0C" stroke-width="0.839157" stroke-linecap="round" stroke-linejoin="round">
+                              </path>
+                            </svg>
+                          </span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 col-xl-6">
+                  <div class="category1-item wow fadeInRight" data-wow-delay="0.3s">
+                    <div class="category1-item__thumb">
+                      <img src="<?php echo url('assets/imgs/category/category_thumb1_1.png'); ?>" alt="thumb">
+                    </div>
+                    <div class="category1-item__content2">
+                      </h2>
+                      <div class="category1-item__button">
+                        <a href="shop.php" class="rr-btn-button2">
+                          <span class="text">Try Our Products</span>
+                          <span class="icon">
+                            <svg width="11" height="7" viewBox="0 0 11 7" fill="none"
+                              xmlns="http://www.w3.org/2000/svg">
+                              <path
+                                d="M0.419556 3.21674H10.2097M10.2097 3.21674L7.41253 6.01393M10.2097 3.21674L7.41253 0.419556"
+                                stroke="#0C0C0C" stroke-width="0.839157" stroke-linecap="round" stroke-linejoin="round">
+                              </path>
+                            </svg>
+                          </span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3 col-xl-3">
+                  <div class="category1-item wow fadeInRight" data-wow-delay="0.5s">
+                    <div class="category1-item__thumb">
+                      <img src="<?php echo url('assets/imgs/category/category_thumb1_3.png'); ?>" alt="thumb">
+                    </div>
+                    <div class="category1-item__content2">
+                      </h2>
+                      <div class="category1-item__button">
+                        <a href="shop.php" class="rr-btn-button2">
+                          <span class="text">Contact Us</span>
+                          <span class="icon">
+                            <svg width="11" height="7" viewBox="0 0 11 7" fill="none"
+                              xmlns="http://www.w3.org/2000/svg">
+                              <path
+                                d="M0.419556 3.21674H10.2097M10.2097 3.21674L7.41253 6.01393M10.2097 3.21674L7.41253 0.419556"
+                                stroke="#0C0C0C" stroke-width="0.839157" stroke-linecap="round" stroke-linejoin="round">
+                              </path>
+                            </svg>
+                          </span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="intro1-slider__dots"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- <section class="py-5 bg-light js-why-business">
           <div class="container">
             <div class="section-heading text-center mb-5">
               <h2 class="section-heading__title">Why launch your own brand</h2>
@@ -749,7 +811,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             </div>
           </div>
-        </section>
+        </section> -->
 
         
         <section class="brand-builder section-spacing-120" aria-labelledby="brandBuilderTitle">
@@ -1471,66 +1533,6 @@ document.addEventListener('DOMContentLoaded', function () {
         </section>
         <!-- Office Section End -->
 
-        <!-- Working Process Section Start -->
-        <section class="working-process-section" aria-label="Why launch your own brand">
-          <div class="working-process-section__inner">
-            <div class="working-process-section__intro">
-              <span class="working-process-section__eyebrow">[ Private Label ]</span>
-              <h2 class="working-process-section__title">Why launch<br>your own brand</h2>
-              <p class="working-process-section__lead">
-                Enhance your brand reputation and profitability with premium private label cosmetic products, low minimum order quantity, and competitive pricing.
-              </p>
-            </div>
-            <div class="working-process-section__track-wrap">
-              <div class="working-process-section__track" data-working-process-track>
-                <?php
-                  $workingProcessSteps = [
-                    [
-                      'step' => 'Step 01',
-                      'title' => 'Higher Profits',
-                      'text' => 'Our high-quality natural and organic-based skin and hair care products are offered at costs comparable to or lower than leading brands, while you set the sale price.',
-                      'href' => 'contact.php',
-                    ],
-                    [
-                      'step' => 'Step 02',
-                      'title' => 'Increased Sales',
-                      'text' => 'Market your own brand with margin and product sale price in your control, giving you stronger flexibility in marketing approach and decisions.',
-                      'href' => 'contact.php',
-                    ],
-                    [
-                      'step' => 'Step 03',
-                      'title' => 'Client Retention',
-                      'text' => 'Retain customers with your own brand while offering premium product experiences at strong pricing, helping you create brand loyalty.',
-                      'href' => 'contact.php',
-                    ],
-                    [
-                      'step' => 'Step 04',
-                      'title' => 'Brand Equity',
-                      'text' => 'Building sales of your own skin and hair care brand strengthens your prestige with customers and in the market.',
-                      'href' => 'contact.php',
-                    ],
-                  ];
-                ?>
-                <?php foreach ($workingProcessSteps as $processStep): ?>
-                  <article class="working-process-card">
-                    <div class="working-process-card__top">
-                      <span class="working-process-card__step"><?php echo htmlspecialchars($processStep['step'], ENT_QUOTES, 'UTF-8'); ?></span>
-                      <span class="working-process-card__spark" aria-hidden="true">&starf;</span>
-                      <a class="working-process-card__link" href="<?php echo url($processStep['href']); ?>">
-                        <span>Explore</span>
-                        <span aria-hidden="true">&nearr;</span>
-                      </a>
-                    </div>
-                    <h3 class="working-process-card__title"><?php echo htmlspecialchars($processStep['title'], ENT_QUOTES, 'UTF-8'); ?></h3>
-                    <p class="working-process-card__text"><?php echo htmlspecialchars($processStep['text'], ENT_QUOTES, 'UTF-8'); ?></p>
-                  </article>
-                <?php endforeach; ?>
-              </div>
-            </div>
-            <div class="working-process-section__steps-bg" aria-hidden="true">Mybrandplease</div>
-          </div>
-        </section>
-        <!-- Working Process Section End -->
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
