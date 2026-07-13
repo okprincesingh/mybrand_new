@@ -39,7 +39,7 @@ usort($headerMenuItems, static function (array $a, array $b) use ($headerMenuPri
 
     return $aPriority <=> $bPriority;
 });
-$headerLogo = url('uploads/logo/mybrandplease-1.gif');
+$headerLogo = url('assets/imgs/logo/logo.png');
 $headerCartCount = 0;
 if (!empty($_SESSION['cart']) && is_array($_SESSION['cart'])) {
     foreach ($_SESSION['cart'] as $qty) {

@@ -513,7 +513,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <a href="<?= htmlspecialchars($itemHref, ENT_QUOTES, 'UTF-8') ?>" class="cat-card" aria-label="<?= htmlspecialchars($itemName, ENT_QUOTES, 'UTF-8') ?>">
                   <span class="cat-card__flip">
                     <span class="cat-card__face cat-card__face--front">
-                      <img src="<?= htmlspecialchars(url($itemImage), ENT_QUOTES, 'UTF-8') ?>" class="cat-image" alt="<?= htmlspecialchars($itemName, ENT_QUOTES, 'UTF-8') ?>">
+                      <img src="<?= htmlspecialchars(url($itemImage), ENT_QUOTES, 'UTF-8') ?>" class="cat-image" alt="<?= htmlspecialchars($itemName, ENT_QUOTES, 'UTF-8') ?>" loading="lazy" decoding="async">
                     </span>
                     <span class="cat-card__face cat-card__face--back" aria-hidden="true">
                       <span class="cat-card__back-inner">
@@ -587,7 +587,7 @@ document.addEventListener('DOMContentLoaded', function () {
                   <a href="${item.href}" class="cat-card" aria-label="${esc(item.name)}">
                     <span class="cat-card__flip">
                       <span class="cat-card__face cat-card__face--front">
-                        <img src="${toUrl(item.image)}" class="cat-image" alt="${esc(item.name)}">
+                        <img src="${toUrl(item.image)}" class="cat-image" alt="${esc(item.name)}" loading="lazy" decoding="async">
                       </span>
                       <span class="cat-card__face cat-card__face--back" aria-hidden="true">
                         <span class="cat-card__back-inner">
@@ -1178,13 +1178,12 @@ document.addEventListener('DOMContentLoaded', function () {
                   <?php endif; ?>>
                   <?php if ($videoUrl !== ''): ?>
                     <video
-                      src="<?php echo htmlspecialchars($videoUrl, ENT_QUOTES, 'UTF-8'); ?>"
+                      data-src="<?php echo htmlspecialchars($videoUrl, ENT_QUOTES, 'UTF-8'); ?>"
                       class="social-reels__video"
                       playsinline
                       muted
-                      autoplay
                       loop
-                      preload="metadata"></video>
+                      preload="none"></video>
                     <button class="social-reels__volume-btn" type="button" aria-label="Unmute reel" aria-pressed="false">
                       <i class="fa-solid fa-volume-xmark" aria-hidden="true"></i>
                     </button>
@@ -1253,8 +1252,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 card.classList.add('is-ready');
                 return;
               }
+              if (!video.getAttribute('src')) {
+                const source = video.getAttribute('data-src') || '';
+                if (!source) return;
+                video.setAttribute('src', source);
+                video.load();
+              }
               video.muted = true;
-              video.autoplay = true;
               video.loop = true;
               video.addEventListener('loadeddata', function () {
                 card.classList.add('is-ready');
@@ -1268,15 +1272,25 @@ document.addEventListener('DOMContentLoaded', function () {
               }
             }
 
-            cards.forEach(prepareCard);
-
             function playCardVideos() {
               section.querySelectorAll('.social-reels__video').forEach(function (video) {
+                if (!video.getAttribute('src')) {
+                  const source = video.getAttribute('data-src') || '';
+                  if (!source) return;
+                  video.setAttribute('src', source);
+                  video.load();
+                }
                 video.muted = true;
                 const playPromise = video.play();
                 if (playPromise && typeof playPromise.catch === 'function') {
                   playPromise.catch(function () {});
                 }
+              });
+            }
+
+            function pauseCardVideos() {
+              section.querySelectorAll('.social-reels__video').forEach(function (video) {
+                video.pause();
               });
             }
 
@@ -1416,8 +1430,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 dragSize: 90
               },
               on: {
-                init: playCardVideos,
-                slideChangeTransitionEnd: playCardVideos
+                init: function () {},
+                slideChangeTransitionEnd: function () {
+                  if (section.classList.contains('is-reels-active')) {
+                    playCardVideos();
+                  }
+                }
               },
               breakpoints: {
                 0: {
@@ -1429,13 +1447,52 @@ document.addEventListener('DOMContentLoaded', function () {
               }
             });
 
-            if (reelsSwiper.autoplay && typeof reelsSwiper.autoplay.start === 'function') {
-              reelsSwiper.autoplay.start();
+            if (reelsSwiper.autoplay && typeof reelsSwiper.autoplay.stop === 'function') {
+              reelsSwiper.autoplay.stop();
+            }
+
+            function activateReels() {
+              if (section.classList.contains('is-reels-active')) return;
+              section.classList.add('is-reels-active');
+              cards.forEach(prepareCard);
+              playCardVideos();
+              if (reelsSwiper.autoplay && typeof reelsSwiper.autoplay.start === 'function') {
+                reelsSwiper.autoplay.start();
+              }
+            }
+
+            function deactivateReels() {
+              if (!section.classList.contains('is-reels-active')) return;
+              section.classList.remove('is-reels-active');
+              pauseCardVideos();
+              if (reelsSwiper.autoplay && typeof reelsSwiper.autoplay.stop === 'function') {
+                reelsSwiper.autoplay.stop();
+              }
+            }
+
+            if ('IntersectionObserver' in window) {
+              const reelsObserver = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                  if (entry.isIntersecting) {
+                    activateReels();
+                  } else {
+                    deactivateReels();
+                  }
+                });
+              }, { rootMargin: '220px 0px', threshold: 0.08 });
+              reelsObserver.observe(section);
+            } else {
+              activateReels();
             }
 
             document.addEventListener('visibilitychange', function () {
-              if (!document.hidden && reelsSwiper.autoplay && typeof reelsSwiper.autoplay.start === 'function') {
-                reelsSwiper.autoplay.start();
+              if (document.hidden) {
+                deactivateReels();
+              } else if (section.classList.contains('is-reels-active')) {
+                playCardVideos();
+                if (reelsSwiper.autoplay && typeof reelsSwiper.autoplay.start === 'function') {
+                  reelsSwiper.autoplay.start();
+                }
               }
             });
           });
@@ -1626,7 +1683,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const root = document;
 
     const imageTargets = root.querySelectorAll(
-      '.intro1__thumb img, .category1-item__thumb img, .cat-image, .card-img-top, .milestone-card__icon-wrap img, .office-card__flag img, .auto-scroll-item img, .partners-carousel-card img, .social-reels__video'
+      '.intro1__thumb img, .category1-item__thumb img, .cat-image, .card-img-top, .milestone-card__icon-wrap img, .office-card__flag img, .auto-scroll-item img, .partners-carousel-card img'
     );
       imageTargets.forEach(function (el) {
         if (!el.hasAttribute('data-aos')) el.setAttribute('data-aos', 'zoom-in');

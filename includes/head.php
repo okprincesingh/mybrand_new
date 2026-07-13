@@ -98,8 +98,6 @@ if ($isAosPage) {
 <?php if ($isHomepage): ?>
   <link rel="preconnect" href="https://jaikvik.in" crossorigin>
   <link rel="dns-prefetch" href="//jaikvik.in">
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
 <?php endif; ?>
   <meta name="google-site-verification" content="gL1f34T2493WB69KLImJg503rTBPfBHjJzvzJ-r57dY">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-C0L7Y4STGF"></script>
