@@ -4243,7 +4243,7 @@ input.main-search-input::placeholder {
 }
 
 .header-area.header-layoutone {
-  background: #F7F4F1;
+  background: transparent;
   position: absolute;
   top: 0;
   left: 0;
@@ -4252,7 +4252,8 @@ input.main-search-input::placeholder {
   border-bottom: none;
 }
 .header-area.header-layoutone.header-sticky {
-  position: sticky;
+  position: fixed;
+  width: 100%;
 }
 .header-area.header-layoutone .header-main {
   padding: 1.125rem 0;
@@ -4273,11 +4274,13 @@ input.main-search-input::placeholder {
   }
 }
 .header-area.header-layoutone .header-shell {
-  background: #FFFFFF;
-  border: 1px solid rgba(14, 14, 12, 0.05);
+  background: rgba(255, 255, 255, 0.68);
+  border: 1px solid rgba(255, 255, 255, 0.42);
   border-radius: 18px;
   padding: 0.95rem 1.6rem;
-  box-shadow: 0 10px 30px rgba(37, 31, 26, 0.08);
+  box-shadow: 0 14px 34px rgba(37, 31, 26, 0.12);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 @media only screen and (max-width: 991px) {
   .header-area.header-layoutone .header-shell {
@@ -26332,10 +26335,10 @@ iframe {
   right: 0;
   z-index: 999;
   background: transparent;
-  transform: translateY(-120%);
-  opacity: 0;
-  pointer-events: none;
-  transition: transform 0.35s ease, opacity 0.25s ease;
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+  transition: background 0.25s ease, transform 0.35s ease, opacity 0.25s ease;
 }
 
 .header-area.header-layoutone.home-header-overlay.is-home-header-visible {
@@ -26349,9 +26352,15 @@ iframe {
 }
 
 .header-area.header-layoutone.home-header-overlay .header-shell {
-  background: #FFFFFF;
-  border-color: rgba(14, 14, 12, 0.05);
-  box-shadow: 0 10px 30px rgba(37, 31, 26, 0.08);
+  background: rgb(255 255 255 / 29%);
+  border-color: rgba(255, 255, 255, 0.42);
+  box-shadow: 0 14px 34px rgba(37, 31, 26, 0.12);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.header-area.header-layoutone.home-header-overlay.is-home-header-visible .header-shell {
+  background: rgba(255, 255, 255, 0.72);
 }
 
 /* Why launch brand stacked scroll */
