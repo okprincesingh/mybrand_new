@@ -1561,7 +1561,7 @@ document.addEventListener('DOMContentLoaded', function () {
       defaults: { ease: 'none' },
       scrollTrigger: {
         trigger: section,
-        start: 'top top',
+        start: 'top 100px',
         end: function () {
           return '+=' + (window.innerHeight * (cards.length - 1) * 1.08);
         },

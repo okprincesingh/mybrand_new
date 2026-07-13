@@ -26325,7 +26325,7 @@ iframe {
 
 .working-process-section__inner {
   position: relative;
-  min-height: 100vh;
+  min-height: 80vh;
   display: grid;
   grid-template-columns: minmax(260px, 31vw) 1fr;
   align-items: start;
@@ -26570,6 +26570,7 @@ iframe {
   }
 
   .working-process-section__steps-bg {
+    display: none;
     left: 18px;
     right: auto;
     bottom: -0.08em;
