@@ -41,10 +41,6 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
                     <a target="_blank" href="<?php echo url('https://in.pinterest.com/mybrandplease/'); ?>" aria-label="Pinterest"><i class="fa-brands fa-pinterest-p"></i></a>
                   </div>
                 </div>
-                <div class="plf-review mt-4">
-                  <a href="https://g.co/kgs/YgaRfY" target="_blank"><img src="<?php echo url('assets/imgs/home/footer/google-Reviews_mybrand.webp'); ?>" alt="Google Reviews"></a>
-                  <a href="https://www.trustpilot.com/review/mybrandplease.com?utm_medium=trustbox&utm_source=TrustBoxReviewCollector" target="_blank"><img src="<?php echo url('assets/imgs/home/footer/Trust-Pilot-Reviews_mybrand.webp'); ?>" alt="Trustpilot Reviews"></a>
-                </div>
               </div>
             </div>
 
@@ -90,22 +86,25 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
                   <li><a href="<?php echo url('contact.php'); ?>">Form Center</a></li>
               </ul>
 
-              <div class="plf-badges">
-                <img src="<?php echo url('assets/imgs/home/footer/fei.webp'); ?>" alt="FEI">
-                <img src="<?php echo url('assets/imgs/home/footer/duns.webp'); ?>" alt="Duns">
-                <img src="<?php echo url('assets/imgs/home/footer/CPNP-Registered.webp'); ?>" alt="CPNP Registered">
-              </div>
-
-              <div class="plf-pay mt-4">
-                <p class="mb-2">Secure Payment</p>
-                <img class="plf-pay__img" src="<?php echo url('assets/imgs/home/footer/stripe.png'); ?>" alt="Secure payment gateways">
-              </div>
             </div>
+          </div>
+
+          <div class="plf-trust-row" aria-label="Trust badges and secure payment">
+            <a href="https://g.co/kgs/YgaRfY" target="_blank" rel="noopener noreferrer">
+              <img src="<?php echo url('assets/imgs/home/footer/google-Reviews_mybrand.webp'); ?>" alt="Google Reviews">
+            </a>
+            <a href="https://www.trustpilot.com/review/mybrandplease.com?utm_medium=trustbox&utm_source=TrustBoxReviewCollector" target="_blank" rel="noopener noreferrer">
+              <img src="<?php echo url('assets/imgs/home/footer/Trust-Pilot-Reviews_mybrand.webp'); ?>" alt="Trustpilot Reviews">
+            </a>
+            <img src="<?php echo url('assets/imgs/home/footer/fei.webp'); ?>" alt="USFDA">
+            <img src="<?php echo url('assets/imgs/home/footer/duns.webp'); ?>" alt="DUNS">
+            <img src="<?php echo url('assets/imgs/home/footer/CPNP-Registered.webp'); ?>" alt="CPNP Registered">
+            <img class="plf-trust-row__payment" src="<?php echo url('assets/imgs/home/footer/stripe.png'); ?>" alt="Secure Stripe payment">
           </div>
 
           <div class="plf-bottom d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
             <p class="mb-0">&copy; 2005-2026 NIMISHA IMPEX WORLDWIDE (P) LIMITED | All rights reserved</p>
-            <p class="mb-0">Developed and Maintained by <a href="https://jaikviktechnology.com/" target="_blank" rel="noopener noreferrer">JaiKVik Technology</a></p>
+            <p class="mb-0">Developed and Maintained by <a href="https://jaikviktechnology.com/" target="_blank" rel="noopener noreferrer">JTPL</a></p>
           </div>
         </div>
       </footer>

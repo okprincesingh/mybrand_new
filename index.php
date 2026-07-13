@@ -854,7 +854,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 <div class="brand-builder__actions">
                   <a class="brand-builder__btn brand-builder__btn--primary" href="<?php echo url('shop.php'); ?>">Explore Private Label</a>
-                  <a class="brand-builder__btn brand-builder__btn--secondary" href="<?php echo url('contact.php'); ?>">Explore Custom Formulation</a>
+                  <a class="brand-builder__btn brand-builder__btn--secondary" href="<?php echo url('services.php'); ?>">Explore Custom Formulation</a>
                 </div>
 
                 <div class="brand-builder__stats" aria-label="Brand growth highlights">

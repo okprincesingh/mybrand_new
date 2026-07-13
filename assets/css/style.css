@@ -21047,13 +21047,16 @@ iframe {
   border-color: var(--primary-two);
 }
 .pl-footer--v2 .plf-review {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
   gap: 0.6rem;
   max-width: 22rem;
 }
 .pl-footer--v2 .plf-review img {
-  width: 100%;
+  width: auto;
+  height: 3.2rem;
+  object-fit: contain;
 }
 .pl-footer--v2 .plf-title {
   font-size: 1.4rem;
@@ -21083,20 +21086,25 @@ iframe {
   color: var(--primary-two);
 }
 .pl-footer--v2 .plf-badges {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: nowrap;
   gap: 0.55rem;
-  align-items: baseline;
+  align-items: center;
 }
 .pl-footer--v2 .plf-badges img {
-  width: 100%;
+  width: auto;
+  height: 2.9rem;
+  object-fit: contain;
 }
 .pl-footer--v2 .plf-pay p {
   color: rgba(255, 255, 255, 0.85);
 }
 .pl-footer--v2 .plf-pay__img {
-  width: 70%;
-  height: auto;
+  width: auto;
+  max-width: 100%;
+  height: 5.5rem;
+  object-fit: contain;
+  object-position: left center;
 }
 .pl-footer--v2 .plf-pay__chips {
   display: flex;
@@ -21109,6 +21117,31 @@ iframe {
   padding: 0.32rem 0.6rem;
   color: #fff;
   font-size: 0.85rem;
+}
+.pl-footer--v2 .plf-trust-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.7rem, 1.6vw, 1.4rem);
+  flex-wrap: nowrap;
+  margin: -1.4rem 0 1.6rem;
+  padding: 1rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+.pl-footer--v2 .plf-trust-row a {
+  display: inline-flex;
+  align-items: center;
+}
+.pl-footer--v2 .plf-trust-row img {
+  width: auto;
+  height: clamp(2.35rem, 3.6vw, 3.25rem);
+  max-width: 11rem;
+  object-fit: contain;
+}
+.pl-footer--v2 .plf-trust-row__payment {
+  height: clamp(3.6rem, 5.8vw, 5.4rem) !important;
+  max-width: 15rem !important;
 }
 .pl-footer--v2 .plf-bottom {
   border-top: 1px solid rgba(255, 255, 255, 0.3);
@@ -21149,6 +21182,17 @@ iframe {
   .pl-footer--v2 .plf-title {
     font-size: 1rem;
     margin-top: 0.5rem;
+  }
+  .pl-footer--v2 .plf-trust-row {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin-top: -0.8rem;
+  }
+  .pl-footer--v2 .plf-trust-row img {
+    height: 2.4rem;
+  }
+  .pl-footer--v2 .plf-trust-row__payment {
+    height: 4.1rem !important;
   }
   .pl-footer--v2 .plf-bottom {
     font-size: 0.86rem;
@@ -26013,7 +26057,7 @@ iframe {
   content: "";
   inset: 16px 18px;
   z-index: 1;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  /* border: 1px solid rgba(255, 255, 255, 0.12); */
   border-top: 0;
   border-bottom: 0;
   pointer-events: none;
