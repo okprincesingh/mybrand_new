@@ -1471,6 +1471,124 @@ document.addEventListener('DOMContentLoaded', function () {
         </section>
         <!-- Office Section End -->
 
+        <!-- Working Process Section Start -->
+        <section class="working-process-section" aria-label="Why launch your own brand">
+          <div class="working-process-section__inner">
+            <div class="working-process-section__intro">
+              <span class="working-process-section__eyebrow">[ Private Label ]</span>
+              <h2 class="working-process-section__title">Why launch<br>your own brand</h2>
+              <p class="working-process-section__lead">
+                Enhance your brand reputation and profitability with premium private label cosmetic products, low minimum order quantity, and competitive pricing.
+              </p>
+            </div>
+            <div class="working-process-section__track-wrap">
+              <div class="working-process-section__track" data-working-process-track>
+                <?php
+                  $workingProcessSteps = [
+                    [
+                      'step' => 'Step 01',
+                      'title' => 'Higher Profits',
+                      'text' => 'Our high-quality natural and organic-based skin and hair care products are offered at costs comparable to or lower than leading brands, while you set the sale price.',
+                      'href' => 'contact.php',
+                    ],
+                    [
+                      'step' => 'Step 02',
+                      'title' => 'Increased Sales',
+                      'text' => 'Market your own brand with margin and product sale price in your control, giving you stronger flexibility in marketing approach and decisions.',
+                      'href' => 'contact.php',
+                    ],
+                    [
+                      'step' => 'Step 03',
+                      'title' => 'Client Retention',
+                      'text' => 'Retain customers with your own brand while offering premium product experiences at strong pricing, helping you create brand loyalty.',
+                      'href' => 'contact.php',
+                    ],
+                    [
+                      'step' => 'Step 04',
+                      'title' => 'Brand Equity',
+                      'text' => 'Building sales of your own skin and hair care brand strengthens your prestige with customers and in the market.',
+                      'href' => 'contact.php',
+                    ],
+                  ];
+                ?>
+                <?php foreach ($workingProcessSteps as $processStep): ?>
+                  <article class="working-process-card">
+                    <div class="working-process-card__top">
+                      <span class="working-process-card__step"><?php echo htmlspecialchars($processStep['step'], ENT_QUOTES, 'UTF-8'); ?></span>
+                      <span class="working-process-card__spark" aria-hidden="true">&starf;</span>
+                      <a class="working-process-card__link" href="<?php echo url($processStep['href']); ?>">
+                        <span>Explore</span>
+                        <span aria-hidden="true">&nearr;</span>
+                      </a>
+                    </div>
+                    <h3 class="working-process-card__title"><?php echo htmlspecialchars($processStep['title'], ENT_QUOTES, 'UTF-8'); ?></h3>
+                    <p class="working-process-card__text"><?php echo htmlspecialchars($processStep['text'], ENT_QUOTES, 'UTF-8'); ?></p>
+                  </article>
+                <?php endforeach; ?>
+              </div>
+            </div>
+            <div class="working-process-section__steps-bg" aria-hidden="true">Mybrandplease</div>
+          </div>
+        </section>
+        <!-- Working Process Section End -->
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (!window.gsap || !window.ScrollTrigger) return;
+    const section = document.querySelector('.working-process-section');
+    const track = document.querySelector('[data-working-process-track]');
+    if (!section || !track) return;
+    if (window.matchMedia('(max-width: 767px)').matches) return;
+
+    window.gsap.registerPlugin(window.ScrollTrigger);
+
+    const cards = window.gsap.utils.toArray('.working-process-card', track);
+    if (cards.length < 2) return;
+
+    window.gsap.set(cards, {
+      force3D: true,
+      transformOrigin: 'center center'
+    });
+
+    window.gsap.set(cards.slice(1), {
+      xPercent: 118,
+      yPercent: 0,
+      scale: 1,
+      autoAlpha: 1
+    });
+
+    const timeline = window.gsap.timeline({
+      defaults: { ease: 'none' },
+      scrollTrigger: {
+        trigger: section,
+        start: 'top top',
+        end: function () {
+          return '+=' + (window.innerHeight * (cards.length - 1) * 1.08);
+        },
+        scrub: 1.25,
+        pin: true,
+        anticipatePin: 1,
+        invalidateOnRefresh: true
+      }
+    });
+
+    cards.slice(1).forEach(function (card, index) {
+      const previousCards = cards.slice(0, index + 1);
+      const position = index * 1.15;
+      timeline
+        .to(card, {
+          xPercent: 0,
+          duration: 1.25
+        }, position)
+        .to(previousCards, {
+          scale: 0.985 - (index * 0.008),
+          yPercent: -1 - (index * 0.8),
+          duration: 1.25
+        }, position);
+    });
+  });
+</script>
+
         <!-- CTA Section Start -->
         <section class="cta-section section-spacing-120 rr-ov-hidden">
           <div class="container rr-container-1350">
@@ -1747,6 +1865,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Handshake section elements
     const section = document.querySelector('.handshake-section');
     if (!section) return;
+    if (window.matchMedia('(max-width: 767px)').matches) return;
 
     window.gsap.registerPlugin(window.ScrollTrigger);
 
