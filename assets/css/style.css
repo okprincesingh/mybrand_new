@@ -546,7 +546,7 @@ h6 {
 /* Small Mobile */
 @media (max-width: 720px) {
     .hero-video-section {
-        height: 41vh;   /* 60vh → 100vh */
+        height: 35vh;   /* 60vh → 100vh */
     }
     .hero-video-mobile {
         height: 100%;    /* 60vh → 100% */
@@ -574,6 +574,10 @@ h6 {
 
 
 @media (max-width: 767px) {
+    .hero-video-section {
+        margin-top: 88px;
+    }
+
     .hero-marquee {
         min-height: 190px;
     }
@@ -604,6 +608,12 @@ h6 {
 
     .hero-marquee__star {
         font-size: clamp(18px, 5.5vw, 24px) !important;
+    }
+}
+
+@media (max-width: 575px) {
+    .hero-video-section {
+        margin-top: 78px;
     }
 }
 
