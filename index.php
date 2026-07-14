@@ -853,8 +853,8 @@ document.addEventListener('DOMContentLoaded', function () {
               <div class="brand-builder__media">
                 <img
                   class="brand-builder__image"
-                  src="<?php echo url('assets/imgs/products/Skin-Care-1-1024x888.webp'); ?>"
-                  alt="Private label beauty product"
+                  src="<?php echo url('assets/imgs/modern/1.jpg'); ?>"
+                  alt="Skin care product category"
                   data-brand-builder-image
                 >
               </div>
@@ -864,7 +864,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <h2 class="brand-builder__title" id="brandBuilderTitle">
                   The modern<br>
                   way to build a<br>
-                  <span class="brand-builder__changing-word" data-brand-builder-word>beauty</span> brand
+                  <span class="brand-builder__changing-word" data-brand-builder-word>skin care</span> brand
                 </h2>
                 <p class="brand-builder__subtitle">Start free today!</p>
 
@@ -896,14 +896,26 @@ document.addEventListener('DOMContentLoaded', function () {
           document.addEventListener('DOMContentLoaded', function () {
             var wordEl = document.querySelector('[data-brand-builder-word]');
             var imageEl = document.querySelector('[data-brand-builder-image]');
+            var mediaTitleEl = document.querySelector('[data-brand-builder-media-title]');
             if (!wordEl || !imageEl) return;
 
             var mediaEl = imageEl.closest('.brand-builder__media');
             var items = [
-              { word: 'beauty', image: '<?php echo url('assets/imgs/product/beauty.png'); ?>', alt: 'Private label beauty product' },
-              { word: 'skin care', image: '<?php echo url('assets/imgs/product/skin.png'); ?>', alt: 'Private label skin care product' },
-              { word: 'hair care', image: '<?php echo url('assets/imgs/product/hair.png'); ?>', alt: 'Private label hair care product' },
-              { word: 'wellness', image: '<?php echo url('assets/imgs/product/welness.png'); ?>', alt: 'Private label wellness product' }
+              { word: 'skin care', image: '<?php echo url('assets/imgs/modern/1.jpg'); ?>', alt: 'Skin care product category', showTitle: true },
+              { word: 'hair care', image: '<?php echo url('assets/imgs/modern/2.jpg'); ?>', alt: 'Hair care product category', showTitle: true },
+              { word: 'body care', image: '<?php echo url('assets/imgs/modern/3.jpg'); ?>', alt: 'Body care product category', showTitle: true },
+              { word: 'bath products', image: '<?php echo url('assets/imgs/modern/4.jpg'); ?>', alt: 'Bath products category', showTitle: true },
+              { word: 'styling products', image: '<?php echo url('assets/imgs/modern/5.jpg'); ?>', alt: 'Styling products category', showTitle: true },
+              { word: 'wellness products', image: '<?php echo url('assets/imgs/modern/6.jpg'); ?>', alt: 'Wellness products category', showTitle: true },
+              { word: 'facial masks', image: '<?php echo url('assets/imgs/modern/7.jpg'); ?>', alt: 'Facial masks category', showTitle: true },
+              { word: 'essential oils', image: '<?php echo url('assets/imgs/modern/8.jpg'); ?>', alt: 'Essential oils category', showTitle: true },
+              { word: "men's grooming", image: '<?php echo url('assets/imgs/modern/9.jpg'); ?>', alt: "Men's grooming category", showTitle: true },
+              { word: 'lip care', image: '<?php echo url('assets/imgs/modern/10.jpg'); ?>', alt: 'Lip balm and scrub category', showTitle: true },
+              { word: 'handmade soaps', image: '<?php echo url('assets/imgs/modern/11.jpg'); ?>', alt: 'Handmade soaps category', showTitle: true },
+              { word: 'medicated soaps', image: '<?php echo url('assets/imgs/modern/12.jpg'); ?>', alt: 'Medicated soaps category', showTitle: true },
+              { word: 'beauty soaps', image: '<?php echo url('assets/imgs/modern/13.jpg'); ?>', alt: 'Beauty soaps category', showTitle: true },
+              { word: 'scented candles', image: '<?php echo url('assets/imgs/modern/14.jpg'); ?>', alt: 'Scented candles category', showTitle: true },
+              { word: 'reed diffusers', image: '<?php echo url('assets/imgs/modern/15.jpg'); ?>', alt: 'Reed diffusers category', showTitle: true }
             ];
             var index = 0;
 
@@ -917,6 +929,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 wordEl.textContent = item.word;
                 imageEl.src = item.image;
                 imageEl.alt = item.alt;
+                if (mediaTitleEl) {
+                  mediaTitleEl.textContent = item.word;
+                  mediaTitleEl.classList.toggle('is-visible', item.showTitle);
+                }
                 wordEl.classList.remove('is-changing');
                 if (mediaEl) mediaEl.classList.remove('is-changing');
               }, 260);
