@@ -1133,7 +1133,7 @@ document.addEventListener('DOMContentLoaded', function () {
           <div class="container rr-container-1350">
             <div class="social-reels__intro">
               <span class="social-reels__eyebrow">Video Showcase</span>
-              <h2 class="social-reels__title">Watch it ! Love it! Build it !</h2>
+              <h2 class="social-reels__title">Watch it! Love it! Build it!</h2>
               <p class="social-reels__lead">We don’t just manufacture products. We manufacture dominance.</p>
             </div>
           </div>
@@ -1911,10 +1911,6 @@ document.addEventListener('DOMContentLoaded', function () {
   </figure>
   <img class="handshake-section__hand handshake-section__hand--top top-hand" src="<?php echo url('assets/imgs/cta/cta1-hand-1.webp'); ?>" alt="" aria-hidden="true">
   <img class="handshake-section__hand handshake-section__hand--bottom bottom-hand" src="<?php echo url('assets/imgs/cta/cta1-hand-2.webp'); ?>" alt="" aria-hidden="true">
-  <div class="handshake-section__scroll" aria-hidden="true">
-    <span></span>
-    <small>Go Down</small>
-  </div>
 </section>
 
 <script>
@@ -1954,7 +1950,7 @@ document.addEventListener('DOMContentLoaded', function () {
       scrollTrigger: {
         trigger: section,
         start: 'top top',
-        end: '+=125%',
+        end: '+=80%',
         scrub: true,
         pin: true,
         pinSpacing: true,

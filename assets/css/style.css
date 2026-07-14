@@ -430,7 +430,7 @@ h6 {
     position: relative;
     min-height: 230px;
     overflow: hidden;
-    background: #030303;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 56%, #fff7ef 100%);
     isolation: isolate;
 }
 
@@ -438,9 +438,9 @@ h6 {
     content: "";
     position: absolute;
     inset: 0;
-    background-image: linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-image: linear-gradient(rgba(238, 45, 122, 0.09) 1px, transparent 1px), linear-gradient(90deg, rgba(238, 45, 122, 0.09) 1px, transparent 1px);
     background-size: 72px 72px;
-    opacity: 0.3;
+    opacity: 0.48;
     pointer-events: none;
 }
 
@@ -453,19 +453,19 @@ h6 {
     align-items: center;
     overflow: hidden;
     white-space: nowrap;
-    box-shadow: 0 18px 34px rgba(0, 0, 0, 0.28);
+    box-shadow: 0 16px 30px rgba(238, 45, 122, 0.12);
 }
 
 .hero-marquee__strip--back {
     top: 76px;
-    background: #272727;
+    background: rgba(255, 239, 242, 0.92);
     transform: rotate(4deg);
     z-index: 1;
 }
 
 .hero-marquee__strip--front {
     top: 94px;
-    background: linear-gradient(90deg, #9c174b 0%, #b64535 34%, #db6a10 68%, #ff9400 100%);
+    background: rgba(255, 239, 242, 0.92);
     transform: rotate(-4deg);
     z-index: 2;
 }
@@ -485,7 +485,7 @@ h6 {
 }
 
 .hero-marquee__track span {
-    color: #ffffff;
+    color: var(--primary-two);
     font-family: var(--font_Lato);
     font-size: clamp(24px, 3vw, 40px);
     font-weight: 800;
@@ -494,6 +494,7 @@ h6 {
 }
 
 .hero-marquee__star {
+    color: var(--text-color-one) !important;
     font-size: clamp(20px, 2.4vw, 34px) !important;
     opacity: 0.95;
 }
@@ -1507,31 +1508,31 @@ h6 {
 }
 
 .section-spacing-120 {
-  padding-bottom: 120px;
-  padding-top: 120px;
+  padding-bottom: 60px;
+  padding-top: 6px;
 }
 @media only screen and (max-width: 1919px) {
-  .section-spacing-120 {
-    padding-bottom: 70px;
-    padding-top: 70px;
-  }
-}
-@media only screen and (max-width: 1399px) {
-  .section-spacing-120 {
-    padding-bottom: 50px;
-    padding-top: 50px;
-  }
-}
-@media only screen and (max-width: 1199px) {
   .section-spacing-120 {
     padding-bottom: 40px;
     padding-top: 40px;
   }
 }
+@media only screen and (max-width: 1399px) {
+  .section-spacing-120 {
+    padding-bottom: 20px;
+    padding-top: 20px;
+  }
+}
+@media only screen and (max-width: 1199px) {
+  .section-spacing-120 {
+    padding-bottom: 20px;
+    padding-top: 20px;
+  }
+}
 @media only screen and (max-width: 991px) {
   .section-spacing-120 {
-    padding-bottom: 30px;
-    padding-top: 30px;
+    padding-bottom: 20px;
+    padding-top: 20px;
   }
 }
 @media only screen and (max-width: 767px) {
@@ -23914,7 +23915,7 @@ iframe {
   --gs-shadow: 0 12px 42px rgba(238, 45, 122, 0.14);
   --gs-radius: 22px;
   position: relative;
-  padding: 110px 32px;
+  padding: 3px 32px;
   overflow: hidden;
   background: linear-gradient(180deg, #fff9fc 0%, var(--gs-cream) 100%);
 }
@@ -26683,11 +26684,11 @@ iframe {
 /* Reference-frame pinned handshake clone */
 .handshake-section {
   position: relative;
-  height: 100vh;
-  min-height: 760px;
+  height: 88vh;
+  min-height: 680px;
   margin-bottom: 0;
   overflow: hidden;
-  background: #000;
+  background: linear-gradient(135deg, var(--primary) 0%, #fff7fa 48%, var(--secondary) 100%);
   border-radius: 0;
   isolation: isolate;
   font-family: var(--font_Lato);
@@ -26708,7 +26709,10 @@ iframe {
 .handshake-section__background {
   position: absolute;
   inset: 0;
-  background: #000;
+  background:
+    radial-gradient(circle at 18% 16%, rgba(238, 45, 122, 0.12), transparent 34%),
+    radial-gradient(circle at 82% 78%, rgba(234, 242, 245, 0.78), transparent 36%),
+    linear-gradient(135deg, var(--primary) 0%, #fff7fa 48%, var(--secondary) 100%);
   z-index: 0;
 }
 
@@ -26725,7 +26729,7 @@ iframe {
 .handshake-section__hand {
   z-index: 5;
   pointer-events: none;
-  filter: drop-shadow(0 24px 38px rgba(0, 0, 0, 0.42));
+  filter: drop-shadow(0 24px 38px rgba(238, 45, 122, 0.16));
 }
 
 .handshake-section__hand--top {
@@ -26747,7 +26751,7 @@ iframe {
 
 .handshake-section__heading {
   position: static;
-  color: #fff;
+  color: var(--text-color-one);
   font-family: var(--font_Lato);
   font-size: clamp(60px, 7.5vw, 132px);
   font-weight: 800;
@@ -26764,7 +26768,7 @@ iframe {
 
 .handshake-section__heading span:nth-child(2) {
   margin-top: 0.08em;
-  color: #e8a315;
+  color: var(--primary-two);
   font-size: 0.62em;
 }
 
@@ -26780,7 +26784,7 @@ iframe {
 .handshake-section__secondary {
   display: inline-flex;
   align-items: center;
-  color: #fff;
+  color: var(--text-color-one);
   font-family: var(--font_Lato);
   font-size: 20px;
   font-weight: 700;
@@ -26793,11 +26797,17 @@ iframe {
   min-height: 58px;
   padding: 0 6px 0 24px;
   border-radius: 8px;
-  background: #3d3d3d;
+  color: #fff;
+  background: var(--primary-two);
+  box-shadow: 0 14px 34px rgba(238, 45, 122, 0.28);
 }
 
 .handshake-section__primary:hover,
 .handshake-section__secondary:hover {
+  color: var(--primary-two);
+}
+
+.handshake-section__primary:hover {
   color: #fff;
 }
 
@@ -26808,8 +26818,8 @@ iframe {
   align-items: center;
   justify-content: center;
   border-radius: 6px;
-  background: #050505;
-  color: #fff;
+  background: var(--white);
+  color: var(--primary-two);
   font-size: 28px;
 }
 
@@ -26818,7 +26828,7 @@ iframe {
 }
 
 .handshake-section__secondary span:last-child {
-  color: #e8a315;
+  color: var(--primary-two);
 }
 
 .handshake-section__hand--top {
@@ -26845,7 +26855,7 @@ iframe {
   border-radius: 7px;
   opacity: 1;
   filter: none;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.42);
+  box-shadow: 0 18px 40px rgba(238, 45, 122, 0.16);
 }
 
 .handshake-section__card img {
@@ -26875,7 +26885,7 @@ iframe {
   display: grid;
   justify-items: center;
   gap: 11px;
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(12, 12, 12, 0.58);
   font-family: var(--font_Lato);
   font-size: 16px;
   line-height: 1;
@@ -26886,7 +26896,7 @@ iframe {
 .handshake-section__scroll span {
   width: 38px;
   height: 64px;
-  border: 1px solid #e8a315;
+  border: 1px solid var(--primary-two);
   border-radius: 999px;
   position: relative;
 }
@@ -26899,7 +26909,7 @@ iframe {
   width: 3px;
   height: 24px;
   border-radius: 999px;
-  background: #fff;
+  background: var(--primary-two);
   transform: translateX(-50%);
 }
 
