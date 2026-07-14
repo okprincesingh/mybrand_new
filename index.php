@@ -2011,7 +2011,7 @@ document.addEventListener('DOMContentLoaded', function () {
       defaults: { ease: 'none' },
       scrollTrigger: {
         trigger: section,
-        start: 'top 100px',
+        start: 'top 150px',
         end: '+=80%',
         scrub: true,
         pin: true,

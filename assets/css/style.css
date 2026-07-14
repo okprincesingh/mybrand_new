@@ -430,7 +430,7 @@ h6 {
     position: relative;
     min-height: 190px;
     overflow: hidden;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 56%, #fff7ef 100%);
+    background: black;
     isolation: isolate;
 }
 
@@ -21020,6 +21020,7 @@ iframe {
 
 /* Footer v2 (reference-inspired, Bootstrap responsive) */
 .pl-footer--v2 {
+  margin-top:-5px;
   background: #050505;
   color: #fff;
   padding: 3.8rem 0 1.4rem;

@@ -107,6 +107,7 @@ if ($isAosPage) {
     gtag('js', new Date());
     gtag('config', 'G-C0L7Y4STGF');
   </script>
+
 <style>
   .breadcumb-wrapper,
   .breadcumb2 {
@@ -392,5 +393,269 @@ if ($isAosPage) {
     }
 }
 </style>
+
+<script type="application/ld+json">
+    
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Who are Mybrandplease's private label clients?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Mybrandplease works with a diverse range of private label skin care and cosmetics clients, from luxury spas to online retailers. Client names are kept confidential to protect each brand's identity."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are Mybrandplease's response times?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Mybrandplease typically responds to inquiries within 24-48 hours. The team operates Monday to Saturday, 9 am to 6 pm IST. For urgent matters, customers can contact the sales office directly by phone or WhatsApp."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I visit the private label manufacturing facility?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "To protect client confidentiality, Mybrandplease does not offer facility tours."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Mybrandplease help with Health Ministry and FDA registration?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, Mybrandplease offers FDA and Health Ministry registration assistance for a fee of $200 per product."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How can I order product samples?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Samples can be ordered directly from the Products section of the website, where customers can browse and select from Mybrandplease's full product range."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the sample sizes for private label skin care products?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Product samples are available in 1/2 oz, 1 oz, and 2 oz sizes."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long does a sample order take to arrive?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sample orders are typically fulfilled within 3-4 business days, with a tracking number emailed once the order ships."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the minimum order quantities for private label products?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The minimum order requirement is 500 units per product, with flexible options for both smaller and larger orders."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much does private label manufacturing cost?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Pricing depends on the product, packaging, and quantity selected. Customers can contact info@mybrandplease.com for a full pricing catalogue in US Dollars."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Mybrandplease offer quantity discounts?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, quantity discounts are available for both bulk and retail-size orders. Contact the sales team at info@mybrandplease.com for pricing catalogues."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the typical lead times for private label orders?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Standard lead times are 6-8 weeks for new orders, and approximately 3-6 weeks once an order is approved and the deposit is received, though this can vary by season and product availability."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are Mybrandplease products vegan and gluten-free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Most products are vegan and gluten-free, though customers should check the full ingredients list of each specific product to confirm."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are Mybrandplease products tested on animals?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No, Mybrandplease is a certified cruelty-free company and does not test any products on animals."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Mybrandplease offer custom formulations?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, custom formulations start at $675, with pricing depending on ingredients and testing requirements. Lead time is 8-12 weeks with a minimum purchase of 25 gallons."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Mybrandplease help with logo and label design?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, professional graphic design services are available: logo design for $300 and label design for $350, one-time fees covering current and future products."
+      }
+    }
+  ]
+}
+
+</script>
+
+<script type="application/ld+json">
+    {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "https://mybrandplease.com/#organization",
+  "name": "Mybrandplease",
+  "legalName": "NIMISHA IMPEX WORLDWIDE (P) LIMITED",
+  "alternateName": "My Brand Please",
+  "url": "https://mybrandplease.com/",
+  "logo": {
+    "@type": "ImageObject",
+    "url": "https://mybrandplease.com/wp-content/uploads/2025/12/mybrandplease-logo-500x250.webp"
+  },
+  "description": "Mybrandplease is a private label and third-party cosmetics manufacturer offering custom formulations, premium packaging, and full brand-launch support for skin care, hair care, body care, bathing soaps, and men's grooming products. FDA registered, ISO 22716 certified, and MoCRA compliant, with over 21 years of private labelling experience.",
+  "foundingDate": "2005",
+  "slogan": "Private Label Is Now Simplified",
+  "email": "info@mybrandplease.com",
+  "telephone": "+91-97170-04615",
+  "sameAs": [
+    "https://www.facebook.com/mybrandplease",
+    "https://www.instagram.com/mybrandplease_/",
+    "https://x.com/mybrandplease",
+    "https://www.linkedin.com/in/mybrandplease/",
+    "https://in.pinterest.com/mybrandplease/",
+    "https://www.youtube.com/@mybrandplease",
+    "https://www.trustpilot.com/review/mybrandplease.com",
+    "https://g.co/kgs/YgaRfYo"
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "D226, 10th Avenue, Gaur City 2",
+    "addressLocality": "Greater Noida West",
+    "postalCode": "201301",
+    "addressCountry": "IN"
+  },
+  "contactPoint": [
+    {
+      "@type": "ContactPoint",
+      "contactType": "customer service",
+      "telephone": "+91-97170-04615",
+      "email": "info@mybrandplease.com",
+      "areaServed": "IN",
+      "availableLanguage": ["English", "Hindi"]
+    },
+    {
+      "@type": "ContactPoint",
+      "contactType": "customer service",
+      "telephone": "+1-343-322-5866",
+      "email": "info@mybrandplease.com",
+      "areaServed": "US"
+    },
+    {
+      "@type": "ContactPoint",
+      "contactType": "customer service",
+      "telephone": "+1-819-593-8620",
+      "email": "barb@mybrandplease.com",
+      "areaServed": "CA"
+    },
+    {
+      "@type": "ContactPoint",
+      "contactType": "customer service",
+      "telephone": "+61-422-833-441",
+      "email": "info@mybrandplease.com",
+      "areaServed": "AU"
+    }
+  ],
+  "location": [
+    {
+      "@type": "Place",
+      "name": "Mybrandplease India Office",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "D226, 10th Avenue, Gaur City 2",
+        "addressLocality": "Greater Noida West",
+        "postalCode": "201301",
+        "addressCountry": "IN"
+      }
+    },
+    {
+      "@type": "Place",
+      "name": "Mybrandplease USA Office",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "59th Terrace SW, West Park",
+        "addressLocality": "Florida",
+        "postalCode": "33023",
+        "addressCountry": "US"
+      }
+    },
+    {
+      "@type": "Place",
+      "name": "Mybrandplease Canada Office",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "McWatters Road",
+        "addressLocality": "Ottawa, ON",
+        "postalCode": "K2C 3N8",
+        "addressCountry": "CA"
+      }
+    },
+    {
+      "@type": "Place",
+      "name": "Mybrandplease Australia Office",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "811 Pacific Highway, Chatswood",
+        "addressLocality": "Sydney",
+        "addressCountry": "AU"
+      }
+    }
+  ],
+  "areaServed": ["IN", "US", "CA", "AU", "Worldwide"],
+  "knowsAbout": [
+    "Private label cosmetics manufacturing",
+    "Third-party skin care manufacturing",
+    "Hair care formulation",
+    "Contract manufacturing for beauty brands",
+    "Natural and organic personal care products"
+  ],
+  "hasCredential": [
+    "FDA Registered",
+    "ISO 22716 Certified",
+    "MoCRA Compliant",
+    "EU CosIng Compliant",
+    "Cruelty-Free Compliant",
+    "Vegan Certified",
+    "CPNP Registered"
+  ]
+}
+
+
+</script>
 </head>
 <body>
