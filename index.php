@@ -694,7 +694,7 @@ document.addEventListener('DOMContentLoaded', function () {
           </script>
         </section>
 
-        <section class="category1 section-spacing-120 rr-ov-hidden">
+        <section class="category1 section-spacing-120 rr-ov-hidden js-category-entrance">
           <div class="category1-wrapper">
             <div class="container rr-container-1350">
               <!-- <div class="section-heading wow fadeInRight" data-wow-delay="0.3s">
@@ -702,7 +702,7 @@ document.addEventListener('DOMContentLoaded', function () {
               </div> -->
               <div class="row g-4">
                 <div class="col-md-3 col-xl-3">
-                  <div class="category1-item wow fadeInRight" data-wow-delay="0.2s">
+                  <div class="category1-item category1-item--from-left" data-category-entrance>
                     <div class="category1-item__thumb">
                       <img src="<?php echo url('assets/imgs/category/category_thumb1_2.png'); ?>" alt="thumb">
                     </div>
@@ -726,7 +726,7 @@ document.addEventListener('DOMContentLoaded', function () {
                   </div>
                 </div>
                 <div class="col-md-6 col-xl-6">
-                  <div class="category1-item wow fadeInRight" data-wow-delay="0.3s">
+                  <div class="category1-item category1-item--from-top" data-category-entrance>
                     <div class="category1-item__thumb">
                       <img src="<?php echo url('assets/imgs/category/category_thumb1_1.png'); ?>" alt="thumb">
                     </div>
@@ -750,7 +750,7 @@ document.addEventListener('DOMContentLoaded', function () {
                   </div>
                 </div>
                 <div class="col-md-3 col-xl-3">
-                  <div class="category1-item wow fadeInRight" data-wow-delay="0.5s">
+                  <div class="category1-item category1-item--from-right" data-category-entrance>
                     <div class="category1-item__thumb">
                       <img src="<?php echo url('assets/imgs/category/category_thumb1_3.png'); ?>" alt="thumb">
                     </div>
@@ -778,6 +778,35 @@ document.addEventListener('DOMContentLoaded', function () {
             </div>
           </div>
         </section>
+
+        <script>
+          document.addEventListener('DOMContentLoaded', function () {
+            var section = document.querySelector('.js-category-entrance');
+            if (!section) return;
+
+            function reveal() {
+              section.classList.remove('is-animated');
+              window.requestAnimationFrame(function () {
+                section.classList.add('is-animated');
+              });
+            }
+
+            if ('IntersectionObserver' in window) {
+              var observer = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                  if (entry.isIntersecting) {
+                    reveal();
+                  } else {
+                    section.classList.remove('is-animated');
+                  }
+                });
+              }, { threshold: 0.22 });
+              observer.observe(section);
+            } else {
+              reveal();
+            }
+          });
+        </script>
 
         <!-- <section class="py-5 bg-light js-why-business">
           <div class="container">

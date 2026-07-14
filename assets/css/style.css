@@ -7410,6 +7410,26 @@ body {
 .category1-item {
   position: relative;
 }
+.js-category-entrance .category1-item {
+  opacity: 0;
+  transition: opacity 0.85s ease, transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, opacity;
+}
+.js-category-entrance .category1-item--from-left {
+  transform: translateX(-90px);
+}
+.js-category-entrance .category1-item--from-top {
+  transform: translateY(-90px);
+  transition-delay: 0.08s;
+}
+.js-category-entrance .category1-item--from-right {
+  transform: translateX(90px);
+  transition-delay: 0.16s;
+}
+.js-category-entrance.is-animated .category1-item {
+  opacity: 1;
+  transform: translate(0, 0);
+}
 .category1-item__thumb {
   position: relative;
 }
