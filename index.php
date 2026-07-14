@@ -495,11 +495,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="working-process-card__top">
                       <span class="working-process-card__label">
                         <span class="working-process-card__spark" aria-hidden="true">&starf;</span>
-                        <span>Explore</span>
+                        <span>Benefits of having your own brand</span>
                       </span>
                       <a class="working-process-card__link" href="<?php echo url($processStep['href']); ?>">
                         <span aria-hidden="true">&nearr;</span>
-                        <span>Explore</span>
+                        <!-- <span>Explore</span> -->
                       </a>
                     </div>
                     <span class="working-process-card__image">
@@ -1976,8 +1976,8 @@ document.addEventListener('DOMContentLoaded', function () {
   <figure class="handshake-section__card handshake-section__card--right right-card" aria-hidden="true">
     <img src="<?php echo url('assets/imgs/about/what-do-we-offer-min-2048x1241.jpg'); ?>" alt="">
   </figure>
-  <img class="handshake-section__hand handshake-section__hand--top top-hand" src="<?php echo url('assets/imgs/cta/cta2.png'); ?>" alt="" aria-hidden="true">
-  <img class="handshake-section__hand handshake-section__hand--bottom bottom-hand" src="<?php echo url('assets/imgs/cta/cta1.png'); ?>" alt="" aria-hidden="true">
+  <img class="handshake-section__hand handshake-section__hand--top top-hand" src="<?php echo url('assets/imgs/cta/img-2.png'); ?>" alt="" aria-hidden="true">
+  <img class="handshake-section__hand handshake-section__hand--bottom bottom-hand" src="<?php echo url('assets/imgs/cta/img-1.png'); ?>" alt="" aria-hidden="true">
 </section>
 
 <script>
