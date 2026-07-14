@@ -1970,12 +1970,7 @@ document.addEventListener('DOMContentLoaded', function () {
       </a>
     </div>
   </div>
-  <figure class="handshake-section__card handshake-section__card--left left-card" aria-hidden="true">
-    <img src="<?php echo url('assets/imgs/about/How-do-we-Formulate-min-2048x1241.jpg'); ?>" alt="">
-  </figure>
-  <figure class="handshake-section__card handshake-section__card--right right-card" aria-hidden="true">
-    <img src="<?php echo url('assets/imgs/about/what-do-we-offer-min-2048x1241.jpg'); ?>" alt="">
-  </figure>
+  
   <img class="handshake-section__hand handshake-section__hand--top top-hand" src="<?php echo url('assets/imgs/cta/img-2.png'); ?>" alt="" aria-hidden="true">
   <img class="handshake-section__hand handshake-section__hand--bottom bottom-hand" src="<?php echo url('assets/imgs/cta/img-1.png'); ?>" alt="" aria-hidden="true">
 </section>
@@ -2006,8 +2001,8 @@ document.addEventListener('DOMContentLoaded', function () {
     window.gsap.set(content, { autoAlpha: 0, x: 130, y: 74, scale: 0.82, force3D: true });
     window.gsap.set(actions, { autoAlpha: 0, y: 34, scale: 0.9, force3D: true });
     window.gsap.set(scrollHint, { autoAlpha: 0, y: 24, force3D: true });
-    window.gsap.set(topHand, { xPercent: 19, yPercent: 42, rotate: 2.4, force3D: true });
-    window.gsap.set(bottomHand, { xPercent: -22, yPercent: -28, rotate: -2.2, force3D: true });
+    window.gsap.set(topHand, { xPercent: 30, yPercent: 35, rotate: 2.6, force3D: true });
+    window.gsap.set(bottomHand, { xPercent: -35, yPercent: -38, rotate: -2.2, force3D: true });
     window.gsap.set(leftCard, { autoAlpha: 0, xPercent: 112, yPercent: 74, rotate: -1.5, scale: 0.72, force3D: true });
     window.gsap.set(rightCard, { autoAlpha: 0, xPercent: -105, yPercent: 82, rotate: 1.5, scale: 0.72, force3D: true });
 

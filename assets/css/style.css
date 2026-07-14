@@ -27017,8 +27017,8 @@ iframe {
 
 .handshake-section__content {
   position: absolute;
-  left: clamp(24px, 18.2vw, 350px);
-  top: 41.5vh;
+  left: clamp(24px, 21.2vw, 350px);
+  top: 38.5vh;
   z-index: 6;
   width: min(50vw, 860px);
   will-change: transform, opacity;
@@ -27107,7 +27107,7 @@ iframe {
 }
 
 .handshake-section__hand--top {
-  left: 9.4vw;
+  left: 0;
   right: auto;
   top: -10vh;
   width: min(52vw, 995px);
@@ -27115,8 +27115,8 @@ iframe {
 }
 
 .handshake-section__hand--bottom {
-  right: -3.8vw;
-  bottom: 8.8vh;
+  right: -7.2vw;
+  bottom: -2.2vh;
   width: min(51vw, 975px);
   transform-origin: 24% 40%;
 }
