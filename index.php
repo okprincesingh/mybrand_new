@@ -429,7 +429,7 @@ document.addEventListener('DOMContentLoaded', function () {
         <section class="working-process-section" aria-label="Why launch your own brand">
           <div class="working-process-section__inner">
             <div class="working-process-section__intro">
-              <span class="working-process-section__eyebrow">[ Private Label ]</span>
+              <span class="working-process-section__eyebrow">Private Label</span>
               <h2 class="working-process-section__title">Why launch<br>your own brand</h2>
               <p class="working-process-section__lead">
                 Enhance your brand reputation and profitability with premium private label cosmetic products, low minimum order quantity, and competitive pricing.
@@ -1909,8 +1909,8 @@ document.addEventListener('DOMContentLoaded', function () {
   <figure class="handshake-section__card handshake-section__card--right right-card" aria-hidden="true">
     <img src="<?php echo url('assets/imgs/about/what-do-we-offer-min-2048x1241.jpg'); ?>" alt="">
   </figure>
-  <img class="handshake-section__hand handshake-section__hand--top top-hand" src="<?php echo url('assets/imgs/cta/cta1-hand-1.webp'); ?>" alt="" aria-hidden="true">
-  <img class="handshake-section__hand handshake-section__hand--bottom bottom-hand" src="<?php echo url('assets/imgs/cta/cta1-hand-2.webp'); ?>" alt="" aria-hidden="true">
+  <img class="handshake-section__hand handshake-section__hand--top top-hand" src="<?php echo url('assets/imgs/cta/cta2.png'); ?>" alt="" aria-hidden="true">
+  <img class="handshake-section__hand handshake-section__hand--bottom bottom-hand" src="<?php echo url('assets/imgs/cta/cta1.png'); ?>" alt="" aria-hidden="true">
 </section>
 
 <script>
