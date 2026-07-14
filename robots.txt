@@ -1,42 +1,11 @@
-
 User-agent: *
-Disallow: /wp-admin/
-Disallow: /wp-includes/
-Disallow: /cgi-bin/
-Disallow: /?s=
 Disallow: /wp-content/uploads/wpo/wpo-plugins-tables-list.json
-Allow: /wp-admin/admin-ajax.php
 
-# AI / LLM Crawlers
-User-agent: GPTBot
-Allow: /
+# START YOAST BLOCK
+# ---------------------------
+User-agent: *
+Disallow:
 
-User-agent: ChatGPT-User
-Allow: /
-
-User-agent: OAI-SearchBot
-Allow: /
-
-User-agent: PerplexityBot
-Allow: /
-
-User-agent: ClaudeBot
-Allow: /
-
-User-agent: Google-Extended
-Allow: /
-
-User-agent: Applebot-Extended
-Allow: /
-
-User-agent: Meta-ExternalAgent
-Allow: /
-
-User-agent: CCBot
-Allow: /
-
-User-agent: Bytespider
-Allow: /
-
-# XML Sitemap
-Sitemap: https://mybrandplease.com/sitemap_index.xml
+Sitemap:  https://mybrandplease.com/sitemap.xml
+# ---------------------------
+# END YOAST BLOCK
