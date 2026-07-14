@@ -26406,7 +26406,7 @@ iframe {
 .working-process-section {
   position: relative;
   overflow: hidden;
-  min-height: 82vh;
+  min-height: 68vh;
   padding-left: clamp(166px, 12vw, 205px);
   background:
     radial-gradient(circle at 16% 18%, rgba(238, 45, 122, 0.14), transparent 28%),
@@ -26418,12 +26418,12 @@ iframe {
 
 .working-process-section__inner {
   position: relative;
-  min-height: 66vh;
+  min-height: 54vh;
   display: grid;
   grid-template-columns: minmax(260px, 31vw) 1fr;
   align-items: start;
   gap: clamp(30px, 4vw, 78px);
-  padding: clamp(52px, 7vh, 78px) 0 clamp(82px, 13vh, 140px) clamp(26px, 5vw, 92px);
+  padding: clamp(38px, 5vh, 58px) 0 clamp(54px, 8vh, 92px) clamp(26px, 5vw, 92px);
 }
 
 .working-process-section__strip {
@@ -26491,7 +26491,7 @@ iframe {
   text-orientation: mixed;
   color: rgba(238, 45, 122, 0.18);
   font-family: Arial, Helvetica, sans-serif;
-  font-size: clamp(32px, 5vw, 50px);
+  font-size: clamp(32px, 5vw, 42px);
   font-weight: 900;
   line-height: 1;
   letter-spacing: 0;
@@ -26583,7 +26583,7 @@ iframe {
 .working-process-card {
   position: relative;
   width: min(52vw, 640px);
-  min-height: clamp(330px, 42vh, 440px);
+  min-height: clamp(300px, 36vh, 390px);
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(170px, 0.82fr);
   grid-template-rows: auto auto 1fr;

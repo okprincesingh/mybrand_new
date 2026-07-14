@@ -514,7 +514,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <?php endforeach; ?>
               </div>
             </div>
-            <div class="working-process-section__steps-bg" aria-hidden="true">mybrandplease.com</div>
+            <!-- <div class="working-process-section__steps-bg" aria-hidden="true">mybrandplease.com</div> -->
           </div>
         </section>
         <!-- Working Process Section End -->
@@ -864,7 +864,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <h2 class="brand-builder__title" id="brandBuilderTitle">
                   The modern<br>
                   way to build a<br>
-                  <span class="brand-builder__changing-word" data-brand-builder-word>skin care</span> brand
+                  <span class="brand-builder__changing-word" data-brand-builder-word>skin care</span> <br>brand
                 </h2>
                 <p class="brand-builder__subtitle">Start free today!</p>
 
@@ -1654,7 +1654,7 @@ document.addEventListener('DOMContentLoaded', function () {
         trigger: section,
         start: 'top 100px',
         end: function () {
-          return '+=' + (window.innerHeight * (cards.length - 1) * 1.08);
+          return '+=' + (window.innerHeight * (cards.length - 1) * 0.72);
         },
         scrub: 1.25,
         pin: true,
