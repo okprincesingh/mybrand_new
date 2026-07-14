@@ -427,6 +427,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
         <!-- Working Process Section Start -->
         <section class="working-process-section" aria-label="Why launch your own brand">
+          <div class="working-process-section__strip" aria-label="Mybrandplease creative services">
+            <div class="working-process-section__strip-services">
+              <?php for ($stripLoop = 0; $stripLoop < 2; $stripLoop++): ?>
+                <span>Mockups</span>
+                <span class="working-process-section__strip-dot">*</span>
+                <span>Creative Strategy</span>
+                <span class="working-process-section__strip-dot">*</span>
+                <span>Brand Identity</span>
+                <span class="working-process-section__strip-dot">*</span>
+                <span>Packaging Design</span>
+                <span class="working-process-section__strip-dot">*</span>
+                <span>Social Media</span>
+                <span class="working-process-section__strip-dot">*</span>
+              <?php endfor; ?>
+            </div>
+            <div class="working-process-section__strip-brand">mybrandplease.com</div>
+          </div>
           <div class="working-process-section__inner">
             <div class="working-process-section__intro">
               <span class="working-process-section__eyebrow">Private Label</span>
@@ -440,48 +457,64 @@ document.addEventListener('DOMContentLoaded', function () {
                 <?php
                   $workingProcessSteps = [
                     [
-                      'step' => 'Step 01',
-                      'title' => 'Higher Profits',
+                      'title_small' => 'Higher',
+                      'title_large' => 'Profits',
                       'text' => 'Our high-quality natural and organic-based skin and hair care products are offered at costs comparable to or lower than leading brands, while you set the sale price.',
                       'href' => 'contact.php',
+                      'image' => 'assets/imgs/home/1.png',
+                      'alt' => 'Profit growth',
                     ],
                     [
-                      'step' => 'Step 02',
-                      'title' => 'Increased Sales',
+                      'title_small' => 'Increased',
+                      'title_large' => 'Sales',
                       'text' => 'Market your own brand with margin and product sale price in your control, giving you stronger flexibility in marketing approach and decisions.',
                       'href' => 'contact.php',
+                      'image' => 'assets/imgs/home/2.png',
+                      'alt' => 'Increased sales',
                     ],
                     [
-                      'step' => 'Step 03',
-                      'title' => 'Client Retention',
+                      'title_small' => 'Client',
+                      'title_large' => 'Retention',
                       'text' => 'Retain customers with your own brand while offering premium product experiences at strong pricing, helping you create brand loyalty.',
                       'href' => 'contact.php',
+                      'image' => 'assets/imgs/home/3.png',
+                      'alt' => 'Customer loyalty',
                     ],
                     [
-                      'step' => 'Step 04',
-                      'title' => 'Brand Equity',
+                      'title_small' => 'Brand',
+                      'title_large' => 'Equity',
                       'text' => 'Building sales of your own skin and hair care brand strengthens your prestige with customers and in the market.',
                       'href' => 'contact.php',
+                      'image' => 'assets/imgs/home/4.png',
+                      'alt' => 'Brand equity',
                     ],
                   ];
                 ?>
                 <?php foreach ($workingProcessSteps as $processStep): ?>
                   <article class="working-process-card">
                     <div class="working-process-card__top">
-                      <span class="working-process-card__step"><?php echo htmlspecialchars($processStep['step'], ENT_QUOTES, 'UTF-8'); ?></span>
-                      <span class="working-process-card__spark" aria-hidden="true">&starf;</span>
-                      <a class="working-process-card__link" href="<?php echo url($processStep['href']); ?>">
+                      <span class="working-process-card__label">
+                        <span class="working-process-card__spark" aria-hidden="true">&starf;</span>
                         <span>Explore</span>
+                      </span>
+                      <a class="working-process-card__link" href="<?php echo url($processStep['href']); ?>">
                         <span aria-hidden="true">&nearr;</span>
+                        <span>Explore</span>
                       </a>
                     </div>
-                    <h3 class="working-process-card__title"><?php echo htmlspecialchars($processStep['title'], ENT_QUOTES, 'UTF-8'); ?></h3>
+                    <span class="working-process-card__image">
+                      <img src="<?php echo url($processStep['image']); ?>" alt="<?php echo htmlspecialchars($processStep['alt'], ENT_QUOTES, 'UTF-8'); ?>">
+                    </span>
+                    <h3 class="working-process-card__title">
+                      <span class="working-process-card__title-small"><?php echo htmlspecialchars($processStep['title_small'], ENT_QUOTES, 'UTF-8'); ?></span>
+                      <span class="working-process-card__title-large"><?php echo htmlspecialchars($processStep['title_large'], ENT_QUOTES, 'UTF-8'); ?></span>
+                    </h3>
                     <p class="working-process-card__text"><?php echo htmlspecialchars($processStep['text'], ENT_QUOTES, 'UTF-8'); ?></p>
                   </article>
                 <?php endforeach; ?>
               </div>
             </div>
-            <div class="working-process-section__steps-bg" aria-hidden="true">Mybrandplease</div>
+            <div class="working-process-section__steps-bg" aria-hidden="true">mybrandplease.com</div>
           </div>
         </section>
         <!-- Working Process Section End -->
@@ -815,23 +848,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         
         <section class="brand-builder section-spacing-120" aria-labelledby="brandBuilderTitle">
-          <div class="brand-builder__strip" aria-label="Mybrandplease creative services">
-            <div class="brand-builder__strip-services">
-              <?php for ($stripLoop = 0; $stripLoop < 2; $stripLoop++): ?>
-                <span>Mockups</span>
-                <span class="brand-builder__strip-dot">*</span>
-                <span>Creative Strategy</span>
-                <span class="brand-builder__strip-dot">*</span>
-                <span>Brand Identity</span>
-                <span class="brand-builder__strip-dot">*</span>
-                <span>Packaging Design</span>
-                <span class="brand-builder__strip-dot">*</span>
-                <span>Social Media</span>
-                <span class="brand-builder__strip-dot">*</span>
-              <?php endfor; ?>
-            </div>
-            <div class="brand-builder__strip-brand">Mybrandplease</div>
-          </div>
           <div class="container rr-container-1350">
             <div class="brand-builder__shell">
               <div class="brand-builder__media">
