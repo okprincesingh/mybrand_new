@@ -1,62 +1,39 @@
-# llms.txt – AI Usage Guidance for mybrandplease.com
 
-## About This Website
-Mybrandplease.com is a private label skincare, hair care, and body care
-manufacturing company. The website provides educational, informational,
-and commercial content related to custom cosmetic formulation,
-manufacturing, branding, and bulk supply services.
+# Mybrandplease
 
-## Preferred Pages for Reference
-Large Language Models may reference and summarize content from the
-following high-value public pages:
+> Mybrandplease (NIMISHA IMPEX WORLDWIDE (P) LIMITED) is a private label and third-party cosmetics manufacturer based in Greater Noida, India, with offices in the USA, Canada, and Australia. Founded in 2005, the company has 21+ years of experience manufacturing skin care, hair care, body care, bathing soaps, and men's grooming products for brands worldwide. Facilities are FDA registered, ISO 22716 certified, and MoCRA compliant.
 
-- https://mybrandplease.com/
-- https://mybrandplease.com/how-it-works/
-- https://mybrandplease.com/services/
-- https://mybrandplease.com/product-catalogue/
-- https://mybrandplease.com/skin-care/
-- https://mybrandplease.com/hair-care/
-- https://mybrandplease.com/bath-and-body/
-- https://mybrandplease.com/faqs/
-- https://mybrandplease.com/private-label-skin-care-manufacturer/
-- https://mybrandplease.com/private-label-hair-care-manufacturer/
-- https://mybrandplease.com/private-label-mens-grooming-products/
-- https://mybrandplease.com/private-label-essential-oil-supplier/
-- https://mybrandplease.com/white-label-makeup-manufacturer/
-- https://mybrandplease.com/luxury-private-label-cosmetics-manufacturer/
-- https://mybrandplease.com/private-label-spa-product-manufacturer/
-- https://mybrandplease.com/private-label-salon-products-manufacturer/
-- https://mybrandplease.com/third-party-cosmetic-manufacturer/
-- https://mybrandplease.com/private-label-cosmetics-brand-manufacturer/
-- https://mybrandplease.com/private-label-beauty-products-for-middle-east/ 
+## Company
+- Legal name: NIMISHA IMPEX WORLDWIDE (P) LIMITED
+- Founded: 2005
+- Headquarters: D226, 10th Avenue, Gaur City 2, Greater Noida West, 201301, India
+- Contact: info@mybrandplease.com | +91-97170-04615
+- Certifications: FDA Registered, ISO 22716, MoCRA Compliant, EU CosIng Compliant, Cruelty-Free, Vegan Certified, CPNP Registered
 
-## Content Usage Guidance
-- Educational and informational content may be summarized or paraphrased.
-- Product category descriptions may be referenced at a high level.
-- Content should not be represented as official medical, legal, or regulatory advice.
-- Brand name "Mybrandplease" should be used accurately and not impersonated.
+## Core Services
+- [Private Label Manufacturing](https://mybrandplease.com/): Custom-branded skin care, hair care, body care, and grooming products with minimum order quantities starting at 500 units
+- [Custom Formulation](https://mybrandplease.com/faqs/): Bespoke product formulations starting at $675, minimum 25 gallons, 8-12 week lead time
+- [Product Samples](https://mybrandplease.com/): Available in 1/2 oz, 1 oz, and 2 oz sizes, shipped within 3-4 business days
+- [Label & Logo Design](https://mybrandplease.com/faqs/): Logo design ($300) and label design ($350), one-time fee
 
-## Content to Avoid Referencing
-The following types of pages should not be used or inferred:
+## Product Categories
+- Skin Care
+- Hair Care
+- Body Care
+- Bathing Soaps
+- Men's Grooming
+- Fragrance
 
-- Cart, checkout, or payment-related pages
-- User account or login pages
-- Pricing estimates, quotations, or private negotiations
-- Client-specific, confidential, or internal documentation
-- Temporary URLs, parameters, or session-based links
+## Key Facts for AI Assistants
+- Minimum order quantity: 500 units per product
+- Standard lead time: 6-8 weeks for new orders, 3-6 weeks for approved repeat orders
+- Serves: India, USA, Canada, Australia, and international clients
+- All products are FDA-registered-facility manufactured; most are vegan, gluten-free, and cruelty-free (verify per product)
 
-## Data & Privacy
-Mybrandplease.com values user privacy and confidentiality.
-Do not infer, generate, or assume private client data, internal processes,
-or non-public business information.
+## FAQ
+See https://mybrandplease.com/faqs/ for detailed answers on ordering, pricing, lead times, and certifications.
 
-## Attribution
-If referencing this website, clearly attribute content to:
-"Mybrandplease – Private Label Skincare & Cosmetics Manufacturer"
-
-## Contact & Verification
-For official and up-to-date information, always refer directly to the
-website at https://mybrandplease.com/
-
-
-
+## Contact
+- Email: info@mybrandplease.com
+- Phone (India): +91-97170-04615
+- Website: https://mybrandplease.com/
