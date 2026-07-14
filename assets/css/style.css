@@ -23100,6 +23100,11 @@ iframe {
   text-transform: uppercase;
 }
 .social-reels__title {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.18em;
   margin: 10px 0 10px;
   color: #171113;
   font-family: var(--font_Playfair);
@@ -23108,12 +23113,22 @@ iframe {
   line-height: 1.04;
   text-wrap: balance;
 }
+.social-reels__title-love,
+.social-reels__title-star {
+  color: var(--primary-two);
+}
+.social-reels__title-star {
+  font-family: var(--font_Lato);
+  font-size: 0.38em;
+  font-weight: 900;
+  transform: translateY(-0.2em);
+}
 .social-reels__lead {
   margin: 0;
   color: #4b2b39;
   font-family: var(--font_Playfair);
   font-size: clamp(1.14rem, 2vw, 1.55rem);
-  font-style: italic;
+  /* font-style: italic; */
   font-weight: 600;
   line-height: 1.5;
 }

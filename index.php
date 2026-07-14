@@ -1164,8 +1164,14 @@ document.addEventListener('DOMContentLoaded', function () {
         <section class="social-reels rr-ov-hidden" id="video-showcase">
           <div class="container rr-container-1350">
             <div class="social-reels__intro">
-              <span class="social-reels__eyebrow">Video Showcase</span>
-              <h2 class="social-reels__title">Watch it! Love it! Build it!</h2>
+              <span class="milestone-highlight__eyebrow">Video Showcase</span>
+              <h2 class="social-reels__title">
+                <span>Watch it!</span>
+                <span class="social-reels__title-star" aria-hidden="true">*</span>
+                <span class="social-reels__title-love">Love it!</span>
+                <span class="social-reels__title-star" aria-hidden="true">*</span>
+                <span>Build it!</span>
+              </h2>
               <p class="social-reels__lead">We don’t just manufacture products. We manufacture dominance.</p>
             </div>
           </div>
