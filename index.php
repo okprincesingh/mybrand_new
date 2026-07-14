@@ -430,15 +430,15 @@ document.addEventListener('DOMContentLoaded', function () {
           <div class="working-process-section__strip" aria-label="Mybrandplease creative services">
             <div class="working-process-section__strip-services">
               <?php for ($stripLoop = 0; $stripLoop < 2; $stripLoop++): ?>
-                <span>Mockups</span>
+                <span>Skin Care</span>
                 <span class="working-process-section__strip-dot">*</span>
-                <span>Creative Strategy</span>
+                <span>Hair Care</span>
                 <span class="working-process-section__strip-dot">*</span>
-                <span>Brand Identity</span>
+                <span>Body Care</span>
                 <span class="working-process-section__strip-dot">*</span>
-                <span>Packaging Design</span>
+                <span>Fragrances</span>
                 <span class="working-process-section__strip-dot">*</span>
-                <span>Social Media</span>
+                <span>Cosmetic Packaging</span>
                 <span class="working-process-section__strip-dot">*</span>
               <?php endfor; ?>
             </div>
@@ -2000,13 +2000,13 @@ document.addEventListener('DOMContentLoaded', function () {
     <div class="hero-marquee__strip hero-marquee__strip--back">
         <div class="hero-marquee__track hero-marquee__track--slow">
             <?php for ($i = 0; $i < 2; $i++): ?>
-                <span>Private Label Skin Care</span>
+                <span>Skin Care</span>
                 <span class="hero-marquee__star">&bull;</span>
-                <span>Custom Formulation</span>
+                <span>Hair Care</span>
                 <span class="hero-marquee__star">&bull;</span>
-                <span>Hair Care Manufacturing</span>
+                <span>Body Care</span>
                 <span class="hero-marquee__star">&bull;</span>
-                <span>Body Care Products</span>
+                <span>Face Care</span>
                 <span class="hero-marquee__star">&bull;</span>
                 <span>Bathing Soaps</span>
                 <span class="hero-marquee__star">&bull;</span>
@@ -2018,17 +2018,17 @@ document.addEventListener('DOMContentLoaded', function () {
     <div class="hero-marquee__strip hero-marquee__strip--front">
         <div class="hero-marquee__track">
             <?php for ($i = 0; $i < 2; $i++): ?>
-                <span>Private Label Cosmetics</span>
-                <span class="hero-marquee__star">&bull;</span>
-                <span>Skin Care</span>
-                <span class="hero-marquee__star">&bull;</span>
-                <span>Hair Care</span>
-                <span class="hero-marquee__star">&bull;</span>
-                <span>Body Care</span>
+                <span>Cosmetics</span>
                 <span class="hero-marquee__star">&bull;</span>
                 <span>Fragrances</span>
                 <span class="hero-marquee__star">&bull;</span>
-                <span>Low MOQ Manufacturing</span>
+                <span>Premium Packaging</span>
+                <span class="hero-marquee__star">&bull;</span>
+                <span>Salon Products</span>
+                <span class="hero-marquee__star">&bull;</span>
+                <span>Spa Products</span>
+                <span class="hero-marquee__star">&bull;</span>
+                <span>Men's Grooming</span>
                 <span class="hero-marquee__star">&bull;</span>
             <?php endfor; ?>
         </div>
