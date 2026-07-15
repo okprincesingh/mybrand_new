@@ -580,7 +580,7 @@ h6 {
     }
 
     .hero-marquee {
-        min-height: 190px;
+        min-height: 160px;
     }
 
     .hero-marquee__strip {
@@ -27218,7 +27218,12 @@ iframe {
   .handshake-section {
     height: auto;
     min-height: 0;
-    padding: 64px 0;
+    padding: 48px 0 34px;
+  }
+
+  .handshake-section + .hero-marquee,
+  .pin-spacer + .hero-marquee {
+    display: none;
   }
 
   .handshake-section__content {

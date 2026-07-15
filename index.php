@@ -970,7 +970,7 @@ document.addEventListener('DOMContentLoaded', function () {
         </script>
 
         <!-- new section -->
-        <section class="gs-process gs-section section-spacing-120 mt-md-4">
+        <section class="gs-process gs-section section-spacing-120 ">
           <div class="petal petal--1"></div>
           <div class="petal petal--2"></div>
           <div class="petal petal--3"></div>
@@ -1115,7 +1115,7 @@ document.addEventListener('DOMContentLoaded', function () {
         <!-- Milestone Section End -->
 
         <!-- Global Presence Map Section Start -->
-        <section class="global-presence section-spacing-120 rr-ov-hidden js-global-presence">
+        <section class="global-presence section-spacing-120 rr-ov-hidden js-global-presence pb-md-0">
           <div class="container-fluid" id="section-map">
             <div class="section-heading wow fadeInUp" data-wow-delay=".2s">
               <h2 class="section-heading__title">~ Our Global Footprint ~</h2>
