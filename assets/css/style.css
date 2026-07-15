@@ -21553,7 +21553,6 @@ iframe {
   overflow: hidden;
   border: 1px solid #e2e5ee;
   box-shadow: 0 20px 36px rgba(18, 25, 41, 0.12);
-  background: #fff;
 }
 .how-works-page .how-works-hero__image-wrap img {
   width: 100%;
@@ -21636,17 +21635,13 @@ iframe {
 
 /* How works feature card override */
 .how-works-page .how-works-hero__feature-card {
-  background: linear-gradient(145deg, #ffffff 0%, #f7f8fc 100%);
-  border: 1px solid #e4e9f4;
-  border-radius: 26px;
+  
   overflow: hidden;
-  box-shadow: 0 20px 38px rgba(18, 25, 41, 0.14);
   transition: transform 0.35s ease, box-shadow 0.35s ease;
   animation: howWorksCardIn 0.7s ease-out both;
 }
 .how-works-page .how-works-hero__feature-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 26px 46px rgba(18, 25, 41, 0.2);
 }
 .how-works-page .how-works-hero__feature-card .how-works-hero__image-wrap {
   border: none;
