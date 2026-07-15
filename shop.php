@@ -19,6 +19,7 @@ $categoryCatalogAliases = [
 ];
 $categoryLandingContent = [
     'skin-care' => [
+        'aliases' => ['skin-care', 'private-label-skin-care-products', 'private-label-skin-care'],
         'title' => 'Private Label Skin Care Products',
         'description' => 'mybrandplease.com offers a wide range of natural and organic private label skin care products that exfoliate, provides whitening & lightening, moisturise, recondition and repair the skin. Choose from a variety of skin care lines that offer specific solutions such as Environmental Defense, Age Defying and care for Blemish Prone skin. Our private label skin care products are made from professional, high-quality ingredients such as Vitamin C, Retinol, Glycolic Acid, Kojic Acid and Peptides.',
         'subtitle' => 'Find Natural Private Label Skin Care Products for your Clients by Shopping our Samples Below!',
@@ -40,19 +41,73 @@ $categoryLandingContent = [
         'description' => 'mybrandplease.com has a specifically tailored line designed to meet the needs of men. Our private label men’s grooming and skin care products include shaving cream, after shave balm and lotions, and skin cream. These products clean and treat skin with herbal extracts and essential oils that infuse the skin with vitamins and minerals. Our products are pure and gentle for everyday use, but powerful enough for even the toughest guys.',
         'subtitle' => 'Create a private label men’s skin care and grooming product line for your brand – order samples today!',
     ],
+    'hair-care' => [
+        'aliases' => ['hair-care', 'private-label-hair-care-products', 'private-label-hair-care'],
+        'children' => [
+            'hair-care-bars',
+            'hair-care-shampoo',
+            'hair-care-conditioner',
+            'hair-care-styling-products',
+            'hair-care-treatment-products',
+        ],
+    ],
 ];
+
+$categoryLandingAliases = [
+    'skin-care' => ['private-label-skin-care-products', 'private-label-skin-care'],
+    'hair-care' => ['private-label-hair-care-products', 'private-label-hair-care'],
+    'body-care' => ['private-label-body-care-products', 'private-label-body-care'],
+    'bathing-soaps' => ['private-label-bathing-soaps', 'private-label-soaps', 'bathing-soap'],
+    'fragrances' => ['private-label-fragrances', 'private-label-perfumes'],
+    'perfumes' => ['private-label-perfumes', 'private-label-fragrances'],
+    'packaging' => ['cosmetic-packaging', 'private-label-packaging'],
+    'especially-for-men' => ['men-s-care', 'private-label-men-care-products', 'private-label-mens-care-products'],
+];
+
+$resolveCategoryLandingKey = static function (?array $category) use ($categoryLandingContent, $categoryLandingAliases): ?string {
+    if (!$category) {
+        return null;
+    }
+
+    $categorySlug = (string) ($category['slug'] ?? '');
+    if (isset($categoryLandingContent[$categorySlug])) {
+        return $categorySlug;
+    }
+
+    $landingKeys = array_unique(array_merge(array_keys($categoryLandingContent), array_keys($categoryLandingAliases)));
+    foreach ($landingKeys as $landingKey) {
+        $aliases = array_merge(
+            [(string) $landingKey],
+            (array) ($categoryLandingContent[$landingKey]['aliases'] ?? []),
+            (array) ($categoryLandingAliases[$landingKey] ?? [])
+        );
+        if (catalog_item_matches_aliases($category, $aliases)) {
+            return (string) $landingKey;
+        }
+    }
+
+    return null;
+};
+
+$resolveCategoryLandingContent = static function (?array $category) use ($categoryLandingContent, $resolveCategoryLandingKey): ?array {
+    $landingKey = $resolveCategoryLandingKey($category);
+    return $landingKey !== null ? ($categoryLandingContent[$landingKey] ?? null) : null;
+};
+
 $activeCategory = $category !== '' ? catalog_find_category($category) : null;
 $activeSubcategory = null;
 $categorySpecificHeading = '';
 $categorySpecificSubtitle = '';
 $activeCategoryLanding = null;
 $catalogSourceCategory = $activeCategory;
+$activeCategoryLandingKey = null;
 if ($activeCategory && !empty($activeCategory['id'])) {
     $cid = (int) $activeCategory['id'];
     $categorySpecificHeading = (string) (cms_get_setting('category_shop_heading_' . $cid, '') ?? '');
     $categorySpecificSubtitle = (string) (cms_get_setting('category_shop_subtitle_' . $cid, '') ?? '');
-    $activeCategoryLanding = $categoryLandingContent[(string) ($activeCategory['slug'] ?? '')] ?? null;
-    $catalogSourceSlug = $categoryCatalogAliases[(string) ($activeCategory['slug'] ?? '')] ?? '';
+    $activeCategoryLandingKey = $resolveCategoryLandingKey($activeCategory);
+    $activeCategoryLanding = $resolveCategoryLandingContent($activeCategory);
+    $catalogSourceSlug = $categoryCatalogAliases[(string) ($activeCategory['slug'] ?? '')] ?? ($activeCategoryLandingKey ?? '');
     if ($catalogSourceSlug !== '') {
         $resolvedSourceCategory = catalog_find_category($catalogSourceSlug);
         if ($resolvedSourceCategory) {
