@@ -895,7 +895,7 @@ document.addEventListener('DOMContentLoaded', function () {
                   way to build a<br>
                   <span class="brand-builder__changing-word" data-brand-builder-word>skin care</span> <br>brand
                 </h2>
-                <p class="brand-builder__subtitle">Start free today!</p>
+                <p class="brand-builder__subtitle">Start Free Today! - Lowest MOQ | Premium Packaging | World-Class Manufacturing</p>
 
                 <div class="brand-builder__actions">
                   <a class="brand-builder__btn brand-builder__btn--primary" href="<?php echo url('shop.php'); ?>">Explore Private Label</a>
@@ -936,10 +936,10 @@ document.addEventListener('DOMContentLoaded', function () {
               { word: 'bath products', image: '<?php echo url('assets/imgs/modern/4.jpg'); ?>', alt: 'Bath products category', showTitle: true },
               { word: 'styling products', image: '<?php echo url('assets/imgs/modern/5.jpg'); ?>', alt: 'Styling products category', showTitle: true },
               { word: 'wellness products', image: '<?php echo url('assets/imgs/modern/6.jpg'); ?>', alt: 'Wellness products category', showTitle: true },
-              { word: 'facial masks', image: '<?php echo url('assets/imgs/modern/7.jpg'); ?>', alt: 'Facial masks category', showTitle: true },
+              { word: 'nature inspired', image: '<?php echo url('assets/imgs/modern/7.jpg'); ?>', alt: 'Facial masks category', showTitle: true },
               { word: 'essential oils', image: '<?php echo url('assets/imgs/modern/8.jpg'); ?>', alt: 'Essential oils category', showTitle: true },
               { word: "men's grooming", image: '<?php echo url('assets/imgs/modern/9.jpg'); ?>', alt: "Men's grooming category", showTitle: true },
-              { word: 'lip care', image: '<?php echo url('assets/imgs/modern/10.jpg'); ?>', alt: 'Lip balm and scrub category', showTitle: true },
+              { word: 'lip balm & scrub', image: '<?php echo url('assets/imgs/modern/10.jpg'); ?>', alt: 'Lip balm and scrub category', showTitle: true },
               { word: 'handmade soaps', image: '<?php echo url('assets/imgs/modern/11.jpg'); ?>', alt: 'Handmade soaps category', showTitle: true },
               { word: 'medicated soaps', image: '<?php echo url('assets/imgs/modern/12.jpg'); ?>', alt: 'Medicated soaps category', showTitle: true },
               { word: 'beauty soaps', image: '<?php echo url('assets/imgs/modern/13.jpg'); ?>', alt: 'Beauty soaps category', showTitle: true },
@@ -2001,7 +2001,7 @@ document.addEventListener('DOMContentLoaded', function () {
     window.gsap.set(content, { autoAlpha: 0, x: 130, y: 74, scale: 0.82, force3D: true });
     window.gsap.set(actions, { autoAlpha: 0, y: 34, scale: 0.9, force3D: true });
     window.gsap.set(scrollHint, { autoAlpha: 0, y: 24, force3D: true });
-    window.gsap.set(topHand, { xPercent: 30, yPercent: 35, rotate: 2.6, force3D: true });
+    window.gsap.set(topHand, { xPercent: 30, yPercent: 30, rotate: 2.6, force3D: true });
     window.gsap.set(bottomHand, { xPercent: -35, yPercent: -38, rotate: -2.2, force3D: true });
     window.gsap.set(leftCard, { autoAlpha: 0, xPercent: 112, yPercent: 74, rotate: -1.5, scale: 0.72, force3D: true });
     window.gsap.set(rightCard, { autoAlpha: 0, xPercent: -105, yPercent: 82, rotate: 1.5, scale: 0.72, force3D: true });

@@ -457,14 +457,14 @@ h6 {
 }
 
 .hero-marquee__strip--back {
-    top: 58px;
+    top: 65px;
     background: rgba(255, 239, 242, 0.94);
     transform: rotate(4deg);
     z-index: 1;
 }
 
 .hero-marquee__strip--front {
-    top: 82px;
+    top: 65px;
     background: rgba(234, 242, 245, 0.94);
     transform: rotate(-4deg);
     z-index: 2;
@@ -26057,10 +26057,10 @@ iframe {
 
 .brand-builder__shell {
   display: grid;
-  grid-template-columns: minmax(250px, 0.78fr) minmax(300px, 1.05fr);
-  gap: clamp(28px, 4vw, 56px);
+  grid-template-columns: minmax(250px, 0.68fr) minmax(300px, 1.25fr);
+  gap: clamp(28px, 4vw, 40px);
   align-items: center;
-  max-width: 1180px;
+  max-width: 1280px;
   margin: 0 auto;
 }
 
@@ -26229,7 +26229,7 @@ iframe {
   margin: 0;
   color: var(--text-color-one);
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(40px, 5vw, 76px);
+  font-size: clamp(40px, 4.5vw, 76px);
   line-height: 0.96;
   letter-spacing: 0;
   max-width: 720px;
@@ -26250,7 +26250,7 @@ iframe {
 .brand-builder__subtitle {
   margin: 18px 0 20px;
   color: var(--text-color-one);
-  font-size: 22px;
+  font-size: 18px;
   line-height: 1.35;
 }
 
