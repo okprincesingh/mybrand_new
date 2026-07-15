@@ -4255,15 +4255,16 @@ input.main-search-input::placeholder {
 
 .header-area.header-layoutone {
   background: transparent;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 99;
+  width: 100%;
+  z-index: 999;
   border-bottom: none;
 }
 .header-area.header-layoutone.header-sticky {
-  position: fixed;
+  position: fixed !important;
   width: 100%;
 }
 .header-area.header-layoutone .header-main {
@@ -4871,7 +4872,7 @@ body {
   z-index: 999;
 }
 .header-area.transformed {
-  transform: translateY(-100%);
+  transform: translateY(0);
   transition: transform 0.3s ease;
 }
 

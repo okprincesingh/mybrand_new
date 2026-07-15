@@ -109,12 +109,13 @@ function render_why_choose_page(string $slug): void
                 <div class="private-label-sidebar__social">
                   <h3>~Follow Us On Social Network~</h3>
                   <ul class="private-label-sidebar__social-list">
-                    <li><a href="https://www.facebook.com/mybrandpleaseindia/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a></li>
-                    <li><a href="https://www.instagram.com/mybrandpleaseindia/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a></li>
-                    <li><a href="https://www.linkedin.com/company/mybrandplease/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a></li>
-                    <li><a href="https://in.pinterest.com/mybrandplease/" target="_blank" rel="noopener noreferrer" aria-label="Pinterest"><i class="fa-brands fa-pinterest-p"></i></a></li>
-                    <li><a href="https://x.com/mybrandplease" target="_blank" rel="noopener noreferrer" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a></li>
-                    <li><a href="https://www.youtube.com/@mybrandplease" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a></li>
+                    <li><a href="<?php echo esc_html(url('https://www.youtube.com/@mybrandplease')); ?>" target="_blank" rel="noopener noreferrer" aria-label="Youtube"><i class="fa-brands fa-youtube"></i></a></li>
+                    <li><a href="<?php echo esc_html(url('https://www.facebook.com/mybrandplease')); ?>" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a></li>
+                    <li><a href="<?php echo esc_html(url('https://www.instagram.com/mybrandplease_/')); ?>" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a></li>
+                    <li><a href="https://www.tiktok.com/@mybrandplease.com" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a></li>
+                    <li><a href="<?php echo esc_html(url('https://x.com/mybrandplease')); ?>" target="_blank" rel="noopener noreferrer" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a></li>
+                    <li><a href="<?php echo esc_html(url('https://www.linkedin.com/in/mybrandplease')); ?>" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a></li>
+                    <li><a href="<?php echo esc_html(url('https://in.pinterest.com/mybrandplease/')); ?>" target="_blank" rel="noopener noreferrer" aria-label="Pinterest"><i class="fa-brands fa-pinterest-p"></i></a></li>
                   </ul>
                 </div>
 
