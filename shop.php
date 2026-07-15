@@ -1,11 +1,46 @@
 <?php
 require_once __DIR__ . '/includes/catalog.php';
 require_once __DIR__ . '/includes/cms.php';
+require_once __DIR__ . '/includes/content-loader.php';
 
 $category = isset($_GET['category']) ? trim((string) $_GET['category']) : '';
 $subcategory = isset($_GET['subcategory']) ? rawurldecode(trim((string) $_GET['subcategory'])) : '';
 $search = isset($_GET['q']) ? trim((string) $_GET['q']) : '';
 $isSearchResults = $search !== '';
+
+$renderShopIntroHtml = static function (string $html, array $skipPhrases = []): string {
+    $html = sanitize_rich_html($html);
+    if ($html === '') {
+        return '';
+    }
+
+    $html = preg_replace('/^\s*<h[1-6]\b[^>]*>[\s\S]*?<\/h[1-6]>\s*/i', '', $html) ?? $html;
+    $blockContains = static function (string $block, string $needle): bool {
+        $text = html_entity_decode(strip_tags($block), ENT_QUOTES, 'UTF-8');
+        $text = preg_replace('/\s+/', ' ', $text) ?? $text;
+        return stripos($text, $needle) !== false;
+    };
+
+    foreach ($skipPhrases as $phrase) {
+        $phrase = trim((string) $phrase);
+        if ($phrase === '') {
+            continue;
+        }
+
+        $html = preg_replace_callback('/\s*<h[1-6]\b[^>]*>[\s\S]*?<\/h[1-6]>\s*/i', static function (array $match) use ($phrase, $blockContains): string {
+            return $blockContains($match[0], $phrase) ? ' ' : $match[0];
+        }, $html) ?? $html;
+    }
+
+    $html = preg_replace_callback('/\s*<p\b[^>]*>[\s\S]*?<\/p>\s*/i', static function (array $match) use ($blockContains): string {
+        return $blockContains($match[0], 'order samples') ? ' ' : $match[0];
+    }, $html) ?? $html;
+    $html = preg_replace_callback('/\s*<h[1-6]\b[^>]*>[\s\S]*?<\/h[1-6]>\s*/i', static function (array $match) use ($blockContains): string {
+        return $blockContains($match[0], 'shop') && $blockContains($match[0], 'below') ? ' ' : $match[0];
+    }, $html) ?? $html;
+
+    return trim($html);
+};
 
 $categories = catalog_categories();
 $shopLandingTitle = cms_get_setting('shop_landing_title', 'Build Your Own Private Label Personal Care Products') ?? 'Build Your Own Private Label Personal Care Products';
@@ -306,22 +341,23 @@ include 'includes/header.php';
   <section class="category-section is-visible section-spacing-120 rr-ov-hidden pt-5">
     <div class="container rr-container-1350">
       <div class="shop-showcase__head text-center">
-        <h2 class="shop-showcase__title"><?php echo htmlspecialchars((string) ($categorySpecificHeading !== '' ? $categorySpecificHeading : (($activeCategoryLanding['title'] ?? '') !== '' ? $activeCategoryLanding['title'] : $activeCategory['name'])), ENT_QUOTES, 'UTF-8'); ?></h2>
+        <?php
+          $categoryHeading = (string) ($categorySpecificHeading !== '' ? $categorySpecificHeading : (($activeCategoryLanding['title'] ?? '') !== '' ? $activeCategoryLanding['title'] : $activeCategory['name']));
+          $categorySubhead = (string) ($categorySpecificSubtitle !== '' ? $categorySpecificSubtitle : (($activeCategoryLanding['subtitle'] ?? '') !== '' ? $activeCategoryLanding['subtitle'] : $shopCategorySubtitle));
+        ?>
+        <h2 class="shop-showcase__title"><?php echo htmlspecialchars($categoryHeading, ENT_QUOTES, 'UTF-8'); ?></h2>
         <div class="shop-showcase__divider"></div>
-        <p class="shop-showcase__desc">
+        <div class="shop-showcase__desc">
           <?php
             $catDesc = trim((string) ($activeCategory['description'] ?? ''));
             $resolvedCategoryDescription = (string) ($activeCategoryLanding['description'] ?? '');
-            echo htmlspecialchars(
-              $resolvedCategoryDescription !== ''
-                ? $resolvedCategoryDescription
-                : ($catDesc !== '' ? $catDesc : ('Explore our complete ' . $activeCategory['name'] . ' range and build your private label catalog with confidence.')),
-              ENT_QUOTES,
-              'UTF-8'
-            );
+            $categoryDescription = $catDesc !== ''
+              ? $catDesc
+              : ($resolvedCategoryDescription !== '' ? $resolvedCategoryDescription : ('Explore our complete ' . $activeCategory['name'] . ' range and build your private label catalog with confidence.'));
+            echo $renderShopIntroHtml($categoryDescription, [$categoryHeading, $categorySubhead]);
           ?>
-        </p>
-        <h3 class="shop-showcase__subhead"><?php echo htmlspecialchars((string) ($categorySpecificSubtitle !== '' ? $categorySpecificSubtitle : (($activeCategoryLanding['subtitle'] ?? '') !== '' ? $activeCategoryLanding['subtitle'] : $shopCategorySubtitle)), ENT_QUOTES, 'UTF-8'); ?></h3>
+        </div>
+        <h3 class="shop-showcase__subhead"><?php echo htmlspecialchars($categorySubhead, ENT_QUOTES, 'UTF-8'); ?></h3>
       </div>
 
       <?php if (!empty($catalogSourceCategory['subcategories'])): ?>
@@ -352,12 +388,12 @@ include 'includes/header.php';
         <div class="col-lg-6" data-aos="fade-left">
           <div class="shop-sub-detail__content">
             <h2><?php echo htmlspecialchars((string) $activeSubcategory['name'], ENT_QUOTES, 'UTF-8'); ?></h2>
-            <p>
+            <div class="shop-sub-detail__description">
               <?php
                 $subDesc = trim((string) ($activeSubcategory['description'] ?? ''));
-                echo nl2br(htmlspecialchars($subDesc !== '' ? $subDesc : (string) $shopSubcategoryFallbackDescription, ENT_QUOTES, 'UTF-8'));
+                echo $renderShopIntroHtml($subDesc !== '' ? $subDesc : (string) $shopSubcategoryFallbackDescription, [(string) $activeSubcategory['name']]);
               ?>
-            </p>
+            </div>
           </div>
         </div>
       </div>
