@@ -178,11 +178,15 @@ include __DIR__ . '/_layout_top.php';
 
 <?php if ($totalPages > 1): ?>
   <div class="modern-pagination">
-    <?php for ($p = 1; $p <= $totalPages; $p++): ?>
+    <?php foreach (admin_pagination_items($page, $totalPages) as $p): ?>
+      <?php if ($p === 'ellipsis'): ?>
+        <span class="page-item page-ellipsis"><span class="page-link">&hellip;</span></span>
+        <?php continue; ?>
+      <?php endif; ?>
       <a class="page-item <?= $p === $page ? 'active' : '' ?>" href="?<?= http_build_query(['q'=>$q,'category'=>$category,'status'=>$status,'sort'=>$sort,'page'=>$p]) ?>">
         <span class="page-link"><?= $p ?></span>
       </a>
-    <?php endfor; ?>
+    <?php endforeach; ?>
   </div>
 <?php endif; ?>
 <?php include __DIR__ . '/_layout_bottom.php'; ?>

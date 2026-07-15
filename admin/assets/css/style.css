@@ -748,43 +748,56 @@ textarea.form-control {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 0.55rem;
-  margin-top: 1.25rem;
-  padding: 0.9rem;
-  border-radius: var(--radius-lg);
+  flex-wrap: nowrap;
+  gap: 0.4rem;
+  width: max-content;
+  max-width: 100%;
+  margin: 1.25rem auto 0;
+  padding: 0.5rem;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  border-radius: 14px;
   border: 1px solid var(--border);
-  background: linear-gradient(180deg, var(--surface), var(--surface-soft));
-  box-shadow: var(--shadow-sm);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(12px);
+}
+.modern-pagination::-webkit-scrollbar {
+  height: 6px;
+}
+.modern-pagination::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: #cbd5e1;
 }
 .page-item {
   text-decoration: none;
+  flex: 0 0 auto;
 }
 .page-item .page-link {
-  min-width: 40px;
-  height: 40px;
-  padding: 0 0.85rem;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  color: var(--text);
-  background: var(--surface);
+  min-width: 38px;
+  height: 38px;
+  padding: 0 0.78rem;
+  border-radius: 11px;
+  border: 1px solid transparent;
+  color: #334155;
+  background: transparent;
   transition: var(--transition);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.86rem;
-  font-weight: 600;
+  font-size: 0.84rem;
+  font-weight: 700;
   line-height: 1;
 }
 .page-item.active .page-link {
   background: linear-gradient(135deg, var(--primary), var(--primary-strong));
   border-color: var(--primary);
   color: #fff;
-  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.35);
+  box-shadow: 0 10px 22px rgba(37, 99, 235, 0.32);
 }
 .page-item .page-link:hover {
-  background: var(--surface-soft);
-  border-color: var(--primary);
+  background: var(--primary-soft);
+  border-color: rgba(37, 99, 235, 0.18);
   color: var(--primary);
   transform: translateY(-1px);
 }
@@ -792,6 +805,9 @@ textarea.form-control {
   pointer-events: none;
   color: var(--muted);
   background: transparent;
+  border-color: transparent;
+  min-width: 26px;
+  padding: 0 0.25rem;
 }
 
 /* Sidebar Enhancements */
@@ -968,14 +984,15 @@ textarea.form-control {
 @media (max-width: 576px) {
   .modern-pagination {
     justify-content: flex-start;
-    padding: 0.7rem;
-    gap: 0.45rem;
+    width: 100%;
+    padding: 0.45rem;
+    gap: 0.35rem;
   }
   .page-item .page-link {
-    min-width: 36px;
-    height: 36px;
-    padding: 0 0.65rem;
-    font-size: 0.8rem;
+    min-width: 34px;
+    height: 34px;
+    padding: 0 0.6rem;
+    font-size: 0.78rem;
   }
   .widget-actions { margin-top: 1rem; justify-content: flex-end; }
   .btn-modern { padding: 0.6rem 1.2rem; font-size: 0.8rem; }
