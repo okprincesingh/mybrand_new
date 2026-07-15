@@ -16,6 +16,44 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
 }
 
 ?>
+<section class="hero-marquee" aria-label="Private label manufacturing services">
+    <div class="hero-marquee__strip hero-marquee__strip--back">
+        <div class="hero-marquee__track hero-marquee__track--slow">
+            <?php for ($i = 0; $i < 2; $i++): ?>
+                <span>Skin Care</span>
+                <span class="hero-marquee__star">&bull;</span>
+                <span>Hair Care</span>
+                <span class="hero-marquee__star">&bull;</span>
+                <span>Body Care</span>
+                <span class="hero-marquee__star">&bull;</span>
+                <span>Face Care</span>
+                <span class="hero-marquee__star">&bull;</span>
+                <span>Bathing Soaps</span>
+                <span class="hero-marquee__star">&bull;</span>
+                <span>Cosmetic Packaging</span>
+                <span class="hero-marquee__star">&bull;</span>
+            <?php endfor; ?>
+        </div>
+    </div>
+    <div class="hero-marquee__strip hero-marquee__strip--front">
+        <div class="hero-marquee__track">
+            <?php for ($i = 0; $i < 2; $i++): ?>
+                <span>Cosmetics</span>
+                <span class="hero-marquee__star">&bull;</span>
+                <span>Fragrances</span>
+                <span class="hero-marquee__star">&bull;</span>
+                <span>Premium Packaging</span>
+                <span class="hero-marquee__star">&bull;</span>
+                <span>Salon Products</span>
+                <span class="hero-marquee__star">&bull;</span>
+                <span>Spa Products</span>
+                <span class="hero-marquee__star">&bull;</span>
+                <span>Men's Grooming</span>
+                <span class="hero-marquee__star">&bull;</span>
+            <?php endfor; ?>
+        </div>
+    </div>
+</section>
 
             <footer class="pl-footer pl-footer--v2 rr-ov-hidden">
         <div class="container rr-container-1350">

@@ -491,6 +491,7 @@ include 'includes/header.php';
     font-family: var(--font_Lato);
     font-size: 17px;
     line-height: 1.82;
+    text-align: justify;
   }
   .shop-sub-detail__description h1,
   .shop-sub-detail__description h2,

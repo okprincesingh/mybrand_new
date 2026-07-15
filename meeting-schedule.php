@@ -23,7 +23,7 @@ $defaultTimezone = isset($_GET['timezone']) ? $_GET['timezone'] : 'Asia/Kolkata'
 
 
 /* Main Container Wrapper */
-.cal-section { padding: 50px 0; }
+.cal-section { padding: 50px 0; margin-top: 5rem; }
 .cal-wrapper {
     background: #fff;
     border-radius: 12px;

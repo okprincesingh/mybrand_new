@@ -146,6 +146,21 @@ p {
   color: var(--text-color-one);
 }
 
+main p,
+.cms-richtext p,
+.cms-richtext li {
+  text-align: justify;
+}
+
+main .text-center p,
+main p.text-center,
+.cms-richtext .text-center,
+.text-center .cms-richtext p {
+  text-align: center;
+}
+.cms-richtext{
+  text-align: justify;
+}
 strong {
   font-weight: 500;
 }
@@ -428,7 +443,7 @@ h6 {
 
 .hero-marquee {
     position: relative;
-    min-height: 190px;
+    min-height: 300px;
     overflow: hidden;
     background: black;
     isolation: isolate;
@@ -457,14 +472,14 @@ h6 {
 }
 
 .hero-marquee__strip--back {
-    top: 65px;
+    top: 110px;
     background: rgba(255, 239, 242, 0.94);
     transform: rotate(4deg);
     z-index: 1;
 }
 
 .hero-marquee__strip--front {
-    top: 65px;
+    top: 110px;
     background: rgba(234, 242, 245, 0.94);
     transform: rotate(-4deg);
     z-index: 2;
