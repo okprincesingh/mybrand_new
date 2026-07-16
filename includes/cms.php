@@ -183,7 +183,6 @@ function cms_build_default_header_menu(): array
         ['label' => 'Bathing Soaps', 'aliases' => ['bathing-soaps']],
         ['label' => 'Especially For Men', 'aliases' => ['especially-for-men', 'men-s-care']],
         ['label' => 'Aerosols & Perfumes', 'aliases' => ['aerosols', 'aerosols-parfumes', 'aerosols-perfumes', 'fragrances', 'perfumes']],
-        ['label' => 'Beauty Products', 'aliases' => ['beauty-products']],
     ];
     foreach ($productMenuConfig as $menuEntry) {
         $resolvedCategory = catalog_find_category_by_aliases((array) ($menuEntry['aliases'] ?? []));

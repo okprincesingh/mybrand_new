@@ -523,7 +523,7 @@ document.addEventListener('DOMContentLoaded', function () {
         
 
         <section class="category-section section-spacing-120 rr-ov-hidden pt-0 js-category-showcase">
-          <div class="container rr-container-1350">
+          <div class="container ">
             <div class="section-heading category-section__heading wow fadeInUp" data-wow-delay=".2s">
               <h2 class="section-heading__title">Nature Powered Ingredients</h2>
             </div>
@@ -696,7 +696,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         <section class="category1 section-spacing-120 rr-ov-hidden js-category-entrance">
           <div class="category1-wrapper">
-            <div class="container rr-container-1350">
+            <div class="container ">
               <!-- <div class="section-heading wow fadeInRight" data-wow-delay="0.3s">
                 <h2 class="section-heading__title">OUR CATEGORY</h2>
               </div> -->
@@ -877,7 +877,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         
         <section class="brand-builder section-spacing-120" aria-labelledby="brandBuilderTitle">
-          <div class="container rr-container-1350">
+          <div class="container ">
             <div class="brand-builder__shell">
               <div class="brand-builder__media">
                 <img
@@ -976,7 +976,7 @@ document.addEventListener('DOMContentLoaded', function () {
           <div class="petal petal--3"></div>
           <div class="petal petal--4"></div>
 
-          <div class="gs-process__inner gs-inner">
+          <div class="gs-process__inner gs-inner container">
             <h1 class="gs-process__title gs-title">~ <em>Here's How To Get Started</em> ~</h1>
 
             <p class="gs-process__subtitle gs-subtitle">
@@ -1191,7 +1191,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
        
         <section class="social-reels rr-ov-hidden" id="video-showcase">
-          <div class="container rr-container-1350">
+          <div class="container ">
             <div class="social-reels__intro">
               <span class="milestone-highlight__eyebrow">Video Showcase</span>
               <h2 class="social-reels__title">
@@ -1280,7 +1280,7 @@ document.addEventListener('DOMContentLoaded', function () {
             </button>
             <div class="social-reels__scrollbar swiper-scrollbar" aria-label="Video showcase slider"></div>
           </div>
-          <div class="container rr-container-1350">
+          <div class="container ">
             <div class="social-reels__outro">
               <p class="social-reels__tagline">mybrandplease.com - turns your ambition into artistry, and your brand into a lasting legacy.</p>
             </div>
@@ -1566,7 +1566,7 @@ document.addEventListener('DOMContentLoaded', function () {
         </script>
 
         <!-- Office Section Start -->
-        <section class="office-showcase section-spacing-120 rr-ov-hidden">
+        <section class=" section-spacing-120 rr-ov-hidden">
           <div class="container">
             <div class="office-showcase__intro wow fadeInUp" data-wow-delay=".3s">
               <span class="office-showcase__eyebrow">Global Presence</span>
@@ -1717,7 +1717,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         <!-- CTA Section Start -->
         <section class="cta-section section-spacing-120 rr-ov-hidden">
-          <div class="container rr-container-1350">
+          <div class="container ">
             <div class="cta-wrapper">
               <div class="row align-items-center bg-white rounded-4 text-center">
                 
