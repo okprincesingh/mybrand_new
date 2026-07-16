@@ -181,7 +181,7 @@ include 'includes/header.php';
 
 body { font-family: 'Inter', sans-serif; background: #fff; }
 
-.det-page { padding: 40px 0; }
+.det-page { padding: 40px 0; margin-top:5rem; }
 .det-shell {
     background: #fff; 
     border: 1px solid var(--border-color); 
