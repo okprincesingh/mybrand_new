@@ -1,11 +1,27 @@
 
 User-agent: *
-Disallow: /wp-admin/
-Disallow: /wp-includes/
-Disallow: /cgi-bin/
-Disallow: /?s=
-Disallow: /wp-content/uploads/wpo/wpo-plugins-tables-list.json
-Allow: /wp-admin/admin-ajax.php
+Disallow: /admin/
+Disallow: /api/
+Disallow: /database/
+Disallow: /data/
+Disallow: /includes/
+Disallow: /PHPMailer/
+Disallow: /scripts/
+Disallow: /storage/
+Disallow: /uploads-old/
+Disallow: /vendor/
+Disallow: /.env
+Disallow: /.git/
+Disallow: /.htaccess
+Disallow: /composer.json
+Disallow: /composer.lock
+Disallow: /README.md
+Disallow: /*.zip$
+Disallow: /*.sql$
+Disallow: /*.log$
+Disallow: /*.tmp$
+Disallow: /*.bak$
+Disallow: /*.docx$
 
 # AI / LLM Crawlers
 User-agent: GPTBot
@@ -39,4 +55,4 @@ User-agent: Bytespider
 Allow: /
 
 # XML Sitemap
-Sitemap: https://mybrandplease.com/sitemap_index.xml
+Sitemap: https://mybrandplease.com/sitemap.xml
