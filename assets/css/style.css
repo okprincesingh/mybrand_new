@@ -26141,6 +26141,24 @@ iframe {
   background: var(--white);
 }
 
+.brand-builder__media::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: -35%;
+  background: linear-gradient(135deg, transparent 34%, rgba(255, 255, 255, 0.18) 43%, rgba(255, 255, 255, 0.82) 50%, rgba(255, 255, 255, 0.22) 57%, transparent 68%);
+  opacity: 0;
+  transform: translate(-42%, -42%) rotate(0deg);
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.brand-builder__media:hover::after {
+  opacity: 1;
+  animation: brandBuilderImageShine 1.15s ease forwards;
+}
+
 .brand-builder__strip {
   position: absolute;
   z-index: 2;
@@ -26277,6 +26295,16 @@ iframe {
 
   to {
     transform: translateY(-50%);
+  }
+}
+
+@keyframes brandBuilderImageShine {
+  from {
+    transform: translate(-42%, -42%) rotate(0deg);
+  }
+
+  to {
+    transform: translate(42%, 42%) rotate(0deg);
   }
 }
 
