@@ -20,7 +20,7 @@ $time = isset($requestData['time']) && is_string($requestData['time']) ? trim($r
 $timezone = isset($requestData['timezone']) && is_string($requestData['timezone']) ? trim($requestData['timezone']) : '';
 
 if ($date === '' || $time === '' || $timezone === '') {
-    header('Location: ' . url('meeting-schedule.php'));
+    header('Location: ' . url('meeting-schedule'));
     exit;
 }
 
@@ -40,7 +40,7 @@ if (preg_match('/^\d{1,2}:\d{2}(am|pm)$/i', $time)) {
 $dateTime = DateTime::createFromFormat('Y-m-d H:i', $date . ' ' . $time, $tzObject);
 
 if (!$dateTime) {
-    header('Location: ' . url('meeting-schedule.php'));
+    header('Location: ' . url('meeting-schedule'));
     exit;
 }
 
@@ -242,7 +242,7 @@ body { font-family: 'Inter', sans-serif; background: #fff; }
             <div class="row g-0">
                 <div class="col-lg-4">
                     <div class="det-left">
-                        <a href="<?= url('meeting-schedule.php') ?>" class="det-back-btn">
+                        <a href="<?= url('meeting-schedule') ?>" class="det-back-btn">
                             <i class="fa-solid fa-arrow-left"></i>
                         </a>
                         
@@ -298,7 +298,7 @@ body { font-family: 'Inter', sans-serif; background: #fff; }
                             <?php endif; ?>
                         <?php endif; ?>
 
-                        <form method="post" action="<?= url('meeting-details.php') ?>" id="meetingDetailsForm">
+                        <form method="post" action="<?= url('meeting-details') ?>" id="meetingDetailsForm">
                             <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
                             <input type="hidden" name="date" value="<?= e($date) ?>">
                             <input type="hidden" name="time" value="<?= e($time) ?>">
