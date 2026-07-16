@@ -4287,9 +4287,9 @@ input.main-search-input::placeholder {
   border: none;
   background: transparent;
 }
-.header-area.header-layoutone .container {
+/* .header-area.header-layoutone .container {
   max-width: 1450px;
-}
+} */
 @media only screen and (max-width: 991px) {
   .header-area.header-layoutone .header-main {
     padding: 0.875rem 0;
@@ -26482,23 +26482,38 @@ iframe {
   left: clamp(18px, 8.2vw, 125px);
   width: clamp(150px, 11vw, 185px);
   background:
-    linear-gradient(90deg, rgba(255, 255, 255, 0.88) 0 36%, rgba(255, 239, 242, 0.96) 36% 100%),
-    linear-gradient(180deg, var(--primary), #fff7fa 48%, var(--secondary));
+    linear-gradient(90deg, rgba(255, 255, 255, 0.9) 0 32%, rgba(255, 239, 242, 0.97) 32% 100%),
+    linear-gradient(180deg, var(--primary) 0%, #fff7fa 46%, var(--secondary) 100%);
   color: var(--primary-two);
   overflow: hidden;
   isolation: isolate;
   box-shadow: inset -1px 0 0 rgba(238, 45, 122, 0.12), 18px 0 36px rgba(238, 45, 122, 0.08);
+  transform: translateZ(0);
 }
 
 .working-process-section__strip::before {
   position: absolute;
-  /* content: ""; */
+  content: "";
   inset: 0;
   background:
-    radial-gradient(circle at 24% 16%, rgba(238, 45, 122, 0.5) 0 2px, transparent 3px),
-    radial-gradient(circle at 76% 27%, rgba(238, 45, 122, 0.22) 0 2px, transparent 3px),
+    radial-gradient(circle at 24% 16%, rgba(238, 45, 122, 0.42) 0 2px, transparent 3px),
+    radial-gradient(circle at 76% 27%, rgba(238, 45, 122, 0.2) 0 2px, transparent 3px),
     linear-gradient(180deg, rgba(238, 45, 122, 0.12), transparent 32%, rgba(234, 242, 245, 0.38));
-  opacity: 0.9;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.working-process-section__strip::after {
+  content: "";
+  position: absolute;
+  z-index: 5;
+  inset: -28% 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.68) 46%, transparent 68%);
+  mix-blend-mode: screen;
+  opacity: 0.7;
+  transform: translateY(-58%);
+  animation: workingProcessStripSweep 5.8s ease-in-out infinite;
+  pointer-events: none;
 }
 
 .working-process-section__strip-services {
@@ -26511,13 +26526,14 @@ iframe {
   gap: 20px;
   writing-mode: vertical-rl;
   text-orientation: mixed;
-  animation: brandBuilderStripMarquee 20s linear infinite;
+  animation: workingProcessStripMarquee 16s linear infinite;
   color: var(--primary-two);
   font-size: clamp(16px, 1.25vw, 21px);
   font-weight: 800;
   line-height: 1;
   white-space: nowrap;
   text-shadow: none;
+  will-change: transform;
 }
 
 .working-process-section__strip-dot {
@@ -26546,6 +26562,8 @@ iframe {
   text-transform: none;
   white-space: nowrap;
   text-shadow: none;
+  animation: workingProcessBrandDrift 7s ease-in-out infinite alternate;
+  will-change: transform, opacity;
 }
 
 .working-process-section__intro {
@@ -26646,9 +26664,25 @@ iframe {
     radial-gradient(circle at 15% 8%, rgba(238, 45, 122, 0.18), transparent 24%),
     linear-gradient(145deg, #ffffff 0%, #fff3f7 100%);
   box-shadow: 0 24px 58px rgba(85, 35, 53, 0.14), inset 1px 0 0 rgba(255, 255, 255, 0.72);
-  transform-origin: center center;
+  transform-origin: 50% 54%;
   will-change: transform, opacity, filter;
   backface-visibility: hidden;
+}
+
+.working-process-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 0 36%, rgba(255, 255, 255, 0.55) 48%, transparent 62% 100%);
+  opacity: 0;
+  transform: translateX(-42%);
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+
+.working-process-card:hover::after {
+  opacity: 1;
+  animation: workingProcessCardSweep 1.2s ease forwards;
 }
 
 .working-process-card:not(:first-child) {
@@ -26833,6 +26867,57 @@ iframe {
   }
 }
 
+@keyframes workingProcessStripMarquee {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes workingProcessStripSweep {
+  0%, 28% {
+    transform: translateY(-58%);
+  }
+
+  70%, 100% {
+    transform: translateY(58%);
+  }
+}
+
+@keyframes workingProcessBrandDrift {
+  from {
+    opacity: 0.16;
+    transform: translateY(-12px);
+  }
+
+  to {
+    opacity: 0.28;
+    transform: translateY(12px);
+  }
+}
+
+@keyframes workingProcessCardSweep {
+  from {
+    transform: translateX(-42%);
+  }
+
+  to {
+    transform: translateX(42%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .working-process-section__strip-services,
+  .working-process-section__strip::after,
+  .working-process-section__strip-brand,
+  .working-process-card:hover::after {
+    animation: none;
+  }
+}
+
 @media (max-width: 991px) {
   .working-process-section {
     padding-left: 122px;
@@ -26929,10 +27014,23 @@ iframe {
     transform: translateX(-50%);
   }
 
+  .working-process-section__title {
+    font-size: clamp(38px, 11vw, 54px);
+    line-height: 0.95;
+    text-align: center;
+  }
+
+  .working-process-section__title br {
+    display: block;
+  }
+
   .working-process-section__lead {
     max-width: 320px;
     margin-left: auto;
     margin-right: auto;
+    text-align: center;
+    word-spacing: 0;
+    line-height: 1.6;
   }
 
   .working-process-section__track {

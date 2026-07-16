@@ -1663,6 +1663,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!window.gsap || !window.ScrollTrigger) return;
     const section = document.querySelector('.working-process-section');
     const track = document.querySelector('[data-working-process-track]');
+    const strip = section ? section.querySelector('.working-process-section__strip') : null;
+    const stripBrand = section ? section.querySelector('.working-process-section__strip-brand') : null;
     if (!section || !track) return;
     if (window.matchMedia('(max-width: 767px)').matches) return;
 
@@ -1673,15 +1675,30 @@ document.addEventListener('DOMContentLoaded', function () {
 
     window.gsap.set(cards, {
       force3D: true,
-      transformOrigin: 'center center'
+      transformOrigin: '50% 54%'
     });
 
     window.gsap.set(cards.slice(1), {
-      xPercent: 118,
-      yPercent: 0,
-      scale: 1,
+      xPercent: 112,
+      yPercent: 8,
+      rotate: 4,
+      scale: 0.96,
       autoAlpha: 1
     });
+
+    if (strip) {
+      window.gsap.set(strip, {
+        force3D: true,
+        transformOrigin: 'center center'
+      });
+    }
+
+    if (stripBrand) {
+      window.gsap.set(stripBrand, {
+        autoAlpha: 0.85,
+        force3D: true
+      });
+    }
 
     const timeline = window.gsap.timeline({
       defaults: { ease: 'none' },
@@ -1698,17 +1715,40 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
 
+    if (strip) {
+      timeline.fromTo(strip, {
+        xPercent: -7,
+        scaleX: 0.96
+      }, {
+        xPercent: 0,
+        scaleX: 1,
+        duration: 0.9
+      }, 0);
+    }
+
+    if (stripBrand) {
+      timeline.to(stripBrand, {
+        yPercent: 9,
+        autoAlpha: 1,
+        duration: cards.length * 1.15
+      }, 0);
+    }
+
     cards.slice(1).forEach(function (card, index) {
       const previousCards = cards.slice(0, index + 1);
       const position = index * 1.15;
       timeline
         .to(card, {
           xPercent: 0,
+          yPercent: 0,
+          rotate: 0,
+          scale: 1,
           duration: 1.25
         }, position)
         .to(previousCards, {
-          scale: 0.985 - (index * 0.008),
-          yPercent: -1 - (index * 0.8),
+          scale: 0.982 - (index * 0.008),
+          yPercent: -1.4 - (index * 0.9),
+          rotate: -0.45 - (index * 0.22),
           duration: 1.25
         }, position);
     });
