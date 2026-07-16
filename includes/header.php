@@ -14,6 +14,26 @@ foreach ($headerMenuItems as &$headerMenuItem) {
     if (cms_header_menu_key($headerMenuItem) === 'additional-services') {
         $headerMenuItem['title'] = 'Services';
     }
+    if (cms_header_menu_key($headerMenuItem) === 'about-us') {
+        $hasCertificatesLink = false;
+        foreach ((array) ($headerMenuItem['children'] ?? []) as $childMenuItem) {
+            $childUrl = strtolower(trim((string) ($childMenuItem['url'] ?? '')));
+            $childTitle = strtolower(trim((string) ($childMenuItem['title'] ?? '')));
+            if (str_contains($childUrl, 'our-certificates') || str_contains($childTitle, 'certificate')) {
+                $hasCertificatesLink = true;
+                break;
+            }
+        }
+
+        if (!$hasCertificatesLink) {
+            $headerMenuItem['children'][] = [
+                'id' => 909001,
+                'title' => 'Our Certificates',
+                'url' => 'our-certificates.php',
+                'children' => [],
+            ];
+        }
+    }
 }
 unset($headerMenuItem);
 $headerMenuItems = array_values(array_filter($headerMenuItems, static function (array $headerMenuItem): bool {

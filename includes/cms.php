@@ -165,7 +165,7 @@ function cms_build_default_header_menu(): array
         cms_header_menu_make_item($nextId, 'What We Offer', 'about.php#what-we-offer'),
         cms_header_menu_make_item($nextId, 'How We Formulate', 'about.php#how-we-formulate'),
         cms_header_menu_make_item($nextId, 'Key Benefits', 'about.php#key-benifits'),
-        cms_header_menu_make_item($nextId, 'Our Certificates', 'our-certificates'),
+        cms_header_menu_make_item($nextId, 'Our Certificates', 'our-certificates.php'),
     ];
 
     $howItWorksChildren = [

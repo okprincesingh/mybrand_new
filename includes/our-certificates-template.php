@@ -67,6 +67,10 @@ if (!function_exists('our_certificates_folder_items')) {
                 return false;
             }
 
+            if (preg_match('/\s+-\s+page\s+\d+\.(jpe?g|png|webp)$/i', $file)) {
+                return false;
+            }
+
             $path = $directory . '/' . $file;
             if (!is_file($path)) {
                 return false;
@@ -83,13 +87,19 @@ if (!function_exists('our_certificates_folder_items')) {
             $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
             $title = our_certificates_title_from_filename($file);
             $path = $webDirectory . '/' . rawurlencode($file);
+            $previewFilename = pathinfo($file, PATHINFO_FILENAME) . ' - page 1.jpg';
+            $previewPath = $directory . '/' . $previewFilename;
+            $previewUrl = is_file($previewPath)
+                ? url($webDirectory . '/' . rawurlencode($previewFilename))
+                : url($path);
 
             $certificates[] = [
                 'title' => $title,
-                'image' => url($path),
+                'image' => $extension === 'pdf' ? $previewUrl : url($path),
                 'file' => url($path),
                 'category' => our_certificates_category_for_title($title),
                 'type' => $extension === 'pdf' ? 'pdf' : 'image',
+                'has_preview' => $extension !== 'pdf' || is_file($previewPath),
             ];
         }
 
@@ -188,6 +198,7 @@ if (!function_exists('render_our_certificates_page')) {
                       $certificateFile = (string) ($certificate['file'] ?? $certificate['image']);
                       $certificateType = (string) ($certificate['type'] ?? 'image');
                       $certificateTitle = (string) $certificate['title'];
+                      $hasPreview = (bool) ($certificate['has_preview'] ?? $certificateType !== 'pdf');
                     ?>
                     <a
                       class="certificate-card__media"
@@ -195,13 +206,16 @@ if (!function_exists('render_our_certificates_page')) {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label="View <?php echo htmlspecialchars($certificateTitle, ENT_QUOTES, 'UTF-8'); ?>">
-                      <?php if ($certificateType === 'pdf'): ?>
+                      <?php if ($certificateType === 'pdf' && !$hasPreview): ?>
                         <span class="certificate-card__pdf" aria-hidden="true">
                           <i class="fa-regular fa-file-pdf"></i>
                           <span>PDF</span>
                         </span>
                       <?php else: ?>
                         <img src="<?php echo htmlspecialchars((string) $certificate['image'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($certificateTitle, ENT_QUOTES, 'UTF-8'); ?>">
+                        <?php if ($certificateType === 'pdf'): ?>
+                          <span class="certificate-card__type-badge">PDF</span>
+                        <?php endif; ?>
                       <?php endif; ?>
                     </a>
                     <div class="certificate-card__body">
@@ -251,6 +265,7 @@ if (!function_exists('render_our_certificates_page')) {
             box-shadow: 0 24px 44px rgba(80, 45, 69, 0.14);
           }
           .certificate-card__media {
+            position: relative;
             display: block;
             background: #fff9fc;
             padding: 14px;
@@ -282,6 +297,25 @@ if (!function_exists('render_our_certificates_page')) {
             font-size: 16px;
             font-weight: 800;
             letter-spacing: 0.08em;
+          }
+          .certificate-card__type-badge {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 44px;
+            min-height: 28px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: #ee2d7a;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: 0.04em;
+            box-shadow: 0 10px 22px rgba(238, 45, 122, 0.24);
           }
           .certificate-card__body {
             padding: 18px 18px 24px;
