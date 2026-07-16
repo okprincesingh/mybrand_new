@@ -1617,9 +1617,9 @@ document.addEventListener('DOMContentLoaded', function () {
                   <div class="office-card__body">
                     <h3 class="office-card__title"><?php echo htmlspecialchars($officeCountry, ENT_QUOTES, 'UTF-8'); ?></h3>
                     <?php if ($officeCompanyName !== ''): ?>
-                      <p class="office-card__company"><?php echo htmlspecialchars($officeCompanyName, ENT_QUOTES, 'UTF-8'); ?></p>
+                      <p class="office-card__company text-center"><?php echo htmlspecialchars($officeCompanyName, ENT_QUOTES, 'UTF-8'); ?></p>
                     <?php endif; ?>
-                    <p class="office-card__address"><?php echo nl2br(htmlspecialchars($officeAddress, ENT_QUOTES, 'UTF-8')); ?></p>
+                    <p class="office-card__address text-center"><?php echo nl2br(htmlspecialchars($officeAddress, ENT_QUOTES, 'UTF-8')); ?></p>
                     <div class="office-card__meta-list">
                       <?php if ($officeRegistrationLabel !== '' || $officeRegistrationNumber !== ''): ?>
                         <div class="office-card__meta office-card__meta--plain">

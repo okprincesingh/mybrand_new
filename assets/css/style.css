@@ -20050,6 +20050,7 @@ iframe {
   font-size: 0.78rem;
   font-weight: 700;
   line-height: 1.35;
+  text-align: center !important;
 }
 .office-card__address {
   margin: 0 0 0.75rem;
@@ -21109,7 +21110,7 @@ iframe {
 .pl-footer--v2 p.plf-contact {
   margin-bottom: 0.35rem;
   color: rgba(255, 255, 255, 0.86);
-  font-size: 1.18rem;
+  font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
 }
