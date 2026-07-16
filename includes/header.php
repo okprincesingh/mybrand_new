@@ -199,6 +199,10 @@ if (!function_exists('render_header_menu_items')) {
               <!-- Actions Column -->
               <div class="col-auto">
                 <div class="header-right d-flex align-items-center gap-3">
+                  <a href="<?php echo url('index.php'); ?>" class="action-btn header-home-btn d-none d-xl-inline-flex" aria-label="Home">
+                    <i class="fa-regular fa-house"></i>
+                  </a>
+
                   <!-- Search Button -->
                   <div class="header__search">
                     <button class="search-open-btn" type="button" aria-expanded="false" aria-controls="site-search">
