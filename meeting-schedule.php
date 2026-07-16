@@ -23,7 +23,7 @@ $defaultTimezone = isset($_GET['timezone']) ? $_GET['timezone'] : 'Asia/Kolkata'
 
 
 /* Main Container Wrapper */
-.cal-section { padding: 50px 0; margin-top: 5rem; }
+.cal-section { padding: 50px 0; }
 .cal-wrapper {
     background: #fff;
     border-radius: 12px;
@@ -120,6 +120,25 @@ $defaultTimezone = isset($_GET['timezone']) ? $_GET['timezone'] : 'Asia/Kolkata'
     .cal-sidebar, .cal-time-sidebar { border: none; border-bottom: 1px solid var(--border-color); }
 }
 </style>
+
+<div class="breadcumb">
+  <div class="container rr-container-1895">
+    <div class="breadcumb-wrapper section-spacing-120 fix" data-bg-src="assets/imgs/breadcumbBg.jpg">
+      <div class="breadcumb-wrapper__title">Book a call with us</div>
+      <ul class="breadcumb-wrapper__items">
+        <li class="breadcumb-wrapper__items-list"><i class="fa-regular fa-house"></i></li>
+        <li class="breadcumb-wrapper__items-list"><i class="fa-regular fa-chevron-right"></i></li>
+        <li class="breadcumb-wrapper__items-list">
+          <a href="<?php echo htmlspecialchars(url('index.php'), ENT_QUOTES, 'UTF-8'); ?>" class="breadcumb-wrapper__items-list-title">Home</a>
+        </li>
+        <li class="breadcumb-wrapper__items-list"><i class="fa-regular fa-chevron-right"></i></li>
+        <li class="breadcumb-wrapper__items-list">
+          <span class="breadcumb-wrapper__items-list-title2">Book a call with us</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 <section class="cal-section">
     <div class="container" style="max-width: 1100px;">

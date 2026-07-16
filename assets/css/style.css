@@ -26723,7 +26723,7 @@ iframe {
     margin-left: 0;
   }
   .working-process-section__strip-brand{
-    font-size: clamp(36px, 5vw, 62px);
+    font-size: clamp(36px, 5vw, 56px);
   }
 }
 
@@ -27294,8 +27294,8 @@ iframe {
 
 .handshake-section__content {
   position: absolute;
-  left: clamp(24px, 18.2vw, 430px);
-  top: clamp(260px, 38.5vh, 430px);
+  left: clamp(24px, 19.2vw, 430px);
+  top: clamp(355px, 40.5vh, 510px);
   z-index: 6;
   width: min(50vw, 920px);
   will-change: transform, opacity;
@@ -27509,7 +27509,7 @@ iframe {
   }
 
   .handshake-section__content {
-    left: clamp(420px, 20vw, 620px);
+    left: clamp(420px, 26vw, 665px);
   }
 
   .handshake-section__hand--top {
