@@ -26545,7 +26545,7 @@ iframe {
 .working-process-section {
   position: relative;
   overflow: hidden;
-  min-height: 68vh;
+  min-height: clamp(480px, 58vh, 620px);
   padding-left: clamp(166px, 12vw, 205px);
   background:
     radial-gradient(circle at 16% 18%, rgba(238, 45, 122, 0.14), transparent 28%),
@@ -26557,12 +26557,12 @@ iframe {
 
 .working-process-section__inner {
   position: relative;
-  min-height: 54vh;
+  min-height: clamp(430px, 48vh, 560px);
   display: grid;
   grid-template-columns: minmax(260px, 31vw) 1fr;
   align-items: start;
   gap: clamp(30px, 2vw, 78px);
-  padding: clamp(38px, 5vh, 58px) 0 clamp(54px, 8vh, 92px) clamp(26px, 9vw, 125px);
+  padding: clamp(32px, 4vh, 48px) 0 clamp(28px, 4.4vh, 52px) clamp(26px, 9vw, 125px);
 }
 
 .working-process-section__strip {
@@ -26644,9 +26644,9 @@ iframe {
   justify-content: center;
   writing-mode: vertical-rl;
   text-orientation: mixed;
-  color: rgba(238, 45, 122, 0.18);
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: clamp(32px, 5vw, 42px);
+  color: rgb(255 0 102);
+  font-family: monospace;
+  font-size: clamp(32px, 5vw, 56px);
   font-weight: 900;
   line-height: 1;
   letter-spacing: 0;
@@ -26727,27 +26727,27 @@ iframe {
   z-index: 3;
   overflow: visible;
   width: 100%;
-  min-height: clamp(320px, 44vh, 470px);
+  min-height: clamp(290px, 36vh, 400px);
 }
 
 .working-process-section__track {
   position: relative;
   width: min(52vw, 640px);
-  min-height: clamp(320px, 44vh, 470px);
+  min-height: clamp(290px, 36vh, 400px);
   will-change: transform;
 }
 
 .working-process-card {
   position: relative;
   width: min(52vw, 640px);
-  min-height: clamp(300px, 36vh, 390px);
+  min-height: clamp(280px, 32vh, 350px);
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(170px, 0.82fr);
   grid-template-rows: auto auto 1fr;
   column-gap: clamp(28px, 4.2vw, 62px);
-  row-gap: clamp(24px, 3.2vh, 38px);
+  row-gap: clamp(18px, 2.4vh, 28px);
   align-items: start;
-  padding: clamp(24px, 2.4vw, 42px);
+  padding: clamp(22px, 2.1vw, 34px);
   overflow: hidden;
   border: 1px solid rgba(238, 45, 122, 0.14);
   border-radius: 8px;

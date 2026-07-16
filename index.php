@@ -1706,7 +1706,7 @@ document.addEventListener('DOMContentLoaded', function () {
         trigger: section,
         start: 'top 100px',
         end: function () {
-          return '+=' + (window.innerHeight * (cards.length - 1) * 0.72);
+          return '+=' + (window.innerHeight * (cards.length - 1) * 0.48);
         },
         scrub: 1.25,
         pin: true,
