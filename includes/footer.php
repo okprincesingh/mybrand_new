@@ -58,7 +58,7 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
             <footer class="pl-footer pl-footer--v2 rr-ov-hidden">
         <div class="container rr-container-1350">
           <div class="row g-5 pb-5">
-            <div class="col-lg-4">
+            <div class="col-lg-3">
                 <div class="plf-brand">
                   <a href="<?php echo url('index.php'); ?>" class="plf-logo d-inline-block mb-3">
                     <img src="<?php echo url('assets/imgs/logo/footerlogo.webp'); ?>" alt="mybrandplease">
@@ -82,7 +82,7 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
               </div>
             </div>
 
-            <div class="col-sm-6 col-lg-2">
+            <div class="col-sm-6 col-lg-3">
               <h4 class="plf-title">QUICK LINKS</h4>
               <ul class="plf-list list-unstyled mb-4">
                 <li><a href="<?php echo htmlspecialchars(catalog_shop_link('skin-care'), ENT_QUOTES, 'UTF-8'); ?>">Skin Care</a></li>
