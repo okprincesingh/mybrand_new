@@ -26971,7 +26971,7 @@ iframe {
 /* Reference-frame pinned handshake clone */
 .handshake-section {
   position: relative;
-  height: 88vh;
+  height: clamp(680px, 88vh, 1060px);
   min-height: 680px;
   margin-bottom: 0;
   overflow: hidden;
@@ -27029,10 +27029,10 @@ iframe {
 
 .handshake-section__content {
   position: absolute;
-  left: clamp(24px, 21.2vw, 350px);
-  top: 38.5vh;
+  left: clamp(24px, 18.2vw, 430px);
+  top: clamp(260px, 38.5vh, 430px);
   z-index: 6;
-  width: min(50vw, 860px);
+  width: min(50vw, 920px);
   will-change: transform, opacity;
 }
 
@@ -27119,17 +27119,17 @@ iframe {
 }
 
 .handshake-section__hand--top {
-  left: 0;
+  left: clamp(0px, 1.4vw, 54px);
   right: auto;
-  top: -10vh;
-  width: min(52vw, 995px);
+  top: clamp(-118px, -7.6vh, -58px);
+  width: clamp(720px, 52vw, 1240px);
   transform-origin: 62% 70%;
 }
 
 .handshake-section__hand--bottom {
-  right: -7.2vw;
-  bottom: -2.2vh;
-  width: min(51vw, 975px);
+  right: clamp(-165px, -7.2vw, -72px);
+  bottom: clamp(-42px, -2.2vh, -16px);
+  width: clamp(710px, 51vw, 1210px);
   transform-origin: 24% 40%;
 }
 
@@ -27201,8 +27201,14 @@ iframe {
 }
 
 @media (max-width: 1199px) {
+  .handshake-section {
+    height: clamp(620px, 84vh, 780px);
+    min-height: 620px;
+  }
+
   .handshake-section__content {
     left: 7vw;
+    top: clamp(250px, 38vh, 330px);
     width: min(62vw, 680px);
   }
 
@@ -27212,16 +27218,41 @@ iframe {
 
   .handshake-section__hand--top {
     left: 6vw;
-    width: min(68vw, 720px);
+    top: -7vh;
+    width: clamp(520px, 68vw, 720px);
   }
 
   .handshake-section__hand--bottom {
     right: -16vw;
-    width: min(70vw, 740px);
+    width: clamp(540px, 70vw, 740px);
   }
 
   .handshake-section__card {
     width: min(24vw, 300px);
+  }
+}
+
+@media (min-width: 1600px) {
+  .handshake-section__content {
+    left: clamp(300px, 19vw, 520px);
+  }
+}
+
+@media (min-width: 2200px) {
+  .handshake-section {
+    height: clamp(820px, 82vh, 1120px);
+  }
+
+  .handshake-section__content {
+    left: clamp(420px, 20vw, 620px);
+  }
+
+  .handshake-section__hand--top {
+    left: clamp(28px, 3vw, 96px);
+  }
+
+  .handshake-section__hand--bottom {
+    right: clamp(-190px, -5.8vw, -110px);
   }
 }
 

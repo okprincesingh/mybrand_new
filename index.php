@@ -1993,6 +1993,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const bottomHand = section.querySelector('.handshake-section__hand--bottom');
     const leftCard = section.querySelector('.handshake-section__card--left');
     const rightCard = section.querySelector('.handshake-section__card--right');
+    const optionalItems = [leftCard, rightCard, scrollHint].filter(Boolean);
+    const finalItems = [topHand, bottomHand, content, actions].concat(optionalItems).filter(Boolean);
+
+    if (!content || !actions || !topHand || !bottomHand) return;
 
     window.gsap.set(topHand, { zIndex: 8 });
     window.gsap.set(bottomHand, { zIndex: 5 });
@@ -2000,14 +2004,14 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initial reference state: hands are closed, content/cards are tucked away.
     window.gsap.set(content, { autoAlpha: 0, x: 130, y: 74, scale: 0.82, force3D: true });
     window.gsap.set(actions, { autoAlpha: 0, y: 34, scale: 0.9, force3D: true });
-    window.gsap.set(scrollHint, { autoAlpha: 0, y: 24, force3D: true });
+    if (scrollHint) window.gsap.set(scrollHint, { autoAlpha: 0, y: 24, force3D: true });
     window.gsap.set(topHand, { xPercent: 30, yPercent: 30, rotate: 2.6, force3D: true });
     window.gsap.set(bottomHand, { xPercent: -35, yPercent: -38, rotate: -2.2, force3D: true });
-    window.gsap.set(leftCard, { autoAlpha: 0, xPercent: 112, yPercent: 74, rotate: -1.5, scale: 0.72, force3D: true });
-    window.gsap.set(rightCard, { autoAlpha: 0, xPercent: -105, yPercent: 82, rotate: 1.5, scale: 0.72, force3D: true });
+    if (leftCard) window.gsap.set(leftCard, { autoAlpha: 0, xPercent: 112, yPercent: 74, rotate: -1.5, scale: 0.72, force3D: true });
+    if (rightCard) window.gsap.set(rightCard, { autoAlpha: 0, xPercent: -105, yPercent: 82, rotate: 1.5, scale: 0.72, force3D: true });
 
     // Scroll-controlled pinned timeline. Motion depends only on scroll progress.
-    window.gsap.timeline({
+    const handshakeTimeline = window.gsap.timeline({
       defaults: { ease: 'none' },
       scrollTrigger: {
         trigger: section,
@@ -2019,15 +2023,27 @@ document.addEventListener('DOMContentLoaded', function () {
         invalidateOnRefresh: true,
         anticipatePin: 1
       }
-    })
+    });
+
+    handshakeTimeline
       .to(topHand, { xPercent: 0, yPercent: 0, rotate: 0, duration: 0.86 }, 0)
       .to(bottomHand, { xPercent: 0, yPercent: 0, rotate: 0, duration: 0.86 }, 0)
       .to(content, { autoAlpha: 1, x: 0, y: 0, scale: 1, duration: 0.52 }, 0.2)
-      .to(actions, { autoAlpha: 1, y: 0, scale: 1, duration: 0.42 }, 0.3)
-      .to(leftCard, { autoAlpha: 1, xPercent: 0, yPercent: 0, rotate: 0, scale: 1, duration: 0.58 }, 0.22)
-      .to(rightCard, { autoAlpha: 1, xPercent: 0, yPercent: 0, rotate: 0, scale: 1, duration: 0.58 }, 0.25)
-      .to(scrollHint, { autoAlpha: 1, y: 0, duration: 0.26 }, 0.42)
-      .to([topHand, bottomHand, leftCard, rightCard, content, actions, scrollHint], { duration: 0.14 }, 0.86);
+      .to(actions, { autoAlpha: 1, y: 0, scale: 1, duration: 0.42 }, 0.3);
+
+    if (leftCard) {
+      handshakeTimeline.to(leftCard, { autoAlpha: 1, xPercent: 0, yPercent: 0, rotate: 0, scale: 1, duration: 0.58 }, 0.22);
+    }
+
+    if (rightCard) {
+      handshakeTimeline.to(rightCard, { autoAlpha: 1, xPercent: 0, yPercent: 0, rotate: 0, scale: 1, duration: 0.58 }, 0.25);
+    }
+
+    if (scrollHint) {
+      handshakeTimeline.to(scrollHint, { autoAlpha: 1, y: 0, duration: 0.26 }, 0.42);
+    }
+
+    handshakeTimeline.to(finalItems, { duration: 0.14 }, 0.86);
 
     section.querySelectorAll('img').forEach(function (image) {
       if (!image.complete) {
