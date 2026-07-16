@@ -61,7 +61,7 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
             <div class="col-lg-3">
                 <div class="plf-brand">
                   <a href="<?php echo url('index.php'); ?>" class="plf-logo d-inline-block mb-3">
-                    <img src="<?php echo url('assets/imgs/logo/footerlogo.webp'); ?>" alt="mybrandplease">
+                    <img src="<?php echo url('assets/imgs/logo/footer.png'); ?>" alt="mybrandplease">
                   </a>
                 <p class="plf-lead">Get in touch with us however is most convenient for you.</p>
                 <p class="plf-contact"><span>Call / WhatsApp:</span> +91 (971) 700 4615</p>

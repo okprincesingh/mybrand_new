@@ -13,6 +13,7 @@ if (!function_exists('our_certificates_title_from_filename')) {
     function our_certificates_title_from_filename(string $filename): string
     {
         $title = pathinfo($filename, PATHINFO_FILENAME);
+        $title = preg_replace('/^\s*\d+\)\s*/', '', $title) ?? $title;
         $title = preg_replace('/[_-]+/', ' ', $title) ?? $title;
         $title = preg_replace('/\s+/', ' ', $title) ?? $title;
         $title = preg_replace('/\s+copy$/i', '', $title) ?? $title;
@@ -80,7 +81,24 @@ if (!function_exists('our_certificates_folder_items')) {
             return in_array($extension, $allowedExtensions, true);
         }));
 
-        natcasesort($files);
+        usort($files, static function (string $a, string $b): int {
+            $aHasSeries = preg_match('/^\s*(\d+)\)/', $a, $aMatch);
+            $bHasSeries = preg_match('/^\s*(\d+)\)/', $b, $bMatch);
+
+            if ($aHasSeries && $bHasSeries) {
+                return ((int) $aMatch[1]) <=> ((int) $bMatch[1]);
+            }
+
+            if ($aHasSeries) {
+                return -1;
+            }
+
+            if ($bHasSeries) {
+                return 1;
+            }
+
+            return strnatcasecmp($a, $b);
+        });
 
         $certificates = [];
         foreach ($files as $file) {
@@ -183,7 +201,7 @@ if (!function_exists('render_our_certificates_page')) {
           </div>
         </div>
 
-        <section class="certificates-page section-spacing-120 rr-ov-hidden">
+        <section class="certificates-page section-spacing-120 rr-ov-hidden" id="certificatesPage">
           <div class="container rr-container-1350">
             <div class="certificates-page__intro text-center">
               <span class="certificates-page__eyebrow">Our Certifications</span>
@@ -191,8 +209,8 @@ if (!function_exists('render_our_certificates_page')) {
             </div>
 
             <div class="row g-4 certificates-grid" id="certificates-grid">
-              <?php foreach ($certificates as $certificate): ?>
-                <div class="col-xl-3 col-lg-4 col-md-6 certificate-item">
+              <?php foreach ($certificates as $certificateIndex => $certificate): ?>
+                <div class="col-xl-3 col-lg-4 col-md-6 certificate-item" style="--certificate-delay: <?php echo (int) ($certificateIndex % 12); ?>;">
                   <article class="certificate-card">
                     <?php
                       $certificateFile = (string) ($certificate['file'] ?? $certificate['image']);
@@ -252,23 +270,46 @@ if (!function_exists('render_our_certificates_page')) {
             line-height: 1.8;
           }
           .certificate-card {
+            position: relative;
             background: #fff;
             border: 1px solid #f0e4eb;
             border-radius: 22px;
             overflow: hidden;
             height: 100%;
             box-shadow: 0 18px 40px rgba(80, 45, 69, 0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0;
+            transform: translateY(24px) scale(0.97);
+            transition: transform 0.32s ease, box-shadow 0.32s ease, border-color 0.32s ease;
+            will-change: transform, opacity;
+          }
+          .certificates-page.is-loaded .certificate-card {
+            animation: certificateCardIn 0.68s cubic-bezier(.22, 1, .36, 1) forwards;
+            animation-delay: calc(var(--certificate-delay) * 70ms);
+          }
+          .certificate-card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(115deg, transparent 0 35%, rgba(255, 255, 255, 0.65) 48%, transparent 62% 100%);
+            opacity: 0;
+            transform: translateX(-58%);
+            pointer-events: none;
           }
           .certificate-card:hover {
-            transform: translateY(-6px);
+            transform: translateY(-8px) scale(1.012);
+            border-color: rgba(238, 45, 122, 0.22);
             box-shadow: 0 24px 44px rgba(80, 45, 69, 0.14);
+          }
+          .certificate-card:hover::after {
+            opacity: 1;
+            animation: certificateCardShine 1s ease forwards;
           }
           .certificate-card__media {
             position: relative;
             display: block;
             background: #fff9fc;
             padding: 14px;
+            overflow: hidden;
           }
           .certificate-card__media img {
             width: 100%;
@@ -276,6 +317,12 @@ if (!function_exists('render_our_certificates_page')) {
             object-fit: contain;
             border-radius: 16px;
             background: #fff;
+            transform: scale(1);
+            transition: transform 0.45s cubic-bezier(.22, 1, .36, 1), filter 0.35s ease;
+          }
+          .certificate-card:hover .certificate-card__media img {
+            transform: scale(1.035);
+            filter: saturate(1.04) contrast(1.02);
           }
           .certificate-card__pdf {
             width: 100%;
@@ -333,6 +380,44 @@ if (!function_exists('render_our_certificates_page')) {
             margin-top: 34px;
             margin-bottom: 0;
           }
+          @keyframes certificateCardIn {
+            from {
+              opacity: 0;
+              transform: translateY(24px) scale(0.97);
+            }
+
+            to {
+              opacity: 1;
+              transform: translateY(0) scale(1);
+            }
+          }
+          @keyframes certificateCardShine {
+            from {
+              transform: translateX(-58%);
+            }
+
+            to {
+              transform: translateX(58%);
+            }
+          }
+          @media (prefers-reduced-motion: reduce) {
+            .certificate-card {
+              opacity: 1;
+              transform: none;
+              animation: none;
+              transition: none;
+            }
+
+            .certificate-card:hover,
+            .certificate-card:hover .certificate-card__media img {
+              transform: none;
+            }
+
+            .certificate-card:hover::after {
+              animation: none;
+              opacity: 0;
+            }
+          }
           @media (max-width: 767px) {
             .certificates-page__lead {
               font-size: 16px;
@@ -342,6 +427,17 @@ if (!function_exists('render_our_certificates_page')) {
             }
           }
         </style>
+
+        <script>
+          (function () {
+            const page = document.getElementById('certificatesPage');
+            if (!page) return;
+
+            window.requestAnimationFrame(function () {
+              page.classList.add('is-loaded');
+            });
+          })();
+        </script>
 
         <?php
         include __DIR__ . '/footer.php';
