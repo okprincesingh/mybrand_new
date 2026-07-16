@@ -180,16 +180,9 @@ if (!function_exists('render_our_certificates_page')) {
               <p class="certificates-page__lead">We maintain the highest standards of quality and compliance through our internationally recognized certifications and accreditations.</p>
             </div>
 
-            <div class="certificates-filter" role="tablist" aria-label="Certificate categories">
-              <button class="certificates-filter__btn is-active" type="button" data-filter="all">All Certificates</button>
-              <button class="certificates-filter__btn" type="button" data-filter="quality-standards">Quality Standards</button>
-              <button class="certificates-filter__btn" type="button" data-filter="regulatory">Regulatory</button>
-              <button class="certificates-filter__btn" type="button" data-filter="business-registration">Business Registration</button>
-            </div>
-
             <div class="row g-4 certificates-grid" id="certificates-grid">
               <?php foreach ($certificates as $certificate): ?>
-                <div class="col-xl-3 col-lg-4 col-md-6 certificate-item" data-category="<?php echo htmlspecialchars((string) $certificate['category'], ENT_QUOTES, 'UTF-8'); ?>">
+                <div class="col-xl-3 col-lg-4 col-md-6 certificate-item">
                   <article class="certificate-card">
                     <?php
                       $certificateFile = (string) ($certificate['file'] ?? $certificate['image']);
@@ -219,11 +212,6 @@ if (!function_exists('render_our_certificates_page')) {
               <?php endforeach; ?>
             </div>
 
-            <div class="certificates-empty" id="certificates-empty" hidden>
-              <h3>No certificates found</h3>
-              <p>Try selecting a different category</p>
-            </div>
-
             <p class="certificates-page__note text-center">&copy; 2023 Nimisha Impex Inc. All certifications are valid and regularly audited.</p>
           </div>
         </section>
@@ -248,28 +236,6 @@ if (!function_exists('render_our_certificates_page')) {
             color: #5a5a66;
             font-size: 18px;
             line-height: 1.8;
-          }
-          .certificates-filter {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 34px;
-          }
-          .certificates-filter__btn {
-            border: 1px solid #ebd2dc;
-            background: #fff;
-            color: #433848;
-            border-radius: 999px;
-            padding: 11px 18px;
-            font-weight: 600;
-            transition: all 0.25s ease;
-          }
-          .certificates-filter__btn.is-active,
-          .certificates-filter__btn:hover {
-            background: #ee2d7a;
-            border-color: #ee2d7a;
-            color: #fff;
           }
           .certificate-card {
             background: #fff;
@@ -326,14 +292,6 @@ if (!function_exists('render_our_certificates_page')) {
             line-height: 1.45;
             margin: 0;
           }
-          .certificates-empty {
-            text-align: center;
-            padding: 42px 20px 10px;
-          }
-          .certificates-empty h3 {
-            margin-bottom: 8px;
-          }
-          .certificates-empty p,
           .certificates-page__note {
             color: #6b6472;
           }
@@ -351,34 +309,6 @@ if (!function_exists('render_our_certificates_page')) {
           }
         </style>
 
-        <script>
-          (function () {
-            const buttons = Array.from(document.querySelectorAll('.certificates-filter__btn'));
-            const items = Array.from(document.querySelectorAll('.certificate-item'));
-            const emptyState = document.getElementById('certificates-empty');
-            if (!buttons.length || !items.length || !emptyState) return;
-
-            function applyFilter(filter) {
-              let visibleCount = 0;
-              items.forEach(function (item) {
-                const matches = filter === 'all' || item.getAttribute('data-category') === filter;
-                item.hidden = !matches;
-                if (matches) visibleCount += 1;
-              });
-              emptyState.hidden = visibleCount !== 0;
-            }
-
-            buttons.forEach(function (button) {
-              button.addEventListener('click', function () {
-                buttons.forEach(function (btn) { btn.classList.remove('is-active'); });
-                button.classList.add('is-active');
-                applyFilter(button.getAttribute('data-filter') || 'all');
-              });
-            });
-
-            applyFilter('all');
-          })();
-        </script>
         <?php
         include __DIR__ . '/footer.php';
     }
