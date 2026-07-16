@@ -457,20 +457,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 <?php
                   $workingProcessSteps = [
                     [
-                      'title_small' => 'Higher',
-                      'title_large' => 'Profits',
-                      'text' => 'Our high-quality natural and organic-based skin and hair care products are offered at costs comparable to or lower than leading brands, while you set the sale price.',
+                      'title_small' => 'Brand',
+                      'title_large' => 'Equity',
+                      'text' => 'Building sales of your own skin and hair care brand strengthens your prestige with customers and in the market.',
                       'href' => 'contact.php',
-                      'image' => 'assets/imgs/home/1.png',
-                      'alt' => 'Profit growth',
-                    ],
-                    [
-                      'title_small' => 'Increased',
-                      'title_large' => 'Sales',
-                      'text' => 'Market your own brand with margin and product sale price in your control, giving you stronger flexibility in marketing approach and decisions.',
-                      'href' => 'contact.php',
-                      'image' => 'assets/imgs/home/2.png',
-                      'alt' => 'Increased sales',
+                      'image' => 'assets/imgs/home/4.png',
+                      'alt' => 'Brand equity',
                     ],
                     [
                       'title_small' => 'Client',
@@ -480,14 +472,24 @@ document.addEventListener('DOMContentLoaded', function () {
                       'image' => 'assets/imgs/home/3.png',
                       'alt' => 'Customer loyalty',
                     ],
-                    [
-                      'title_small' => 'Brand',
-                      'title_large' => 'Equity',
-                      'text' => 'Building sales of your own skin and hair care brand strengthens your prestige with customers and in the market.',
+                     [
+                      'title_small' => 'Increased',
+                      'title_large' => 'Sales',
+                      'text' => 'Market your own brand with margin and product sale price in your control, giving you stronger flexibility in marketing approach and decisions.',
                       'href' => 'contact.php',
-                      'image' => 'assets/imgs/home/4.png',
-                      'alt' => 'Brand equity',
+                      'image' => 'assets/imgs/home/2.png',
+                      'alt' => 'Increased sales',
                     ],
+                    [
+                      'title_small' => 'Higher',
+                      'title_large' => 'Profits',
+                      'text' => 'Our high-quality natural and organic-based skin and hair care products are offered at costs comparable to or lower than leading brands, while you set the sale price.',
+                      'href' => 'contact.php',
+                      'image' => 'assets/imgs/home/1.png',
+                      'alt' => 'Profit growth',
+                    ],
+                    
+                    
                   ];
                 ?>
                 <?php foreach ($workingProcessSteps as $processStep): ?>
@@ -1679,11 +1681,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     window.gsap.set(cards.slice(1), {
-      xPercent: 112,
+      xPercent: 118,
       yPercent: 8,
       rotate: 4,
       scale: 0.96,
-      autoAlpha: 1
+      autoAlpha: 0
     });
 
     if (strip) {
@@ -1738,7 +1740,14 @@ document.addEventListener('DOMContentLoaded', function () {
       const previousCards = cards.slice(0, index + 1);
       const position = index * 1.15;
       timeline
-        .to(card, {
+        .fromTo(card, {
+          autoAlpha: 0,
+          xPercent: 118,
+          yPercent: 8,
+          rotate: 4,
+          scale: 0.96
+        }, {
+          autoAlpha: 1,
           xPercent: 0,
           yPercent: 0,
           rotate: 0,
