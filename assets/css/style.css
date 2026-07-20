@@ -3924,7 +3924,7 @@ input.main-search-input::placeholder {
 }
 
 .breadcumb2 {
-  height: 340px;
+  height: 250px;
   box-sizing: border-box;
   display: flex;
   align-items: end;
@@ -3933,19 +3933,19 @@ input.main-search-input::placeholder {
 }
 @media only screen and (max-width: 1199px) {
   .breadcumb2 {
-    height: 330px;
+    height: 250px;
     padding: 50px 20px;
   }
 }
 @media only screen and (max-width: 991px) {
   .breadcumb2 {
-    height: 330px;
+    height: 300px;
     padding: 48px 18px;
   }
 }
 @media only screen and (max-width: 767px) {
   .breadcumb2 {
-    height: 260px;
+    height: 300px;
     padding: 75px 12px 30px;
   }
 }
