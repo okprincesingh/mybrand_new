@@ -144,7 +144,7 @@ include 'includes/header.php';
           <div class="container rr-container-1350">
             <div class="product-details-wrapper">
               <div class="row g-4 d-flex justify-content-center justify-content-between">
-                <div class="col-xl-6 col-lg-6">
+                <div class="col-xl-4 col-lg-4">
                   <div class="product-details-items">
                     <div class="tab-content">
                       <?php foreach ($gallery as $index => $imagePath): ?>
@@ -184,7 +184,7 @@ include 'includes/header.php';
                     </div>
                   </div>
                 </div>
-                <div class="col-xl-6 col-lg-6">
+                <div class="col-xl-8 col-lg-8">
                   <div class="product-details-content">
                     <!-- <p class="product-details-content__text">Pelican</p> -->
                     <h1 class="product-details-content__title mb-2"><?php echo htmlspecialchars($product['name'] ?? 'Product', ENT_QUOTES, 'UTF-8'); ?></h1>
@@ -782,16 +782,16 @@ include 'includes/header.php';
               <div class="tab-content" id="product-info-tabContent">
                 <div class="tab-pane fade show active" id="product-info-moq" role="tabpanel" aria-labelledby="product-info-moq-tab" tabindex="0">
                   <h6 class="mb-2">Minimum Order Quantity</h6>
-                  <p class="mb-2 text-muted lh-base fs-17 word-spacing-3">Our MOQ is usually based on bulk batch sizes ranging from 50 kg to 100 kg Bulk, depending on the viscosity and nature of the product. (±10% tolerance).</p>
-                  <p class="mb-2 text-muted lh-base fs-17 word-spacing-3">Eg - For a 50 kg Bulk batch size usually for skin care or hair care Serums & color cosmetics, if your pack size is 30ml, you would receive approximately 1,000 to 1500 units. (±10% tolerance).</p>
-                  <p class="mb-2 text-muted lh-base fs-17 word-spacing-3">For a batch size of 100 kg or more, typically for  Cream, SPF’s, Shampoo, Conditioners, Body Lotions, Body Wash, Hair oil Variants, etc., a 200 ml SKU would yield approximately 500 units. (±10% tolerance).</p>
+                  <p class="mb-2 text-muted lh-base fs-17 word-spacing-3">Our MOQ is usually based on bulk batch sizes ranging from 50 kg to 100 kg Bulk, depending on the viscosity and nature of the product. (ï¿½10% tolerance).</p>
+                  <p class="mb-2 text-muted lh-base fs-17 word-spacing-3">Eg - For a 50 kg Bulk batch size usually for skin care or hair care Serums & color cosmetics, if your pack size is 30ml, you would receive approximately 1,000 to 1500 units. (ï¿½10% tolerance).</p>
+                  <p class="mb-2 text-muted lh-base fs-17 word-spacing-3">For a batch size of 100 kg or more, typically for  Cream, SPFï¿½s, Shampoo, Conditioners, Body Lotions, Body Wash, Hair oil Variants, etc., a 200 ml SKU would yield approximately 500 units. (ï¿½10% tolerance).</p>
                 </div>
                 <div class="tab-pane fade" id="product-info-note" role="tabpanel" aria-labelledby="product-info-note-tab" tabindex="0">
                   <h6 class="mb-2">Why is adhering to MOQ important?</h6>
                   <p class="mb-2 text-muted lh-base fs-17 word-spacing-3">The Minimum Order Quantity for bulk batch size that we have shared is the industry standard globally, and it is set to ensure product quality, stability, and consistent efficacy for commercial production batches. Bulk sizes below this threshold is very likely compromising on formulation integrity.</p>
                   <p class="mb-2 text-muted lh-base fs-17 word-spacing-3">For cosmetic products especially those with performance-oriented actives the shelf life, texture, fragrance stability, and overall efficacy depend heavily on proper homogenization. In standard manufacturing, ingredients are blended using automated mixers at controlled RPM, which vary according to the viscosity and nature of each formulation. This ensures uniform distribution of active ingredients and guarantees compliance with product claims.</p>
                   <p class="mb-2 text-muted lh-base fs-17 word-spacing-3">When the batch size is reduced below the minimum required volume, the blending process cannot be executed correctly within the mixer. This results in uneven dispersion of actives, compromised stability, and a product whose shelf life cannot be assured. Manual blending is not a sustainable or scientifically sound method for commercial production, especially for premium grooming products.</p>
-                  <p class="mb-2 text-muted lh-base fs-17 word-spacing-3">For these reasons, adhering to the industry-standard MOQ is essential to deliver a product that meets both regulatory expectations and your brand’s high-performance standards.</p>
+                  <p class="mb-2 text-muted lh-base fs-17 word-spacing-3">For these reasons, adhering to the industry-standard MOQ is essential to deliver a product that meets both regulatory expectations and your brandï¿½s high-performance standards.</p>
                 </div>
                 <div class="tab-pane fade" id="product-info-custom" role="tabpanel" aria-labelledby="product-info-custom-tab" tabindex="0">
                   <h6 class="mb-2">New Custom Formulation</h6>

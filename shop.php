@@ -480,7 +480,7 @@ include 'includes/header.php';
     margin: 0 0 18px;
     color: #ee4f8a;
     font-family: var(--font_Playfair);
-    font-size: clamp(34px, 4vw, 56px);
+    font-size: clamp(34px, 4vw, 36px);
     font-weight: 800;
     line-height: 1.05;
     letter-spacing: 0;
@@ -553,7 +553,7 @@ include 'includes/header.php';
       line-height: 1.72;
     }
     .shop-sub-detail__content h2 {
-      font-size: 32px;
+      font-size: 26px;
     }
   }
 </style>
