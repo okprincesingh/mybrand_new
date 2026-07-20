@@ -10,6 +10,14 @@ if (!validate_slug_value($slug)) {
     exit;
 }
 
+$combinedAerosolPerfumeSlugs = ['aerosols-perfumes', 'aerosols-parfumes', 'aerosols-and-perfumes', 'aerosol-perfume', 'aerosol-and-perfume'];
+if (in_array(catalog_normalize_identity($slug), $combinedAerosolPerfumeSlugs, true)) {
+    $_GET['category'] = 'aerosols-perfumes';
+    unset($_GET['slug']);
+    require __DIR__ . '/shop.php';
+    exit;
+}
+
 $category = catalog_find_category($slug);
 if ($category) {
     $_GET['category'] = (string) ($category['slug'] ?? $slug);

@@ -181,12 +181,15 @@ function cms_build_default_header_menu(): array
         ['label' => 'Hair Care', 'aliases' => ['hair-care']],
         ['label' => 'Bathing Soaps', 'aliases' => ['bathing-soaps']],
         ['label' => 'Especially For Men', 'aliases' => ['especially-for-men', 'men-s-care']],
-        ['label' => 'Aerosols & Perfumes', 'aliases' => ['aerosols', 'aerosols-parfumes', 'aerosols-perfumes', 'fragrances', 'perfumes']],
+        ['label' => 'Aerosols & Perfumes', 'aliases' => ['aerosols-perfumes']],
     ];
     foreach ($productMenuConfig as $menuEntry) {
-        $resolvedCategory = catalog_find_category_by_aliases((array) ($menuEntry['aliases'] ?? []));
+        $entryAliases = (array) ($menuEntry['aliases'] ?? []);
         $resolvedLabel = (string) ($menuEntry['label'] ?? 'Products');
-        $resolvedLink = catalog_shop_link((string) (((array) ($menuEntry['aliases'] ?? []))[0] ?? 'shop'));
+        $resolvedLink = catalog_shop_link((string) ($entryAliases[0] ?? 'shop'));
+        $resolvedCategory = in_array('aerosols-perfumes', $entryAliases, true)
+            ? null
+            : catalog_find_category_by_aliases($entryAliases);
 
         if ($resolvedCategory) {
             $resolvedLink = catalog_shop_link((string) ($resolvedCategory['slug'] ?? ''));
