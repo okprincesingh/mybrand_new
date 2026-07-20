@@ -224,7 +224,6 @@ include 'includes/header.php';
 <div class="breadcumb">
   <div class="container rr-container-1895">
     <div class="breadcumb-wrapper section-spacing-120 fix" data-bg-src="assets/imgs/breadcumbBg.jpg">
-      <div class="breadcumb-wrapper__title">Products</div>
       <ul class="breadcumb-wrapper__items">
         <li class="breadcumb-wrapper__items-list"><i class="fa-regular fa-house"></i></li>
         <li class="breadcumb-wrapper__items-list"><i class="fa-regular fa-chevron-right"></i></li>
@@ -240,6 +239,7 @@ include 'includes/header.php';
           <li class="breadcumb-wrapper__items-list"><span class="breadcumb-wrapper__items-list-title2"><?php echo htmlspecialchars((string) $activeSubcategory['name'], ENT_QUOTES, 'UTF-8'); ?></span></li>
         <?php endif; ?>
       </ul>
+      <div class="breadcumb-wrapper__title">Products</div>
     </div>
   </div>
 </div>

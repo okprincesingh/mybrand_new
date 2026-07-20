@@ -443,7 +443,7 @@ h6 {
 
 .hero-marquee {
     position: relative;
-    min-height: 300px;
+    min-height: 220px;
     overflow: hidden;
     background: black;
     isolation: isolate;
@@ -462,8 +462,8 @@ h6 {
 .hero-marquee__strip {
     position: absolute;
     left: -8vw;
-    width: 116vw;
-    height: 54px;
+    width: 110vw;
+    height: 40px;
     display: flex;
     align-items: center;
     overflow: hidden;
@@ -472,16 +472,16 @@ h6 {
 }
 
 .hero-marquee__strip--back {
-    top: 110px;
+    top: 80px;
     background: rgba(255, 239, 242, 0.94);
-    transform: rotate(4deg);
+    transform: rotate(3deg);
     z-index: 1;
 }
 
 .hero-marquee__strip--front {
-    top: 110px;
+    top: 80px;
     background: rgba(234, 242, 245, 0.94);
-    transform: rotate(-4deg);
+    transform: rotate(-3deg);
     z-index: 2;
 }
 
@@ -502,7 +502,7 @@ h6 {
 .hero-marquee__track span {
     color: var(--primary-two);
     font-family: var(--font_Lato);
-    font-size: clamp(22px, 2.6vw, 34px);
+    font-size: clamp(22px, 2.6vw, 22px);
     font-weight: 800;
     line-height: 1;
     letter-spacing: 0;
@@ -3768,8 +3768,8 @@ input.main-search-input::placeholder {
   height: 390px;
   box-sizing: border-box;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  /* flex-direction: column; */
+  justify-content: space-between;
   align-items: center;
   padding: 64px 24px;
 }
@@ -3783,12 +3783,16 @@ input.main-search-input::placeholder {
   .breadcumb-wrapper {
     height: 330px;
     padding: 48px 18px;
+    flex-direction: column-reverse;
+        justify-content: center;
   }
 }
 @media only screen and (max-width: 767px) {
   .breadcumb-wrapper {
     height: 300px;
     padding: 40px 16px;
+    flex-direction: column-reverse;
+        justify-content: center;
   }
 }
 .about-breadcumb-banner {
@@ -3833,6 +3837,7 @@ input.main-search-input::placeholder {
 @media only screen and (max-width: 991px) {
   .breadcumb-wrapper__title {
     font-size: 56px;
+    line-height: 40px;
   }
 }
 @media only screen and (max-width: 767px) {
@@ -3841,6 +3846,7 @@ input.main-search-input::placeholder {
   }
   .breadcumb-wrapper__title {
     font-size: 38px;
+    line-height: 40px;
   }
 }
 .breadcumb-wrapper__items {
@@ -3849,13 +3855,13 @@ input.main-search-input::placeholder {
   justify-content: center;
   align-items: center;
   justify-items: center;
-  margin: 0 auto;
+  /* margin: 0 auto; */
   gap: 15px;
   padding: 2px 16px;
   width: max-content;
   border-radius: 4px;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  margin-bottom: 50px;
+  /* margin-bottom: 50px; */
 }
 @media only screen and (max-width: 1199px) {
   .breadcumb-wrapper__items {
