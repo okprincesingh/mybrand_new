@@ -109,31 +109,8 @@ if ($isAosPage) {
   </script>
 
 <style>
-  .breadcumb-wrapper,
-  .breadcumb2 {
-    position: relative;
-    background-image: url('<?php echo htmlspecialchars($breadcrumbBackgroundUrl, ENT_QUOTES, 'UTF-8'); ?>') !important;
-    background-position: center center !important;
-    background-repeat: no-repeat !important;
-    background-size: cover !important;
-    overflow: hidden;
-  }
 
-  .breadcumb-wrapper::before,
-  .breadcumb2::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(rgba(255, 249, 252, 0.46), rgba(255, 241, 246, 0.46));
-    z-index: 0;
-    pointer-events: none;
-  }
 
-  .breadcumb-wrapper > *,
-  .breadcumb2 > * {
-    position: relative;
-    z-index: 1;
-  }
 </style>
 <script>
   document.addEventListener('DOMContentLoaded', function () {

@@ -113,7 +113,7 @@ include 'includes/header.php';
         <!--===== Breadcrumb  Section   S T A R T =====-->
         <div class="breadcumb2 fix">
           <div class="container rr-container-1350">
-            <div class="breadcumb2-wrapper">
+            <div class="breadcumb2-wrapper d-flex flex-wrap align-items-center justify-content-between">
               <ul class="breadcumb2-wrapper__items">
                 <li class="breadcumb2-wrapper__items-list">
                   <i class="fa-regular fa-house"></i>
@@ -135,6 +135,7 @@ include 'includes/header.php';
                   </a>
                 </li>
               </ul>
+              <h2><?php echo htmlspecialchars($product['name'] ?? 'Product Details', ENT_QUOTES, 'UTF-8'); ?></h2>
             </div>
           </div>
         </div>
