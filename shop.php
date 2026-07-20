@@ -344,6 +344,7 @@ include 'includes/header.php';
         <?php
           $categoryHeading = (string) ($categorySpecificHeading !== '' ? $categorySpecificHeading : (($activeCategoryLanding['title'] ?? '') !== '' ? $activeCategoryLanding['title'] : $activeCategory['name']));
           $categorySubhead = (string) ($categorySpecificSubtitle !== '' ? $categorySpecificSubtitle : (($activeCategoryLanding['subtitle'] ?? '') !== '' ? $activeCategoryLanding['subtitle'] : $shopCategorySubtitle));
+          $categoryPageImage = (string) ($activeCategory['page_image'] ?? $activeCategory['image'] ?? 'assets/imgs/product/skin-care.webp');
         ?>
         <h2 class="shop-showcase__title"><?php echo htmlspecialchars($categoryHeading, ENT_QUOTES, 'UTF-8'); ?></h2>
         <div class="shop-showcase__divider"></div>
@@ -380,12 +381,12 @@ include 'includes/header.php';
   <section class="shop-sub-detail section-spacing-120 rr-ov-hidden pt-5">
     <div class="container rr-container-1350">
       <div class="shop-sub-detail__top row g-4 align-items-center">
-        <div class="col-lg-6" data-aos="zoom-in">
+        <div class="col-lg-5" data-aos="zoom-in">
           <div class="shop-sub-detail__thumb">
-            <img src="<?php echo htmlspecialchars(url((string) ($activeSubcategory['image'] ?? $activeCategory['image'] ?? 'assets/imgs/product/skin-care.webp')), ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars((string) $activeSubcategory['name'], ENT_QUOTES, 'UTF-8'); ?>">
+            <img src="<?php echo htmlspecialchars(url((string) ($activeSubcategory['page_image'] ?? $activeSubcategory['image'] ?? $activeCategory['page_image'] ?? $activeCategory['image'] ?? 'assets/imgs/product/skin-care.webp')), ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars((string) $activeSubcategory['name'], ENT_QUOTES, 'UTF-8'); ?>">
           </div>
         </div>
-        <div class="col-lg-6" data-aos="fade-left">
+        <div class="col-lg-7" data-aos="fade-left">
           <div class="shop-sub-detail__content">
             <h2><?php echo htmlspecialchars((string) $activeSubcategory['name'], ENT_QUOTES, 'UTF-8'); ?></h2>
             <div class="shop-sub-detail__description">
@@ -464,15 +465,13 @@ include 'includes/header.php';
   }
   .shop-sub-detail__thumb {
     border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid rgba(238, 45, 122, 0.14);
-    box-shadow: 0 18px 48px rgba(12, 12, 12, 0.08);
+
   }
   .shop-sub-detail__thumb img {
     width: 100%;
     display: block;
-    object-fit: cover;
-    aspect-ratio: 16 / 9;
+    /* object-fit: cover; */
+    aspect-ratio: 16 / 10;
   }
   .shop-sub-detail__content {
     max-width: 620px;

@@ -3,24 +3,45 @@ require_once __DIR__ . '/_init.php';
 $adminUser = admin_require_auth();
 $title = 'Categories';
 $pdo = db();
+if ($pdo) {
+    try {
+        $column = db_fetch_one($pdo, "SHOW COLUMNS FROM categories LIKE 'page_image_path'");
+        if (!$column) {
+            $pdo->exec('ALTER TABLE categories ADD COLUMN page_image_path VARCHAR(255) NULL AFTER image_path');
+        }
+    } catch (Throwable $e) {
+        // The migration covers environments where the admin user cannot alter tables.
+    }
+}
 if ($pdo && $_SERVER['REQUEST_METHOD']==='POST') {
     verify_csrf_or_fail();
     $action=$_POST['action']??'';
     if($action==='save'){
       $id=(int)($_POST['id']??0);$name=trim((string)$_POST['name']);$slug=slugify(trim((string)($_POST['slug']?:$name)));$parent=(int)($_POST['parent_id']??0);$sortOrder=(int)($_POST['sort_order']??0);$shopHeading=trim((string)($_POST['shop_heading']??''));$shopSubtitle=trim((string)($_POST['shop_subtitle']??''));
       $imagePath = trim((string)($_POST['existing_image_path'] ?? ''));
+      $pageImagePath = trim((string)($_POST['existing_page_image_path'] ?? ''));
       if (!empty($_FILES['image']['name'])) {
         $stored = store_uploaded_image($_FILES['image'], 'categories', 5_000_000, false);
         if ($stored) {
           $imagePath = (string)$stored['public_path'];
         } else {
-          admin_flash('danger', 'Image upload failed. Please upload jpg, jpeg, png or webp (max 5MB).');
+          admin_flash('danger', 'Category card image upload failed. Please upload jpg, jpeg, png or webp (max 5MB).');
           header('Location: categories.php' . ($id > 0 ? '?edit=' . $id : ''));
           exit;
         }
       }
-      if($id>0){$st=$pdo->prepare('UPDATE categories SET parent_id=:p,name=:n,slug=:s,description=:d,is_active=:a,image_path=:img,sort_order=:so WHERE id=:id');$st->execute([':p'=>$parent?:null,':n'=>$name,':s'=>$slug,':d'=>(string)$_POST['description'],':a'=>(int)!empty($_POST['is_active']),':img'=>$imagePath,':so'=>$sortOrder,':id'=>$id]);$categoryId=$id;}
-      else {$st=$pdo->prepare('INSERT INTO categories (parent_id,name,slug,description,is_active,image_path,sort_order) VALUES (:p,:n,:s,:d,:a,:img,:so)');$st->execute([':p'=>$parent?:null,':n'=>$name,':s'=>$slug,':d'=>(string)$_POST['description'],':a'=>(int)!empty($_POST['is_active']),':img'=>$imagePath,':so'=>$sortOrder]);$categoryId=(int)$pdo->lastInsertId();}
+      if (!empty($_FILES['page_image']['name'])) {
+        $stored = store_uploaded_image($_FILES['page_image'], 'categories', 5_000_000, false);
+        if ($stored) {
+          $pageImagePath = (string)$stored['public_path'];
+        } else {
+          admin_flash('danger', 'Category page image upload failed. Please upload jpg, jpeg, png or webp (max 5MB).');
+          header('Location: categories.php' . ($id > 0 ? '?edit=' . $id : ''));
+          exit;
+        }
+      }
+      if($id>0){$st=$pdo->prepare('UPDATE categories SET parent_id=:p,name=:n,slug=:s,description=:d,is_active=:a,image_path=:img,page_image_path=:page_img,sort_order=:so WHERE id=:id');$st->execute([':p'=>$parent?:null,':n'=>$name,':s'=>$slug,':d'=>(string)$_POST['description'],':a'=>(int)!empty($_POST['is_active']),':img'=>$imagePath,':page_img'=>$pageImagePath,':so'=>$sortOrder,':id'=>$id]);$categoryId=$id;}
+      else {$st=$pdo->prepare('INSERT INTO categories (parent_id,name,slug,description,is_active,image_path,page_image_path,sort_order) VALUES (:p,:n,:s,:d,:a,:img,:page_img,:so)');$st->execute([':p'=>$parent?:null,':n'=>$name,':s'=>$slug,':d'=>(string)$_POST['description'],':a'=>(int)!empty($_POST['is_active']),':img'=>$imagePath,':page_img'=>$pageImagePath,':so'=>$sortOrder]);$categoryId=(int)$pdo->lastInsertId();}
       if (!empty($categoryId)) {
         $k1 = 'category_shop_heading_' . $categoryId;
         $k2 = 'category_shop_subtitle_' . $categoryId;
@@ -35,7 +56,7 @@ if ($pdo && $_SERVER['REQUEST_METHOD']==='POST') {
     }
     if($action==='delete'){ $id=(int)$_POST['id']; $pdo->prepare('DELETE FROM categories WHERE id=:id')->execute([':id'=>$id]); if($id>0){$k1='category_shop_heading_'.$id;$k2='category_shop_subtitle_'.$id;$pdo->prepare('DELETE FROM site_settings WHERE setting_key IN (:k1,:k2)')->execute([':k1'=>$k1,':k2'=>$k2]);cms_invalidate_settings_cache($k1);cms_invalidate_settings_cache($k2);} catalog_invalidate_cache(); admin_flash('success','Category deleted.'); header('Location: categories.php'); exit; }
 }
-$editId=(int)($_GET['edit']??0);$edit=['id'=>0,'name'=>'','slug'=>'','parent_id'=>0,'description'=>'','is_active'=>1,'image_path'=>'','sort_order'=>0,'shop_heading'=>'','shop_subtitle'=>''];
+$editId=(int)($_GET['edit']??0);$edit=['id'=>0,'name'=>'','slug'=>'','parent_id'=>0,'description'=>'','is_active'=>1,'image_path'=>'','page_image_path'=>'','sort_order'=>0,'shop_heading'=>'','shop_subtitle'=>''];
 if($pdo && $editId>0){$s=$pdo->prepare('SELECT * FROM categories WHERE id=:id');$s->execute([':id'=>$editId]);$r=$s->fetch();if($r){$edit=$r;$edit['shop_heading']=(string)(cms_get_setting('category_shop_heading_'.$editId,'') ?? '');$edit['shop_subtitle']=(string)(cms_get_setting('category_shop_subtitle_'.$editId,'') ?? '');}}
 
 $filterQ = trim((string)($_GET['q'] ?? ''));
@@ -82,6 +103,7 @@ include __DIR__ . '/_layout_top.php';
         <input type="hidden" name="action" value="save">
         <input type="hidden" name="id" value="<?= (int)$edit['id'] ?>">
         <input type="hidden" name="existing_image_path" value="<?= e((string)$edit['image_path']) ?>">
+        <input type="hidden" name="existing_page_image_path" value="<?= e((string)($edit['page_image_path'] ?? '')) ?>">
 
         <div class="form-group">
           <label class="form-label">Name</label>
@@ -111,11 +133,22 @@ include __DIR__ . '/_layout_top.php';
         </div>
         
         <div class="form-group" style="grid-column:1/-1;">
-          <label class="form-label">Category / Sub-category Image</label>
+          <label class="form-label">Category Card Image</label>
           <input type="file" name="image" class="form-control" accept="image/jpeg,image/png,image/webp">
           <?php if ((string)$edit['image_path'] !== ''): ?>
             <div class="mt-2">
               <img src="<?= e(url((string)$edit['image_path'])) ?>" alt="" style="width:120px;height:80px;object-fit:cover;border-radius:10px;border:1px solid var(--border);">
+            </div>
+          <?php endif; ?>
+        </div>
+
+        <div class="form-group" style="grid-column:1/-1;">
+          <label class="form-label">Category Page Image</label>
+          <input type="file" name="page_image" class="form-control" accept="image/jpeg,image/png,image/webp">
+          <small class="text-muted">Shown after opening this category/sub-category page. If empty, card image will be used.</small>
+          <?php if ((string)($edit['page_image_path'] ?? '') !== ''): ?>
+            <div class="mt-2">
+              <img src="<?= e(url((string)$edit['page_image_path'])) ?>" alt="" style="width:160px;height:90px;object-fit:cover;border-radius:10px;border:1px solid var(--border);">
             </div>
           <?php endif; ?>
         </div>
@@ -189,7 +222,8 @@ include __DIR__ . '/_layout_top.php';
         <table class="modern-table">
           <thead>
             <tr>
-              <th>Image</th>
+              <th>Card Image</th>
+              <th>Page Image</th>
               <th>Name</th>
               <th>Slug</th>
               <th>Parent</th>
@@ -205,6 +239,13 @@ include __DIR__ . '/_layout_top.php';
                     <img src="<?= e(url((string)$r['image_path'])) ?>" alt="" style="width:72px;height:48px;object-fit:cover;border-radius:8px;border:1px solid var(--border);">
                   <?php else: ?>
                     <span class="text-muted">No image</span>
+                  <?php endif; ?>
+                </td>
+                <td>
+                  <?php if ((string)($r['page_image_path'] ?? '') !== ''): ?>
+                    <img src="<?= e(url((string)$r['page_image_path'])) ?>" alt="" style="width:72px;height:48px;object-fit:cover;border-radius:8px;border:1px solid var(--border);">
+                  <?php else: ?>
+                    <span class="text-muted">Uses card image</span>
                   <?php endif; ?>
                 </td>
                 <td><?= e($r['name']) ?></td>
@@ -234,7 +275,7 @@ include __DIR__ . '/_layout_top.php';
             <?php endforeach; ?>
             <?php if(!$rows): ?>
               <tr>
-                <td colspan="6" class="text-center text-muted py-4">No categories found for selected filters.</td>
+                <td colspan="7" class="text-center text-muted py-4">No categories found for selected filters.</td>
               </tr>
             <?php endif; ?>
           </tbody>

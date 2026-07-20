@@ -17,9 +17,9 @@ function catalog_invalidate_cache(): void
 function catalog_fallback_categories(): array
 {
     return [
-        ['id' => 0, 'slug' => 'skin-care', 'name' => 'Skin Care', 'description' => 'Hydration, treatment and glow essentials', 'image' => 'assets/imgs/product/skin-care.webp', 'subcategories' => []],
-        ['id' => 0, 'slug' => 'body-care', 'name' => 'Body Care', 'description' => 'Nourishing formulas for daily body wellness', 'image' => 'assets/imgs/product/body-care.webp', 'subcategories' => []],
-        ['id' => 0, 'slug' => 'hair-care', 'name' => 'Hair Care', 'description' => 'Targeted care for strong and healthy hair', 'image' => 'assets/imgs/product/hair-care.webp', 'subcategories' => []],
+        ['id' => 0, 'slug' => 'skin-care', 'name' => 'Skin Care', 'description' => 'Hydration, treatment and glow essentials', 'image' => 'assets/imgs/product/skin-care.webp', 'page_image' => 'assets/imgs/product/skin-care.webp', 'subcategories' => []],
+        ['id' => 0, 'slug' => 'body-care', 'name' => 'Body Care', 'description' => 'Nourishing formulas for daily body wellness', 'image' => 'assets/imgs/product/body-care.webp', 'page_image' => 'assets/imgs/product/body-care.webp', 'subcategories' => []],
+        ['id' => 0, 'slug' => 'hair-care', 'name' => 'Hair Care', 'description' => 'Targeted care for strong and healthy hair', 'image' => 'assets/imgs/product/hair-care.webp', 'page_image' => 'assets/imgs/product/hair-care.webp', 'subcategories' => []],
     ];
 }
 
@@ -143,7 +143,15 @@ function catalog_categories(): array
         return catalog_fallback_categories();
     }
 
-    $rows = db_fetch_all($pdo, 'SELECT id,parent_id,name,slug,description,image_path,sort_order FROM categories WHERE is_active = 1 ORDER BY parent_id ASC, sort_order ASC, name ASC');
+    $hasPageImagePath = false;
+    try {
+        $hasPageImagePath = (bool) db_fetch_one($pdo, "SHOW COLUMNS FROM categories LIKE 'page_image_path'");
+    } catch (Throwable $e) {
+        $hasPageImagePath = false;
+    }
+
+    $pageImageSelect = $hasPageImagePath ? 'page_image_path' : 'NULL AS page_image_path';
+    $rows = db_fetch_all($pdo, 'SELECT id,parent_id,name,slug,description,image_path,' . $pageImageSelect . ',sort_order FROM categories WHERE is_active = 1 ORDER BY parent_id ASC, sort_order ASC, name ASC');
     if (!$rows) {
         return catalog_fallback_categories();
     }
@@ -158,6 +166,7 @@ function catalog_categories(): array
                 'name' => (string) $r['name'],
                 'description' => (string) ($r['description'] ?? ''),
                 'image' => (string) ($r['image_path'] ?: 'assets/imgs/product/skin-care.webp'),
+                'page_image' => (string) ($r['page_image_path'] ?: $r['image_path'] ?: 'assets/imgs/product/skin-care.webp'),
                 'subcategories' => [],
             ];
         } else {
@@ -174,6 +183,7 @@ function catalog_categories(): array
                 'name' => (string) $s['name'],
                 'description' => (string) ($s['description'] ?? ''),
                 'image' => (string) ($s['image_path'] ?: $top[$pid]['image']),
+                'page_image' => (string) ($s['page_image_path'] ?: $s['image_path'] ?: $top[$pid]['page_image']),
             ];
         }
     }
