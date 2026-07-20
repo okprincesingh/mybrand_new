@@ -19784,6 +19784,7 @@ iframe {
   font-family: var(--font_Lato);
   font-size: 1rem;
   line-height: 1.75;
+  text-align: center;
 }
 .milestone-grid {
   display: grid;
@@ -19862,6 +19863,7 @@ iframe {
   line-height: 1.5;
   font-family: var(--font_Lato);
   font-weight: 800;
+  text-align: center;
 }
 .milestone-card:nth-child(1) .milestone-card__number {
   color: #f04d8a;
@@ -24184,10 +24186,10 @@ iframe {
   width: 100%;
 }
 
-.gs-process__card-front > .gs-card-title,
+/* .gs-process__card-front > .gs-card-title,
 .gs-process__card-front > .gs-card-text {
   text-align: left;
-}
+} */
 
 .gs-process__card-back {
   display: flex;
@@ -24335,6 +24337,7 @@ iframe {
   line-height: 1.3;
   color: var(--gs-deep);
   letter-spacing: 0.01em;
+  text-align: center;
 }
 
 .gs-card-text {
