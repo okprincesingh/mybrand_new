@@ -266,7 +266,7 @@ include 'includes/header.php';
                     </div>
                     <div class="product-details-content__meta mb-4">
                       <div class="meta-row"><span class="k">Category:</span> <span class="v"><?php echo htmlspecialchars($categoryInfo['name'] ?? 'Beauty & Cosmetics', ENT_QUOTES, 'UTF-8'); ?></span></div>
-                      <!-- <div class="meta-row"><span class="k">Tag:</span> <span class="v">Cream</span></div> -->
+                      <div class="meta-row"><span class="k text-danger">Note:</span> <span class="v">Product packaging images are shown for illustrative purposes only.</span></div>
                     </div>
                     <!-- <div class="product-details-content__checkout">
                       <p class="product-details-content__checkout-text mb-2">Guranted Safe Checkout</p>
