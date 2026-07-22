@@ -9,6 +9,40 @@ function catalog_cache_key(string $key): string
     return 'catalog:' . $key;
 }
 
+function catalog_ensure_product_filter_indexes(PDO $pdo): void
+{
+    static $checked = false;
+    if ($checked) {
+        return;
+    }
+    $checked = true;
+
+    try {
+        $indexes = db_fetch_all($pdo, 'SHOW INDEX FROM products');
+        $existing = [];
+        foreach ($indexes as $index) {
+            $existing[(string) ($index['Key_name'] ?? '')] = true;
+        }
+        if (!isset($existing['idx_products_active_status_category'])) {
+            $pdo->exec('CREATE INDEX idx_products_active_status_category ON products (is_active, status, category_id, created_at)');
+        }
+        if (!isset($existing['idx_products_name'])) {
+            $pdo->exec('CREATE INDEX idx_products_name ON products (name)');
+        }
+
+        $categoryIndexes = db_fetch_all($pdo, 'SHOW INDEX FROM categories');
+        $existingCategoryIndexes = [];
+        foreach ($categoryIndexes as $index) {
+            $existingCategoryIndexes[(string) ($index['Key_name'] ?? '')] = true;
+        }
+        if (!isset($existingCategoryIndexes['idx_categories_slug_parent'])) {
+            $pdo->exec('CREATE INDEX idx_categories_slug_parent ON categories (slug, parent_id)');
+        }
+    } catch (Throwable $e) {
+        // Index creation is an optimization only; page rendering should continue without it.
+    }
+}
+
 function catalog_invalidate_cache(): void
 {
     cache_clear_prefix('catalog:');
@@ -207,6 +241,7 @@ function get_products(array $filters = [], array $pagination = []): array
             'total' => count($items),
         ];
     }
+    catalog_ensure_product_filter_indexes($pdo);
 
     $where = ['p.is_active = 1'];
     $params = [];

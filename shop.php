@@ -313,12 +313,17 @@ include 'includes/header.php';
           </div>
         <?php endif; ?>
 
-        <?php $delay = 0.2; ?>
-        <?php foreach ($displayProducts as $product): ?>
-          <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="<?php echo number_format($delay, 1); ?>s">
+        <?php foreach ($displayProducts as $productIndex => $product): ?>
+          <?php $isPriorityProductImage = $productIndex < 8; ?>
+          <div class="col-xl-3 col-lg-4 col-md-6">
             <div class="shop-card">
               <div class="shop-card__thumb">
-                <img src="<?php echo htmlspecialchars(url((string) $product['image']), ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars((string) $product['name'], ENT_QUOTES, 'UTF-8'); ?>">
+                <img
+                  src="<?php echo htmlspecialchars(url((string) $product['image']), ENT_QUOTES, 'UTF-8'); ?>"
+                  alt="<?php echo htmlspecialchars((string) $product['name'], ENT_QUOTES, 'UTF-8'); ?>"
+                  loading="<?php echo $isPriorityProductImage ? 'eager' : 'lazy'; ?>"
+                  decoding="async"
+                  <?php echo $isPriorityProductImage ? 'fetchpriority="high"' : 'fetchpriority="low"'; ?>>
                 <?php if (!empty($product['badge'])): ?>
                   <div class="shop-card__thumb-offer"><?php echo htmlspecialchars((string) $product['badge'], ENT_QUOTES, 'UTF-8'); ?></div>
                 <?php endif; ?>
@@ -346,7 +351,6 @@ include 'includes/header.php';
               </div>
             </div>
           </div>
-          <?php $delay += 0.1; ?>
         <?php endforeach; ?>
       </div>
     </div>
@@ -471,12 +475,17 @@ include 'includes/header.php';
           </div>
         <?php endif; ?>
 
-        <?php $delay = 0.2; ?>
-        <?php foreach ($displayProducts as $product): ?>
-          <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="<?php echo number_format($delay, 1); ?>s">
+        <?php foreach ($displayProducts as $productIndex => $product): ?>
+          <?php $isPriorityProductImage = $productIndex < 8; ?>
+          <div class="col-xl-3 col-lg-4 col-md-6">
             <div class="shop-card">
               <div class="shop-card__thumb">
-                <img src="<?php echo htmlspecialchars(url((string) $product['image']), ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars((string) $product['name'], ENT_QUOTES, 'UTF-8'); ?>">
+                <img
+                  src="<?php echo htmlspecialchars(url((string) $product['image']), ENT_QUOTES, 'UTF-8'); ?>"
+                  alt="<?php echo htmlspecialchars((string) $product['name'], ENT_QUOTES, 'UTF-8'); ?>"
+                  loading="<?php echo $isPriorityProductImage ? 'eager' : 'lazy'; ?>"
+                  decoding="async"
+                  <?php echo $isPriorityProductImage ? 'fetchpriority="high"' : 'fetchpriority="low"'; ?>>
                 <?php if (!empty($product['badge'])): ?>
                   <div class="shop-card__thumb-offer"><?php echo htmlspecialchars((string) $product['badge'], ENT_QUOTES, 'UTF-8'); ?></div>
                 <?php endif; ?>
@@ -504,7 +513,6 @@ include 'includes/header.php';
               </div>
             </div>
           </div>
-          <?php $delay += 0.1; ?>
         <?php endforeach; ?>
       </div>
     </div>
