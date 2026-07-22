@@ -50,39 +50,71 @@ function admin_ensure_certificates_table(?PDO $pdo): bool
 
 function admin_store_certificate_file(array $file, string $subdir, int $maxBytes, bool $allowPdf = true): ?array
 {
-  if (($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK || ($file['size'] ?? 0) > $maxBytes) {
+  $GLOBALS['admin_certificate_upload_error'] = '';
+  $uploadError = (int) ($file['error'] ?? UPLOAD_ERR_NO_FILE);
+  if ($uploadError !== UPLOAD_ERR_OK) {
+    $messages = [
+      UPLOAD_ERR_INI_SIZE => 'The uploaded file is larger than the live server upload_max_filesize limit.',
+      UPLOAD_ERR_FORM_SIZE => 'The uploaded file is larger than the form limit.',
+      UPLOAD_ERR_PARTIAL => 'The upload was interrupted. Please try again.',
+      UPLOAD_ERR_NO_FILE => 'Please choose a file to upload.',
+      UPLOAD_ERR_NO_TMP_DIR => 'The live server is missing a PHP temporary upload folder.',
+      UPLOAD_ERR_CANT_WRITE => 'The live server could not write the uploaded file.',
+      UPLOAD_ERR_EXTENSION => 'A PHP extension stopped the upload.',
+    ];
+    $GLOBALS['admin_certificate_upload_error'] = $messages[$uploadError] ?? 'Upload failed with error code ' . $uploadError . '.';
+    return null;
+  }
+
+  if (($file['size'] ?? 0) > $maxBytes) {
+    $GLOBALS['admin_certificate_upload_error'] = 'The uploaded file is larger than the allowed ' . (int) ($maxBytes / 1_000_000) . 'MB limit.';
     return null;
   }
 
   $tmp = $file['tmp_name'] ?? '';
   $name = (string) ($file['name'] ?? '');
   if (!is_string($tmp) || $tmp === '' || !is_uploaded_file($tmp) || $name === '') {
+    $GLOBALS['admin_certificate_upload_error'] = 'The live server did not provide a valid uploaded file.';
     return null;
   }
 
   $base = basename($name);
   $extension = strtolower(pathinfo($base, PATHINFO_EXTENSION));
   if ($extension === '') {
+    $GLOBALS['admin_certificate_upload_error'] = 'The uploaded file has no extension.';
     return null;
   }
 
-  $finfo = finfo_open(FILEINFO_MIME_TYPE);
+  $finfo = function_exists('finfo_open') ? finfo_open(FILEINFO_MIME_TYPE) : false;
   $mime = $finfo ? (string) finfo_file($finfo, $tmp) : '';
   if ($finfo) {
     finfo_close($finfo);
   }
 
-  $imageInfo = @getimagesize($tmp);
-  $isPdf = $allowPdf && $extension === 'pdf' && ($mime === 'application/pdf' || str_starts_with($mime, 'application/'));
-  $isImage = $extension !== 'svg' && is_array($imageInfo);
+  $imageInfo = function_exists('getimagesize') ? @getimagesize($tmp) : false;
+  $commonImageExtensions = ['jpg', 'jpeg', 'jpe', 'png', 'webp', 'gif', 'bmp', 'avif', 'heic', 'heif', 'tif', 'tiff'];
+  $isPdf = $allowPdf && $extension === 'pdf' && ($mime === '' || $mime === 'application/pdf' || str_starts_with($mime, 'application/'));
+  $isImage = $extension !== 'svg' && (
+    is_array($imageInfo)
+    || str_starts_with($mime, 'image/')
+    || ($mime === '' && in_array($extension, $commonImageExtensions, true))
+    || in_array($extension, ['jpg', 'jpeg', 'jpe'], true)
+  );
   if (!$isPdf && !$isImage) {
+    $GLOBALS['admin_certificate_upload_error'] = 'The file does not look like a supported image or PDF. Detected MIME: ' . ($mime !== '' ? $mime : 'unknown') . '.';
     return null;
   }
 
   $targetDir = upload_storage_dir($subdir, false);
+  if (!is_dir($targetDir) || !is_writable($targetDir)) {
+    $GLOBALS['admin_certificate_upload_error'] = 'Upload folder is not writable: uploads/' . trim($subdir, "/\\") . '.';
+    return null;
+  }
+
   $newFileName = hash('sha256', random_bytes(32) . microtime(true) . $name) . '.' . $extension;
   $targetPath = rtrim($targetDir, "/\\") . DIRECTORY_SEPARATOR . $newFileName;
   if (!move_uploaded_file($tmp, $targetPath)) {
+    $GLOBALS['admin_certificate_upload_error'] = 'The uploaded file could not be moved into uploads/' . trim($subdir, "/\\") . '.';
     return null;
   }
 
@@ -199,7 +231,8 @@ if ($tableReady && $_SERVER['REQUEST_METHOD'] === 'POST') {
       true
     );
     if (!$stored) {
-      admin_flash('danger', 'Certificate upload failed. Use a valid image file or PDF up to 12MB.');
+      $uploadError = (string) ($GLOBALS['admin_certificate_upload_error'] ?? '');
+      admin_flash('danger', 'Certificate upload failed. ' . ($uploadError !== '' ? $uploadError : 'Use a valid image file or PDF up to 12MB.'));
       header('Location: certificates.php' . ($id > 0 ? '?edit=' . $id : ''));
       exit;
     }
@@ -213,7 +246,8 @@ if ($tableReady && $_SERVER['REQUEST_METHOD'] === 'POST') {
   if (!empty($_FILES['preview_image']['name'])) {
     $preview = admin_store_certificate_file($_FILES['preview_image'], 'certificates', 5_000_000, false);
     if (!$preview) {
-      admin_flash('danger', 'Preview image upload failed. Use a valid image file up to 5MB.');
+      $uploadError = (string) ($GLOBALS['admin_certificate_upload_error'] ?? '');
+      admin_flash('danger', 'Preview image upload failed. ' . ($uploadError !== '' ? $uploadError : 'Use a valid image file up to 5MB.'));
       header('Location: certificates.php' . ($id > 0 ? '?edit=' . $id : ''));
       exit;
     }

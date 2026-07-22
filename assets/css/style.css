@@ -538,7 +538,21 @@ h6 {
 .hero-video-desktop {
     display: block;
 }
-
+@media (min-width: 2200px) {
+.hero-marquee{
+  height: 260px;
+}
+.hero-marquee__track span{
+  font-size:clamp(22px, 2.6vw, 45px);
+  font-weight: 600;
+}
+.hero-marquee__strip{
+  height: 80px;
+}
+.hero-marquee__strip--front, .hero-marquee__strip--back{
+  top: 90px;
+}
+}
 /* Tablet */
 @media (max-width: 991px) {
     .hero-video-section {
@@ -27394,10 +27408,10 @@ iframe {
 
 .handshake-section__hand--top {
   left: clamp(0px, 1.4vw, 54px);
-  right: auto;
-  top: clamp(-118px, -7.6vh, -58px);
-  width: clamp(720px, 52vw, 1240px);
-  transform-origin: 62% 70%;
+    right: auto;
+    top: clamp(-118px, -7.6vh, -58px);
+    width: clamp(720px, 52vw, 1240px);
+    transform-origin: 62% 70%;
 }
 
 .handshake-section__hand--bottom {
@@ -27523,10 +27537,13 @@ iframe {
 
   .handshake-section__hand--top {
     left: clamp(28px, 3vw, 96px);
+    top: clamp(-118px, -7.6vh, -58px);
   }
 
+
   .handshake-section__hand--bottom {
-    right: clamp(-190px, -5.8vw, -110px);
+    right: clamp(-190px, -4.8vw, -110px);
+    bottom: clamp(-180px, -40.2vh, -16px);
   }
 }
 
