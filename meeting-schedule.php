@@ -150,7 +150,7 @@ $defaultTimezone = isset($_GET['timezone']) ? $_GET['timezone'] : 'Asia/Kolkata'
                         <img src="<?php echo url('uploads/logo/mybrandplease-1.gif'); ?>" alt="Logo" class="brand-logo">
                         <hr class="my-4" style="opacity: 0.1;">
                         <p class="text-muted small fw-bold mb-1">NIMISHA IMPEX WORLDWIDE (P) LIMITED</p>
-                        <h2 class="h4 text-muted fw-bold mb-4">30 Minute Meeting</h2>
+                        <h2 class="h4 text-muted fw-bold mb-4"><span class="thirty-minute">30</span> Minute Meeting</h2>
                         <div class="meta-item">
                             <i class="fa-regular fa-clock"></i>
                             <span>30 min</span>

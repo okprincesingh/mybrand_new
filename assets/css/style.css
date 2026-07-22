@@ -28109,3 +28109,7 @@ iframe {
     line-height: 1.5;
   }
 }
+
+.thirty-minute{
+font-family: var(--font_Lato);
+}

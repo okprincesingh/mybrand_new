@@ -7,6 +7,22 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 $headerMenuItems = cms_get_resolved_header_menu();
+if (!function_exists('header_menu_item_is_certificates')) {
+    function header_menu_item_is_certificates(array $item): bool
+    {
+        $url = strtolower(trim((string) ($item['url'] ?? '')));
+        $title = strtolower(trim((string) ($item['title'] ?? '')));
+        return str_contains($url, 'our-certificates') || str_contains($title, 'certificate');
+    }
+}
+
+$certificatesMenuItem = [
+    'id' => 909001,
+    'title' => 'Our Certificates',
+    'url' => 'our-certificates.php',
+    'children' => [],
+];
+
 foreach ($headerMenuItems as &$headerMenuItem) {
     if (cms_header_menu_key($headerMenuItem) === 'our-product') {
         $headerMenuItem['title'] = 'Sample';
@@ -15,37 +31,32 @@ foreach ($headerMenuItems as &$headerMenuItem) {
         $headerMenuItem['title'] = 'Services';
     }
     if (cms_header_menu_key($headerMenuItem) === 'about-us') {
-        $filteredChildren = [];
-        foreach ((array) ($headerMenuItem['children'] ?? []) as $childMenuItem) {
-            $childUrl = strtolower(trim((string) ($childMenuItem['url'] ?? '')));
-            $childTitle = strtolower(trim((string) ($childMenuItem['title'] ?? '')));
-            if (!str_contains($childUrl, 'our-certificates') && !str_contains($childTitle, 'certificate')) {
-                $filteredChildren[] = $childMenuItem;
-            }
-        }
-        $headerMenuItem['children'] = $filteredChildren;
-    }
-    if (cms_header_menu_key($headerMenuItem) === 'resources') {
         $hasCertificatesLink = false;
-        foreach ((array) ($headerMenuItem['children'] ?? []) as &$childMenuItem) {
-            $childUrl = strtolower(trim((string) ($childMenuItem['url'] ?? '')));
-            $childTitle = strtolower(trim((string) ($childMenuItem['title'] ?? '')));
-            if (str_contains($childUrl, 'our-certificates') || str_contains($childTitle, 'certificate')) {
+        if (!isset($headerMenuItem['children']) || !is_array($headerMenuItem['children'])) {
+            $headerMenuItem['children'] = [];
+        }
+        foreach ($headerMenuItem['children'] as &$childMenuItem) {
+            if (header_menu_item_is_certificates($childMenuItem)) {
                 $hasCertificatesLink = true;
                 $childMenuItem['url'] = 'our-certificates.php';
+                $childMenuItem['title'] = 'Our Certificates';
+                $childMenuItem['children'] = [];
                 break;
             }
         }
         unset($childMenuItem);
 
         if (!$hasCertificatesLink) {
-            $headerMenuItem['children'][] = [
-                'id' => 909001,
-                'title' => 'Our Certificates',
-                'url' => 'our-certificates.php',
-                'children' => [],
-            ];
+            $headerMenuItem['children'][] = $certificatesMenuItem;
         }
+    } else {
+        $filteredChildren = [];
+        foreach ((array) ($headerMenuItem['children'] ?? []) as $childMenuItem) {
+            if (!header_menu_item_is_certificates($childMenuItem)) {
+                $filteredChildren[] = $childMenuItem;
+            }
+        }
+        $headerMenuItem['children'] = $filteredChildren;
     }
 }
 unset($headerMenuItem);
