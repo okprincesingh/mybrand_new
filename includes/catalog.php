@@ -213,6 +213,7 @@ function catalog_categories(): array
         if (isset($top[$pid])) {
             $top[$pid]['subcategories'][] = [
                 'id' => (int) $s['id'],
+                'parent_id' => $pid,
                 'slug' => (string) $s['slug'],
                 'name' => (string) $s['name'],
                 'description' => (string) ($s['description'] ?? ''),

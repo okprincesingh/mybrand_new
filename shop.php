@@ -51,6 +51,7 @@ $shopRelatedTitle = cms_get_setting('shop_related_products_title', 'Related Prod
 $shopSubcategoryFallbackDescription = cms_get_setting('shop_subcategory_fallback_description', 'Explore premium products in this sub-category and build your private label range with confidence.') ?? 'Explore premium products in this sub-category and build your private label range with confidence.';
 $categoryCatalogAliases = [
     'especially-for-men' => 'men-s-care',
+    'men-s-care' => 'men-s-care',
 ];
 $combinedAerosolPerfumeSlugs = ['aerosols-perfumes', 'aerosols-parfumes', 'aerosols-and-perfumes', 'aerosol-perfume', 'aerosol-and-perfume'];
 $categoryLandingContent = [
@@ -130,6 +131,16 @@ $resolveCategoryLandingContent = static function (?array $category) use ($catego
     return $landingKey !== null ? ($categoryLandingContent[$landingKey] ?? null) : null;
 };
 
+$findCategoryByExactSlug = static function (string $slug) use ($categories): ?array {
+    foreach ($categories as $categoryItem) {
+        if ((string) ($categoryItem['slug'] ?? '') === $slug) {
+            return $categoryItem;
+        }
+    }
+
+    return catalog_find_category($slug);
+};
+
 $isCombinedAerosolPerfume = $category !== '' && in_array(catalog_normalize_identity($category), $combinedAerosolPerfumeSlugs, true);
 $activeCategory = $category !== '' && !$isCombinedAerosolPerfume ? catalog_find_category($category) : null;
 $activeSubcategory = null;
@@ -142,7 +153,7 @@ if ($isCombinedAerosolPerfume) {
     $combinedChildren = [];
     $combinedImage = 'assets/imgs/product/skin-care.webp';
     foreach (['aerosols', 'perfumes', 'fragrances'] as $combinedSlug) {
-        $combinedCategory = catalog_find_category($combinedSlug);
+        $combinedCategory = $findCategoryByExactSlug($combinedSlug);
         if (!$combinedCategory) {
             continue;
         }
@@ -201,7 +212,7 @@ $filteredProducts = catalog_filtered_products(
 if ($isCombinedAerosolPerfume) {
     $filteredProducts = [];
     foreach (['aerosols', 'perfumes', 'fragrances'] as $combinedProductSlug) {
-        $combinedProductCategory = catalog_find_category($combinedProductSlug);
+        $combinedProductCategory = $findCategoryByExactSlug($combinedProductSlug);
         if (!$combinedProductCategory) {
             continue;
         }
@@ -439,9 +450,15 @@ include 'includes/header.php';
         <h3 class="shop-showcase__subhead"><?php echo htmlspecialchars($categorySubhead, ENT_QUOTES, 'UTF-8'); ?></h3>
       </div>
 
-      <?php if (!empty($catalogSourceCategory['subcategories'])): ?>
+      <?php
+        $visibleSubcategories = (array) ($catalogSourceCategory['subcategories'] ?? []);
+        if ($isCombinedAerosolPerfume) {
+            $visibleSubcategories = array_slice($visibleSubcategories, 0, 3);
+        }
+      ?>
+      <?php if (!empty($visibleSubcategories)): ?>
         <div class="cat-grid">
-          <?php foreach ((array) $catalogSourceCategory['subcategories'] as $sub): ?>
+          <?php foreach ($visibleSubcategories as $sub): ?>
             <?php $subImage = (string) ($sub['image'] ?? $catalogSourceCategory['image'] ?? $activeCategory['image']); ?>
             <a href="<?php echo htmlspecialchars(catalog_subcategory_page_link((string) $activeCategory['slug'], (string) ($sub['name'] ?? $sub['slug'] ?? '')), ENT_QUOTES, 'UTF-8'); ?>" class="cat-card">
               <img src="<?php echo htmlspecialchars(url($subImage), ENT_QUOTES, 'UTF-8'); ?>" class="cat-image" alt="<?php echo htmlspecialchars((string) $sub['name'], ENT_QUOTES, 'UTF-8'); ?>">
