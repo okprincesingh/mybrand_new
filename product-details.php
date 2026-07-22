@@ -209,7 +209,7 @@ include 'includes/header.php';
                     <div class="product-details-content__desc"><?php echo $shortDescriptionHtml; ?></div>
                     
                     <div class="product-details-content__info">
-                      <p class="label mb-3">Sample Quantity</p>
+                      <p class="label mb-3">Trial Sample Quantity</p>
                       <div class="d-flex flex-wrap align-items-center gap-3">
                         <div class="qty">
                           <button class="qty-btn" type="button" aria-label="Decrease">-</button>
@@ -317,7 +317,7 @@ include 'includes/header.php';
                     <div class="col-xl-12">
                       <div class="product-tab-card">
                         <div class="product-tab-card__content">
-                          <div class="product-tab-card__content-title">Description</div>
+                          <!-- <div class="product-tab-card__content-title">Description</div> -->
                           <div class="product-tab-card__content-dsc"><?php echo $productDescriptionHtml; ?></div>
                         </div>
                       </div>
