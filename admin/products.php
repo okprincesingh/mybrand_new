@@ -31,7 +31,11 @@ if($pdo && $_SERVER['REQUEST_METHOD']==='POST'){
 
 $q=trim((string)($_GET['q']??''));$cat=(int)($_GET['category_id']??0);$subCat=(int)($_GET['sub_category_id']??0);$status=trim((string)($_GET['status']??''));$sort=$_GET['sort']??'updated_desc';$page=max(1,(int)($_GET['page']??1));$limit=10;$offset=($page-1)*$limit;
 $where=['1=1'];$params=[];
-if($q!==''){ $where[]='(p.name LIKE :q OR p.slug LIKE :q)';$params[':q']="%$q%"; }
+if($q!==''){
+  $where[]='(p.name LIKE :q_name OR p.slug LIKE :q_slug)';
+  $params[':q_name']="%$q%";
+  $params[':q_slug']="%$q%";
+}
 if($subCat>0){
   $where[]='p.category_id=:sub_cid';
   $params[':sub_cid']=$subCat;
