@@ -106,8 +106,17 @@ function admin_store_certificate_file(array $file, string $subdir, int $maxBytes
   }
 
   $targetDir = upload_storage_dir($subdir, false);
+  if (!is_dir($targetDir)) {
+    @mkdir($targetDir, 0755, true);
+  }
+  if (is_dir($targetDir) && !is_writable($targetDir)) {
+    @chmod($targetDir, 0775);
+  }
+  if (is_dir($targetDir) && !is_writable($targetDir)) {
+    @chmod($targetDir, 0777);
+  }
   if (!is_dir($targetDir) || !is_writable($targetDir)) {
-    $GLOBALS['admin_certificate_upload_error'] = 'Upload folder is not writable: uploads/' . trim($subdir, "/\\") . '.';
+    $GLOBALS['admin_certificate_upload_error'] = 'Upload folder is not writable: uploads/' . trim($subdir, "/\\") . '. Server path: ' . $targetDir . '.';
     return null;
   }
 
