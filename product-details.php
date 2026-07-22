@@ -195,7 +195,7 @@ include 'includes/header.php';
                         <span class="price-was">$<?php echo htmlspecialchars(number_format((float) (($product['price'] ?? 0) * 1.6), 2), ENT_QUOTES, 'UTF-8'); ?></span>
                         <span class="price-currency">USD</span>
                       </div>
-                      <span class="product-details-content__badge-pill">60% OFF</span>
+                      <!-- <span class="product-details-content__badge-pill">60% OFF</span> -->
                       <div class="product-details-content__rating d-flex align-items-center">
                         <div class="stars">
                           <span class="star"><i class="fa-solid fa-star fa-fw"></i></span>
