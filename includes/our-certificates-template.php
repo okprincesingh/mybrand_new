@@ -128,11 +128,6 @@ if (!function_exists('our_certificates_folder_items')) {
 if (!function_exists('our_certificates_get_items')) {
     function our_certificates_get_items(): array
     {
-        $folderItems = our_certificates_folder_items();
-        if ($folderItems) {
-            return $folderItems;
-        }
-
         $pdo = db();
         if (!$pdo) {
             return our_certificates_fallback_items();
@@ -141,7 +136,7 @@ if (!function_exists('our_certificates_get_items')) {
         try {
             $rows = db_fetch_all(
                 $pdo,
-                'SELECT title, image_path, category FROM certificates WHERE is_active = 1 ORDER BY sort_order ASC, id ASC'
+                'SELECT title, image_path, file_path, category, file_type FROM certificates WHERE is_active = 1 ORDER BY sort_order ASC, id ASC'
             );
         } catch (Throwable $e) {
             $rows = [];
@@ -159,12 +154,22 @@ if (!function_exists('our_certificates_get_items')) {
                 continue;
             }
 
+            $filePath = trim((string) ($row['file_path'] ?? ''));
+            if ($filePath === '') {
+                $filePath = $imagePath;
+            }
+            $fileType = strtolower(trim((string) ($row['file_type'] ?? 'image')));
+            if (!in_array($fileType, ['image', 'pdf'], true)) {
+                $fileType = strtolower(pathinfo($filePath, PATHINFO_EXTENSION)) === 'pdf' ? 'pdf' : 'image';
+            }
+
             $certificates[] = [
                 'title' => $title,
                 'image' => url($imagePath),
-                'file' => url($imagePath),
+                'file' => url($filePath),
                 'category' => (string) ($row['category'] ?? 'quality-standards'),
-                'type' => 'image',
+                'type' => $fileType,
+                'has_preview' => $fileType !== 'pdf' || $imagePath !== $filePath,
             ];
         }
 

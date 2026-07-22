@@ -396,4 +396,18 @@ CREATE TABLE IF NOT EXISTS home_instagram_reels (
   INDEX idx_home_instagram_reels_active_order (is_active, sort_order, id)
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS certificates (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  image_path VARCHAR(255) NOT NULL,
+  file_path VARCHAR(255) NULL,
+  file_type ENUM('image','pdf') NOT NULL DEFAULT 'image',
+  category VARCHAR(80) NOT NULL DEFAULT 'quality-standards',
+  sort_order INT NOT NULL DEFAULT 0,
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_certificates_active_order (is_active, sort_order, id)
+) ENGINE=InnoDB;
+
 

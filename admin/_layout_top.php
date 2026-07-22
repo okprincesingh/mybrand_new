@@ -35,6 +35,7 @@ $currentPage = basename($_SERVER['PHP_SELF'] ?? '');
 
       <div class="nav-group-label">Content</div>
       <a class="admin-nav-link <?= $currentPage==='why-pages.php' || $currentPage==='why-page-edit.php'?'active':'' ?>" href="why-pages.php"><i class="bi bi-award"></i><span>Why Choose Us</span></a>
+      <a class="admin-nav-link <?= $currentPage==='certificates.php'?'active':'' ?>" href="certificates.php"><i class="bi bi-patch-check"></i><span>Certificates</span></a>
       <a class="admin-nav-link <?= $currentPage==='faq-pages.php' || $currentPage==='faq-page-edit.php'?'active':'' ?>" href="faq-pages.php"><i class="bi bi-question-circle"></i><span>FAQs</span></a>
       <a class="admin-nav-link <?= $currentPage==='blogs.php' || $currentPage==='blog-edit.php'?'active':'' ?>" href="blogs.php"><i class="bi bi-journal-richtext"></i><span>Blog</span></a>
       <a class="admin-nav-link <?= $currentPage==='pages.php' || $currentPage==='page-edit.php'?'active':'' ?>" href="pages.php"><i class="bi bi-file-earmark-text"></i><span>SEO Pages</span></a>
