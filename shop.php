@@ -269,6 +269,24 @@ if ($activeCategory && $activeSubcategory && !$filteredProducts) {
     }
 }
 
+if ($activeCategory && !$activeSubcategory && catalog_item_matches_aliases((array) $activeCategory, ['bathing-soaps'])) {
+    $barProducts = catalog_filtered_products('private-label-hair-care-products', 'hair-care-bars', $search !== '' ? $search : null);
+    if ($barProducts) {
+        $seenProductSlugs = [];
+        $filteredProducts = array_values(array_filter(
+            array_merge($filteredProducts, $barProducts),
+            static function (array $product) use (&$seenProductSlugs): bool {
+                $slug = (string) ($product['slug'] ?? '');
+                if ($slug === '' || isset($seenProductSlugs[$slug])) {
+                    return false;
+                }
+                $seenProductSlugs[$slug] = true;
+                return true;
+            }
+        ));
+    }
+}
+
 $displayProducts = $filteredProducts;
 
 if ($catalogSourceCategory && !$activeSubcategory && $activeCategoryLanding && !empty($catalogSourceCategory['subcategories']) && !empty($activeCategoryLanding['children'])) {
