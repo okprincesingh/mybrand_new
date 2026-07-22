@@ -1203,7 +1203,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span class="social-reels__title-star" aria-hidden="true">*</span>
                 <span>Build it!</span>
               </h2>
-              <p class="social-reels__lead">We don’t just manufacture products. We manufacture dominance.</p>
+              <p class="social-reels__lead text-center">We don’t just manufacture products. We manufacture dominance.</p>
             </div>
           </div>
           <div class="social-reels__viewport">
@@ -1573,7 +1573,8 @@ document.addEventListener('DOMContentLoaded', function () {
             <div class="office-showcase__intro wow fadeInUp" data-wow-delay=".3s">
               <span class="office-showcase__eyebrow">Global Presence</span>
               <h2 class="office-showcase__title">~ Our Global Network ~</h2>
-              <p class="office-showcase__lead">Meet the teams supporting our private label partners across key markets with direct access to local guidance, production coordination, and faster communication.</p>
+              <h5 class=" text-center">Our Group of Companies & Global Registered Offices</h5>
+              <p class="office-showcase__lead text-center">Our registered offices across key markets bring local expertise, seamless coordination, and responsive support to every partnership.</p>
             </div>
             <div class="office-grid">
               <?php
