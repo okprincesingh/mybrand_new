@@ -287,6 +287,56 @@ if ($activeCategory && !$activeSubcategory && catalog_item_matches_aliases((arra
     }
 }
 
+if (
+    $activeCategory
+    && $activeSubcategory
+    && catalog_item_matches_aliases((array) $activeCategory, ['bathing-soaps'])
+    && in_array((string) ($activeSubcategory['slug'] ?? ''), [
+        'bathing-soaps-mens-soap',
+        'bathing-soaps-medicated-soaps',
+        'bathing-soaps-hotel-soap',
+        'bathing-soaps-novelty-soaps',
+    ], true)
+) {
+    $bathingSoapDisplaySlugs = [
+        'activated-charcoal-soap',
+        'all-inclusive-conditioner-bar',
+        'all-inclusive-shampoo-bar',
+        'aqua-soap-for-men',
+        'ball-soap-for-men',
+        'beach-chic-conditioner-bar',
+        'beach-chic-shampoo-bar',
+        'beard-soap-for-men',
+        'blue-lagoon-conditioner-bar',
+        'blue-lagoon-shampoo-bar',
+        'boho-babe-conditioner-bar',
+        'boho-babe-shampoo-bar',
+    ];
+
+    $extraProducts = [];
+    foreach ($bathingSoapDisplaySlugs as $displaySlug) {
+        $displayProduct = catalog_find_product($displaySlug);
+        if ($displayProduct) {
+            $extraProducts[] = $displayProduct;
+        }
+    }
+
+    if ($extraProducts) {
+        $seenProductSlugs = [];
+        $filteredProducts = array_values(array_filter(
+            array_merge($filteredProducts, $extraProducts),
+            static function (array $product) use (&$seenProductSlugs): bool {
+                $slug = (string) ($product['slug'] ?? '');
+                if ($slug === '' || isset($seenProductSlugs[$slug])) {
+                    return false;
+                }
+                $seenProductSlugs[$slug] = true;
+                return true;
+            }
+        ));
+    }
+}
+
 $displayProducts = $filteredProducts;
 
 if ($catalogSourceCategory && !$activeSubcategory && $activeCategoryLanding && !empty($catalogSourceCategory['subcategories']) && !empty($activeCategoryLanding['children'])) {
