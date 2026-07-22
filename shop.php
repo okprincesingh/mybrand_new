@@ -201,11 +201,30 @@ $filteredProducts = catalog_filtered_products(
 if ($isCombinedAerosolPerfume) {
     $filteredProducts = [];
     foreach (['aerosols', 'perfumes', 'fragrances'] as $combinedProductSlug) {
+        $combinedProductCategory = catalog_find_category($combinedProductSlug);
+        if (!$combinedProductCategory) {
+            continue;
+        }
+        $queryCategorySlug = (string) ($combinedProductCategory['slug'] ?? $combinedProductSlug);
+        $querySubcategorySlug = $activeSubcategory ? (string) ($activeSubcategory['slug'] ?? '') : null;
+
+        if ($activeSubcategory) {
+            $selectedSubcategoryId = (int) ($activeSubcategory['id'] ?? 0);
+            $combinedCategoryId = (int) ($combinedProductCategory['id'] ?? 0);
+            $selectedParentId = (int) ($activeSubcategory['parent_id'] ?? 0);
+
+            if ($selectedSubcategoryId === $combinedCategoryId) {
+                $querySubcategorySlug = null;
+            } elseif ($selectedParentId !== $combinedCategoryId) {
+                continue;
+            }
+        }
+
         $filteredProducts = array_merge(
             $filteredProducts,
             catalog_filtered_products(
-                $combinedProductSlug,
-                $activeSubcategory ? (string) $activeSubcategory['slug'] : null,
+                $queryCategorySlug,
+                $querySubcategorySlug,
                 $search !== '' ? $search : null
             )
         );
