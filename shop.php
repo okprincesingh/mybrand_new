@@ -497,7 +497,7 @@ include 'includes/header.php';
     </div>
   </section>
 <?php elseif (!$activeCategory): ?>
-  <section class="category-section shop-category-section is-visible section-spacing-120 rr-ov-hidden pt-5">
+  <section class="category-section is-visible section-spacing-120 rr-ov-hidden pt-5">
     <div class="container rr-container-1350">
       <div class="shop-showcase__head text-center">
         <h2 class="shop-showcase__title"><?php echo htmlspecialchars((string) $shopLandingTitle, ENT_QUOTES, 'UTF-8'); ?></h2>
@@ -538,7 +538,7 @@ include 'includes/header.php';
     </div>
   </section>
 <?php elseif (!$activeSubcategory): ?>
-  <section class="category-section shop-category-section is-visible section-spacing-120 rr-ov-hidden pt-5">
+  <section class="category-section is-visible section-spacing-120 rr-ov-hidden pt-5">
     <div class="container rr-container-1350">
       <div class="shop-showcase__head text-center">
         <?php
