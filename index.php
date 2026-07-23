@@ -706,7 +706,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div class="col-md-3 col-xl-3">
                   <div class="category1-item category1-item--from-left" data-category-entrance>
                     <div class="category1-item__thumb">
-                      <img src="<?php echo url('assets/imgs/category/category_thumb1_2.png'); ?>" alt="thumb">
+                      <img src="<?php echo url('assets/imgs/category/category_thumb2.jpeg'); ?>" alt="thumb">
                     </div>
                     <div class="category1-item__content2">
                       </h2>
@@ -730,7 +730,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div class="col-md-6 col-xl-6">
                   <div class="category1-item category1-item--from-top" data-category-entrance>
                     <div class="category1-item__thumb">
-                      <img src="<?php echo url('assets/imgs/category/category_thumb1_1.png'); ?>" alt="thumb">
+                      <img src="<?php echo url('assets/imgs/category/category_thumb3.jpeg'); ?>" alt="thumb">
                     </div>
                     <div class="category1-item__content2">
                       </h2>
@@ -754,7 +754,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div class="col-md-3 col-xl-3">
                   <div class="category1-item category1-item--from-right" data-category-entrance>
                     <div class="category1-item__thumb">
-                      <img src="<?php echo url('assets/imgs/category/category_thumb1_3.png'); ?>" alt="thumb">
+                      <img src="<?php echo url('assets/imgs/category/category_thumb1.jpeg'); ?>" alt="thumb">
                     </div>
                     <div class="category1-item__content2">
                       </h2>
