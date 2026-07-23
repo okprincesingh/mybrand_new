@@ -53,7 +53,7 @@ $categoryCatalogAliases = [
     'especially-for-men' => 'men-s-care',
     'men-s-care' => 'men-s-care',
 ];
-$combinedAerosolPerfumeSlugs = ['aerosols-perfumes', 'aerosols-parfumes', 'aerosols-and-perfumes', 'aerosol-perfume', 'aerosol-and-perfume'];
+$combinedAerosolPerfumeSlugs = ['aerosols-perfumes', 'aerosols-parfumes', 'aerosols-and-perfumes', 'aerosol-perfume', 'aerosol-and-perfume', 'scents'];
 $categoryLandingContent = [
     'skin-care' => [
         'aliases' => ['skin-care', 'private-label-skin-care-products', 'private-label-skin-care'],
@@ -141,18 +141,11 @@ $findCategoryByExactSlug = static function (string $slug) use ($categories): ?ar
     return catalog_find_category($slug);
 };
 
-$isCombinedAerosolPerfume = $category !== '' && in_array(catalog_normalize_identity($category), $combinedAerosolPerfumeSlugs, true);
-$activeCategory = $category !== '' && !$isCombinedAerosolPerfume ? catalog_find_category($category) : null;
-$activeSubcategory = null;
-$categorySpecificHeading = '';
-$categorySpecificSubtitle = '';
-$activeCategoryLanding = null;
-$catalogSourceCategory = $activeCategory;
-$activeCategoryLandingKey = null;
-if ($isCombinedAerosolPerfume) {
+$buildCombinedAerosolPerfumeCategory = static function () use ($findCategoryByExactSlug): ?array {
     $combinedChildren = [];
     $combinedImage = 'assets/imgs/product/skin-care.webp';
-    foreach (['aerosols', 'perfumes', 'fragrances'] as $combinedSlug) {
+
+    foreach (['aerosols', 'perfumes', 'fragrances', 'scents'] as $combinedSlug) {
         $combinedCategory = $findCategoryByExactSlug($combinedSlug);
         if (!$combinedCategory) {
             continue;
@@ -168,7 +161,12 @@ if ($isCombinedAerosolPerfume) {
             $combinedChildren[] = $combinedCategory;
         }
     }
-    $activeCategory = [
+
+    if (!$combinedChildren) {
+        return null;
+    }
+
+    return [
         'id' => 0,
         'slug' => 'aerosols-perfumes',
         'name' => 'Aerosols & Perfumes',
@@ -177,6 +175,51 @@ if ($isCombinedAerosolPerfume) {
         'page_image' => $combinedImage,
         'subcategories' => $combinedChildren,
     ];
+};
+
+$shopLandingCategoryConfigs = [
+    ['aliases' => ['skin-care', 'private-label-skin-care-products']],
+    ['aliases' => ['hair-care', 'private-label-hair-care-products']],
+    ['aliases' => ['body-care', 'bath-and-body']],
+    ['aliases' => ['bathing-soaps']],
+    ['aliases' => ['especially-for-men', 'men-s-care']],
+    ['combined' => 'aerosols-perfumes'],
+    ['aliases' => ['packaging']],
+];
+
+$shopLandingCategories = [];
+$seenShopLandingCategoryKeys = [];
+foreach ($shopLandingCategoryConfigs as $config) {
+    $categoryItem = null;
+    if (($config['combined'] ?? '') === 'aerosols-perfumes') {
+        $categoryItem = $buildCombinedAerosolPerfumeCategory();
+    } else {
+        $categoryItem = catalog_find_category_by_aliases((array) ($config['aliases'] ?? []));
+    }
+
+    if (!$categoryItem) {
+        continue;
+    }
+
+    $categoryKey = (string) (($categoryItem['id'] ?? 0) ?: ($categoryItem['slug'] ?? ''));
+    if ($categoryKey === '' || isset($seenShopLandingCategoryKeys[$categoryKey])) {
+        continue;
+    }
+
+    $seenShopLandingCategoryKeys[$categoryKey] = true;
+    $shopLandingCategories[] = $categoryItem;
+}
+
+$isCombinedAerosolPerfume = $category !== '' && in_array(catalog_normalize_identity($category), $combinedAerosolPerfumeSlugs, true);
+$activeCategory = $category !== '' && !$isCombinedAerosolPerfume ? catalog_find_category($category) : null;
+$activeSubcategory = null;
+$categorySpecificHeading = '';
+$categorySpecificSubtitle = '';
+$activeCategoryLanding = null;
+$catalogSourceCategory = $activeCategory;
+$activeCategoryLandingKey = null;
+if ($isCombinedAerosolPerfume) {
+    $activeCategory = $buildCombinedAerosolPerfumeCategory();
     $catalogSourceCategory = $activeCategory;
 }
 if ($activeCategory && !empty($activeCategory['id'])) {
@@ -211,7 +254,7 @@ $filteredProducts = catalog_filtered_products(
 
 if ($isCombinedAerosolPerfume) {
     $filteredProducts = [];
-    foreach (['aerosols', 'perfumes', 'fragrances'] as $combinedProductSlug) {
+    foreach (['aerosols', 'perfumes', 'fragrances', 'scents'] as $combinedProductSlug) {
         $combinedProductCategory = $findCategoryByExactSlug($combinedProductSlug);
         if (!$combinedProductCategory) {
             continue;
@@ -464,7 +507,7 @@ include 'includes/header.php';
       </div>
 
       <div class="cat-grid">
-        <?php foreach ($categories as $idx => $cat): ?>
+        <?php foreach ($shopLandingCategories as $idx => $cat): ?>
           <?php $catImage = (string) ($cat['image'] ?? 'assets/imgs/product/skin-care.webp'); ?>
           <?php
             $aosDirections = ['fade-right', 'fade-left', 'fade-up', 'fade-down'];
