@@ -66,8 +66,8 @@ $reviewCount = count($productReviews);
 
 $gallery = [];
 $attributes = [];
-$shortDescriptionHtml = '<p>Product short description.</p>';
-$productDescriptionHtml = '<p>Product description.</p>';
+$shortDescriptionHtml = '';
+$productDescriptionHtml = '';
 if ($product) {
   if (!empty($product['gallery']) && is_array($product['gallery'])) {
     $gallery = array_values(array_filter($product['gallery'], static function ($img): bool {
@@ -192,10 +192,8 @@ include 'includes/header.php';
                     <div class="product-details-content-items d-flex flex-wrap align-items-center gap-3">
                       <div class="product-details-content__price d-flex align-items-baseline gap-2">
                         <span class="price-now">$<?php echo htmlspecialchars(number_format((float) ($product['price'] ?? 0), 2), ENT_QUOTES, 'UTF-8'); ?></span>
-                        <span class="price-was">$<?php echo htmlspecialchars(number_format((float) (($product['price'] ?? 0) * 1.6), 2), ENT_QUOTES, 'UTF-8'); ?></span>
                         <span class="price-currency">USD</span>
                       </div>
-                      <!-- <span class="product-details-content__badge-pill">60% OFF</span> -->
                       <div class="product-details-content__rating d-flex align-items-center">
                         <div class="stars">
                           <span class="star"><i class="fa-solid fa-star fa-fw"></i></span>

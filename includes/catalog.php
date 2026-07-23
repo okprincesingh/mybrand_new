@@ -60,8 +60,8 @@ function catalog_fallback_categories(): array
 function catalog_fallback_products(): array
 {
     return [
-        ['slug' => 'glycolic-acid-serum', 'name' => '10% Glycolic Acid + 2% Niacinamide Face Serum', 'category' => 'skin-care', 'subcategory' => '', 'price' => 12, 'rating' => 5.0, 'reviews' => 135, 'badge' => 'New', 'image' => 'assets/imgs/products/10_-Glycolic-Acid-1-1.jpg', 'description' => 'Refining overnight serum.'],
-        ['slug' => 'avocado-conditioner', 'name' => 'Avocado Volumising Hair Conditioner', 'category' => 'hair-care', 'subcategory' => '', 'price' => 16, 'rating' => 4.9, 'reviews' => 92, 'badge' => '', 'image' => 'assets/imgs/products/Avocado-Volumising-Hair-Conditioner-1.jpg', 'description' => 'Lightweight conditioner.'],
+        ['slug' => 'glycolic-acid-serum', 'name' => '10% Glycolic Acid + 2% Niacinamide Face Serum', 'category' => 'skin-care', 'subcategory' => '', 'price' => 11.18, 'rating' => 5.0, 'reviews' => 135, 'badge' => 'New', 'image' => 'assets/imgs/products/10_-Glycolic-Acid-1-1.jpg', 'description' => 'Refining overnight serum.'],
+        ['slug' => 'avocado-conditioner', 'name' => 'Avocado Volumising Hair Conditioner', 'category' => 'hair-care', 'subcategory' => '', 'price' => 11.18, 'rating' => 4.9, 'reviews' => 92, 'badge' => '', 'image' => 'assets/imgs/products/Avocado-Volumising-Hair-Conditioner-1.jpg', 'description' => 'Lightweight conditioner.'],
     ];
 }
 
