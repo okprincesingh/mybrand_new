@@ -7,7 +7,7 @@ if ($pdo) {
   cms_ensure_home_offices_registration_columns($pdo);
 }
 
-$defaults = ['id'=>0,'country'=>'','company_name'=>'','address'=>'','email'=>'','phone'=>'','registration_label'=>'','registration_number'=>'','sort_order'=>0,'is_active'=>1,'image_path'=>''];
+$defaults = ['id'=>0,'country'=>'','company_name'=>'','address'=>'','email'=>'','phone'=>'','registration_label'=>'','registration_number'=>'','tax_label'=>'','tax_number'=>'','sort_order'=>0,'is_active'=>1,'image_path'=>''];
 $formData = $defaults;
 $editId = (int) ($_GET['edit'] ?? 0);
 if ($pdo && $editId > 0) {
@@ -36,6 +36,8 @@ if ($pdo && $_SERVER['REQUEST_METHOD'] === 'POST') {
   $phone = trim((string) ($_POST['phone'] ?? ''));
   $registrationLabel = trim((string) ($_POST['registration_label'] ?? ''));
   $registrationNumber = trim((string) ($_POST['registration_number'] ?? ''));
+  $taxLabel = trim((string) ($_POST['tax_label'] ?? ''));
+  $taxNumber = trim((string) ($_POST['tax_number'] ?? ''));
   $sortOrder = (int) ($_POST['sort_order'] ?? 0);
   $isActive = isset($_POST['is_active']) ? 1 : 0;
   $imagePath = trim((string) ($_POST['existing_image_path'] ?? ''));
@@ -53,13 +55,13 @@ if ($pdo && $_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   if ($id > 0) {
-    db_execute($pdo, 'UPDATE home_offices SET country=:country, company_name=:company_name, address=:address, email=:email, phone=:phone, registration_label=:registration_label, registration_number=:registration_number, image_path=:image, sort_order=:sort_order, is_active=:is_active WHERE id=:id', [
-      ':country'=>$country, ':company_name'=>$companyName, ':address'=>$address, ':email'=>$email, ':phone'=>$phone, ':registration_label'=>$registrationLabel, ':registration_number'=>$registrationNumber, ':image'=>$imagePath, ':sort_order'=>$sortOrder, ':is_active'=>$isActive, ':id'=>$id
+    db_execute($pdo, 'UPDATE home_offices SET country=:country, company_name=:company_name, address=:address, email=:email, phone=:phone, registration_label=:registration_label, registration_number=:registration_number, tax_label=:tax_label, tax_number=:tax_number, image_path=:image, sort_order=:sort_order, is_active=:is_active WHERE id=:id', [
+      ':country'=>$country, ':company_name'=>$companyName, ':address'=>$address, ':email'=>$email, ':phone'=>$phone, ':registration_label'=>$registrationLabel, ':registration_number'=>$registrationNumber, ':tax_label'=>$taxLabel, ':tax_number'=>$taxNumber, ':image'=>$imagePath, ':sort_order'=>$sortOrder, ':is_active'=>$isActive, ':id'=>$id
     ]);
     admin_flash('success', 'Office updated.');
   } else {
-    db_execute($pdo, 'INSERT INTO home_offices (country, company_name, address, email, phone, registration_label, registration_number, image_path, sort_order, is_active) VALUES (:country,:company_name,:address,:email,:phone,:registration_label,:registration_number,:image,:sort_order,:is_active)', [
-      ':country'=>$country, ':company_name'=>$companyName, ':address'=>$address, ':email'=>$email, ':phone'=>$phone, ':registration_label'=>$registrationLabel, ':registration_number'=>$registrationNumber, ':image'=>$imagePath, ':sort_order'=>$sortOrder, ':is_active'=>$isActive
+    db_execute($pdo, 'INSERT INTO home_offices (country, company_name, address, email, phone, registration_label, registration_number, tax_label, tax_number, image_path, sort_order, is_active) VALUES (:country,:company_name,:address,:email,:phone,:registration_label,:registration_number,:tax_label,:tax_number,:image,:sort_order,:is_active)', [
+      ':country'=>$country, ':company_name'=>$companyName, ':address'=>$address, ':email'=>$email, ':phone'=>$phone, ':registration_label'=>$registrationLabel, ':registration_number'=>$registrationNumber, ':tax_label'=>$taxLabel, ':tax_number'=>$taxNumber, ':image'=>$imagePath, ':sort_order'=>$sortOrder, ':is_active'=>$isActive
     ]);
     admin_flash('success', 'Office added.');
   }
@@ -115,6 +117,16 @@ include __DIR__ . '/_layout_top.php';
           <label class="form-label">Registration Number</label>
           <input class="form-control" name="registration_number" value="<?= e((string) $formData['registration_number']) ?>">
         </div>
+
+        <div class="form-group">
+          <label class="form-label">Tax Label</label>
+          <input class="form-control" name="tax_label" value="<?= e((string) $formData['tax_label']) ?>" placeholder="GST, TAX ID, UK VAT">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Tax Number</label>
+          <input class="form-control" name="tax_number" value="<?= e((string) $formData['tax_number']) ?>">
+        </div>
         
         <div class="form-group">
           <label class="form-label">Sort Order</label>
@@ -164,6 +176,7 @@ include __DIR__ . '/_layout_top.php';
               <th>Company</th>
               <th>Email</th>
               <th>Registration</th>
+              <th>Tax</th>
               <th>Status</th>
               <th>Action</th>
             </tr>
@@ -175,6 +188,7 @@ include __DIR__ . '/_layout_top.php';
                 <td><?= e((string)($r['company_name'] ?? '')) ?></td>
                 <td><?= e((string)$r['email']) ?></td>
                 <td><?= e(trim((string)($r['registration_label'] ?? '') . ' ' . (string)($r['registration_number'] ?? ''))) ?></td>
+                <td><?= e(trim((string)($r['tax_label'] ?? '') . ' ' . (string)($r['tax_number'] ?? ''))) ?></td>
                 <td>
                   <span class="status-badge <?= ((int)$r['is_active'])===1?'status-active':'status-inactive' ?>">
                     <?= ((int)$r['is_active'])===1?'Active':'Inactive' ?>
@@ -199,7 +213,7 @@ include __DIR__ . '/_layout_top.php';
             <?php endforeach; ?>
             <?php if(!$rows): ?>
               <tr>
-                <td colspan="6" class="text-center text-muted py-4">No offices found.</td>
+                <td colspan="7" class="text-center text-muted py-4">No offices found.</td>
               </tr>
             <?php endif; ?>
           </tbody>

@@ -1604,6 +1604,8 @@ document.addEventListener('DOMContentLoaded', function () {
                   $officePhone = trim((string) ($office['phone'] ?? ''));
                   $officeRegistrationLabel = trim((string) ($office['registration_label'] ?? ''));
                   $officeRegistrationNumber = trim((string) ($office['registration_number'] ?? ''));
+                  $officeTaxLabel = trim((string) ($office['tax_label'] ?? ''));
+                  $officeTaxNumber = trim((string) ($office['tax_number'] ?? ''));
                   $officeWebsite = trim((string) ($office['website'] ?? ''));
                   if ($officeWebsite === '') {
                     $officeWebsite = 'https://www.mybrandplease.com';
@@ -1621,6 +1623,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     <h3 class="office-card__title"><?php echo htmlspecialchars($officeCountry, ENT_QUOTES, 'UTF-8'); ?></h3>
                     <?php if ($officeCompanyName !== ''): ?>
                       <p class="office-card__company text-center"><?php echo htmlspecialchars($officeCompanyName, ENT_QUOTES, 'UTF-8'); ?></p>
+                    <?php endif; ?>
+                    <?php if ($officeTaxLabel !== '' || $officeTaxNumber !== ''): ?>
+                      <p class="office-card__tax text-center">
+                        <?php if ($officeTaxLabel !== ''): ?>
+                          <strong><?php echo htmlspecialchars($officeTaxLabel, ENT_QUOTES, 'UTF-8'); ?> -</strong>
+                        <?php endif; ?>
+                        <?php echo htmlspecialchars($officeTaxNumber, ENT_QUOTES, 'UTF-8'); ?>
+                      </p>
                     <?php endif; ?>
                     <p class="office-card__address text-center"><?php echo nl2br(htmlspecialchars($officeAddress, ENT_QUOTES, 'UTF-8')); ?></p>
                     <div class="office-card__meta-list">

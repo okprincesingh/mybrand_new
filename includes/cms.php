@@ -566,6 +566,14 @@ function cms_ensure_home_offices_registration_columns(PDO $pdo): bool
             $pdo->exec('ALTER TABLE home_offices ADD COLUMN registration_number VARCHAR(120) NULL AFTER registration_label');
             $existing['registration_number'] = true;
         }
+        if (empty($existing['tax_label'])) {
+            $pdo->exec('ALTER TABLE home_offices ADD COLUMN tax_label VARCHAR(40) NULL AFTER registration_number');
+            $existing['tax_label'] = true;
+        }
+        if (empty($existing['tax_number'])) {
+            $pdo->exec('ALTER TABLE home_offices ADD COLUMN tax_number VARCHAR(120) NULL AFTER tax_label');
+            $existing['tax_number'] = true;
+        }
         $available = true;
         return true;
     } catch (Throwable $e) {
@@ -656,26 +664,32 @@ function cms_get_home_offices(): array
             'phone' => '+91 (971) 700 4615',
             'registration_label' => 'CIN',
             'registration_number' => 'U20237UP2025PTC234476',
+            'tax_label' => 'GST',
+            'tax_number' => '09AAKCN9231H1Z4',
             'image_path' => 'assets/imgs/home/office/INDIAN.webp',
         ],
         [
             'country' => 'United States',
-            'company_name' => 'Mybrandplease USA',
+            'company_name' => 'Nimisha Impex inc',
             'address' => '30 N Gould St, Ste R,\nSheridan, WY 82801, USA',
             'email' => 'customersupport@nimishaimpex.com',
             'phone' => '+1 (343) 322 5866',
             'registration_label' => 'EIN',
             'registration_number' => '41-4152316',
+            'tax_label' => 'TAX ID',
+            'tax_number' => '2026-001890284',
             'image_path' => 'assets/imgs/home/office/USA-FLAG.webp',
         ],
         [
             'country' => 'United Kingdom',
-            'company_name' => 'Mybrandplease UK',
+            'company_name' => 'Nimisha Impex Worldwide Limited',
             'address' => '128, City Rd, London,\nEC1V 2NX, UNITED KINGDOM',
             'email' => 'customersupport@nimishaimpex.com',
             'phone' => '+91 (120) 518 5637',
             'registration_label' => 'Company No',
             'registration_number' => '17263045',
+            'tax_label' => 'UK VAT',
+            'tax_number' => '522 9730 88',
             'image_path' => 'assets/imgs/home/office/Flag-United-Kingdom.webp',
         ],
     ];
@@ -688,7 +702,7 @@ function cms_get_home_offices(): array
     $hasExtendedOfficeColumns = cms_ensure_home_offices_registration_columns($pdo);
 
     $rows = db_fetch_all($pdo, $hasExtendedOfficeColumns
-        ? 'SELECT id, country, company_name, address, email, phone, registration_label, registration_number, image_path FROM home_offices WHERE is_active = 1 ORDER BY sort_order ASC, id ASC'
+        ? 'SELECT id, country, company_name, address, email, phone, registration_label, registration_number, tax_label, tax_number, image_path FROM home_offices WHERE is_active = 1 ORDER BY sort_order ASC, id ASC'
         : 'SELECT id, country, address, email, phone, image_path FROM home_offices WHERE is_active = 1 ORDER BY sort_order ASC, id ASC'
     );
     if (!$rows) {
@@ -707,6 +721,8 @@ function cms_get_home_offices(): array
             'phone' => (string) ($row['phone'] ?? ''),
             'registration_label' => (string) ($row['registration_label'] ?? ''),
             'registration_number' => (string) ($row['registration_number'] ?? ''),
+            'tax_label' => (string) ($row['tax_label'] ?? ''),
+            'tax_number' => (string) ($row['tax_number'] ?? ''),
             'image_path' => (string) ($row['image_path'] ?? ''),
         ];
     }

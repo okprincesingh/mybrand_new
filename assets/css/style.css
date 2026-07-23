@@ -20100,6 +20100,18 @@ iframe {
   line-height: 1.35;
   text-align: center !important;
 }
+.office-card__tax {
+  margin: -0.35rem 0 0.65rem;
+  color: #4b3940;
+  font-family: var(--font_Lato);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+.office-card__tax strong {
+  color: var(--primary-two);
+  font-weight: 800;
+}
 .office-card__address {
   margin: 0 0 0.75rem;
   min-height: 3.8rem;
