@@ -547,7 +547,7 @@ h6 {
   font-weight: 600;
 }
 .hero-marquee__strip{
-  height: 80px;
+  height: 68px;
 }
 .hero-marquee__strip--front, .hero-marquee__strip--back{
   top: 90px;
@@ -7524,17 +7524,43 @@ body {
 }
 .category1-item__thumb {
   position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  isolation: isolate;
+}
+.category1-item__thumb::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: -35%;
+  background: linear-gradient(135deg, transparent 34%, rgba(255, 255, 255, 0.18) 43%, rgba(255, 255, 255, 0.82) 50%, rgba(255, 255, 255, 0.22) 57%, transparent 68%);
+  opacity: 0;
+  transform: translate(-42%, -42%) rotate(0deg);
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+.category1-item__thumb:hover::after {
+  opacity: 1;
+  animation: brandBuilderImageShine 1.15s ease forwards;
 }
 .category1-item__thumb img {
   border-radius: 20px;
+  display: block;
   width: 100%;
 }
 @media only screen and (max-width: 991px) {
+  .category1-item__thumb {
+    border-radius: 15px;
+  }
   .category1-item__thumb img {
     border-radius: 15px;
   }
 }
 @media (max-width: 575px) {
+  .category1-item__thumb {
+    border-radius: 12px;
+  }
   .category1-item__thumb img {
     border-radius: 12px;
   }
