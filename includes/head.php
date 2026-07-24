@@ -56,6 +56,9 @@ if (!preg_match('#^(https?:)?//#i', (string) $canonical)) {
     $canonical = url((string) $canonical);
 }
 
+$currentPhpPage = basename($_SERVER['PHP_SELF']);
+$isHomepage = $currentPhpPage === 'index.php';
+
 $styles = $meta['styles'] ?? [
     'assets/vandor/bootstrap/bootstrap.min.css',
     'assets/vandor/fontawesome/fontawesome-pro.min.css',
@@ -69,10 +72,19 @@ $styles = $meta['styles'] ?? [
     'assets/css/user-dropdown.css',
 ];
 
+if ($isHomepage && !isset($meta['styles'])) {
+    $homepageUnusedStyles = [
+        'assets/vandor/popup/magnific-popup.css',
+        'assets/vandor/nice-select/nice-select.css',
+        'assets/vandor/odometer/odometer-theme-default.css',
+    ];
+    $styles = array_values(array_filter($styles, static function (string $href) use ($homepageUnusedStyles): bool {
+        return !in_array($href, $homepageUnusedStyles, true);
+    }));
+}
+
 // Add AOS CSS/JS on animation-enabled pages
-$currentPhpPage = basename($_SERVER['PHP_SELF']);
 $isAosPage = in_array($currentPhpPage, ['index.php', 'shop.php'], true);
-$isHomepage = $currentPhpPage === 'index.php';
 if ($isAosPage) {
     $styles[] = 'https://unpkg.com/aos@next/dist/aos.css';
 }
@@ -90,10 +102,17 @@ if ($isAosPage) {
   <link rel="canonical" href="<?php echo htmlspecialchars($canonical, ENT_QUOTES, 'UTF-8'); ?>">
   <link rel="icon" type="image/x-icon" href="<?php echo url($favicon); ?>">
 <?php foreach ($styles as $href): ?>
-  <link rel="stylesheet" href="<?php echo url($href); ?>">
+  <link rel="stylesheet" href="<?php echo url($href); ?>"<?php echo (str_contains((string) $href, '/wow/') || str_contains((string) $href, 'aos@')) ? ' media="(min-width: 992px)"' : ''; ?>>
 <?php endforeach; ?>
 <?php if ($isAosPage): ?>
-  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js" defer></script>
+  <script>
+    if (window.matchMedia('(min-width: 992px)').matches) {
+      var aosScript = document.createElement('script');
+      aosScript.src = 'https://unpkg.com/aos@2.3.4/dist/aos.js';
+      aosScript.defer = true;
+      document.head.appendChild(aosScript);
+    }
+  </script>
 <?php endif; ?>
 <?php if ($isHomepage): ?>
   <link rel="preconnect" href="https://jaikvik.in" crossorigin>
@@ -109,8 +128,25 @@ if ($isAosPage) {
   </script>
 
 <style>
+@media (max-width: 991.98px) {
+  [data-aos],
+  .wow {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
 
-
+  .hero-marquee__track,
+  .working-process-section__strip-services,
+  .partners-carousel-list,
+  .auto-scroll-content,
+  .map-marker__dot {
+    animation: none !important;
+    transform: none !important;
+  }
+}
 </style>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
