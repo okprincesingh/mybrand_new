@@ -195,9 +195,10 @@ $homeTestimonials = cms_get_home_testimonials();
 $homeOffices = cms_get_home_offices();
 $homeInstagramReels = cms_get_home_instagram_reels();
 $meta = [
-  'title' => 'Mybrandplease | Home',
-  'description' => 'Mybrandplease - Home page',
-  'canonical' => 'index.php'
+  'title' => 'Mybrandplease | Private Label Cosmetics Manufacturer',
+  'description' => 'Launch premium skin care, hair care, body care, bathing soaps, and personal care products with Mybrandplease private label manufacturing.',
+  'canonical' => 'index.php',
+  'social_image' => 'uploads/social/mybrandplease-og.png'
 ];
 include 'includes/head.php';
 $homeHeaderOverlay = true;

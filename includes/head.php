@@ -58,6 +58,21 @@ if (!preg_match('#^(https?:)?//#i', (string) $canonical)) {
 
 $currentPhpPage = basename($_SERVER['PHP_SELF']);
 $isHomepage = $currentPhpPage === 'index.php';
+if ($isHomepage) {
+    if ($title === 'Mybrandplease | Home' || $title === 'Mybrandplease') {
+        $title = 'Mybrandplease | Private Label Cosmetics Manufacturer';
+    }
+    if ($description === 'Mybrandplease - Home page' || $description === 'Private label personal care manufacturing with premium formulations.') {
+        $description = 'Launch premium skin care, hair care, body care, bathing soaps, and personal care products with Mybrandplease private label manufacturing.';
+    }
+}
+
+$socialTitle = (string) ($meta['og_title'] ?? $meta['social_title'] ?? $title);
+$socialDescription = (string) ($meta['og_description'] ?? $meta['social_description'] ?? $description);
+$socialImagePath = (string) ($meta['og_image'] ?? $meta['social_image'] ?? 'uploads/social/mybrandplease-og.png');
+$socialImage = preg_match('#^(https?:)?//#i', $socialImagePath) ? $socialImagePath : url($socialImagePath);
+$socialUrl = (string) ($meta['og_url'] ?? $canonical);
+$socialType = (string) ($meta['og_type'] ?? ($isHomepage ? 'website' : 'article'));
 
 $styles = $meta['styles'] ?? [
     'assets/vandor/bootstrap/bootstrap.min.css',
@@ -101,6 +116,22 @@ if ($isAosPage) {
   <meta name="robots" content="<?php echo htmlspecialchars($robots, ENT_QUOTES, 'UTF-8'); ?>">
   <link rel="canonical" href="<?php echo htmlspecialchars($canonical, ENT_QUOTES, 'UTF-8'); ?>">
   <link rel="icon" type="image/x-icon" href="<?php echo url($favicon); ?>">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="<?php echo htmlspecialchars($socialType, ENT_QUOTES, 'UTF-8'); ?>">
+  <meta property="og:site_name" content="Mybrandplease">
+  <meta property="og:title" content="<?php echo htmlspecialchars($socialTitle, ENT_QUOTES, 'UTF-8'); ?>">
+  <meta property="og:description" content="<?php echo htmlspecialchars($socialDescription, ENT_QUOTES, 'UTF-8'); ?>">
+  <meta property="og:url" content="<?php echo htmlspecialchars($socialUrl, ENT_QUOTES, 'UTF-8'); ?>">
+  <meta property="og:image" content="<?php echo htmlspecialchars($socialImage, ENT_QUOTES, 'UTF-8'); ?>">
+  <meta property="og:image:secure_url" content="<?php echo htmlspecialchars($socialImage, ENT_QUOTES, 'UTF-8'); ?>">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Mybrandplease logo and private label cosmetics manufacturing">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="<?php echo htmlspecialchars($socialTitle, ENT_QUOTES, 'UTF-8'); ?>">
+  <meta name="twitter:description" content="<?php echo htmlspecialchars($socialDescription, ENT_QUOTES, 'UTF-8'); ?>">
+  <meta name="twitter:image" content="<?php echo htmlspecialchars($socialImage, ENT_QUOTES, 'UTF-8'); ?>">
 <?php foreach ($styles as $href): ?>
   <link rel="stylesheet" href="<?php echo url($href); ?>"<?php echo (str_contains((string) $href, '/wow/') || str_contains((string) $href, 'aos@')) ? ' media="(min-width: 992px)"' : ''; ?>>
 <?php endforeach; ?>
