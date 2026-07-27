@@ -246,7 +246,7 @@ body { font-family: 'Inter', sans-serif; background: #fff; }
                             <i class="fa-solid fa-arrow-left"></i>
                         </a>
                         
-                        <img src="<?= url('assets/imgs/logo/logo.gif') ?>" class="det-logo-main" alt="Logo">
+                        <img src="<?= url('uploads/logo/mybrandplease-1.gif') ?>" class="det-logo-main" alt="Logo">
                         
                         <div class="mt-4">
                             <div class="det-company-name">NIMISHA IMPEX WORLDWIDE (P) LIMITED</div>
