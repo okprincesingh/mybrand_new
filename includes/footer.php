@@ -1984,15 +1984,17 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
         }
       })();
 
-      // Site visit popup: once dismissed, do not show it again for this browser.
+      // Site visit popup: show once for a new visitor when they scroll down to the footer.
       (function () {
         const popup = document.getElementById('site-visit-popup');
         if (!popup) return;
 
-        const firstDelayMs = 15000;
+        const footer = document.querySelector('.pl-footer');
+        if (!footer) return;
+
         const popupDismissedKey = 'mybrandplease_site_visit_popup_dismissed';
-        let timerId = 0;
         let hasShownPopup = false;
+        let previousScrollY = window.scrollY || window.pageYOffset || 0;
 
         function isPopupDismissed() {
           try {
@@ -2010,59 +2012,86 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
           }
         }
 
-        function schedulePopup(delay) {
-          if (hasShownPopup || isPopupDismissed()) return;
-          if (timerId) window.clearTimeout(timerId);
-          timerId = window.setTimeout(openPopup, delay);
-        }
-
         function openPopup() {
           if (hasShownPopup || isPopupDismissed()) return;
           if (popup.classList.contains('is-open')) return;
           const enquiryModal = document.getElementById('enquiry-modal');
           if (enquiryModal && enquiryModal.classList.contains('is-open')) {
-            schedulePopup(firstDelayMs);
             return;
           }
           hasShownPopup = true;
-          timerId = 0;
           popup.classList.add('is-open');
           popup.setAttribute('aria-hidden', 'false');
           document.body.style.overflow = 'hidden';
         }
 
-        function closePopup(restoreScroll, persistDismissal) {
+        function closePopup(restoreScroll) {
           popup.classList.remove('is-open');
           popup.setAttribute('aria-hidden', 'true');
-          if (persistDismissal) {
-            markPopupDismissed();
-          }
+          markPopupDismissed();
           if (restoreScroll !== false) {
             document.body.style.overflow = '';
           }
         }
 
-        if (!isPopupDismissed()) {
-          schedulePopup(firstDelayMs);
+        function footerIsVisible() {
+          const rect = footer.getBoundingClientRect();
+          return rect.top < window.innerHeight && rect.bottom > 0;
+        }
+
+        function handleFooterReach() {
+          if (hasShownPopup || isPopupDismissed()) return;
+          const currentScrollY = window.scrollY || window.pageYOffset || 0;
+          const isScrollingDown = currentScrollY >= previousScrollY;
+          previousScrollY = currentScrollY;
+
+          if (isScrollingDown && footerIsVisible()) {
+            openPopup();
+          }
+        }
+
+        if (isPopupDismissed()) return;
+
+        if ('IntersectionObserver' in window) {
+          const observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              if (!entry.isIntersecting || hasShownPopup || isPopupDismissed()) return;
+              const currentScrollY = window.scrollY || window.pageYOffset || 0;
+              const isScrollingDown = currentScrollY >= previousScrollY;
+              previousScrollY = currentScrollY;
+              if (isScrollingDown) {
+                openPopup();
+                observer.disconnect();
+              }
+            });
+          }, {
+            threshold: 0.08
+          });
+
+          observer.observe(footer);
+        } else {
+          window.addEventListener('scroll', handleFooterReach, { passive: true });
+          window.addEventListener('resize', handleFooterReach);
+          handleFooterReach();
         }
 
         popup.querySelectorAll('[data-site-popup-close]').forEach(function (trigger) {
           trigger.addEventListener('click', function () {
-            closePopup(true, true);
+            closePopup(true);
           });
         });
 
         const enquiryButton = document.getElementById('site-popup-enquiry-btn');
         if (enquiryButton) {
           enquiryButton.addEventListener('click', function () {
-            closePopup(true, true);
+            closePopup(true);
             window.location.href = '<?php echo url('meeting-schedule.php'); ?>';
           });
         }
 
         document.addEventListener('keydown', function (event) {
           if (event.key === 'Escape' && popup.classList.contains('is-open')) {
-            closePopup(true, true);
+            closePopup(true);
           }
         });
       })();

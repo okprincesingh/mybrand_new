@@ -198,7 +198,9 @@ $meta = [
   'title' => 'Mybrandplease | Private Label Cosmetics Manufacturer',
   'description' => 'Launch premium skin care, hair care, body care, bathing soaps, and personal care products with Mybrandplease private label manufacturing.',
   'canonical' => 'index.php',
-  'social_image' => 'uploads/social/mybrandplease-og.png'
+  'social_image' => 'assets/imgs/logo/footer.png',
+  'social_image_width' => '3125',
+  'social_image_height' => '875'
 ];
 include 'includes/head.php';
 $homeHeaderOverlay = true;

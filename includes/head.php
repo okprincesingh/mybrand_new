@@ -69,10 +69,12 @@ if ($isHomepage) {
 
 $socialTitle = (string) ($meta['og_title'] ?? $meta['social_title'] ?? $title);
 $socialDescription = (string) ($meta['og_description'] ?? $meta['social_description'] ?? $description);
-$socialImagePath = (string) ($meta['og_image'] ?? $meta['social_image'] ?? 'uploads/social/mybrandplease-og.png');
+$socialImagePath = (string) ($meta['og_image'] ?? $meta['social_image'] ?? 'assets/imgs/logo/footer.png');
 $socialImage = preg_match('#^(https?:)?//#i', $socialImagePath) ? $socialImagePath : url($socialImagePath);
 $socialUrl = (string) ($meta['og_url'] ?? $canonical);
 $socialType = (string) ($meta['og_type'] ?? ($isHomepage ? 'website' : 'article'));
+$socialImageWidth = (string) ($meta['og_image_width'] ?? $meta['social_image_width'] ?? '3125');
+$socialImageHeight = (string) ($meta['og_image_height'] ?? $meta['social_image_height'] ?? '875');
 
 $styles = $meta['styles'] ?? [
     'assets/vandor/bootstrap/bootstrap.min.css',
@@ -125,8 +127,8 @@ if ($isAosPage) {
   <meta property="og:image" content="<?php echo htmlspecialchars($socialImage, ENT_QUOTES, 'UTF-8'); ?>">
   <meta property="og:image:secure_url" content="<?php echo htmlspecialchars($socialImage, ENT_QUOTES, 'UTF-8'); ?>">
   <meta property="og:image:type" content="image/png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
+  <meta property="og:image:width" content="<?php echo htmlspecialchars($socialImageWidth, ENT_QUOTES, 'UTF-8'); ?>">
+  <meta property="og:image:height" content="<?php echo htmlspecialchars($socialImageHeight, ENT_QUOTES, 'UTF-8'); ?>">
   <meta property="og:image:alt" content="Mybrandplease logo and private label cosmetics manufacturing">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="<?php echo htmlspecialchars($socialTitle, ENT_QUOTES, 'UTF-8'); ?>">
@@ -580,7 +582,7 @@ if ($isAosPage) {
   "url": "https://mybrandplease.com/",
   "logo": {
     "@type": "ImageObject",
-    "url": "https://mybrandplease.com/wp-content/uploads/2025/12/mybrandplease-logo-500x250.webp"
+    "url": "<?php echo htmlspecialchars(url('assets/imgs/logo/footer.png'), ENT_QUOTES, 'UTF-8'); ?>"
   },
   "description": "Mybrandplease is a private label and third-party cosmetics manufacturer offering custom formulations, premium packaging, and full brand-launch support for skin care, hair care, body care, bathing soaps, and men's grooming products. FDA registered, ISO 22716 certified, and MoCRA compliant, with over 21 years of private labelling experience.",
   "foundingDate": "2005",
