@@ -894,7 +894,7 @@ document.addEventListener('DOMContentLoaded', function () {
               </div>
 
               <div class="brand-builder__content">
-                <p class="brand-builder__kicker">Just add your brand.<br>mybrandplease handles the rest.</p>
+                <p class="brand-builder__kicker">Just add your brand.<br>mybrandplease.com handles the rest.</p>
                 <h2 class="brand-builder__title" id="brandBuilderTitle">
                   The modern<br>
                   way to build a<br>
