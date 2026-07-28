@@ -40,8 +40,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $meta = [
-    'title' => 'Mybrandplease | Register',
-    'description' => 'Create your Mybrandplease account',
+    'title' => 'mybrandplease | Register',
+    'description' => 'Create your mybrandplease account',
     'canonical' => 'register.php'
 ];
 

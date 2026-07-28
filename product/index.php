@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../includes/catalog.php';
 
 $meta = [
-  'title' => 'Mybrandplease | Product',
+  'title' => 'mybrandplease | Product',
   'description' => 'Explore private label categories and product collections.',
   'canonical' => 'product/index.php'
 ];

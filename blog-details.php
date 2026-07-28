@@ -25,8 +25,8 @@ $contentHtml = $rawContent !== ''
   : '';
 
 $meta = [
-  'title' => 'Mybrandplease | ' . (string) $post['title'],
-  'description' => (string) ($post['excerpt'] ?: 'Mybrandplease blog details'),
+  'title' => 'mybrandplease | ' . (string) $post['title'],
+  'description' => (string) ($post['excerpt'] ?: 'mybrandplease blog details'),
   'canonical' => 'blog-details.php?slug=' . urlencode((string) $post['slug']),
 ];
 include 'includes/head.php';

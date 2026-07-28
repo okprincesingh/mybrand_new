@@ -40,8 +40,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $meta = [
-    'title' => 'Mybrandplease | Login',
-    'description' => 'Login to your Mybrandplease account',
+    'title' => 'mybrandplease | Login',
+    'description' => 'Login to your mybrandplease account',
     'canonical' => 'login.php'
 ];
 

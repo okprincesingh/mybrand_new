@@ -160,7 +160,7 @@ if ($isPost) {
 }
 
 $meta = [
-    'title' => 'Meeting Details | Mybrandplease',
+    'title' => 'Meeting Details | mybrandplease',
     'description' => 'Enter your details to confirm and schedule a meeting.',
     'canonical' => 'meeting-details.php',
 ];

@@ -62,8 +62,8 @@ if ((!isset($_SESSION['cart']) || !is_array($_SESSION['cart']) || empty($_SESSIO
 }
 
 $meta = [
-  'title' => 'Mybrandplease | Cart',
-  'description' => 'Mybrandplease - Shopping Cart',
+  'title' => 'mybrandplease | Cart',
+  'description' => 'mybrandplease - Shopping Cart',
   'canonical' => 'cart.php'
 ];
 

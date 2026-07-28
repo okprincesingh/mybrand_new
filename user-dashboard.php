@@ -13,8 +13,8 @@ $defaultAddress = user_get_default_address((int) $user['id']);
 $isEmailVerified = !empty($user['email_verified_at']);
 
 $meta = [
-    'title' => 'Mybrandplease | Dashboard',
-    'description' => 'Your Mybrandplease account dashboard',
+    'title' => 'mybrandplease | Dashboard',
+    'description' => 'Your mybrandplease account dashboard',
     'canonical' => 'user-dashboard.php'
 ];
 

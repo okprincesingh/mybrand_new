@@ -1,7 +1,7 @@
 <?php
 $meta = [
-  'title' => 'Mybrandplease | wishlist',
-  'description' => 'Mybrandplease - wishlist page',
+  'title' => 'mybrandplease | wishlist',
+  'description' => 'mybrandplease - wishlist page',
   'canonical' => 'wishlist.php'
 ];
 include 'includes/head.php';

@@ -2,7 +2,7 @@
 require_once __DIR__ . '/includes/url.php';
 
 $meta = [
-    'title' => 'Product Catalogue | Mybrandplease',
+    'title' => 'Product Catalogue | mybrandplease',
     'description' => 'Unveil a world of captivating possibilities with our extraordinary range of products.',
     'canonical' => 'product-catalog.php',
 ];

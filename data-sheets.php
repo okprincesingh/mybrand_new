@@ -2,7 +2,7 @@
 require_once __DIR__ . '/includes/resource-library.php';
 
 $meta = [
-    'title' => 'Data Sheets | Mybrandplease',
+    'title' => 'Data Sheets | mybrandplease',
     'description' => 'Download the Material Safety Data Sheet by clicking on the product of your choice.',
     'canonical' => 'data-sheets.php',
 ];

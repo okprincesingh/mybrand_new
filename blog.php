@@ -32,8 +32,8 @@ if (!$editorPicks && count($posts) > 1) {
 $categories = blog_get_categories();
 
 $meta = [
-  'title' => 'Mybrandplease | Blog',
-  'description' => 'Latest updates, skincare insights and beauty blogs from Mybrandplease.',
+  'title' => 'mybrandplease | Blog',
+  'description' => 'Latest updates, skincare insights and beauty blogs from mybrandplease.',
   'canonical' => 'blog.php' . (!empty($_SERVER['QUERY_STRING']) ? ('?' . $_SERVER['QUERY_STRING']) : ''),
 ];
 include 'includes/head.php';

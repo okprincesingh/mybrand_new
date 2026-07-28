@@ -1,7 +1,7 @@
 <?php
 $meta = [
-  'title' => 'Mybrandplease | 404',
-  'description' => 'Mybrandplease - 404 page',
+  'title' => 'mybrandplease | 404',
+  'description' => 'mybrandplease - 404 page',
   'canonical' => '404.php'
 ];
 include 'includes/head.php';

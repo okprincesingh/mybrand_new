@@ -143,7 +143,7 @@ if (!function_exists('render_header_menu_items')) {
             <div class="offset-widget offset-header">
               <div class="offset-logo">
                 <a href="<?php echo url('index.php'); ?>">
-                  <img src="<?php echo $headerLogo; ?>" alt="MyBrandPlease Logo" />
+                  <img src="<?php echo $headerLogo; ?>" alt="mybrandplease Logo" />
                 </a>
               </div>
               <button id="side-info-close" class="side-info-close">
@@ -226,7 +226,7 @@ if (!function_exists('render_header_menu_items')) {
               <div class="col-auto">
                 <div class="header__logo">
                   <a href="<?php echo url('index.php'); ?>">
-                    <img src="<?php echo $headerLogo; ?>" class="normal-logo" alt="MyBrandPlease Logo" />
+                    <img src="<?php echo $headerLogo; ?>" class="normal-logo" alt="mybrandplease Logo" />
                   </a>
                 </div>
               </div>

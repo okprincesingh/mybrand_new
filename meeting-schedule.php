@@ -1,6 +1,6 @@
 <?php
 $meta = [
-    'title' => 'Schedule Meeting | Mybrandplease',
+    'title' => 'Schedule Meeting | mybrandplease',
     'description' => 'Select a date and time for meeting.',
     'canonical' => 'meeting-schedule.php',
 ];

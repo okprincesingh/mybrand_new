@@ -61,7 +61,7 @@ function meeting_mail_last_error(?string $set = null): string
 function meeting_mail_sender_name(): string
 {
     $fromName = trim((string) getenv('MAIL_FROM_NAME'));
-    return $fromName !== '' ? $fromName : 'MyBrandPlease';
+    return $fromName !== '' ? $fromName : 'mybrandplease';
 }
 
 function meeting_mail_transport_configs(): array

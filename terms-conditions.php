@@ -1,7 +1,7 @@
 <?php
 $meta = [
-    'title' => 'Terms & Conditions | Mybrandplease',
-    'description' => 'Terms and conditions for Mybrandplease private label product services, ordering, shipping, payments, labelling, privacy, and contact information.',
+    'title' => 'Terms & Conditions | mybrandplease',
+    'description' => 'Terms and conditions for mybrandplease private label product services, ordering, shipping, payments, labelling, privacy, and contact information.',
     'keywords' => 'terms and conditions, mybrandplease terms, private label terms',
     'canonical' => 'terms-conditions.php',
 ];

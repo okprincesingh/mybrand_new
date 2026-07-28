@@ -22,7 +22,7 @@ if ($orderNumber !== '') {
 $orders = user_get_orders((int) $user['id'], 50, 0);
 
 $meta = [
-    'title' => 'Mybrandplease | Orders',
+    'title' => 'mybrandplease | Orders',
     'description' => 'Your order history and details',
     'canonical' => 'user-orders.php'
 ];

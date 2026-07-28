@@ -108,8 +108,8 @@ $availableCurrencies = payment_get_supported_currencies();
 $defaultCurrency = 'usd';
 
 $meta = [
-    'title' => 'Mybrandplease | Checkout',
-    'description' => 'Complete your order - Mybrandplease',
+    'title' => 'mybrandplease | Checkout',
+    'description' => 'Complete your order - mybrandplease',
     'canonical' => 'checkout.php'
 ];
 

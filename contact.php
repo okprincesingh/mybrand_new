@@ -134,14 +134,14 @@ if (strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')) === 'POST') {
 
         $userBody = implode("\n", [
             '<p>Hi ' . e($formData['name']) . ',</p>',
-            '<p>Thanks for contacting MyBrandPlease. We have received your enquiry and our team will get back to you soon.</p>',
+            '<p>Thanks for contacting mybrandplease. We have received your enquiry and our team will get back to you soon.</p>',
             $formData['message'] !== ''
                 ? '<p><strong>Your Message:</strong><br>' . nl2br(e($formData['message'])) . '</p>'
                 : '',
             $formData['requirements'] !== ''
                 ? '<p><strong>Your Requirements:</strong><br>' . nl2br(e($formData['requirements'])) . '</p>'
                 : '',
-            '<p>Regards,<br>MyBrandPlease</p>',
+            '<p>Regards,<br>mybrandplease</p>',
         ]);
 
         $adminSent = meeting_send_html_mail($adminEmail, $mailSubject, $adminBody, $formData['email'], $formData['name']);
@@ -149,7 +149,7 @@ if (strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')) === 'POST') {
 
         $userSent = meeting_send_html_mail(
             $formData['email'],
-            'We Received Your Enquiry - MyBrandPlease',
+            'We Received Your Enquiry - mybrandplease',
             $userBody
         );
         $userStatus = meeting_mail_last_error();
@@ -193,8 +193,8 @@ if (strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')) === 'POST') {
 $contactOffices = cms_get_home_offices();
 
 $meta = [
-  'title' => 'Mybrandplease | contact',
-  'description' => 'Mybrandplease - contact page',
+  'title' => 'mybrandplease | contact',
+  'description' => 'mybrandplease - contact page',
   'canonical' => 'contact.php'
 ];
 include 'includes/head.php';

@@ -9,7 +9,7 @@ $user = user_require_auth();
 $wishlist = user_get_wishlist((int) $user['id']);
 
 $meta = [
-    'title' => 'Mybrandplease | Wishlist',
+    'title' => 'mybrandplease | Wishlist',
     'description' => 'Your wishlist of favorite products',
     'canonical' => 'user-wishlist.php'
 ];

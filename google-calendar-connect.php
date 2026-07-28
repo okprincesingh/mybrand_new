@@ -142,7 +142,7 @@ if ($oauthCode !== '') {
 }
 
 $meta = [
-    'title' => 'Google Calendar Connect | Mybrandplease',
+    'title' => 'Google Calendar Connect | mybrandplease',
     'description' => 'Connect Google Calendar for automatic Google Meet links.',
     'canonical' => 'google-calendar-connect.php',
 ];

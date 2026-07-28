@@ -27,7 +27,7 @@ if ($pdo) {
 }
 
 if (is_array($seoRow) && (($seoRow['status'] ?? 'draft') === 'published')) {
-    $meta['title'] = (string) (($seoRow['meta_title'] ?? '') !== '' ? $seoRow['meta_title'] : ($seoRow['title'] ?? 'Mybrandplease'));
+    $meta['title'] = (string) (($seoRow['meta_title'] ?? '') !== '' ? $seoRow['meta_title'] : ($seoRow['title'] ?? 'mybrandplease'));
     $meta['description'] = (string) ($seoRow['meta_description'] ?? '');
     $seoCanonical = (string) ($seoRow['canonical_url'] ?? '');
     if ($seoCanonical === '') {
@@ -40,9 +40,13 @@ if (is_array($seoRow) && (($seoRow['status'] ?? 'draft') === 'published')) {
     $meta['keywords'] = (string) ($seoRow['meta_keywords'] ?? '');
 }
 
-$title = $meta['title'] ?? 'Mybrandplease';
+$title = $meta['title'] ?? 'mybrandplease';
 $description = $meta['description'] ?? 'Private label personal care manufacturing with premium formulations.';
 $keywords = $meta['keywords'] ?? '';
+$brandSearch = ['mybrandplease', 'my brandplease'];
+$title = str_ireplace($brandSearch, 'mybrandplease', (string) $title);
+$description = str_ireplace($brandSearch, 'mybrandplease', (string) $description);
+$keywords = str_ireplace($brandSearch, 'mybrandplease', (string) $keywords);
 $robots = $meta['robots'] ?? 'index,follow';
 $favicon = $meta['favicon'] ?? 'assets/imgs/logo/favicon-white.png';
 $canonical = $meta['canonical'] ?? ltrim(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/', '/');
@@ -59,11 +63,11 @@ if (!preg_match('#^(https?:)?//#i', (string) $canonical)) {
 $currentPhpPage = basename($_SERVER['PHP_SELF']);
 $isHomepage = $currentPhpPage === 'index.php';
 if ($isHomepage) {
-    if ($title === 'Mybrandplease | Home' || $title === 'Mybrandplease') {
-        $title = 'Mybrandplease | Private Label Cosmetics Manufacturer';
+    if ($title === 'mybrandplease | Home' || $title === 'mybrandplease') {
+        $title = 'mybrandplease | Private Label Cosmetics Manufacturer';
     }
-    if ($description === 'Mybrandplease - Home page' || $description === 'Private label personal care manufacturing with premium formulations.') {
-        $description = 'Launch premium skin care, hair care, body care, bathing soaps, and personal care products with Mybrandplease private label manufacturing.';
+    if ($description === 'mybrandplease - Home page' || $description === 'Private label personal care manufacturing with premium formulations.') {
+        $description = 'Launch premium skin care, hair care, body care, bathing soaps, and personal care products with mybrandplease private label manufacturing.';
     }
 }
 
@@ -120,7 +124,7 @@ if ($isAosPage) {
   <link rel="icon" type="image/x-icon" href="<?php echo url($favicon); ?>">
   <meta property="og:locale" content="en_US">
   <meta property="og:type" content="<?php echo htmlspecialchars($socialType, ENT_QUOTES, 'UTF-8'); ?>">
-  <meta property="og:site_name" content="Mybrandplease">
+  <meta property="og:site_name" content="mybrandplease">
   <meta property="og:title" content="<?php echo htmlspecialchars($socialTitle, ENT_QUOTES, 'UTF-8'); ?>">
   <meta property="og:description" content="<?php echo htmlspecialchars($socialDescription, ENT_QUOTES, 'UTF-8'); ?>">
   <meta property="og:url" content="<?php echo htmlspecialchars($socialUrl, ENT_QUOTES, 'UTF-8'); ?>">
@@ -129,7 +133,7 @@ if ($isAosPage) {
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="<?php echo htmlspecialchars($socialImageWidth, ENT_QUOTES, 'UTF-8'); ?>">
   <meta property="og:image:height" content="<?php echo htmlspecialchars($socialImageHeight, ENT_QUOTES, 'UTF-8'); ?>">
-  <meta property="og:image:alt" content="Mybrandplease logo and private label cosmetics manufacturing">
+  <meta property="og:image:alt" content="mybrandplease logo and private label cosmetics manufacturing">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="<?php echo htmlspecialchars($socialTitle, ENT_QUOTES, 'UTF-8'); ?>">
   <meta name="twitter:description" content="<?php echo htmlspecialchars($socialDescription, ENT_QUOTES, 'UTF-8'); ?>">
@@ -448,18 +452,18 @@ if ($isAosPage) {
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "Who are Mybrandplease's private label clients?",
+      "name": "Who are mybrandplease's private label clients?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Mybrandplease works with a diverse range of private label skin care and cosmetics clients, from luxury spas to online retailers. Client names are kept confidential to protect each brand's identity."
+        "text": "mybrandplease works with a diverse range of private label skin care and cosmetics clients, from luxury spas to online retailers. Client names are kept confidential to protect each brand's identity."
       }
     },
     {
       "@type": "Question",
-      "name": "What are Mybrandplease's response times?",
+      "name": "What are mybrandplease's response times?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Mybrandplease typically responds to inquiries within 24-48 hours. The team operates Monday to Saturday, 9 am to 6 pm IST. For urgent matters, customers can contact the sales office directly by phone or WhatsApp."
+        "text": "mybrandplease typically responds to inquiries within 24-48 hours. The team operates Monday to Saturday, 9 am to 6 pm IST. For urgent matters, customers can contact the sales office directly by phone or WhatsApp."
       }
     },
     {
@@ -467,15 +471,15 @@ if ($isAosPage) {
       "name": "Can I visit the private label manufacturing facility?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "To protect client confidentiality, Mybrandplease does not offer facility tours."
+        "text": "To protect client confidentiality, mybrandplease does not offer facility tours."
       }
     },
     {
       "@type": "Question",
-      "name": "Does Mybrandplease help with Health Ministry and FDA registration?",
+      "name": "Does mybrandplease help with Health Ministry and FDA registration?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes, Mybrandplease offers FDA and Health Ministry registration assistance for a fee of $200 per product."
+        "text": "Yes, mybrandplease offers FDA and Health Ministry registration assistance for a fee of $200 per product."
       }
     },
     {
@@ -483,7 +487,7 @@ if ($isAosPage) {
       "name": "How can I order product samples?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Samples can be ordered directly from the Products section of the website, where customers can browse and select from Mybrandplease's full product range."
+        "text": "Samples can be ordered directly from the Products section of the website, where customers can browse and select from mybrandplease's full product range."
       }
     },
     {
@@ -520,7 +524,7 @@ if ($isAosPage) {
     },
     {
       "@type": "Question",
-      "name": "Does Mybrandplease offer quantity discounts?",
+      "name": "Does mybrandplease offer quantity discounts?",
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "Yes, quantity discounts are available for both bulk and retail-size orders. Contact the sales team at info@mybrandplease.com for pricing catalogues."
@@ -536,7 +540,7 @@ if ($isAosPage) {
     },
     {
       "@type": "Question",
-      "name": "Are Mybrandplease products vegan and gluten-free?",
+      "name": "Are mybrandplease products vegan and gluten-free?",
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "Most products are vegan and gluten-free, though customers should check the full ingredients list of each specific product to confirm."
@@ -544,15 +548,15 @@ if ($isAosPage) {
     },
     {
       "@type": "Question",
-      "name": "Are Mybrandplease products tested on animals?",
+      "name": "Are mybrandplease products tested on animals?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No, Mybrandplease is a certified cruelty-free company and does not test any products on animals."
+        "text": "No, mybrandplease is a certified cruelty-free company and does not test any products on animals."
       }
     },
     {
       "@type": "Question",
-      "name": "Does Mybrandplease offer custom formulations?",
+      "name": "Does mybrandplease offer custom formulations?",
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "Yes, custom formulations start at $675, with pricing depending on ingredients and testing requirements. Lead time is 8-12 weeks with a minimum purchase of 25 gallons."
@@ -560,7 +564,7 @@ if ($isAosPage) {
     },
     {
       "@type": "Question",
-      "name": "Does Mybrandplease help with logo and label design?",
+      "name": "Does mybrandplease help with logo and label design?",
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "Yes, professional graphic design services are available: logo design for $300 and label design for $350, one-time fees covering current and future products."
@@ -576,7 +580,7 @@ if ($isAosPage) {
   "@context": "https://schema.org",
   "@type": "Organization",
   "@id": "https://mybrandplease.com/#organization",
-  "name": "Mybrandplease",
+  "name": "mybrandplease",
   "legalName": "NIMISHA IMPEX WORLDWIDE (P) LIMITED",
   "alternateName": "My Brand Please",
   "url": "https://mybrandplease.com/",
@@ -584,7 +588,7 @@ if ($isAosPage) {
     "@type": "ImageObject",
     "url": "<?php echo htmlspecialchars(url('assets/imgs/logo/footer.png'), ENT_QUOTES, 'UTF-8'); ?>"
   },
-  "description": "Mybrandplease is a private label and third-party cosmetics manufacturer offering custom formulations, premium packaging, and full brand-launch support for skin care, hair care, body care, bathing soaps, and men's grooming products. FDA registered, ISO 22716 certified, and MoCRA compliant, with over 21 years of private labelling experience.",
+  "description": "mybrandplease is a private label and third-party cosmetics manufacturer offering custom formulations, premium packaging, and full brand-launch support for skin care, hair care, body care, bathing soaps, and men's grooming products. FDA registered, ISO 22716 certified, and MoCRA compliant, with over 21 years of private labelling experience.",
   "foundingDate": "2005",
   "slogan": "Private Label Is Now Simplified",
   "email": "info@mybrandplease.com",
@@ -640,7 +644,7 @@ if ($isAosPage) {
   "location": [
     {
       "@type": "Place",
-      "name": "Mybrandplease India Office",
+      "name": "mybrandplease India Office",
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "D226, 10th Avenue, Gaur City 2",
@@ -651,7 +655,7 @@ if ($isAosPage) {
     },
     {
       "@type": "Place",
-      "name": "Mybrandplease USA Office",
+      "name": "mybrandplease USA Office",
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "59th Terrace SW, West Park",
@@ -662,7 +666,7 @@ if ($isAosPage) {
     },
     {
       "@type": "Place",
-      "name": "Mybrandplease Canada Office",
+      "name": "mybrandplease Canada Office",
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "McWatters Road",
@@ -673,7 +677,7 @@ if ($isAosPage) {
     },
     {
       "@type": "Place",
-      "name": "Mybrandplease Australia Office",
+      "name": "mybrandplease Australia Office",
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "811 Pacific Highway, Chatswood",

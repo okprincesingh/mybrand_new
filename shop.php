@@ -408,7 +408,7 @@ if ($isSearchResults) {
 }
 
 $meta = [
-    'title' => 'Mybrandplease | ' . $pageTitle,
+    'title' => 'mybrandplease | ' . $pageTitle,
     'description' => 'Browse private label products by category and subcategory.',
     'canonical' => 'shop.php' . ($_SERVER['QUERY_STRING'] ? ('?' . $_SERVER['QUERY_STRING']) : ''),
 ];

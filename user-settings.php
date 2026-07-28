@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $meta = [
-    'title' => 'Mybrandplease | Settings',
+    'title' => 'mybrandplease | Settings',
     'description' => 'Manage your account settings',
     'canonical' => 'user-settings.php'
 ];

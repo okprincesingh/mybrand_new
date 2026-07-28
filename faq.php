@@ -78,7 +78,7 @@ function render_common_faq_layout(string $slug): void
     $hasAccordion = count($accordions) > 0;
 
     $meta = [
-        'title' => (string) (($page['meta_title'] ?? '') !== '' ? $page['meta_title'] : ($page['title'] ?? 'Mybrandplease')),
+        'title' => (string) (($page['meta_title'] ?? '') !== '' ? $page['meta_title'] : ($page['title'] ?? 'mybrandplease')),
         'description' => (string) ($page['meta_description'] ?? ''),
         'keywords' => (string) ($page['meta_keywords'] ?? ''),
         'canonical' => (string) (($page['canonical_url'] ?? '') !== '' ? $page['canonical_url'] : ('faq.php?slug=' . $slug)),

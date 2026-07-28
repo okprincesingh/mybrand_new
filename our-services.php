@@ -2,8 +2,8 @@
 require_once __DIR__ . '/includes/url.php';
 
 $meta = [
-    'title' => 'Mybrandplease | Our Services',
-    'description' => 'Formulation, Design, Packaging and Branding | Mybrandplease',
+    'title' => 'mybrandplease | Our Services',
+    'description' => 'Formulation, Design, Packaging and Branding | mybrandplease',
     'canonical' => 'our-services.php',
 ];
 

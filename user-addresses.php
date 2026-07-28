@@ -100,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $meta = [
-    'title' => 'Mybrandplease | Addresses',
+    'title' => 'mybrandplease | Addresses',
     'description' => 'Manage your shipping and billing addresses',
     'canonical' => 'user-addresses.php'
 ];

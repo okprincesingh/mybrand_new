@@ -5,7 +5,7 @@ VALUES ('Super Admin', 'admin@mybrandplease.com', '$2y$10$UEWStNzTYImvwJ4nFEezX.
 ON DUPLICATE KEY UPDATE name=VALUES(name), role=VALUES(role), is_active=1;
 
 INSERT INTO site_settings (setting_key, setting_value) VALUES
-('site_name', 'MyBrandPlease'),
+('site_name', 'mybrandplease'),
 ('site_email', 'info@mybrandplease.com'),
 ('site_phone', '+91 9717004615')
 ON DUPLICATE KEY UPDATE setting_value=VALUES(setting_value);
@@ -52,13 +52,13 @@ WHERE NOT EXISTS (SELECT 1 FROM footer_links WHERE section_id=@fs_legal AND labe
 
 INSERT INTO pages (title, slug, content, status)
 VALUES
-('Home', 'home', 'Welcome to MyBrandPlease home page', 'published'),
+('Home', 'home', 'Welcome to mybrandplease home page', 'published'),
 ('About Us', 'about-us', 'We are private label experts', 'published'),
 ('Contact', 'contact', 'Reach out to us', 'published')
 ON DUPLICATE KEY UPDATE title=VALUES(title), content=VALUES(content), status=VALUES(status);
 
 INSERT INTO page_meta (page_id, meta_title, meta_description, meta_keywords, canonical_url)
-SELECT p.id, CONCAT(p.title, ' | MyBrandPlease'), CONCAT('About ', p.title), 'cosmetics, private label', CONCAT(p.slug, '.php')
+SELECT p.id, CONCAT(p.title, ' | mybrandplease'), CONCAT('About ', p.title), 'cosmetics, private label', CONCAT(p.slug, '.php')
 FROM pages p
 WHERE p.slug IN ('home','about-us','contact')
 ON DUPLICATE KEY UPDATE

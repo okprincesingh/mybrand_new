@@ -41,7 +41,7 @@ $isEmailVerified = !empty($user['email_verified_at']);
 $accountStatus = ((int) ($user['is_active'] ?? 0) === 1) ? 'Active' : 'Inactive';
 
 $meta = [
-    'title' => 'Mybrandplease | Profile',
+    'title' => 'mybrandplease | Profile',
     'description' => 'Manage your profile information',
     'canonical' => 'user-profile.php'
 ];

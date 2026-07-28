@@ -101,8 +101,8 @@ if ($gallery === []) {
 }
 
 $meta = [
-  'title' => $product ? ('Mybrandplease | ' . $product['name']) : 'Mybrandplease | product details',
-  'description' => $product['description'] ?? 'Mybrandplease - product details page',
+  'title' => $product ? ('mybrandplease | ' . $product['name']) : 'mybrandplease | product details',
+  'description' => $product['description'] ?? 'mybrandplease - product details page',
   'canonical' => $product ? ('product-details.php?slug=' . urlencode((string) $product['slug'])) : 'product-details.php'
 ];
 include 'includes/head.php';

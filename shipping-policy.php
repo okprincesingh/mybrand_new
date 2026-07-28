@@ -1,7 +1,7 @@
 <?php
 $meta = [
-    'title' => 'Shipping Policy | Mybrandplease',
-    'description' => 'Shipping policy for Mybrandplease orders, sample preparation timelines, courier options, and delivery estimates.',
+    'title' => 'Shipping Policy | mybrandplease',
+    'description' => 'Shipping policy for mybrandplease orders, sample preparation timelines, courier options, and delivery estimates.',
     'keywords' => 'shipping policy, mybrandplease shipping, worldwide shipping, sample delivery',
     'canonical' => 'shipping-policy.php',
 ];

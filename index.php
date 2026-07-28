@@ -195,8 +195,8 @@ $homeTestimonials = cms_get_home_testimonials();
 $homeOffices = cms_get_home_offices();
 $homeInstagramReels = cms_get_home_instagram_reels();
 $meta = [
-  'title' => 'Mybrandplease | Private Label Cosmetics Manufacturer',
-  'description' => 'Launch premium skin care, hair care, body care, bathing soaps, and personal care products with Mybrandplease private label manufacturing.',
+  'title' => 'mybrandplease | Private Label Cosmetics Manufacturer',
+  'description' => 'Launch premium skin care, hair care, body care, bathing soaps, and personal care products with mybrandplease private label manufacturing.',
   'canonical' => 'index.php',
   'social_image' => 'assets/imgs/logo/footer.png',
   'social_image_width' => '3125',
@@ -430,7 +430,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         <!-- Working Process Section Start -->
         <section class="working-process-section" aria-label="Why launch your own brand">
-          <div class="working-process-section__strip" aria-label="Mybrandplease creative services">
+          <div class="working-process-section__strip" aria-label="mybrandplease creative services">
             <div class="working-process-section__strip-services">
               <?php for ($stripLoop = 0; $stripLoop < 2; $stripLoop++): ?>
                 <span>Skin Care</span>
@@ -894,7 +894,7 @@ document.addEventListener('DOMContentLoaded', function () {
               </div>
 
               <div class="brand-builder__content">
-                <p class="brand-builder__kicker">Just add your brand.<br>MyBrandPlease handles the rest.</p>
+                <p class="brand-builder__kicker">Just add your brand.<br>mybrandplease handles the rest.</p>
                 <h2 class="brand-builder__title" id="brandBuilderTitle">
                   The modern<br>
                   way to build a<br>
@@ -1585,7 +1585,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (count($displayOffices) < 2) {
                   $displayOffices[] = [
                     'country' => 'United Kingdom',
-                    'company_name' => 'Mybrandplease UK',
+                    'company_name' => 'mybrandplease UK',
                     'address' => 'Unit 1, Durham Way South, Newton Aycliffe, DL5 6ZF, UNITED KINGDOM',
                     'email' => 'info@mybrandplease.com',
                     'phone' => '+44 7940 359995',

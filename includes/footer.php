@@ -205,7 +205,7 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
         <div class="site-visit-popup__dialog" role="dialog" aria-modal="true" aria-labelledby="site-visit-popup-title">
           <button type="button" class="site-visit-popup__close" data-site-popup-close aria-label="Close popup">&times;</button>
           <span class="site-visit-popup__eyebrow">Private Label Cosmetics</span>
-          <h3 class="site-visit-popup__title" id="site-visit-popup-title">Build Your Brand With Mybrandplease</h3>
+          <h3 class="site-visit-popup__title" id="site-visit-popup-title">Build Your Brand With mybrandplease</h3>
           <p class="site-visit-popup__text">
             We help salons, spas, retailers, hotels, and growing brands create premium skin care, hair care, body care, and personal care products with low MOQ and expert private label support.
           </p>

@@ -1,7 +1,7 @@
 <?php
 $meta = [
-    'title' => 'Private Label Cosmetic Formulation Center | Mybrandplease',
-    'description' => 'Discover Mybrandplease Form Center offering expert private label cosmetic documentation and compliance support.',
+    'title' => 'Private Label Cosmetic Formulation Center | mybrandplease',
+    'description' => 'Discover mybrandplease Form Center offering expert private label cosmetic documentation and compliance support.',
     'canonical' => 'form-center.php',
 ];
 

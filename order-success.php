@@ -29,7 +29,7 @@ if ($orderNumber !== '') {
 }
 
 $meta = [
-    'title' => 'Mybrandplease | Order Confirmation',
+    'title' => 'mybrandplease | Order Confirmation',
     'description' => 'Your order has been placed successfully',
     'canonical' => 'order-success.php'
 ];

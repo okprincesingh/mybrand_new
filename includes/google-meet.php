@@ -53,7 +53,7 @@ function meeting_create_google_meet_link(
 
     $event = [
         'summary' => '30 Minute Meeting',
-        'description' => trim($notes) !== '' ? $notes : 'Meeting scheduled from MyBrandPlease website.',
+        'description' => trim($notes) !== '' ? $notes : 'Meeting scheduled from mybrandplease website.',
         'start' => [
             'dateTime' => $start->format(DateTimeInterface::RFC3339),
             'timeZone' => $timezone,

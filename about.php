@@ -1,7 +1,7 @@
 <?php
 $meta = [
-  'title' => 'Mybrandplease | about',
-  'description' => 'Mybrandplease - about page',
+  'title' => 'mybrandplease | about',
+  'description' => 'mybrandplease - about page',
   'canonical' => 'about.php'
 ];
 include 'includes/head.php';
