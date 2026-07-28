@@ -141,7 +141,7 @@ $defaultTimezone = isset($_GET['timezone']) ? $_GET['timezone'] : 'Asia/Kolkata'
 </div>
 
 <section class="cal-section">
-    <div class="container" style="max-width: 1100px;">
+    <div class="container" >
         <form action="<?php echo htmlspecialchars(url('meeting-details'), ENT_QUOTES, 'UTF-8'); ?>" method="GET" class="cal-wrapper shadow-sm">
             <div class="row g-0">
                 

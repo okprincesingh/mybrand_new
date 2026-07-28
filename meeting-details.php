@@ -237,7 +237,7 @@ body { font-family: 'Inter', sans-serif; background: #fff; }
 </style>
 
 <section class="det-page">
-    <div class="container" style="max-width: 1060px;">
+    <div class="container" >
         <div class="det-shell">
             <div class="row g-0">
                 <div class="col-lg-4">
@@ -250,7 +250,7 @@ body { font-family: 'Inter', sans-serif; background: #fff; }
                         
                         <div class="mt-4">
                             <div class="det-company-name">NIMISHA IMPEX WORLDWIDE (P) LIMITED</div>
-                            <h1 class="det-event-title">30 Minute Meeting</h1>
+                            <h1 class="det-event-title"><span class="thirty-minute">30</span> Minute Meeting</h1>
                             
                             <div class="det-meta">
                                 <i class="fa-regular fa-clock"></i>
@@ -324,8 +324,8 @@ body { font-family: 'Inter', sans-serif; background: #fff; }
                             <textarea name="notes" class="form-control w-75" rows="3"><?= e($_POST['notes'] ?? '') ?></textarea>
 
                             <p class="privacy-text">
-                                By proceeding, you confirm that you have read and agree to<br>
-                                <a href="#">Nimishaimpex Terms of Use</a> and <a href="#">Privacy Notice</a>.
+                                By proceeding, you confirm that you have read and agree to mybrandplease<br>
+                                <a href="<?= url('terms-conditions') ?>">Terms & Conditions</a> and <a href="<?= url('privacy') ?>">Privacy Notice</a>.
                             </p>
 
                             <button type="submit" class="btn-schedule">Schedule Event</button>
