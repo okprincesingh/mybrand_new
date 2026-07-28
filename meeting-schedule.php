@@ -68,7 +68,7 @@ function meeting_timezone_label(string $timezone): string
 /* Calendar Content */
 .cal-main-content { padding: 40px; }
 .cal-nav-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-.month-display { font-weight: 600; font-size: 16px; }
+.month-display { font-weight: 600; font-size: 16px; color: var(--text-dark); }
 .btn-nav { border: none; background: transparent; color: var(--primary-blue); font-size: 18px; width: 36px; height: 36px; border-radius: 50%; transition: 0.2s; }
 .btn-nav:hover { background: #f0f7ff; }
 
@@ -89,7 +89,7 @@ function meeting_timezone_label(string $timezone): string
 .cal-time-sidebar { padding: 40px 25px; border-left: 1px solid var(--border-color); min-height: 550px; }
 .time-title { font-weight: 600; margin-bottom: 20px; color: var(--text-dark); }
 .time-scroll { max-height: 480px; overflow-y: auto; padding-right: 10px; }
-
+.form-label{font-weight: 600; font-size: 16px; color: var(--text-dark);}
 .time-slot-container { display: flex; gap: 8px; margin-bottom: 10px; align-items: center; }
 
 /* Default time button state */

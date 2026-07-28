@@ -208,7 +208,7 @@ body { font-family: 'Inter', sans-serif; background: #fff; }
 .det-logo-main { max-width: 150px; margin-bottom: 40px; display: block; }
 .det-avatar { width: 64px; height: 64px; border-radius: 50%; margin-bottom: 15px; }
 .det-company-name { font-size: 14px; color: var(--text-muted); font-weight: 700; margin-bottom: 5px; text-transform: uppercase; }
-.det-event-title { font-size: 26px; font-weight: 800; color: var(--text-dark); margin-bottom: 25px; }
+.det-event-title { font-size: 20px; font-weight: 800; color: var(--text-dark); margin-bottom: 25px; }
 .det-meta { color: var(--text-muted); font-size: 15px; margin-bottom: 12px; font-weight: 500; display: flex; align-items: flex-start; gap: 12px; }
 .det-meta i { margin-top: 4px; font-size: 18px; width: 20px; text-align: center; }
 
