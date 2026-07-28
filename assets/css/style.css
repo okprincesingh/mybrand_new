@@ -26784,7 +26784,7 @@ iframe {
     margin-left: 0;
   }
   .working-process-section__strip-brand{
-    font-size: clamp(36px, 5vw, 56px);
+    font-size: clamp(36px, 5vw, 53px);
   }
 }
 

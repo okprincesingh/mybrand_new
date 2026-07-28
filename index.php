@@ -1690,16 +1690,17 @@ document.addEventListener('DOMContentLoaded', function () {
     if (cards.length < 2) return;
 
     window.gsap.set(cards, {
+      autoAlpha: 1,
       force3D: true,
       transformOrigin: '50% 54%'
     });
 
     window.gsap.set(cards.slice(1), {
       xPercent: 118,
-      yPercent: 8,
-      rotate: 4,
-      scale: 0.96,
-      autoAlpha: 0
+      yPercent: 0,
+      rotate: 0,
+      scale: 1,
+      autoAlpha: 1
     });
 
     if (strip) {
@@ -1755,11 +1756,11 @@ document.addEventListener('DOMContentLoaded', function () {
       const position = index * 1.15;
       timeline
         .fromTo(card, {
-          autoAlpha: 0,
+          autoAlpha: 1,
           xPercent: 118,
-          yPercent: 8,
-          rotate: 4,
-          scale: 0.96
+          yPercent: 0,
+          rotate: 0,
+          scale: 1
         }, {
           autoAlpha: 1,
           xPercent: 0,
