@@ -12,6 +12,11 @@ function meeting_mail_hit_gmail_quota(string $status): bool
     return str_contains(strtolower($status), 'daily user sending limit exceeded');
 }
 
+function meeting_timezone_display(DateTimeInterface $dateTime, string $timezone): string
+{
+    return $timezone . ' (' . $dateTime->format('T') . ')';
+}
+
 $isPost = strtoupper((string)($_SERVER['REQUEST_METHOD'] ?? 'GET')) === 'POST';
 $requestData = $isPost ? $_POST : $_GET;
 
@@ -19,17 +24,12 @@ $date = isset($requestData['date']) && is_string($requestData['date']) ? trim($r
 $time = isset($requestData['time']) && is_string($requestData['time']) ? trim($requestData['time']) : '';
 $timezone = isset($requestData['timezone']) && is_string($requestData['timezone']) ? trim($requestData['timezone']) : '';
 
-if ($date === '' || $time === '' || $timezone === '') {
+if ($date === '' || $time === '' || $timezone === '' || !in_array($timezone, DateTimeZone::listIdentifiers(), true)) {
     header('Location: ' . url('meeting-schedule'));
     exit;
 }
 
-try {
-    $tzObject = new DateTimeZone($timezone);
-} catch (Exception $e) {
-    $timezone = 'Asia/Kolkata';
-    $tzObject = new DateTimeZone($timezone);
-}
+$tzObject = new DateTimeZone($timezone);
 if (preg_match('/^\d{1,2}:\d{2}(am|pm)$/i', $time)) {
     $tmp = DateTime::createFromFormat('g:ia', strtolower($time), $tzObject);
     if ($tmp instanceof DateTime) {
@@ -46,7 +46,10 @@ if (!$dateTime) {
 
 $endDateTime = clone $dateTime;
 $endDateTime->modify('+30 minutes');
-$eventDisplay = $dateTime->format('g:ia') . ' - ' . $endDateTime->format('g:ia') . ', ' . $dateTime->format('l, F j, Y');
+$eventDisplay = $dateTime->format('g:i A') . ' - ' . $endDateTime->format('g:i A') . ', ' . $dateTime->format('l, F j, Y');
+$eventDateDisplay = $dateTime->format('j F Y');
+$eventTimeDisplay = $dateTime->format('g:i A') . ' - ' . $endDateTime->format('g:i A');
+$eventTimezoneDisplay = meeting_timezone_display($dateTime, $timezone);
 
 $errors = [];
 $warnings = [];
@@ -117,11 +120,12 @@ if ($isPost) {
             <p><strong>Invitee:</strong><br>' . e($name) . '</p>
             <p><strong>Invitee Email:</strong><br>' . e($email) . '</p>
             <p><strong>Additional Guests:</strong>' . $guestHtml . '</p>
-            <p><strong>Event Date/Time:</strong><br>' . e($eventDisplay) . ' (' . e($timezone) . ')</p>
+            <p><strong>Date:</strong><br>' . e($eventDateDisplay) . '</p>
+            <p><strong>Time:</strong><br>' . e($eventTimeDisplay) . '</p>
+            <p><strong>Time Zone:</strong><br>' . e($eventTimezoneDisplay) . '</p>
             <p><strong>Location:</strong><br>This is a Google Meet web conference. <a href="' . e($googleMeetLink) . '">Join now</a></p>
             ' . $meetLinkHtml . '
             ' . $meetWarning . '
-            <p><strong>Invitee Time Zone:</strong><br>' . e($timezone) . '</p>
             <p><strong>Notes:</strong><br>' . $notesHtml . '</p>
         ';
 
@@ -129,7 +133,9 @@ if ($isPost) {
             <p>Hi ' . e($name) . ',</p>
             <p>Your event has been scheduled.</p>
             <p><strong>Event Type:</strong><br>30 Minute Meeting</p>
-            <p><strong>Event Date/Time:</strong><br>' . e($eventDisplay) . ' (' . e($timezone) . ')</p>
+            <p><strong>Date:</strong><br>' . e($eventDateDisplay) . '</p>
+            <p><strong>Time:</strong><br>' . e($eventTimeDisplay) . '</p>
+            <p><strong>Time Zone:</strong><br>' . e($eventTimezoneDisplay) . '</p>
             <p><strong>Additional Guests:</strong>' . $guestHtml . '</p>
             <p><strong>Location:</strong><br>This is a Google Meet web conference. <a href="' . e($googleMeetLink) . '">Join now</a></p>
             ' . $meetLinkHtml . '
@@ -266,7 +272,7 @@ body { font-family: 'Inter', sans-serif; background: #fff; }
                             </div>
                             <div class="det-meta">
                                 <i class="fa-solid fa-earth-americas"></i>
-                                <span><?= e(str_replace('_', ' ', $timezone)) ?></span>
+                                <span><?= e($eventTimezoneDisplay) ?></span>
                             </div>
                         </div>
                     </div>

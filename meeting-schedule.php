@@ -7,8 +7,35 @@ $meta = [
 include 'includes/head.php';
 include 'includes/header.php';
 
-$timezoneList = timezone_identifiers_list();
-$defaultTimezone = isset($_GET['timezone']) ? $_GET['timezone'] : 'Asia/Kolkata';
+$timezoneList = DateTimeZone::listIdentifiers();
+$defaultTimezone = isset($_GET['timezone']) && is_string($_GET['timezone']) ? trim($_GET['timezone']) : 'Asia/Kolkata';
+if (!in_array($defaultTimezone, $timezoneList, true)) {
+    $defaultTimezone = 'Asia/Kolkata';
+}
+
+function meeting_timezone_label(string $timezone): string
+{
+    $friendlyNames = [
+        'Asia/Kolkata' => 'India Standard Time',
+        'America/New_York' => 'Eastern Time',
+        'America/Chicago' => 'Central Time',
+        'America/Denver' => 'Mountain Time',
+        'America/Los_Angeles' => 'Pacific Time',
+        'Europe/London' => 'London',
+        'Europe/Paris' => 'Central European Time',
+        'Australia/Sydney' => 'Sydney',
+        'Australia/Melbourne' => 'Melbourne',
+        'Australia/Perth' => 'Perth',
+    ];
+
+    if (isset($friendlyNames[$timezone])) {
+        return $friendlyNames[$timezone] . ' (' . $timezone . ')';
+    }
+
+    $parts = explode('/', $timezone);
+    $city = str_replace('_', ' ', (string) end($parts));
+    return $city . ' (' . $timezone . ')';
+}
 ?>
 
 
@@ -179,9 +206,10 @@ $defaultTimezone = isset($_GET['timezone']) ? $_GET['timezone'] : 'Asia/Kolkata'
                         </table>
 
                         <div class="cal-tz-wrap">
+                            <label class="form-label" for="tzSearch">Time Zone *</label>
                             <div class="tz-trigger" id="tzTrigger">
                                 <i class="fa-solid fa-earth-americas me-2"></i>
-                                <span id="tzCurrentName">India Standard Time (6:28pm)</span>
+                                <span id="tzCurrentName"><?= htmlspecialchars(meeting_timezone_label($defaultTimezone), ENT_QUOTES, 'UTF-8') ?></span>
                                 <i class="fa-solid fa-caret-up ms-auto"></i>
                             </div>
 
@@ -190,8 +218,9 @@ $defaultTimezone = isset($_GET['timezone']) ? $_GET['timezone'] : 'Asia/Kolkata'
                                     <input type="text" class="form-control form-control-sm mb-2" id="tzSearch" placeholder="Search...">
                                     <div class="tz-list" id="tzList">
                                         <?php foreach ($timezoneList as $tz): ?>
-                                            <div class="tz-item <?= $tz === $defaultTimezone ? 'active' : '' ?>" data-tz="<?= $tz ?>">
-                                                <span><?= str_replace(['_', '/'], [' ', ' / '], $tz) ?></span>
+                                            <?php $tzLabel = meeting_timezone_label($tz); ?>
+                                            <div class="tz-item <?= $tz === $defaultTimezone ? 'active' : '' ?>" data-tz="<?= htmlspecialchars($tz, ENT_QUOTES, 'UTF-8') ?>" data-label="<?= htmlspecialchars($tzLabel, ENT_QUOTES, 'UTF-8') ?>">
+                                                <span><?= htmlspecialchars($tzLabel, ENT_QUOTES, 'UTF-8') ?></span>
                                             </div>
                                         <?php endforeach; ?>
                                     </div>
@@ -212,7 +241,7 @@ $defaultTimezone = isset($_GET['timezone']) ? $_GET['timezone'] : 'Asia/Kolkata'
 
             <input type="hidden" name="date" id="selectedDateValue">
             <input type="hidden" name="time" id="selectedTimeValue">
-            <input type="hidden" name="timezone" id="selectedTz" value="<?= $defaultTimezone ?>">
+            <input type="hidden" name="timezone" id="selectedTz" value="<?= htmlspecialchars($defaultTimezone, ENT_QUOTES, 'UTF-8') ?>" required>
         </form>
     </div>
 </section>
@@ -245,10 +274,17 @@ $defaultTimezone = isset($_GET['timezone']) ? $_GET['timezone'] : 'Asia/Kolkata'
         return String(h).padStart(2, '0') + ':' + min;
     }
 
+    function formatLocalDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
     function renderCalendar() {
         monthLabel.textContent = new Date(viewYear, viewMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
         dateLabel.textContent = selectedDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
-        dateInput.value = selectedDate.toISOString().split('T')[0];
+        dateInput.value = formatLocalDate(selectedDate);
         
         calGrid.innerHTML = '';
         let firstDay = (new Date(viewYear, viewMonth, 1).getDay() + 6) % 7;
@@ -343,7 +379,7 @@ $defaultTimezone = isset($_GET['timezone']) ? $_GET['timezone'] : 'Asia/Kolkata'
     tzItems.forEach(item => {
         item.onclick = () => {
             const val = item.getAttribute('data-tz');
-            tzCurrentName.textContent = val.replace('_', ' ');
+            tzCurrentName.textContent = item.getAttribute('data-label') || val;
             selectedTzInput.value = val;
             tzDropdown.classList.add('d-none');
             tzItems.forEach(i => i.classList.remove('active'));
