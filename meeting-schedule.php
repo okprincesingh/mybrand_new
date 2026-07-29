@@ -21,20 +21,53 @@ function meeting_timezone_label(string $timezone): string
         'America/Chicago' => 'Central Time',
         'America/Denver' => 'Mountain Time',
         'America/Los_Angeles' => 'Pacific Time',
-        'Europe/London' => 'London',
-        'Europe/Paris' => 'Central European Time',
-        'Australia/Sydney' => 'Sydney',
-        'Australia/Melbourne' => 'Melbourne',
-        'Australia/Perth' => 'Perth',
+        'Europe/London' => 'United Kingdom',
+        'Australia/Sydney' => 'Australia - Sydney',
+    ];
+    $countryNames = [
+        'AU' => 'Australia',
+        'CA' => 'Canada',
+        'DE' => 'Germany',
+        'ES' => 'Spain',
+        'FR' => 'France',
+        'GB' => 'United Kingdom',
+        'IN' => 'India',
+        'IT' => 'Italy',
+        'JP' => 'Japan',
+        'NZ' => 'New Zealand',
+        'US' => 'United States',
+    ];
+    $flags = [
+        'AU' => '🇦🇺',
+        'CA' => '🇨🇦',
+        'DE' => '🇩🇪',
+        'ES' => '🇪🇸',
+        'FR' => '🇫🇷',
+        'GB' => '🇬🇧',
+        'IN' => '🇮🇳',
+        'IT' => '🇮🇹',
+        'JP' => '🇯🇵',
+        'NZ' => '🇳🇿',
+        'US' => '🇺🇸',
     ];
 
-    if (isset($friendlyNames[$timezone])) {
-        return $friendlyNames[$timezone] . ' (' . $timezone . ')';
-    }
-
+    $tzObject = new DateTimeZone($timezone);
+    $now = new DateTimeImmutable('now', $tzObject);
+    $offsetSeconds = $tzObject->getOffset($now);
+    $offsetSign = $offsetSeconds >= 0 ? '+' : '-';
+    $offsetSeconds = abs($offsetSeconds);
+    $offset = 'UTC' . $offsetSign . sprintf('%02d:%02d', intdiv($offsetSeconds, 3600), intdiv($offsetSeconds % 3600, 60));
+    $location = $tzObject->getLocation();
+    $countryCode = is_array($location) ? (string) ($location['country_code'] ?? '') : '';
     $parts = explode('/', $timezone);
     $city = str_replace('_', ' ', (string) end($parts));
-    return $city . ' (' . $timezone . ')';
+    $friendlyName = $friendlyNames[$timezone] ?? trim(($countryNames[$countryCode] ?? '') . ($countryCode !== '' ? ' - ' : '') . $city, ' -');
+
+    if ($friendlyName === '') {
+        $friendlyName = $city;
+    }
+
+    return trim(($flags[$countryCode] ?? '') . ' ' . $friendlyName) . ' (' . $offset . ')';
 }
 ?>
 
@@ -127,18 +160,22 @@ function meeting_timezone_label(string $timezone): string
 /* Searchable Timezone Dropdown */
 .cal-tz-wrap { margin-top: 30px; position: relative; }
 .tz-trigger {
-    display: flex; align-items: center; padding: 10px; border: 1px solid #dee2e6;
+    display: flex; align-items: center; gap: 8px; padding: 10px; border: 1px solid #dee2e6;
     border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500; color:black;
 }
+.tz-trigger span { line-height: 1.35; }
 .tz-dropdown {
     position: absolute; bottom: 100%; left: 0; width: 100%; min-width: 280px;
     background: #fff; border: 1px solid #e1e1e1; border-radius: 8px;
     box-shadow: 0 -10px 25px rgba(0,0,0,0.1); z-index: 1000; margin-bottom: 5px;
 }
-.tz-list { max-height: 200px; overflow-y: auto; }
-.tz-item { display: flex; padding: 10px; font-size: 13px; cursor: pointer; border-radius: 4px;color:black; }
+.tz-list { max-height: 260px; overflow-y: auto; }
+.tz-item { display: flex; flex-direction: column; gap: 2px; padding: 10px; font-size: 13px; cursor: pointer; border-radius: 4px;color:black; }
+.tz-item__name { font-weight: 700; line-height: 1.25; }
+.tz-item__id { color: var(--text-muted); font-size: 12px; line-height: 1.25; word-break: break-word; }
 .tz-item:hover { background: #f0f7ff; color: var(--primary-blue); }
 .tz-item.active { background: var(--primary-blue); color: #fff; }
+.tz-item.active .tz-item__id { color: rgba(255, 255, 255, 0.82); }
 
 .time-scroll::-webkit-scrollbar, .tz-list::-webkit-scrollbar { width: 5px; }
 .time-scroll::-webkit-scrollbar-thumb, .tz-list::-webkit-scrollbar-thumb { background: #d1d1d1; border-radius: 10px; }
@@ -219,8 +256,10 @@ function meeting_timezone_label(string $timezone): string
                                     <div class="tz-list" id="tzList">
                                         <?php foreach ($timezoneList as $tz): ?>
                                             <?php $tzLabel = meeting_timezone_label($tz); ?>
-                                            <div class="tz-item <?= $tz === $defaultTimezone ? 'active' : '' ?>" data-tz="<?= htmlspecialchars($tz, ENT_QUOTES, 'UTF-8') ?>" data-label="<?= htmlspecialchars($tzLabel, ENT_QUOTES, 'UTF-8') ?>">
-                                                <span><?= htmlspecialchars($tzLabel, ENT_QUOTES, 'UTF-8') ?></span>
+                                            <?php $tzSearch = strtolower(str_replace(['_', '/'], [' ', ' '], $tz . ' ' . $tzLabel . ' ' . preg_replace('/UTC([+-])0(\d:)/', 'UTC$1$2', $tzLabel))); ?>
+                                            <div class="tz-item <?= $tz === $defaultTimezone ? 'active' : '' ?>" data-tz="<?= htmlspecialchars($tz, ENT_QUOTES, 'UTF-8') ?>" data-label="<?= htmlspecialchars($tzLabel, ENT_QUOTES, 'UTF-8') ?>" data-search="<?= htmlspecialchars($tzSearch, ENT_QUOTES, 'UTF-8') ?>">
+                                                <span class="tz-item__name"><?= htmlspecialchars($tzLabel, ENT_QUOTES, 'UTF-8') ?></span>
+                                                <span class="tz-item__id"><?= htmlspecialchars($tz, ENT_QUOTES, 'UTF-8') ?></span>
                                             </div>
                                         <?php endforeach; ?>
                                     </div>
@@ -367,25 +406,43 @@ function meeting_timezone_label(string $timezone): string
     const selectedTzInput = document.getElementById('selectedTz');
     const tzCurrentName = document.getElementById('tzCurrentName');
 
-    tzTrigger.onclick = () => tzDropdown.classList.toggle('d-none');
+    function selectTimezone(item) {
+        if (!item) return;
+        const val = item.getAttribute('data-tz');
+        tzCurrentName.textContent = item.getAttribute('data-label') || val;
+        selectedTzInput.value = val;
+        tzItems.forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+    }
+
+    tzTrigger.onclick = () => {
+        tzDropdown.classList.toggle('d-none');
+        if (!tzDropdown.classList.contains('d-none')) {
+            tzSearch.focus();
+        }
+    };
     
     tzSearch.oninput = (e) => {
-        const val = e.target.value.toLowerCase();
+        const val = e.target.value.toLowerCase().replace(/\s+/g, ' ').trim();
         tzItems.forEach(item => {
-            item.style.display = item.textContent.toLowerCase().includes(val) ? 'flex' : 'none';
+            item.style.display = item.getAttribute('data-search').includes(val) ? 'flex' : 'none';
         });
     };
 
     tzItems.forEach(item => {
         item.onclick = () => {
-            const val = item.getAttribute('data-tz');
-            tzCurrentName.textContent = item.getAttribute('data-label') || val;
-            selectedTzInput.value = val;
+            selectTimezone(item);
             tzDropdown.classList.add('d-none');
-            tzItems.forEach(i => i.classList.remove('active'));
-            item.classList.add('active');
         };
     });
+
+    try {
+        const detectedTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const detectedItem = detectedTimezone
+            ? Array.from(tzItems).find(item => item.getAttribute('data-tz') === detectedTimezone)
+            : null;
+        if (detectedItem) selectTimezone(detectedItem);
+    } catch (error) {}
 
     document.getElementById('prevMonth').onclick = () => { viewMonth--; renderCalendar(); };
     document.getElementById('nextMonth').onclick = () => { viewMonth++; renderCalendar(); };

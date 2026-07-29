@@ -14,7 +14,45 @@ function meeting_mail_hit_gmail_quota(string $status): bool
 
 function meeting_timezone_display(DateTimeInterface $dateTime, string $timezone): string
 {
-    return $timezone . ' (' . $dateTime->format('T') . ')';
+    $friendlyNames = [
+        'Asia/Kolkata' => 'India Standard Time',
+        'America/New_York' => 'Eastern Time',
+        'America/Chicago' => 'Central Time',
+        'America/Denver' => 'Mountain Time',
+        'America/Los_Angeles' => 'Pacific Time',
+        'Europe/London' => 'United Kingdom',
+        'Australia/Sydney' => 'Australia - Sydney',
+    ];
+    $countryNames = [
+        'AU' => 'Australia',
+        'CA' => 'Canada',
+        'DE' => 'Germany',
+        'ES' => 'Spain',
+        'FR' => 'France',
+        'GB' => 'United Kingdom',
+        'IN' => 'India',
+        'IT' => 'Italy',
+        'JP' => 'Japan',
+        'NZ' => 'New Zealand',
+        'US' => 'United States',
+    ];
+
+    $tzObject = new DateTimeZone($timezone);
+    $offsetSeconds = $tzObject->getOffset($dateTime);
+    $offsetSign = $offsetSeconds >= 0 ? '+' : '-';
+    $offsetSeconds = abs($offsetSeconds);
+    $offset = 'UTC' . $offsetSign . sprintf('%02d:%02d', intdiv($offsetSeconds, 3600), intdiv($offsetSeconds % 3600, 60));
+    $location = $tzObject->getLocation();
+    $countryCode = is_array($location) ? (string) ($location['country_code'] ?? '') : '';
+    $parts = explode('/', $timezone);
+    $city = str_replace('_', ' ', (string) end($parts));
+    $friendlyName = $friendlyNames[$timezone] ?? trim(($countryNames[$countryCode] ?? '') . ($countryCode !== '' ? ' - ' : '') . $city, ' -');
+
+    if ($friendlyName === '') {
+        $friendlyName = $city;
+    }
+
+    return $friendlyName . ' (' . $offset . ')<br>' . $timezone;
 }
 
 $isPost = strtoupper((string)($_SERVER['REQUEST_METHOD'] ?? 'GET')) === 'POST';
@@ -121,8 +159,7 @@ if ($isPost) {
             <p><strong>Invitee Email:</strong><br>' . e($email) . '</p>
             <p><strong>Additional Guests:</strong>' . $guestHtml . '</p>
             <p><strong>Date:</strong><br>' . e($eventDateDisplay) . '</p>
-            <p><strong>Time:</strong><br>' . e($eventTimeDisplay) . '</p>
-            <p><strong>Time Zone:</strong><br>' . e($eventTimezoneDisplay) . '</p>
+            <p><strong>Meeting Time:</strong><br>' . e($eventTimeDisplay) . '<br>' . $eventTimezoneDisplay . '</p>
             <p><strong>Location:</strong><br>This is a Google Meet web conference. <a href="' . e($googleMeetLink) . '">Join now</a></p>
             ' . $meetLinkHtml . '
             ' . $meetWarning . '
@@ -134,8 +171,7 @@ if ($isPost) {
             <p>Your event has been scheduled.</p>
             <p><strong>Event Type:</strong><br>30 Minute Meeting</p>
             <p><strong>Date:</strong><br>' . e($eventDateDisplay) . '</p>
-            <p><strong>Time:</strong><br>' . e($eventTimeDisplay) . '</p>
-            <p><strong>Time Zone:</strong><br>' . e($eventTimezoneDisplay) . '</p>
+            <p><strong>Meeting Time:</strong><br>' . e($eventTimeDisplay) . '<br>' . $eventTimezoneDisplay . '</p>
             <p><strong>Additional Guests:</strong>' . $guestHtml . '</p>
             <p><strong>Location:</strong><br>This is a Google Meet web conference. <a href="' . e($googleMeetLink) . '">Join now</a></p>
             ' . $meetLinkHtml . '
@@ -272,7 +308,7 @@ body { font-family: 'Inter', sans-serif; background: #fff; }
                             </div>
                             <div class="det-meta">
                                 <i class="fa-solid fa-earth-americas"></i>
-                                <span><?= e($eventTimezoneDisplay) ?></span>
+                                <span><?= $eventTimezoneDisplay ?></span>
                             </div>
                         </div>
                     </div>
