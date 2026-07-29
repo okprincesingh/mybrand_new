@@ -198,5 +198,5 @@ function blog_get_recent_posts(int $limit = 3, ?string $excludeSlug = null): arr
 
 function blog_link(string $slug): string
 {
-    return url('blog-details.php?slug=' . urlencode($slug));
+    return url($slug);
 }

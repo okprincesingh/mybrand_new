@@ -27,7 +27,7 @@ $contentHtml = $rawContent !== ''
 $meta = [
   'title' => 'mybrandplease | ' . (string) $post['title'],
   'description' => (string) ($post['excerpt'] ?: 'mybrandplease blog details'),
-  'canonical' => 'blog-details.php?slug=' . urlencode((string) $post['slug']),
+  'canonical' => (string) $post['slug'],
 ];
 include 'includes/head.php';
 include 'includes/header.php';

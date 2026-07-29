@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/includes/helpers.php';
 require_once __DIR__ . '/includes/catalog.php';
+require_once __DIR__ . '/includes/blog.php';
 
 $slug = rawurldecode(trim((string) ($_GET['slug'] ?? ''), "/ \t\n\r\0\x0B"));
 
@@ -23,6 +24,12 @@ if ($category) {
     $_GET['category'] = (string) ($category['slug'] ?? $slug);
     unset($_GET['slug']);
     require __DIR__ . '/shop.php';
+    exit;
+}
+
+if (blog_get_post_by_slug($slug)) {
+    $_GET['slug'] = $slug;
+    require __DIR__ . '/blog-details.php';
     exit;
 }
 
