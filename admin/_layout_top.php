@@ -60,6 +60,7 @@ $currentPage = basename($_SERVER['PHP_SELF'] ?? '');
       <a class="admin-nav-link <?= $currentPage==='reports.php'?'active':'' ?>" href="reports.php"><i class="bi bi-bar-chart"></i><span>Reports</span></a>
 
       <div class="nav-group-label">Session</div>
+      <a class="admin-nav-link <?= $currentPage==='settings.php'?'active':'' ?>" href="settings.php"><i class="bi bi-gear"></i><span>Settings</span></a>
       <a class="admin-nav-link" href="logout.php"><i class="bi bi-box-arrow-right"></i><span>Logout</span></a>
     </aside>
 
