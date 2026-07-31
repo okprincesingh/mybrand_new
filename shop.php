@@ -184,7 +184,6 @@ $shopLandingCategoryConfigs = [
     ['aliases' => ['bathing-soaps']],
     ['aliases' => ['especially-for-men', 'men-s-care']],
     ['combined' => 'aerosols-perfumes'],
-    ['aliases' => ['packaging']],
 ];
 
 $shopLandingCategories = [];

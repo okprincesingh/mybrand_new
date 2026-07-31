@@ -143,10 +143,30 @@ if ($isAosPage) {
 <?php endforeach; ?>
 <?php if ($isAosPage): ?>
   <script>
+    window.mybrandpleaseInitAOS = function () {
+      if (typeof window.AOS === 'undefined' || typeof window.AOS.init !== 'function') return;
+      window.AOS.init({
+        once: false,
+        mirror: true,
+        offset: 60,
+        duration: 800,
+        easing: 'ease-out-cubic'
+      });
+      if (typeof window.AOS.refreshHard === 'function') {
+        window.AOS.refreshHard();
+      }
+    };
     if (window.matchMedia('(min-width: 992px)').matches) {
       var aosScript = document.createElement('script');
       aosScript.src = 'https://unpkg.com/aos@2.3.4/dist/aos.js';
-      aosScript.defer = true;
+      aosScript.async = false;
+      aosScript.onload = function () {
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', window.mybrandpleaseInitAOS, { once: true });
+        } else {
+          window.mybrandpleaseInitAOS();
+        }
+      };
       document.head.appendChild(aosScript);
     }
   </script>

@@ -205,17 +205,21 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
         <div class="site-visit-popup__dialog" role="dialog" aria-modal="true" aria-labelledby="site-visit-popup-title">
           <button type="button" class="site-visit-popup__close" data-site-popup-close aria-label="Close popup">&times;</button>
           <span class="site-visit-popup__eyebrow">Private Label Cosmetics</span>
-          <h3 class="site-visit-popup__title" id="site-visit-popup-title">Build Your Brand With mybrandplease</h3>
+          <h3 class="site-visit-popup__title" id="site-visit-popup-title">Build Your Brand With mybrandplease.com</h3>
           <p class="site-visit-popup__text">
-            We help salons, spas, retailers, hotels, and growing brands create premium skin care, hair care, body care, and personal care products with low MOQ and expert private label support.
+            At mybrandplease.com, we turn your product vision into premium skin care, hair care, body care products expertly formulated, beautifully packaged, and ready for your market.
           </p>
           <div class="site-visit-popup__points">
-            <span><i class="fa-solid fa-check"></i> Custom formulations</span>
-            <span><i class="fa-solid fa-check"></i> Label design support</span>
-            <span><i class="fa-solid fa-check"></i> Worldwide enquiries</span>
+            <span><i class="fa-solid fa-check"></i> Global regulatory compliance support</span>
+            <span><i class="fa-solid fa-check"></i> Custom & ready-to-launch formulations</span>
+            <span><i class="fa-solid fa-check"></i> End-to-end Custom branding & Packaging</span>
+            <span><i class="fa-solid fa-check"></i> Low-MOQ manufacturing with global delivery</span>
           </div>
+          <p class="site-visit-popup__text mb-3">
+            Create a Beauty Brand That Stands Out
+          </p>
           <button type="button" class="site-visit-popup__button" id="site-popup-enquiry-btn">
-            Get in Touch
+            BOOK A CALL WITH US TODAY!
             <i class="fa-solid fa-arrow-right"></i>
           </button>
         </div>
@@ -1425,14 +1429,10 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
       });
 
       // Global AOS init (for pages that include AOS library + data-aos attributes)
-      if (typeof window.AOS !== 'undefined' && typeof window.AOS.init === 'function') {
-        window.AOS.init({
-          once: false,
-          mirror: true,
-          offset: 60,
-          duration: 800,
-          easing: 'ease-out-cubic'
-        });
+      if (typeof window.mybrandpleaseInitAOS === 'function') {
+        window.mybrandpleaseInitAOS();
+      } else if (typeof window.AOS !== 'undefined' && typeof window.AOS.init === 'function') {
+        window.AOS.init();
       }
 
       // Social reels seamless marquee + muted autoplay + click-to-open lightbox
