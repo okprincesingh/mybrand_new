@@ -195,10 +195,7 @@ if ($isAosPage) {
     transition: none !important;
   }
 
-  .hero-marquee__track,
   .working-process-section__strip-services,
-  .partners-carousel-list,
-  .auto-scroll-content,
   .map-marker__dot {
     animation: none !important;
     transform: none !important;
