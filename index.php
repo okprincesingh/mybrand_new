@@ -1886,6 +1886,7 @@ document.addEventListener('DOMContentLoaded', function () {
         ];
 
         const pinElements = [];
+        let hasActivatedOnScroll = false;
 
         locations.forEach(function (loc, index) {
           const pin = root.createElement('div');
@@ -1922,6 +1923,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         function deactivateMap() {
+          if (hasActivatedOnScroll) return;
           if (stage.classList.contains('active')) {
             stage.classList.remove('active');
             pinElements.forEach(function (pin) {
@@ -1932,6 +1934,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
         adjustStickHeights();
         window.addEventListener('resize', adjustStickHeights);
+        if ('IntersectionObserver' in window) {
+          const observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              if (!entry.isIntersecting) return;
+              hasActivatedOnScroll = true;
+              activateMap();
+              observer.disconnect();
+            });
+          }, {
+            threshold: 0.35,
+            rootMargin: '0px 0px -12% 0px'
+          });
+          observer.observe(stage);
+        } else {
+          hasActivatedOnScroll = true;
+          activateMap();
+        }
         stage.addEventListener('mouseenter', activateMap);
         stage.addEventListener('mouseleave', deactivateMap);
         stage.addEventListener('focusin', activateMap);

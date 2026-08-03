@@ -124,12 +124,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $addSlug = isset($_GET['add']) ? trim((string) $_GET['add']) : '';
 if ($addSlug !== '' && isset($productIndex[$addSlug])) {
-  if (cartIsDuplicateAdd($addSlug, 1)) {
+  $addQty = max(1, min(99, (int) ($_GET['quantity'] ?? 1)));
+  if (cartIsDuplicateAdd($addSlug, $addQty)) {
     header('Location: ' . url('cart.php'));
     exit;
   }
   $currentQty = (int) ($_SESSION['cart'][$addSlug] ?? 0);
-  $newQty = max(1, $currentQty + 1);
+  $newQty = max(1, min(99, $currentQty + $addQty));
   $_SESSION['cart'][$addSlug] = $newQty;
   $pdo = db();
   $sessionId = session_id();

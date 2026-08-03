@@ -626,19 +626,30 @@ include 'includes/header.php';
     document.addEventListener('DOMContentLoaded', function () {
       const store = window.MybrandStore;
       const qtyVal = document.querySelector('.qty-val');
+      const qtyWrap = document.querySelector('.qty');
       const addBtn = document.querySelector('.js-product-add-to-cart');
       const wishlistBtn = document.querySelector('.js-product-toggle-wishlist');
       const buyBtn = document.querySelector('.js-product-buy-now');
 
-      function getPayload(trigger) {
+      function getSelectedQuantity() {
         const quantity = parseInt(qtyVal?.textContent.trim() || '1', 10);
+        return Number.isFinite(quantity) && quantity > 0 ? quantity : 1;
+      }
+
+      function setSelectedQuantity(quantity) {
+        if (!qtyVal) return;
+        const normalized = Math.max(1, Math.min(99, parseInt(quantity || 1, 10) || 1));
+        qtyVal.textContent = String(normalized).padStart(2, '0');
+      }
+
+      function getPayload(trigger) {
         return {
           slug: trigger?.dataset.productSlug || '',
           title: trigger?.dataset.productName || 'Product',
           price: Number(trigger?.dataset.productPrice || 0),
           image: trigger?.dataset.productImage || '',
           link: trigger?.dataset.productLink || window.location.href,
-          quantity: Number.isFinite(quantity) && quantity > 0 ? quantity : 1
+          quantity: getSelectedQuantity()
         };
       }
 
@@ -658,13 +669,25 @@ include 'includes/header.php';
         wishlistBtn.classList.toggle('active', store.isInWishlist(wishlistBtn.dataset.productSlug || ''));
       }
 
+      if (qtyWrap && qtyVal) {
+        setSelectedQuantity(getSelectedQuantity());
+        const qtyButtons = qtyWrap.querySelectorAll('.qty-btn');
+        qtyButtons.forEach(function (button) {
+          button.addEventListener('click', function () {
+            const isDecrease = (button.getAttribute('aria-label') || '').toLowerCase().includes('decrease') || button.textContent.trim() === '-';
+            const nextQuantity = getSelectedQuantity() + (isDecrease ? -1 : 1);
+            setSelectedQuantity(nextQuantity);
+          });
+        });
+      }
+
       if (addBtn) {
         addBtn.addEventListener('click', function (e) {
           e.preventDefault();
           e.stopImmediatePropagation();
           const slug = (addBtn.dataset.productSlug || '').trim();
           if (!slug) return;
-          window.location.href = `<?php echo url('cart.php'); ?>?add=${encodeURIComponent(slug)}`;
+          window.location.href = `<?php echo url('cart.php'); ?>?add=${encodeURIComponent(slug)}&quantity=${encodeURIComponent(getSelectedQuantity())}`;
         }, true);
       }
 
@@ -685,7 +708,7 @@ include 'includes/header.php';
           e.stopImmediatePropagation();
           const slug = (buyBtn.dataset.productSlug || '').trim();
           if (!slug) return;
-          window.location.href = `<?php echo url('cart.php'); ?>?add=${encodeURIComponent(slug)}`;
+          window.location.href = `<?php echo url('cart.php'); ?>?add=${encodeURIComponent(slug)}&quantity=${encodeURIComponent(getSelectedQuantity())}`;
         }, true);
       }
 
