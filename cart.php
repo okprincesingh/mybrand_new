@@ -340,14 +340,14 @@ include 'includes/header.php';
               <i class="fa-regular fa-shield-check"></i>
               <span>Secure Checkout</span>
             </div>
-            <div class="trust-item">
+            <!-- <div class="trust-item">
               <i class="fa-regular fa-truck"></i>
               <span>Free Shipping</span>
             </div>
             <div class="trust-item">
               <i class="fa-regular fa-rotate-left"></i>
               <span>Easy Returns</span>
-            </div>
+            </div> -->
           </div>
         </div>
 

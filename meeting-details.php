@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/includes/security.php';
+require_once __DIR__ . '/includes/captcha.php';
 require_once __DIR__ . '/includes/mailer.php';
 require_once __DIR__ . '/includes/google-meet.php';
 require_once __DIR__ . '/includes/url.php';
@@ -96,6 +97,7 @@ $createdMeetingLink = '';
 
 if ($isPost) {
     verify_csrf_or_fail();
+    $captchaError = null;
     $name = trim((string)($_POST['name'] ?? ''));
     $email = trim((string)($_POST['email'] ?? ''));
     $guestsRaw = trim((string)($_POST['guests'] ?? ''));
@@ -103,6 +105,7 @@ if ($isPost) {
     $googleMeetLink = '';
     $guestEmails = [];
 
+    if (!captcha_verify_response($captchaError)) $errors[] = $captchaError ?: 'Captcha verification failed. Please try again.';
     if ($name === '') $errors[] = 'Name is required.';
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = 'Valid email is required.';
 
@@ -369,6 +372,8 @@ body { font-family: 'Inter', sans-serif; background: #fff; }
                                 By proceeding, you confirm that you have read and agree to mybrandplease<br>
                                 <a href="<?= url('terms-conditions') ?>">Terms & Conditions</a> and <a href="<?= url('privacy') ?>">Privacy Notice</a>.
                             </p>
+
+                            <?= captcha_render('mb-3') ?>
 
                             <button type="submit" class="btn-schedule">Schedule Event</button>
                         </form>

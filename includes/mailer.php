@@ -16,13 +16,13 @@ if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
 function meeting_mail_admin_email(): string
 {
     $email = getenv('MEETING_MAIL_ADMIN') ?: getenv('MAIL_ADMIN_ADDRESS');
-    return is_string($email) && filter_var($email, FILTER_VALIDATE_EMAIL) ? $email : 'okprincesingh@gmail.com';
+    return is_string($email) && filter_var($email, FILTER_VALIDATE_EMAIL) ? $email : 'customersupport@nimishaimpex.com';
 }
 
 function meeting_mail_from_email(): string
 {
     $email = getenv('MEETING_MAIL_FROM') ?: getenv('MAIL_FROM_ADDRESS');
-    return is_string($email) && filter_var($email, FILTER_VALIDATE_EMAIL) ? $email : 'website@jaikvik.com';
+    return is_string($email) && filter_var($email, FILTER_VALIDATE_EMAIL) ? $email : 'customersupport@nimishaimpex.com';
 }
 
 function meeting_google_meet_link(): string

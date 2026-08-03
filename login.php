@@ -2,6 +2,7 @@
 session_start();
 require_once __DIR__ . '/includes/user.php';
 require_once __DIR__ . '/includes/url.php';
+require_once __DIR__ . '/includes/captcha.php';
 
 $redirect = trim((string) ($_GET['redirect'] ?? $_POST['redirect'] ?? ''));
 if ($redirect === '' || preg_match('#^(https?:)?//#i', $redirect) || str_contains($redirect, '..')) {
@@ -25,8 +26,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
     $remember = !empty($_POST['remember']);
+    $captchaError = null;
 
-    if (empty($email) || empty($password)) {
+    if (!captcha_verify_response($captchaError)) {
+        $error = $captchaError ?: 'Captcha verification failed. Please try again.';
+    } elseif (empty($email) || empty($password)) {
         $error = 'Please enter both email and password';
     } else {
         $result = user_login($email, $password, $remember);
@@ -120,6 +124,8 @@ include 'includes/header.php';
                     </label>
                     <a href="<?php echo url('forgot-password.php'); ?>" class="forgot-link">Forgot Password?</a>
                 </div>
+
+                <?php echo captcha_render('mb-3'); ?>
 
                 <button type="submit" class="login-btn">Sign In</button>
 

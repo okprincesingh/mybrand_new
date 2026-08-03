@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/url.php';
 require_once __DIR__ . '/security.php';
+require_once __DIR__ . '/captcha.php';
 require_once __DIR__ . '/db.php';
 
 $meta = $meta ?? [];
@@ -724,5 +725,6 @@ if ($isAosPage) {
 
 
 </script>
+<?php echo captcha_head_script(); ?>
 </head>
 <body>

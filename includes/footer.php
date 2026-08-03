@@ -1,6 +1,8 @@
 </main>
 <?php
 require_once __DIR__ . '/url.php';
+require_once __DIR__ . '/security.php';
+require_once __DIR__ . '/captcha.php';
 require_once __DIR__ . '/cms.php';
 require_once __DIR__ . '/catalog.php';
 $footerSections = cms_get_footer_sections();
@@ -153,6 +155,7 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
           <button type="button" class="enquiry-modal__close" data-enquiry-close aria-label="Close enquiry form">&times;</button>
           <h3 class="enquiry-modal__title" id="enquiry-modal-title">Request a Free Consultation</h3>
           <form class="enquiry-modal__form" method="post" action="<?php echo htmlspecialchars(url('contact.php'), ENT_QUOTES, 'UTF-8'); ?>">
+            <input type="hidden" name="csrf_token" value="<?php echo e(csrf_token()); ?>">
             <div class="row g-3">
               <div class="col-md-6">
                 <label class="enquiry-modal__field">
@@ -194,6 +197,7 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
             </label>
             
             <div class="text-center">
+              <?php echo captcha_render('mb-3'); ?>
               <button type="submit" class="enquiry-modal__submit">Submit Request</button>
             </div>
           </form>

@@ -2,6 +2,7 @@
 session_start();
 require_once __DIR__ . '/includes/user.php';
 require_once __DIR__ . '/includes/url.php';
+require_once __DIR__ . '/includes/captcha.php';
 
 // If already logged in, redirect to dashboard
 if (user_current()) {
@@ -19,9 +20,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $firstName = trim($_POST['first_name'] ?? '');
     $lastName = trim($_POST['last_name'] ?? '');
     $phone = trim($_POST['phone'] ?? '');
+    $captchaError = null;
 
     // Validation
-    if (empty($email) || empty($password) || empty($confirmPassword) || empty($firstName) || empty($lastName)) {
+    if (!captcha_verify_response($captchaError)) {
+        $error = $captchaError ?: 'Captcha verification failed. Please try again.';
+    } elseif (empty($email) || empty($password) || empty($confirmPassword) || empty($firstName) || empty($lastName)) {
         $error = 'Please fill in all required fields';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = 'Please enter a valid email address';
@@ -32,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $result = user_register($email, $password, $firstName, $lastName, $phone);
         if ($result && $result['success']) {
-            $success = 'Registration successful! Please check your email for verification.';
+            $success = $result['message'] ?? 'Registration successful. Please check your email for verification.';
         } else {
             $error = $result['message'] ?? 'Registration failed';
         }
@@ -154,6 +158,8 @@ include 'includes/header.php';
                         <span>Subscribe to our newsletter for updates and offers</span>
                     </label>
                 </div>
+
+                <?php echo captcha_render('mb-3'); ?>
 
                 <button type="submit" class="register-btn">Create Account</button>
 

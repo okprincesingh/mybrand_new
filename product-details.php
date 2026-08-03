@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/includes/catalog.php';
 require_once __DIR__ . '/includes/content-loader.php';
+require_once __DIR__ . '/includes/captcha.php';
 
 $slug = isset($_GET['slug']) ? trim((string) $_GET['slug']) : '';
 $product = $slug !== '' ? catalog_find_product($slug) : null;
@@ -18,12 +19,15 @@ $reviewError = '';
 if ($product && $_SERVER['REQUEST_METHOD'] === 'POST' && (string) ($_POST['form_type'] ?? '') === 'product_review') {
   try {
     verify_csrf_or_fail();
+    $captchaError = null;
     $reviewerName = trim((string) ($_POST['reviewer_name'] ?? ''));
     $reviewerEmail = trim((string) ($_POST['reviewer_email'] ?? ''));
     $reviewRating = max(1, min(5, (int) ($_POST['rating'] ?? 5)));
     $reviewText = trim((string) ($_POST['review_text'] ?? ''));
 
-    if ($currentProductId <= 0) {
+    if (!captcha_verify_response($captchaError)) {
+      $reviewError = $captchaError ?: 'Captcha verification failed. Please try again.';
+    } elseif ($currentProductId <= 0) {
       $reviewError = 'Review could not be submitted for this product.';
     } elseif ($reviewerName === '' || $reviewerEmail === '' || $reviewText === '') {
       $reviewError = 'Please enter your name, email, and review message.';
@@ -436,6 +440,7 @@ include 'includes/header.php';
                               </div>
                             </div>
                             <div class="col-lg-6">
+                              <?php echo captcha_render('mb-3'); ?>
                               <button type="submit" class="rr-btn-button">
                                 <span class="text">Send Message</span>
                                 <span class="icon">
@@ -755,6 +760,7 @@ include 'includes/header.php';
       <button type="button" class="enquiry-modal__close" data-enquiry-close aria-label="Close enquiry form">&times;</button>
       <h3 class="enquiry-modal__title" id="enquiry-modal-title">Product Enquiry</h3>
       <form class="enquiry-modal__form" method="post" action="<?php echo htmlspecialchars(url('contact.php'), ENT_QUOTES, 'UTF-8'); ?>">
+        <input type="hidden" name="csrf_token" value="<?php echo e(csrf_token()); ?>">
         <label class="enquiry-modal__field">
           <span>Product ID</span>
           <input type="text" name="product_id" id="enquiry-product-id" readonly required>
@@ -779,6 +785,7 @@ include 'includes/header.php';
           <span>Bulk Quantity</span>
           <input type="number" min="1" name="bulk_quantity" required>
         </label>
+        <?php echo captcha_render(); ?>
         <button type="submit" class="enquiry-modal__submit">Submit Enquiry</button>
       </form>
     </div>

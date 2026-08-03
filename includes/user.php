@@ -2,6 +2,7 @@
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/security.php';
 require_once __DIR__ . '/url.php';
+require_once __DIR__ . '/mailer.php';
 
 /**
  * User Authentication and Management Functions
@@ -67,12 +68,73 @@ function user_generate_session_token(): string
     return bin2hex(random_bytes(32));
 }
 
+function user_ensure_verification_columns(?PDO $pdo = null): void
+{
+    $pdo = $pdo ?: db();
+    if (!$pdo) {
+        return;
+    }
+
+    static $checked = false;
+    if ($checked) {
+        return;
+    }
+
+    try {
+        $columns = [];
+        $stmt = $pdo->query('SHOW COLUMNS FROM users');
+        foreach ($stmt->fetchAll() ?: [] as $column) {
+            $columns[strtolower((string) ($column['Field'] ?? ''))] = true;
+        }
+
+        if (empty($columns['email_verified_at'])) {
+            $pdo->exec('ALTER TABLE users ADD COLUMN email_verified_at DATETIME NULL AFTER is_active');
+        }
+        if (empty($columns['email_verification_token'])) {
+            $pdo->exec('ALTER TABLE users ADD COLUMN email_verification_token VARCHAR(255) NULL AFTER email_verified_at');
+            $pdo->exec('ALTER TABLE users ADD INDEX idx_users_verification_token (email_verification_token)');
+        }
+    } catch (Throwable $e) {
+        // Existing installs may have restricted ALTER permissions; normal queries will report any real issue.
+    }
+
+    $checked = true;
+}
+
+function user_generate_email_verification_token(): string
+{
+    return bin2hex(random_bytes(32));
+}
+
+function user_hash_email_verification_token(string $token): string
+{
+    return hash('sha256', $token);
+}
+
+function user_send_verification_email(int $userId, string $email, string $firstName, string $token): bool
+{
+    $verifyUrl = url('verify-email.php?token=' . urlencode($token));
+    $safeName = e($firstName !== '' ? $firstName : 'there');
+    $safeUrl = e($verifyUrl);
+    $body = implode("\n", [
+        '<p>Hi ' . $safeName . ',</p>',
+        '<p>Thanks for registering with mybrandplease. Please verify your email address before logging in.</p>',
+        '<p><a href="' . $safeUrl . '" style="display:inline-block;padding:12px 18px;background:#ee2d7a;color:#ffffff;text-decoration:none;border-radius:6px;font-weight:700;">Verify Email Address</a></p>',
+        '<p>If the button does not work, copy and paste this link into your browser:<br><a href="' . $safeUrl . '">' . $safeUrl . '</a></p>',
+        '<p>If you did not create this account, you can ignore this email.</p>',
+        '<p>Regards,<br>mybrandplease</p>',
+    ]);
+
+    return meeting_send_html_mail($email, 'Verify your mybrandplease account', $body);
+}
+
 function user_store_session(int $userId, string $sessionToken, int $ttlSeconds = 2592000): void
 {
     $pdo = db();
     if (!$pdo) {
         return;
     }
+    user_ensure_verification_columns($pdo);
 
     $expiresAt = date('Y-m-d H:i:s', time() + $ttlSeconds);
     $ip = user_client_ip();
@@ -94,6 +156,7 @@ function user_verify_session(string $sessionToken): ?array
     if (!$pdo) {
         return null;
     }
+    user_ensure_verification_columns($pdo);
 
     $ip = user_client_ip();
     $ua = user_client_ua();
@@ -110,6 +173,7 @@ function user_get_by_id(int $userId): ?array
     if (!$pdo || $userId <= 0) {
         return null;
     }
+    user_ensure_verification_columns($pdo);
 
     $stmt = $pdo->prepare('SELECT id, email, password_hash, first_name, last_name, phone, date_of_birth, gender, is_active, email_verified_at, created_at, updated_at FROM users WHERE id = :id AND is_active = 1 LIMIT 1');
     $stmt->execute([':id' => $userId]);
@@ -123,6 +187,7 @@ function user_get_by_email(string $email): ?array
     if (!$pdo) {
         return null;
     }
+    user_ensure_verification_columns($pdo);
 
     $stmt = $pdo->prepare('SELECT id, email, password_hash, first_name, last_name, phone, date_of_birth, gender, is_active, email_verified_at, created_at, updated_at FROM users WHERE email = :email AND is_active = 1 LIMIT 1');
     $stmt->execute([':email' => $email]);
@@ -136,10 +201,35 @@ function user_register(string $email, string $password, string $firstName, strin
     if (!$pdo) {
         return null;
     }
+    user_ensure_verification_columns($pdo);
 
     // Check if email already exists
     $existing = user_get_by_email($email);
     if ($existing) {
+        if (empty($existing['email_verified_at'])) {
+            $verificationToken = user_generate_email_verification_token();
+            $verificationTokenHash = user_hash_email_verification_token($verificationToken);
+            $stmt = $pdo->prepare('UPDATE users SET email_verification_token = :token, updated_at = NOW() WHERE id = :id');
+            $stmt->execute([
+                ':token' => $verificationTokenHash,
+                ':id' => (int) $existing['id'],
+            ]);
+            $verificationMailSent = user_send_verification_email(
+                (int) $existing['id'],
+                (string) $existing['email'],
+                (string) ($existing['first_name'] ?? ''),
+                $verificationToken
+            );
+
+            return [
+                'success' => true,
+                'user_id' => (int) $existing['id'],
+                'verification_email_sent' => $verificationMailSent,
+                'message' => $verificationMailSent
+                    ? 'This email is already registered but not verified. We sent a fresh verification link to your email.'
+                    : 'This email is already registered but not verified. The verification email could not be sent. Please contact support.',
+            ];
+        }
         return ['success' => false, 'message' => 'Email already registered'];
     }
 
@@ -149,6 +239,8 @@ function user_register(string $email, string $password, string $firstName, strin
     }
 
     $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+    $verificationToken = user_generate_email_verification_token();
+    $verificationTokenHash = user_hash_email_verification_token($verificationToken);
 
     try {
         $stmt = $pdo->prepare('INSERT INTO users (email, password_hash, first_name, last_name, phone, email_verified_at) VALUES (:email, :password_hash, :first_name, :last_name, :phone, :email_verified_at)');
@@ -158,10 +250,13 @@ function user_register(string $email, string $password, string $firstName, strin
             ':first_name' => $firstName,
             ':last_name' => $lastName,
             ':phone' => $phone,
-            ':email_verified_at' => date('Y-m-d H:i:s'),
+            ':email_verified_at' => null,
         ]);
 
         $userId = (int) $pdo->lastInsertId();
+        $tokenStmt = $pdo->prepare('UPDATE users SET email_verification_token = :token WHERE id = :id');
+        $tokenStmt->execute([':token' => $verificationTokenHash, ':id' => $userId]);
+        $verificationMailSent = user_send_verification_email($userId, $email, $firstName, $verificationToken);
 
         try {
             create_notification(
@@ -183,11 +278,45 @@ function user_register(string $email, string $password, string $firstName, strin
         return [
             'success' => true,
             'user_id' => $userId,
-            'message' => 'Registration successful. You can now log in.'
+            'verification_email_sent' => $verificationMailSent,
+            'message' => $verificationMailSent
+                ? 'Registration successful. Please check your email and verify your account before logging in.'
+                : 'Registration successful, but the verification email could not be sent. Please contact support.'
         ];
     } catch (\Exception $e) {
         return ['success' => false, 'message' => 'Registration failed: ' . $e->getMessage()];
     }
+}
+
+function user_verify_email_token(string $token): array
+{
+    $pdo = db();
+    if (!$pdo) {
+        return ['success' => false, 'message' => 'Database connection failed.'];
+    }
+    user_ensure_verification_columns($pdo);
+
+    $token = trim($token);
+    if ($token === '' || !preg_match('/^[a-f0-9]{64}$/i', $token)) {
+        return ['success' => false, 'message' => 'Invalid verification link.'];
+    }
+
+    $tokenHash = user_hash_email_verification_token($token);
+    $stmt = $pdo->prepare('SELECT id, email, email_verified_at FROM users WHERE email_verification_token = :token AND is_active = 1 LIMIT 1');
+    $stmt->execute([':token' => $tokenHash]);
+    $user = $stmt->fetch();
+    if (!$user) {
+        return ['success' => false, 'message' => 'This verification link is invalid or has already been used.'];
+    }
+
+    if (!empty($user['email_verified_at'])) {
+        return ['success' => true, 'message' => 'Your email is already verified. You can log in.'];
+    }
+
+    $update = $pdo->prepare('UPDATE users SET email_verified_at = NOW(), email_verification_token = NULL, updated_at = NOW() WHERE id = :id');
+    $update->execute([':id' => (int) $user['id']]);
+
+    return ['success' => true, 'message' => 'Your email has been verified successfully. You can now log in.'];
 }
 
 function user_login(string $email, string $password, bool $remember = false): ?array
@@ -201,6 +330,10 @@ function user_login(string $email, string $password, bool $remember = false): ?a
     $passwordHash = (string) ($user['password_hash'] ?? '');
     if (!$user || $passwordHash === '' || !password_verify($password, $passwordHash)) {
         return ['success' => false, 'message' => 'Invalid email or password'];
+    }
+
+    if (empty($user['email_verified_at'])) {
+        return ['success' => false, 'message' => 'Please verify your email address before logging in. Check your inbox for the verification link.'];
     }
 
     session_regenerate_id(true);

@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/includes/security.php';
+require_once __DIR__ . '/includes/captcha.php';
 require_once __DIR__ . '/includes/mailer.php';
 require_once __DIR__ . '/includes/url.php';
 require_once __DIR__ . '/includes/cms.php';
@@ -34,6 +35,10 @@ $success = '';
 
 if (strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')) === 'POST') {
     verify_csrf_or_fail();
+    $captchaError = null;
+    if (!captcha_verify_response($captchaError)) {
+        $errors[] = $captchaError ?: 'Captcha verification failed. Please try again.';
+    }
 
     $formData = [
         'first_name' => contact_post_value('first_name'),
@@ -56,9 +61,12 @@ if (strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')) === 'POST') {
         $formData['message'] = contact_post_value('comment');
     }
 
-    $isConsultationForm = $formData['requirements'] !== '' || $formData['address'] !== '' || $formData['product_id'] !== '';
-    $enquiryType = $formData['product_id'] !== '' ? 'product' : ($isConsultationForm ? 'consultation' : 'contact');
-    $mailSubject = $formData['subject'] !== '' ? $formData['subject'] : ($isConsultationForm ? 'New Website Consultation Request' : 'New Contact Form Submission');
+    $isProductEnquiry = $formData['product_id'] !== '';
+    $isConsultationForm = !$isProductEnquiry && ($formData['requirements'] !== '' || $formData['address'] !== '');
+    $enquiryType = $isProductEnquiry ? 'product' : ($isConsultationForm ? 'consultation' : 'contact');
+    $mailSubject = $formData['subject'] !== ''
+        ? $formData['subject']
+        : ($isProductEnquiry ? 'New Product Enquiry' : ($isConsultationForm ? 'New Website Consultation Request' : 'New Contact Form Submission'));
 
     if ($formData['name'] === '') {
         $errors[] = 'Name is required.';
@@ -66,10 +74,17 @@ if (strtoupper((string) ($_SERVER['REQUEST_METHOD'] ?? 'GET')) === 'POST') {
     if (!filter_var($formData['email'], FILTER_VALIDATE_EMAIL)) {
         $errors[] = 'A valid email address is required.';
     }
-    if ($formData['country'] === '' && !$isConsultationForm) {
+    if ($formData['country'] === '' && !$isConsultationForm && !$isProductEnquiry) {
         $errors[] = 'Country is required.';
     }
-    if ($isConsultationForm) {
+    if ($isProductEnquiry) {
+        if ($formData['phone'] === '') {
+            $errors[] = 'Phone is required.';
+        }
+        if ($formData['bulk_quantity'] === '') {
+            $errors[] = 'Bulk quantity is required.';
+        }
+    } elseif ($isConsultationForm) {
         if ($formData['phone'] === '') {
             $errors[] = 'Phone is required.';
         }
@@ -347,6 +362,7 @@ include 'includes/header.php';
                         </div>
                       </div>
                       <div class="col-lg-12 wow fadeInUp" data-wow-delay=".9s">
+                        <?php echo captcha_render('mb-3'); ?>
                         <div class="contact2-form__button">
                           <button class="btn-orange" type="submit">SUBMIT</button>
                         </div>
