@@ -1,1 +1,0 @@
-a:3:{s:3:"key";s:38:"cms:setting:category_shop_subtitle_110";s:10:"expires_at";i:1784787406;s:4:"data";s:0:"";}
