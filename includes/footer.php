@@ -229,6 +229,50 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
         </div>
       </div>
 
+      <section class="cookie-consent" id="cookie-consent" aria-label="Cookie preferences" aria-hidden="true">
+        <div class="cookie-consent__panel">
+          <div class="cookie-consent__content">
+            <span class="cookie-consent__icon"><i class="fa-solid fa-cookie-bite" aria-hidden="true"></i></span>
+            <div>
+              <h2 class="cookie-consent__title">Cookies & Privacy</h2>
+              <p class="cookie-consent__text">
+                We use cookies to keep the website working, understand site performance, and improve your experience.
+                You can accept all, reject optional cookies, or customize your choices.
+              </p>
+              <div class="cookie-consent__custom" id="cookie-consent-custom" hidden>
+                <label class="cookie-consent__option">
+                  <span>
+                    <strong>Required cookies</strong>
+                    <small>Needed for security, forms, cart, login, and basic website features.</small>
+                  </span>
+                  <input type="checkbox" checked disabled>
+                </label>
+                <label class="cookie-consent__option">
+                  <span>
+                    <strong>Analytics cookies</strong>
+                    <small>Help us understand traffic and improve pages.</small>
+                  </span>
+                  <input type="checkbox" id="cookie-analytics" checked>
+                </label>
+                <label class="cookie-consent__option">
+                  <span>
+                    <strong>Marketing cookies</strong>
+                    <small>Help us personalize offers and measure campaigns.</small>
+                  </span>
+                  <input type="checkbox" id="cookie-marketing" checked>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="cookie-consent__actions">
+            <button type="button" class="cookie-consent__button cookie-consent__button--ghost" data-cookie-action="reject">Reject</button>
+            <button type="button" class="cookie-consent__button cookie-consent__button--light" data-cookie-action="customize">Customize</button>
+            <button type="button" class="cookie-consent__button cookie-consent__button--primary" data-cookie-action="accept">Accept All</button>
+            <button type="button" class="cookie-consent__button cookie-consent__button--primary" data-cookie-action="save" hidden>Save Choices</button>
+          </div>
+        </div>
+      </section>
+
       <a
         href="https://wa.me/919717004615"
         class="whatsapp-chat-button"
@@ -580,7 +624,7 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
           right: 16px;
           border: 0;
           background: transparent;
-          color: #5f6368;
+          color: #f8e7ec;
           cursor: pointer;
           font-size: 30px;
           line-height: 1;
@@ -710,6 +754,140 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
           outline-offset: 3px;
         }
 
+        .cookie-consent {
+          position: fixed;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          z-index: 12000;
+          display: none;
+          padding: 18px;
+          pointer-events: none;
+        }
+        .cookie-consent.is-visible {
+          display: block;
+        }
+        .cookie-consent__panel {
+          width: min(1080px, 100%);
+          margin: 0 auto;
+          display: grid;
+          grid-template-columns: 1fr auto;
+          gap: 18px;
+          align-items: center;
+          border: 1px solid rgba(15, 23, 42, 0.12);
+          border-radius: 14px;
+          background: #fff;
+          padding: 18px;
+          box-shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
+          pointer-events: auto;
+        }
+        .cookie-consent__content {
+          display: grid;
+          grid-template-columns: 44px 1fr;
+          gap: 14px;
+          align-items: start;
+        }
+        .cookie-consent__icon {
+          width: 44px;
+          height: 44px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          background: rgba(238, 45, 122, 0.1);
+          color: #ee2d7a;
+          font-size: 22px;
+        }
+        .cookie-consent__title {
+          margin: 0 0 6px;
+          color: #17202a;
+          font-size: 20px;
+          line-height: 1.2;
+          font-weight: 800;
+        }
+        .cookie-consent__text {
+          margin: 0;
+          color: #475569;
+          font-size: 14px;
+          line-height: 1.55;
+        }
+        .cookie-consent__custom {
+          display: grid;
+          gap: 10px;
+          margin-top: 14px;
+        }
+        .cookie-consent__option {
+          display: flex;
+          justify-content: space-between;
+          gap: 14px;
+          align-items: center;
+          margin: 0;
+          padding: 10px 12px;
+          border: 1px solid #e2e8f0;
+          border-radius: 10px;
+          background: #f8fafc;
+          color: #17202a;
+        }
+        .cookie-consent__option strong,
+        .cookie-consent__option small {
+          display: block;
+        }
+        .cookie-consent__option strong {
+          font-size: 14px;
+          font-weight: 800;
+        }
+        .cookie-consent__option small {
+          margin-top: 2px;
+          color: #64748b;
+          font-size: 12px;
+          line-height: 1.35;
+        }
+        .cookie-consent__option input {
+          width: 18px;
+          height: 18px;
+          accent-color: #ee2d7a;
+          flex: 0 0 auto;
+        }
+        .cookie-consent__actions {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+          justify-content: flex-end;
+        }
+        .cookie-consent__button {
+          min-height: 42px;
+          border-radius: 999px;
+          border: 1px solid transparent;
+          padding: 10px 16px;
+          font-size: 14px;
+          font-weight: 800;
+          line-height: 1;
+          cursor: pointer;
+          transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+        .cookie-consent__button:hover,
+        .cookie-consent__button:focus-visible {
+          transform: translateY(-1px);
+        }
+        .cookie-consent__button:focus-visible {
+          outline: 2px solid rgba(238, 45, 122, 0.35);
+          outline-offset: 2px;
+        }
+        .cookie-consent__button--ghost {
+          border-color: #cbd5e1;
+          background: #fff;
+          color: #334155;
+        }
+        .cookie-consent__button--light {
+          background: #f1f5f9;
+          color: #17202a;
+        }
+        .cookie-consent__button--primary {
+          background: #ee2d7a;
+          color: #fff;
+          box-shadow: 0 10px 22px rgba(238, 45, 122, 0.24);
+        }
+
         @media (max-width: 575px) {
           .whatsapp-chat-button {
             right: 20px;
@@ -717,6 +895,35 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
             width: 46px;
             height: 46px;
             font-size: 26px;
+          }
+          .cookie-consent {
+            padding: 10px;
+          }
+          .cookie-consent__panel {
+            grid-template-columns: 1fr;
+            gap: 14px;
+            padding: 14px;
+            border-radius: 12px;
+          }
+          .cookie-consent__content {
+            grid-template-columns: 1fr;
+          }
+          .cookie-consent__icon {
+            display: none;
+          }
+          .cookie-consent__title {
+            font-size: 18px;
+          }
+          .cookie-consent__actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+          }
+          .cookie-consent__button {
+            width: 100%;
+            padding-inline: 12px;
+          }
+          .cookie-consent__button--primary {
+            grid-column: span 2;
           }
         }
       </style>
@@ -2096,6 +2303,98 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
         document.addEventListener('keydown', function (event) {
           if (event.key === 'Escape' && popup.classList.contains('is-open')) {
             closePopup(true);
+          }
+        });
+      })();
+
+      (function () {
+        const banner = document.getElementById('cookie-consent');
+        if (!banner) return;
+
+        const storageKey = 'mbp_cookie_consent';
+        const cookieName = 'mbp_cookie_consent';
+        const customPanel = document.getElementById('cookie-consent-custom');
+        const analyticsInput = document.getElementById('cookie-analytics');
+        const marketingInput = document.getElementById('cookie-marketing');
+        const customizeButton = banner.querySelector('[data-cookie-action="customize"]');
+        const saveButton = banner.querySelector('[data-cookie-action="save"]');
+        const acceptButton = banner.querySelector('[data-cookie-action="accept"]');
+
+        function readStoredConsent() {
+          try {
+            return window.localStorage.getItem(storageKey);
+          } catch (error) {
+            const match = document.cookie.match(new RegExp('(?:^|; )' + cookieName + '=([^;]*)'));
+            return match ? decodeURIComponent(match[1]) : null;
+          }
+        }
+
+        function writeConsent(consent) {
+          const value = JSON.stringify(consent);
+          try {
+            window.localStorage.setItem(storageKey, value);
+          } catch (error) {
+            // Continue with the cookie fallback below.
+          }
+          const maxAge = 60 * 60 * 24 * 180;
+          document.cookie = cookieName + '=' + encodeURIComponent(value) + '; max-age=' + maxAge + '; path=/; SameSite=Lax';
+        }
+
+        function hideBanner() {
+          banner.classList.remove('is-visible');
+          banner.setAttribute('aria-hidden', 'true');
+        }
+
+        function saveConsent(settings) {
+          const consent = {
+            required: true,
+            analytics: Boolean(settings.analytics),
+            marketing: Boolean(settings.marketing),
+            savedAt: new Date().toISOString()
+          };
+          writeConsent(consent);
+          window.dispatchEvent(new CustomEvent('mbpCookieConsentChanged', { detail: consent }));
+          hideBanner();
+        }
+
+        function showBanner() {
+          banner.classList.add('is-visible');
+          banner.setAttribute('aria-hidden', 'false');
+        }
+
+        if (readStoredConsent()) return;
+
+        showBanner();
+
+        banner.addEventListener('click', function (event) {
+          const target = event.target;
+          if (!(target instanceof Element)) return;
+          const button = target.closest('[data-cookie-action]');
+          if (!button) return;
+
+          const action = button.getAttribute('data-cookie-action');
+          if (action === 'accept') {
+            saveConsent({ analytics: true, marketing: true });
+          } else if (action === 'reject') {
+            saveConsent({ analytics: false, marketing: false });
+          } else if (action === 'customize') {
+            if (customPanel) {
+              customPanel.hidden = false;
+            }
+            if (customizeButton) {
+              customizeButton.hidden = true;
+            }
+            if (acceptButton) {
+              acceptButton.hidden = true;
+            }
+            if (saveButton) {
+              saveButton.hidden = false;
+            }
+          } else if (action === 'save') {
+            saveConsent({
+              analytics: analyticsInput ? analyticsInput.checked : false,
+              marketing: marketingInput ? marketingInput.checked : false
+            });
           }
         });
       })();
