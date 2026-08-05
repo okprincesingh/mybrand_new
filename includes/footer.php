@@ -70,7 +70,7 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
                 <p class="plf-contact"><span>Email:</span> info@mybrandplease.com</p>
 
                   <div class="plf-follow mt-4">
-                    <a href="<?php echo url('contact.php'); ?>" class="plf-follow-btn">FOLLOW US <i class="fa-solid fa-user"></i></a>
+                    <p class="plf-follow-btn">FOLLOW US <i class="fa-solid fa-user"></i></p>
                   <div class="plf-social mt-3">
                     <a target="_blank" href="<?php echo url('https://www.youtube.com/@mybrandplease'); ?>" aria-label="Youtube"><i class="fa-brands fa-youtube"></i></a>
                     <a target="_blank" href="<?php echo url('https://www.facebook.com/mybrandplease'); ?>" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>

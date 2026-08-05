@@ -13486,7 +13486,7 @@ body {
   background-color: var(--black);
 }
 
-iframe {
+.map iframe {
   width: 100%;
   height: 682px;
   margin-bottom: -15px;
