@@ -63,7 +63,7 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
             <div class="col-lg-3">
                 <div class="plf-brand">
                   <a href="<?php echo url('index.php'); ?>" class="plf-logo d-inline-block mb-3">
-                    <img src="<?php echo url('assets/imgs/logo/footer.png'); ?>" alt="mybrandplease">
+                     <img src="<?php echo url('uploads/logo/mybrandfooter.gif'); ?>" alt="mybrandplease">
                   </a>
                 <p class="plf-lead">Get in touch with us however is most convenient for you.</p>
                 <p class="plf-contact"><span>Call / WhatsApp:</span> +91 (971) 700 4615</p>
@@ -1173,6 +1173,41 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
         });
       })();
 
+      // Header account dropdown works on hover via CSS and on click for touch devices.
+      (function () {
+        const account = document.getElementById('header-account');
+        if (!account) return;
+
+        const trigger = account.querySelector('.header-account__trigger');
+        if (!trigger) return;
+
+        function closeAccount() {
+          account.classList.remove('is-open');
+          trigger.setAttribute('aria-expanded', 'false');
+        }
+
+        trigger.addEventListener('click', function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+          const willOpen = !account.classList.contains('is-open');
+          account.classList.toggle('is-open', willOpen);
+          trigger.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+        });
+
+        document.addEventListener('click', function (event) {
+          const target = event.target;
+          if (target instanceof Node && !account.contains(target)) {
+            closeAccount();
+          }
+        });
+
+        document.addEventListener('keydown', function (event) {
+          if (event.key === 'Escape') {
+            closeAccount();
+          }
+        });
+      })();
+
       // Header language switcher with Google Translate integration.
       (function () {
         const switcher = document.getElementById('header-lang-switcher');
@@ -1287,16 +1322,11 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
             if (targetLang === 'en') {
               translateSelect.value = '';
               dispatchNativeChange(translateSelect);
-              window.setTimeout(function () {
-                window.location.reload();
-              }, 150);
               return;
             }
 
-            if (translateSelect.value !== targetLang) {
-              translateSelect.value = targetLang;
-              dispatchNativeChange(translateSelect);
-            }
+            translateSelect.value = targetLang;
+            dispatchNativeChange(translateSelect);
           }, 20);
         }
 
@@ -1317,7 +1347,7 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
               pageLanguage: 'en',
               includedLanguages: supportedLanguages.join(','),
               autoDisplay: false,
-              layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE
+              layout: window.google.translate.TranslateElement.InlineLayout.VERTICAL
             }, 'google_translate_element');
 
             window.setTimeout(function () {

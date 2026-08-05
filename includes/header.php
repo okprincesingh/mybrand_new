@@ -84,6 +84,14 @@ usort($headerMenuItems, static function (array $a, array $b) use ($headerMenuPri
     return $aPriority <=> $bPriority;
 });
 $headerLogo = url('uploads/logo/mybrandplease-1.gif');
+$headerUser = user_current();
+$headerUserName = '';
+if ($headerUser) {
+    $headerUserName = trim((string) ($headerUser['first_name'] ?? '') . ' ' . (string) ($headerUser['last_name'] ?? ''));
+    if ($headerUserName === '') {
+        $headerUserName = (string) ($headerUser['email'] ?? 'My Account');
+    }
+}
 $headerCartCount = 0;
 if (!empty($_SESSION['cart']) && is_array($_SESSION['cart'])) {
     foreach ($_SESSION['cart'] as $qty) {
@@ -290,6 +298,33 @@ if (!function_exists('render_header_menu_items')) {
                       <?php echo (int) $headerCartCount; ?>
                     </span>
                   </a>
+
+                  <div class="header-account" id="header-account">
+                    <button
+                      type="button"
+                      class="action-btn header-account__trigger"
+                      aria-label="<?php echo $headerUser ? 'My account' : 'Account'; ?>"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                      aria-controls="header-account-menu"
+                    >
+                      <i class="fa-regular fa-user"></i>
+                    </button>
+                    <div class="header-account__menu" id="header-account-menu" role="menu">
+                      <?php if ($headerUser): ?>
+                        <div class="header-account__identity">
+                          <span>Signed in as</span>
+                          <strong><?php echo htmlspecialchars($headerUserName, ENT_QUOTES, 'UTF-8'); ?></strong>
+                        </div>
+                        <a href="<?php echo url('user-dashboard.php'); ?>" role="menuitem"><i class="fa-regular fa-grid-2"></i> Dashboard</a>
+                        <a href="<?php echo url('user-orders.php'); ?>" role="menuitem"><i class="fa-regular fa-bag-shopping"></i> Orders</a>
+                        <a href="<?php echo url('user-wishlist.php'); ?>" role="menuitem"><i class="fa-regular fa-heart"></i> Wishlist</a>
+                      <?php else: ?>
+                        <a href="<?php echo url('register.php'); ?>" role="menuitem"><i class="fa-regular fa-user-plus"></i> Register</a>
+                        <a href="<?php echo url('login.php'); ?>" role="menuitem"><i class="fa-regular fa-right-to-bracket"></i> Login</a>
+                      <?php endif; ?>
+                    </div>
+                  </div>
 
                   <div class="header-lang d-none d-lg-flex">
                     <div class="header-lang-switcher" id="header-lang-switcher" aria-expanded="false">
