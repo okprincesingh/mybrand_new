@@ -40,6 +40,17 @@ function cms_invalidate_home_certification_logos_cache(): void
     cache_delete('cms:home:certification_logos');
 }
 
+function cms_invalidate_home_category_section_cache(): void
+{
+    cache_delete('cms:home:category_section');
+}
+
+function cms_invalidate_home_categories_cache(): void
+{
+    cache_delete('cms:home:categories');
+    cache_delete('cms:home:catalog_category_tree');
+}
+
 function cms_get_home_working_process(): array
 {
     $cacheKey = 'cms:home:working_process';
@@ -116,6 +127,230 @@ function cms_get_home_working_process(): array
             'href' => (string) ($row['href'] ?? 'contact.php'),
             'image_path' => (string) ($row['image_path'] ?? ''),
             'alt_text' => (string) ($row['alt_text'] ?? ''),
+        ];
+    }
+
+    if (!preview_mode_should_bypass_cache()) {
+        cache_set($cacheKey, $out, 300);
+    }
+    return $out;
+}
+
+function cms_get_home_category_section(): array
+{
+    $cacheKey = 'cms:home:category_section';
+    if (!preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $fallback = [
+        'section_key' => 'main',
+        'title_text' => 'Nature Powered Ingredients',
+        'is_active' => 1,
+    ];
+
+    $pdo = db();
+    if (!$pdo) {
+        return $fallback;
+    }
+
+    try {
+        $activeClause = preview_mode_include_drafts() ? '' : ' AND is_active = 1';
+        $row = db_fetch_one($pdo, 'SELECT * FROM home_category_section WHERE section_key = :k' . $activeClause . ' LIMIT 1', [
+            ':k' => 'main',
+        ]);
+    } catch (Throwable $e) {
+        $row = null;
+    }
+
+    if (!$row) {
+        if (!preview_mode_should_bypass_cache()) {
+            cache_set($cacheKey, $fallback, 300);
+        }
+        return $fallback;
+    }
+
+    if (preview_mode_include_drafts()) {
+        $row = draft_merge_row((array) $row, 'home_category_section', (int) ($row['id'] ?? 0));
+    }
+
+    $out = [
+        'section_key' => (string) ($row['section_key'] ?? 'main'),
+        'title_text' => (string) ($row['title_text'] ?? 'Nature Powered Ingredients'),
+        'is_active' => (int) ($row['is_active'] ?? 1),
+    ];
+
+    if (!preview_mode_should_bypass_cache()) {
+        cache_set($cacheKey, $out, 300);
+    }
+    return $out;
+}
+
+function cms_get_catalog_category_tree(): array
+{
+    $cacheKey = 'cms:home:catalog_category_tree';
+    if (!preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $pdo = db();
+    if (!$pdo) {
+        return [];
+    }
+
+    try {
+        $hasPageImagePath = (bool) db_fetch_one($pdo, "SHOW COLUMNS FROM categories LIKE 'page_image_path'");
+    } catch (Throwable $e) {
+        $hasPageImagePath = false;
+    }
+
+    $pageImageSelect = $hasPageImagePath ? 'page_image_path' : 'NULL AS page_image_path';
+    $activeClause = preview_mode_include_drafts() ? '' : ' WHERE is_active = 1';
+    $rows = db_fetch_all(
+        $pdo,
+        'SELECT id, parent_id, name, slug, description, image_path, ' . $pageImageSelect . ', sort_order FROM categories' . $activeClause . ' ORDER BY parent_id ASC, sort_order ASC, name ASC'
+    );
+
+    if (!$rows) {
+        return [];
+    }
+
+    $top = [];
+    $subs = [];
+    foreach ($rows as $r) {
+        if (empty($r['parent_id'])) {
+            $top[(int) $r['id']] = [
+                'id' => (int) $r['id'],
+                'slug' => (string) $r['slug'],
+                'name' => (string) $r['name'],
+                'description' => (string) ($r['description'] ?? ''),
+                'image' => (string) ($r['image_path'] ?: 'assets/imgs/product/skin-care.webp'),
+                'page_image' => (string) ($r['page_image_path'] ?: $r['image_path'] ?: 'assets/imgs/product/skin-care.webp'),
+                'subcategories' => [],
+            ];
+        } else {
+            $subs[] = $r;
+        }
+    }
+
+    foreach ($subs as $s) {
+        $pid = (int) $s['parent_id'];
+        if (isset($top[$pid])) {
+            $top[$pid]['subcategories'][] = [
+                'id' => (int) $s['id'],
+                'parent_id' => $pid,
+                'slug' => (string) $s['slug'],
+                'name' => (string) $s['name'],
+                'description' => (string) ($s['description'] ?? ''),
+                'image' => (string) ($s['image_path'] ?: $top[$pid]['image']),
+                'page_image' => (string) ($s['page_image_path'] ?: $s['image_path'] ?: $top[$pid]['page_image']),
+            ];
+        }
+    }
+
+    $tree = array_values($top);
+    if (!preview_mode_should_bypass_cache()) {
+        cache_set($cacheKey, $tree, 600);
+    }
+    return $tree;
+}
+
+function cms_get_home_categories(): array
+{
+    $cacheKey = 'cms:home:categories';
+    if (!preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $pdo = db();
+    if (!$pdo) {
+        return [];
+    }
+
+    try {
+        $hasPageImagePath = (bool) db_fetch_one($pdo, "SHOW COLUMNS FROM categories LIKE 'page_image_path'");
+    } catch (Throwable $e) {
+        $hasPageImagePath = false;
+    }
+    $pageImageSelect = $hasPageImagePath ? 'c.page_image_path' : 'NULL AS page_image_path';
+
+    try {
+        $activeClause = preview_mode_include_drafts() ? '' : ' WHERE hc.is_active = 1';
+        $rows = db_fetch_all(
+            $pdo,
+            'SELECT hc.id AS home_id, hc.category_id, hc.sort_order, hc.is_active,
+                    c.id, c.slug, c.name, c.description, c.image_path, ' . $pageImageSelect . '
+             FROM home_categories hc
+             INNER JOIN categories c ON c.id = hc.category_id
+             ' . $activeClause . '
+             ORDER BY hc.sort_order ASC, hc.id ASC'
+        );
+    } catch (Throwable $e) {
+        $rows = [];
+    }
+
+    if (!$rows) {
+        if (!preview_mode_should_bypass_cache()) {
+            cache_set($cacheKey, [], 300);
+        }
+        return [];
+    }
+
+    $out = [];
+    foreach ($rows as $row) {
+        $homeId = (int) ($row['home_id'] ?? 0);
+        $categoryId = (int) ($row['category_id'] ?? 0);
+
+        // Fetch selected subcategories for this home category
+        $subRows = [];
+        try {
+            $subActiveClause = preview_mode_include_drafts() ? '' : ' AND c.is_active = 1';
+            $subPageImageSelect = $hasPageImagePath ? 'c.page_image_path' : 'NULL AS page_image_path';
+            $subRows = db_fetch_all(
+                $pdo,
+                'SELECT c.id, c.slug, c.name, c.description, c.image_path, ' . $subPageImageSelect . '
+                 FROM home_category_subcategories hcs
+                 INNER JOIN categories c ON c.id = hcs.subcategory_id
+                 WHERE hcs.home_category_id = :hid' . $subActiveClause . '
+                 ORDER BY hcs.sort_order ASC, hcs.id ASC',
+                [':hid' => $homeId]
+            );
+        } catch (Throwable $e) {
+            $subRows = [];
+        }
+
+        $subcategories = [];
+        foreach ($subRows as $sub) {
+            $subcategories[] = [
+                'id' => (int) ($sub['id'] ?? 0),
+                'slug' => (string) ($sub['slug'] ?? ''),
+                'name' => (string) ($sub['name'] ?? ''),
+                'description' => (string) ($sub['description'] ?? ''),
+                'image' => (string) ($sub['image_path'] ?: $row['image_path'] ?: 'assets/imgs/product/skin-care.webp'),
+                'page_image' => (string) ($sub['page_image_path'] ?: $sub['image_path'] ?: $row['image_path'] ?: 'assets/imgs/product/skin-care.webp'),
+            ];
+        }
+
+        $out[] = [
+            'id' => $categoryId,
+            'home_id' => $homeId,
+            'slug' => (string) ($row['slug'] ?? ''),
+            'name' => (string) ($row['name'] ?? ''),
+            'description' => (string) ($row['description'] ?? ''),
+            'image' => (string) ($row['image_path'] ?: 'assets/imgs/product/skin-care.webp'),
+            'page_image' => (string) ($row['page_image_path'] ?: $row['image_path'] ?: 'assets/imgs/product/skin-care.webp'),
+            'sort_order' => (int) ($row['sort_order'] ?? 0),
+            'is_active' => (int) ($row['is_active'] ?? 1),
+            'subcategories' => $subcategories,
         ];
     }
 

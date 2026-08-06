@@ -1,1 +1,1 @@
-a:3:{s:3:"key";s:49:"cms:setting:shop_subcategory_fallback_description";s:10:"expires_at";i:1785932524;s:4:"data";s:97:"Explore premium products in this sub-category and build your private label range with confidence.";}
+a:3:{s:3:"key";s:49:"cms:setting:shop_subcategory_fallback_description";s:10:"expires_at";i:1786008333;s:4:"data";s:97:"Explore premium products in this sub-category and build your private label range with confidence.";}

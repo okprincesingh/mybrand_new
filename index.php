@@ -5,134 +5,33 @@ require_once __DIR__ . '/includes/cms_homepage_sections.php';
 
 $homeProducts = array_slice(catalog_products(), 0, 8);
 $allHomeCategories = catalog_categories();
-$homeCategoryConfigs = [
-  [
-    'label' => 'SKIN CARE',
-    'aliases' => ['skin-care'],
-    'children' => [
-      ['aliases' => ['skin-care-environmental-defense'], 'label' => 'Environmental Defense', 'image' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Environmental-Defense-888x1024.webp'],
-      ['aliases' => ['skin-care-advanced'], 'label' => 'Advanced', 'image' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Advance-888x1024.webp'],
-      ['aliases' => ['skin-care-age-defying'], 'label' => 'Age Defying', 'image' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Age-Defying-888x1024.webp'],
-      ['aliases' => ['skin-care-peptides'], 'label' => 'Peptides', 'image' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Peptides-888x1024.webp'],
-      ['aliases' => ['vitamin-c', 'skin-care-vitamin-c'], 'label' => 'Vitamin C', 'image' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Vitamin-C-888x1024.webp'],
-      ['aliases' => ['skin-care-brightening'], 'label' => 'Brightening', 'image' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Brightening-888x1024.webp'],
-      ['aliases' => ['skin-care-super-fruits'], 'label' => 'Super Fruits', 'image' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Super-Fruits-888x1024.webp'],
-      ['aliases' => ['skin-care-marine-complex'], 'label' => 'Marine Complex', 'image' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Marine-Complex-1-888x1024.webp'],
-      ['aliases' => ['skin-care-blemish-prone-skin'], 'label' => 'Blemish Prone Skin', 'image' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Blemish-Prone-Skin-888x1024.webp'],
-      ['aliases' => ['skin-care-botanical'], 'label' => 'Botanical', 'image' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Botanical-1-888x1024.webp'],
-    ],
-  ],
-  [
-    'label' => 'BODY CARE',
-    'aliases' => ['body-care'],
-    'children' => [
-      ['aliases' => ['body-care-specialty-products'], 'label' => 'Specialty Products', 'image' => 'uploads/categories/body-care-specialty-products/category.webp'],
-      ['aliases' => ['body-care-body-wash-shower-gel'], 'label' => 'Body Wash & Shower Gel', 'image' => 'uploads/categories/body-care-body-wash-shower-gel/category.webp'],
-      ['aliases' => ['body-care-lotions'], 'label' => 'Lotions', 'image' => 'uploads/categories/body-care-lotions/category.webp'],
-      ['aliases' => ['body-care-body-butters'], 'label' => 'Body Butters', 'image' => 'uploads/categories/body-care-body-butters/category.webp'],
-      ['aliases' => ['body-care-salts-soaks'], 'label' => 'Salt & Soaks', 'image' => 'uploads/categories/body-care-salts-soaks/category.webp'],
-      ['aliases' => ['body-care-lip-balms-lip-scrubs'], 'label' => 'Lip Balms & Scrubs', 'image' => 'uploads/categories/body-care-lip-balms-lip-scrubs/category.webp'],
-      ['aliases' => ['body-care-body-scrubs'], 'label' => 'Bath & Body Scrub', 'image' => 'uploads/categories/body-care-body-scrubs/category.webp'],
-      ['aliases' => ['body-care-manicure-pedicure'], 'label' => 'Manicure & Pedicure', 'image' => 'uploads/categories/body-care-manicure-pedicure/category.webp'],
-    ],
-  ],
-  [
-    'label' => 'HAIR CARE',
-    'aliases' => ['hair-care'],
-    'children' => [
-      ['aliases' => ['hair-care-bars', 'bars'], 'label' => 'Shampoo & Conditioner Bars', 'image' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Shampoo-Conditioner-Bars-888x1024.webp'],
-      ['aliases' => ['hair-care-shampoo', 'shampoo'], 'label' => 'Shampoo', 'image' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Shampoo-888x1024.webp'],
-      ['aliases' => ['hair-care-conditioner'], 'label' => 'Conditioner', 'image' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Conditioner-888x1024.webp'],
-      ['aliases' => ['hair-care-styling-products', 'styling-products'], 'label' => 'Styling Products', 'image' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Styling-Products-888x1024.webp'],
-      ['aliases' => ['hair-care-treatment-products', 'treatment-products'], 'label' => 'Treatment Products', 'image' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Treatment-Products-888x1024.webp'],
-    ],
-  ],
-  [
-    'label' => 'BATHING SOAPS',
-    'aliases' => ['bathing-soaps'],
-    'children' => [
-      ['aliases' => ['bathing-soaps-beauty-soaps'], 'label' => 'Beauty Soaps', 'image' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Beauty-Soaps-scaled.webp'],
-      ['aliases' => ['bathing-soaps-mens-soap'], 'label' => 'Mens Soap', 'image' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Mens-Soap-scaled.webp'],
-      ['aliases' => ['bathing-soaps-medicated-soaps'], 'label' => 'Medicated Soap', 'image' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Medicated-Soap-scaled.webp'],
-      ['aliases' => ['bathing-soaps-hotel-soap'], 'label' => 'Hotel Soaps', 'image' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Hotel-Soaps-scaled.webp'],
-      ['aliases' => ['bathing-soaps-novelty-soaps'], 'label' => 'Novelty Soaps', 'image' => 'https://mybrandplease.com/wp-content/uploads/2023/07/Novelty-Soaps-scaled.webp'],
-    ],
-  ],
-  [
-    'label' => "FOR MEN'S",
-    'aliases' => ['men-s-care', 'especially-for-men'],
-    'image' => 'https://mybrandplease.com/wp-content/uploads/2023/05/Mens-min-1024x621.png',
-  ],
-];
+$homeCategorySection = cms_get_home_category_section();
+$homeCategoryConfigs = cms_get_home_categories();
 
 $homeCategories = [];
 $selectedCategoryIds = [];
 $selectedCategorySlugs = [];
 foreach ($homeCategoryConfigs as $config) {
-  $category = catalog_find_category_by_aliases((array) ($config['aliases'] ?? []));
-  $categoryResolved = (bool) $category;
-  if (!$category) {
-    $categorySlug = (string) (($config['aliases'][0] ?? '') ?: catalog_normalize_identity((string) ($config['label'] ?? 'category')));
-    $category = [
-      'id' => 0,
-      'slug' => $categorySlug,
-      'name' => (string) ($config['label'] ?? $categorySlug),
-      'description' => '',
-      'image' => (string) ($config['image'] ?? 'assets/imgs/product/skin-care.webp'),
-      'subcategories' => [],
-    ];
-  }
-
-  $category['display_name'] = (string) ($config['label'] ?? strtoupper((string) ($category['name'] ?? '')));
+  $category = $config;
+  $category['display_name'] = (string) ($category['name'] ?? '');
   $selectedCategoryIds[] = (int) ($category['id'] ?? 0);
   $selectedCategorySlugs[] = (string) ($category['slug'] ?? '');
   $cards = [];
 
-  $children = [];
-  $seenChildKeys = [];
-  foreach ((array) ($config['children'] ?? []) as $childConfig) {
-    $childAliases = (array) ($childConfig['aliases'] ?? []);
-    $resolvedChild = catalog_find_subcategory_by_aliases($category, $childAliases);
-    $childSlug = (string) ($resolvedChild['slug'] ?? ($childAliases[0] ?? catalog_normalize_identity((string) ($childConfig['label'] ?? ''))));
-    if ($childSlug === '') {
-      continue;
-    }
-    $seenChildKeys[] = $childSlug;
-    $children[] = [
-      'id' => (int) ($resolvedChild['id'] ?? 0),
-      'slug' => $childSlug,
-      'name' => (string) ($childConfig['label'] ?? $resolvedChild['name'] ?? $childSlug),
-      'display_name' => (string) ($childConfig['label'] ?? $resolvedChild['name'] ?? $childSlug),
-      'url_name' => (string) ($resolvedChild['name'] ?? $childConfig['label'] ?? $childSlug),
-      'description' => (string) ($resolvedChild['description'] ?? ''),
-      'image' => (string) ($resolvedChild['image'] ?? $childConfig['image'] ?? $category['image'] ?? 'assets/imgs/product/skin-care.webp'),
-      'fit' => (string) ($childConfig['fit'] ?? 'cover'),
-    ];
-  }
-
-  if (empty($config['children'])) {
-    foreach ((array) ($category['subcategories'] ?? []) as $child) {
-      $childSlug = (string) ($child['slug'] ?? '');
-      if ($childSlug !== '' && in_array($childSlug, $seenChildKeys, true)) {
-        continue;
-      }
-      $children[] = (array) $child;
-    }
-  }
-
+  $children = (array) ($category['subcategories'] ?? []);
   $category['subcategories'] = $children;
   if (!empty($children)) {
     $cards = array_map(static function (array $child) use ($category): array {
       return [
-        'name' => (string) ($child['display_name'] ?? $child['name'] ?? ''),
+        'name' => (string) ($child['name'] ?? ''),
         'image' => (string) ($child['image'] ?? $category['image'] ?? 'assets/imgs/product/skin-care.webp'),
-        'href' => catalog_subcategory_page_link((string) ($category['slug'] ?? ''), (string) ($child['url_name'] ?? $child['name'] ?? $child['display_name'] ?? $child['slug'] ?? '')),
+        'href' => catalog_subcategory_page_link((string) ($category['slug'] ?? ''), (string) ($child['slug'] ?? $child['name'] ?? '')),
         'fit' => (string) ($child['fit'] ?? 'cover'),
       ];
     }, array_slice($children, 0, 10));
   }
 
-  if (empty($cards) && $categoryResolved) {
+  if (empty($cards)) {
     $productCards = array_slice(catalog_filtered_products((string) $category['slug'], null, null), 0, 10);
     foreach ($productCards as $product) {
       $cards[] = [
@@ -151,37 +50,6 @@ foreach ($homeCategoryConfigs as $config) {
     ];
   }
 
-  $category['home_cards'] = $cards;
-  $homeCategories[] = $category;
-}
-
-foreach ($allHomeCategories as $category) {
-  if (count($homeCategories) >= 5) {
-    break;
-  }
-  $categoryId = (int) ($category['id'] ?? 0);
-  $categorySlug = (string) ($category['slug'] ?? '');
-  if (($categoryId > 0 && in_array($categoryId, $selectedCategoryIds, true)) || ($categorySlug !== '' && in_array($categorySlug, $selectedCategorySlugs, true))) {
-    continue;
-  }
-
-  $category['display_name'] = strtoupper((string) ($category['name'] ?? ''));
-  $cards = [];
-  $productCards = array_slice(catalog_filtered_products((string) ($category['slug'] ?? ''), null, null), 0, 10);
-  foreach ($productCards as $product) {
-    $cards[] = [
-      'name' => (string) ($product['name'] ?? ''),
-      'image' => (string) ($product['image'] ?? $category['image'] ?? 'assets/imgs/product/skin-care.webp'),
-      'href' => url('product-details.php') . '?slug=' . rawurlencode((string) ($product['slug'] ?? '')),
-    ];
-  }
-  if (empty($cards)) {
-    $cards[] = [
-      'name' => (string) $category['display_name'],
-      'image' => (string) ($category['image'] ?? 'assets/imgs/product/skin-care.webp'),
-      'href' => catalog_shop_link((string) ($category['slug'] ?? '')),
-    ];
-  }
   $category['home_cards'] = $cards;
   $homeCategories[] = $category;
 }
@@ -572,7 +440,7 @@ document.addEventListener('DOMContentLoaded', function () {
         <section class="category-section section-spacing-120 rr-ov-hidden pt-0 js-category-showcase">
           <div class="container ">
             <div class="section-heading category-section__heading wow fadeInUp" data-wow-delay=".2s">
-              <h2 class="section-heading__title">Nature Powered Ingredients</h2>
+              <h2 class="section-heading__title"><?php echo htmlspecialchars($homeCategorySection['title_text'] ?? 'Nature Powered Ingredients', ENT_QUOTES, 'UTF-8'); ?></h2>
             </div>
             <div class="nav-tabs-modern" id="homeCategoryTabs">
               <span class="nav-tabs-modern__indicator" aria-hidden="true"></span>

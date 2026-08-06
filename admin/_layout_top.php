@@ -3,7 +3,7 @@ $adminUser = $adminUser ?? admin_current();
 $flash = admin_flash_get();
 $currentPage = basename($_SERVER['PHP_SELF'] ?? '');
 $currentTab = $_GET['tab'] ?? '';
-$homeNavPages = ['home-hero-video.php','home-slider.php','home-testimonials.php','home-offices.php','home-instagram.php','homepage-sections.php'];
+$homeNavPages = ['home-hero-video.php','home-slider.php','home-testimonials.php','home-offices.php','home-instagram.php','homepage-sections.php','manage-categories.php'];
 $isHomeNavActive = in_array($currentPage, $homeNavPages, true);
 $isHomepageSections = $currentPage === 'homepage-sections.php';
 ?><!doctype html>
@@ -40,6 +40,7 @@ $isHomepageSections = $currentPage === 'homepage-sections.php';
         <a class="admin-nav-link admin-sub-link <?= $currentPage==='home-hero-video.php'?'active':'' ?>" href="home-hero-video.php"><i class="bi bi-play-btn"></i><span>Hero Video</span></a>
         <a class="admin-nav-link admin-sub-link <?= $isHomepageSections && ($currentTab === '' || $currentTab === 'working_process') ?'active':'' ?>" href="homepage-sections.php?tab=working_process"><i class="bi bi-list-task"></i><span>Working Process</span></a>
         <a class="admin-nav-link admin-sub-link <?= $isHomepageSections && $currentTab === 'marquee' ?'active':'' ?>" href="homepage-sections.php?tab=marquee"><i class="bi bi-arrow-repeat"></i><span>Marquee Strip</span></a>
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='manage-categories.php'?'active':'' ?>" href="manage-categories.php"><i class="bi bi-tags"></i><span>Manage Categories</span></a>
         <a class="admin-nav-link admin-sub-link <?= $isHomepageSections && $currentTab === 'brand_builder' ?'active':'' ?>" href="homepage-sections.php?tab=brand_builder"><i class="bi bi-bricks"></i><span>Brand Builder</span></a>
         <a class="admin-nav-link admin-sub-link <?= $isHomepageSections && $currentTab === 'getting_started' ?'active':'' ?>" href="homepage-sections.php?tab=getting_started"><i class="bi bi-rocket-takeoff"></i><span>Getting Started</span></a>
         <a class="admin-nav-link admin-sub-link <?= $currentPage==='home-testimonials.php'?'active':'' ?>" href="home-testimonials.php"><i class="bi bi-chat-quote"></i><span>Testimonials</span></a>
