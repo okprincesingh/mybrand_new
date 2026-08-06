@@ -3,6 +3,7 @@ require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/url.php';
 require_once __DIR__ . '/security.php';
 require_once __DIR__ . '/cache.php';
+require_once __DIR__ . '/preview.php';
 
 function catalog_cache_key(string $key): string
 {
@@ -167,9 +168,11 @@ function catalog_find_subcategory_by_aliases(array $category, array $aliases): ?
 function catalog_categories(): array
 {
     $cacheKey = catalog_cache_key('categories');
-    $cached = cache_get($cacheKey);
-    if (is_array($cached)) {
-        return $cached;
+    if (!preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
     }
 
     $pdo = db();
@@ -185,7 +188,8 @@ function catalog_categories(): array
     }
 
     $pageImageSelect = $hasPageImagePath ? 'page_image_path' : 'NULL AS page_image_path';
-    $rows = db_fetch_all($pdo, 'SELECT id,parent_id,name,slug,description,image_path,' . $pageImageSelect . ',sort_order FROM categories WHERE is_active = 1 ORDER BY parent_id ASC, sort_order ASC, name ASC');
+    $activeClause = preview_mode_include_drafts() ? '' : ' WHERE is_active = 1';
+    $rows = db_fetch_all($pdo, 'SELECT id,parent_id,name,slug,description,image_path,' . $pageImageSelect . ',sort_order FROM categories' . $activeClause . ' ORDER BY parent_id ASC, sort_order ASC, name ASC');
     if (!$rows) {
         return catalog_fallback_categories();
     }
@@ -224,7 +228,9 @@ function catalog_categories(): array
     }
 
     $categories = array_values($top);
-    cache_set($cacheKey, $categories, 600);
+    if (!preview_mode_should_bypass_cache()) {
+        cache_set($cacheKey, $categories, 600);
+    }
     return $categories;
 }
 
@@ -244,7 +250,7 @@ function get_products(array $filters = [], array $pagination = []): array
     }
     catalog_ensure_product_filter_indexes($pdo);
 
-    $where = ['p.is_active = 1'];
+    $where = preview_mode_include_drafts() ? ['1=1'] : ['p.is_active = 1'];
     $params = [];
 
     if (!empty($filters['category'])) {
@@ -368,13 +374,21 @@ function get_products(array $filters = [], array $pagination = []): array
 function catalog_products(): array
 {
     $cacheKey = catalog_cache_key('products:published:1000');
-    $cached = cache_get($cacheKey);
-    if (is_array($cached)) {
-        return $cached;
+    if (!preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
     }
 
-    $items = get_products(['status' => 'published'], ['limit' => 1000, 'offset' => 0])['items'];
-    cache_set($cacheKey, $items, 600);
+    $filters = ['status' => 'published'];
+    if (preview_mode_include_drafts()) {
+        unset($filters['status']);
+    }
+    $items = get_products($filters, ['limit' => 1000, 'offset' => 0])['items'];
+    if (!preview_mode_should_bypass_cache()) {
+        cache_set($cacheKey, $items, 600);
+    }
     return $items;
 }
 
@@ -473,20 +487,29 @@ function catalog_related_products(string $currentSlug, ?string $category = null,
 function catalog_filtered_products(?string $category = null, ?string $subcategory = null, ?string $search = null): array
 {
     $cacheKey = catalog_cache_key('filtered:' . sha1(json_encode([$category, $subcategory, $search])));
-    $cached = cache_get($cacheKey);
-    if (is_array($cached)) {
-        return $cached;
+    if (!preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
     }
 
-    $result = get_products([
+    $filters = [
         'category' => $category,
         'subcategory' => $subcategory,
         'search' => $search,
         'status' => 'published',
-    ], ['limit' => 1000, 'offset' => 0]);
+    ];
+    if (preview_mode_include_drafts()) {
+        unset($filters['status']);
+    }
+
+    $result = get_products($filters, ['limit' => 1000, 'offset' => 0]);
 
     $items = $result['items'];
-    cache_set($cacheKey, $items, 600);
+    if (!preview_mode_should_bypass_cache()) {
+        cache_set($cacheKey, $items, 600);
+    }
     return $items;
 }
 
@@ -499,6 +522,12 @@ function get_product_by_slug(string $slug): ?array
                 return $p;
             }
         }
+        return null;
+    }
+
+    $statusClause = preview_mode_include_drafts() ? '' : ' AND p.status = "published"';
+    $slug = trim($slug);
+    if ($slug === '') {
         return null;
     }
 
@@ -525,7 +554,7 @@ function get_product_by_slug(string $slug): ?array
           FROM product_images
           GROUP BY product_id
         ) imgs ON imgs.product_id = p.id
-        WHERE p.slug = :slug
+        WHERE p.slug = :slug{$statusClause}
         LIMIT 1", [':slug' => $slug]);
     if (!$r) {
         return null;

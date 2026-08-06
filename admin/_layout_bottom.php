@@ -12,6 +12,7 @@
 </button>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="<?php echo url('admin/assets/js/section-preview.js'); ?>"></script>
 <script>
   // Theme Toggle Functionality
   (function() {
@@ -61,8 +62,10 @@
       sidebarOverlay.addEventListener('click', function() {
         setSidebarState(false);
       });
-      // Close sidebar when clicking on links (mobile only)
-      const navLinks = sidebar.querySelectorAll('.admin-nav-link');
+      // Close sidebar when clicking on links (mobile only).
+      // Exclude the Home dropdown toggle so expanding/collapsing it
+      // does not close the mobile sidebar; sub-items still navigate.
+      const navLinks = sidebar.querySelectorAll('.admin-nav-link:not(.admin-nav-toggle)');
       navLinks.forEach(link => {
         link.addEventListener('click', function() {
           if (window.innerWidth < 992) {

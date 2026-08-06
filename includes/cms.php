@@ -4,6 +4,8 @@ require_once __DIR__ . '/security.php';
 require_once __DIR__ . '/url.php';
 require_once __DIR__ . '/cache.php';
 require_once __DIR__ . '/catalog.php';
+require_once __DIR__ . '/preview.php';
+require_once __DIR__ . '/draft.php';
 
 function cms_cache_key(string $bucket, string $key): string
 {
@@ -42,12 +44,141 @@ function cms_invalidate_home_slides_cache(): void
     cache_delete(cms_cache_key('home', 'slides'));
 }
 
+function cms_invalidate_home_hero_videos_cache(): void
+{
+    cache_delete(cms_cache_key('home', 'hero_videos'));
+}
+
+function cms_ensure_home_hero_videos_table(PDO $pdo): bool
+{
+    static $checked = null;
+    if ($checked !== null) {
+        return $checked;
+    }
+
+    try {
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS home_hero_videos (
+                id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                label VARCHAR(180) NULL,
+                desktop_video_url VARCHAR(500) NULL,
+                desktop_light_video_url VARCHAR(500) NULL,
+                mobile_video_url VARCHAR(500) NULL,
+                desktop_video_file VARCHAR(255) NULL,
+                desktop_light_video_file VARCHAR(255) NULL,
+                mobile_video_file VARCHAR(255) NULL,
+                poster_image VARCHAR(255) NULL,
+                sort_order INT NOT NULL DEFAULT 0,
+                is_active TINYINT(1) NOT NULL DEFAULT 1,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX idx_home_hero_videos_active_order (is_active, sort_order, id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        ");
+
+        // Ensure new file columns exist on existing installs.
+        $columns = db_fetch_all($pdo, 'SHOW COLUMNS FROM home_hero_videos');
+        $existing = [];
+        foreach ($columns as $column) {
+            $existing[strtolower((string) ($column['Field'] ?? ''))] = true;
+        }
+        if (empty($existing['desktop_video_file'])) {
+            $pdo->exec('ALTER TABLE home_hero_videos ADD COLUMN desktop_video_file VARCHAR(255) NULL AFTER desktop_video_url');
+        }
+        if (empty($existing['desktop_light_video_file'])) {
+            $pdo->exec('ALTER TABLE home_hero_videos ADD COLUMN desktop_light_video_file VARCHAR(255) NULL AFTER desktop_light_video_url');
+        }
+        if (empty($existing['mobile_video_file'])) {
+            $pdo->exec('ALTER TABLE home_hero_videos ADD COLUMN mobile_video_file VARCHAR(255) NULL AFTER mobile_video_url');
+        }
+
+        $checked = true;
+        return true;
+    } catch (Throwable $e) {
+        $checked = false;
+        return false;
+    }
+}
+
+function cms_get_home_hero_videos(): array
+{
+    $cacheKey = cms_cache_key('home', 'hero_videos');
+    if (!preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $fallbackDesktop = 'https://jaikvik.in/lab/mybrand_video/mybrandvideo';
+    $fallbackDesktopLight = 'https://jaikvik.in/lab/mybrand_video/mybrandmobilevideo';
+    $fallbackMobile = 'https://jaikvik.in/lab/mybrand_video/mybrandmobilevideo';
+    $fallback = [
+        [
+            'id' => 0,
+            'label' => 'Default Hero Video',
+            'desktop_video_url' => $fallbackDesktop,
+            'desktop_light_video_url' => $fallbackDesktopLight,
+            'mobile_video_url' => $fallbackMobile,
+            'poster_image' => '',
+        ],
+    ];
+
+    $pdo = db();
+    if (!$pdo || !cms_ensure_home_hero_videos_table($pdo)) {
+        return $fallback;
+    }
+
+    $activeClause = preview_mode_include_drafts() ? '' : ' WHERE is_active = 1';
+    $rows = db_fetch_all(
+        $pdo,
+        'SELECT id, label, desktop_video_url, desktop_light_video_url, mobile_video_url, desktop_video_file, desktop_light_video_file, mobile_video_file, poster_image FROM home_hero_videos' . $activeClause . ' ORDER BY sort_order ASC, id ASC'
+    );
+
+    if (!$rows) {
+        if (!preview_mode_should_bypass_cache()) {
+            cache_set($cacheKey, $fallback, 300);
+        }
+        return $fallback;
+    }
+
+    $videos = [];
+    foreach ($rows as $row) {
+        $merged = draft_merge_row((array) $row, 'home_hero_video', (int) $row['id']);
+
+        // Resolve each video source: prefer uploaded file, then URL, then fallback.
+        $desktopFile = trim((string) ($merged['desktop_video_file'] ?? ''));
+        $desktopLightFile = trim((string) ($merged['desktop_light_video_file'] ?? ''));
+        $mobileFile = trim((string) ($merged['mobile_video_file'] ?? ''));
+
+        $desktopUrl = trim((string) ($merged['desktop_video_url'] ?? ''));
+        $desktopLightUrl = trim((string) ($merged['desktop_light_video_url'] ?? ''));
+        $mobileUrl = trim((string) ($merged['mobile_video_url'] ?? ''));
+
+        $videos[] = [
+            'id' => (int) ($merged['id'] ?? $row['id']),
+            'label' => (string) ($merged['label'] ?? ''),
+            'desktop_video_url' => $desktopFile !== '' ? url($desktopFile) : ($desktopUrl !== '' ? $desktopUrl : $fallbackDesktop),
+            'desktop_light_video_url' => $desktopLightFile !== '' ? url($desktopLightFile) : ($desktopLightUrl !== '' ? $desktopLightUrl : $fallbackDesktopLight),
+            'mobile_video_url' => $mobileFile !== '' ? url($mobileFile) : ($mobileUrl !== '' ? $mobileUrl : $fallbackMobile),
+            'poster_image' => (string) ($merged['poster_image'] ?? ''),
+        ];
+    }
+
+    if (!preview_mode_should_bypass_cache()) {
+        cache_set($cacheKey, $videos, 300);
+    }
+    return $videos;
+}
+
 function cms_get_setting(string $key, ?string $default = null): ?string
 {
     $cacheKey = cms_cache_key('setting', $key);
-    $cached = cache_get($cacheKey);
-    if ($cached !== null) {
-        return (string) $cached;
+    if (!preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if ($cached !== null) {
+            return (string) $cached;
+        }
     }
 
     $pdo = db();
@@ -60,7 +191,7 @@ function cms_get_setting(string $key, ?string $default = null): ?string
     ]);
 
     $resolved = $value !== false ? (string) $value : $default;
-    if ($resolved !== null) {
+    if ($resolved !== null && !preview_mode_should_bypass_cache()) {
         cache_set($cacheKey, $resolved, 600);
     }
 
@@ -100,9 +231,11 @@ function cms_get_breadcrumb_background_path(): string
 function cms_get_menu(string $locationKey): array
 {
     $cacheKey = cms_cache_key('menu', $locationKey);
-    $cached = cache_get($cacheKey);
-    if (is_array($cached)) {
-        return $cached;
+    if (!preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
     }
 
     $pdo = db();
@@ -137,7 +270,9 @@ function cms_get_menu(string $locationKey): array
     };
 
     $menu = $build(0);
-    cache_set($cacheKey, $menu, 600);
+    if (!preview_mode_should_bypass_cache()) {
+        cache_set($cacheKey, $menu, 600);
+    }
     return $menu;
 }
 
@@ -393,9 +528,11 @@ function get_page_by_slug(string $slug): ?array
     }
 
     $cacheKey = cms_cache_key('page_slug', $slug);
-    $cached = cache_get($cacheKey);
-    if (is_array($cached) || $cached === false) {
-        return $cached === false ? null : $cached;
+    if (!preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached) || $cached === false) {
+            return $cached === false ? null : $cached;
+        }
     }
 
     $pdo = db();
@@ -403,15 +540,20 @@ function get_page_by_slug(string $slug): ?array
         return null;
     }
 
-    $page = db_fetch_one($pdo, 'SELECT p.*, pm.meta_title, pm.meta_description, pm.meta_keywords, pm.canonical_url FROM pages p LEFT JOIN page_meta pm ON pm.page_id = p.id WHERE p.slug = :slug AND p.status = "published" LIMIT 1', [
+    $statusClause = preview_mode_include_drafts() ? '' : ' AND p.status = "published"';
+    $page = db_fetch_one($pdo, 'SELECT p.*, pm.meta_title, pm.meta_description, pm.meta_keywords, pm.canonical_url FROM pages p LEFT JOIN page_meta pm ON pm.page_id = p.id WHERE p.slug = :slug' . $statusClause . ' LIMIT 1', [
         ':slug' => $slug,
     ]);
     if ($page) {
-        cache_set($cacheKey, $page, 300);
+        if (!preview_mode_should_bypass_cache()) {
+            cache_set($cacheKey, $page, 300);
+        }
         return $page;
     }
 
-    cache_set($cacheKey, false, 120);
+    if (!preview_mode_should_bypass_cache()) {
+        cache_set($cacheKey, false, 120);
+    }
     return null;
 }
 
@@ -461,9 +603,11 @@ function get_page_sections(int $pageId): array
 function cms_get_home_slides(): array
 {
     $cacheKey = cms_cache_key('home', 'slides');
-    $cached = cache_get($cacheKey);
-    if (is_array($cached)) {
-        return $cached;
+    if (!preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
     }
 
     $fallback = [
@@ -501,31 +645,37 @@ function cms_get_home_slides(): array
         return $fallback;
     }
 
+    $activeClause = preview_mode_include_drafts() ? '' : ' WHERE is_active = 1';
     $rows = db_fetch_all(
         $pdo,
-        'SELECT id, badge_text, title, description, button_text, button_url, image_path, image_alt FROM home_slides WHERE is_active = 1 ORDER BY sort_order ASC, id ASC'
+        'SELECT id, badge_text, title, description, button_text, button_url, image_path, image_alt FROM home_slides' . $activeClause . ' ORDER BY sort_order ASC, id ASC'
     );
 
     if (!$rows) {
-        cache_set($cacheKey, $fallback, 300);
+        if (!preview_mode_should_bypass_cache()) {
+            cache_set($cacheKey, $fallback, 300);
+        }
         return $fallback;
     }
 
     $slides = [];
     foreach ($rows as $row) {
+        $merged = draft_merge_row((array) $row, 'home_slide', (int) $row['id']);
         $slides[] = [
-            'id' => (int) $row['id'],
-            'badge_text' => (string) ($row['badge_text'] ?? ''),
-            'title' => (string) ($row['title'] ?? ''),
-            'description' => (string) ($row['description'] ?? ''),
-            'button_text' => (string) ($row['button_text'] ?? ''),
-            'button_url' => (string) ($row['button_url'] ?? ''),
-            'image_path' => (string) ($row['image_path'] ?? ''),
-            'image_alt' => (string) ($row['image_alt'] ?? ''),
+            'id' => (int) ($merged['id'] ?? $row['id']),
+            'badge_text' => (string) ($merged['badge_text'] ?? ''),
+            'title' => (string) ($merged['title'] ?? ''),
+            'description' => (string) ($merged['description'] ?? ''),
+            'button_text' => (string) ($merged['button_text'] ?? ''),
+            'button_url' => (string) ($merged['button_url'] ?? ''),
+            'image_path' => (string) ($merged['image_path'] ?? ''),
+            'image_alt' => (string) ($merged['image_alt'] ?? ''),
         ];
     }
 
-    cache_set($cacheKey, $slides, 300);
+    if (!preview_mode_should_bypass_cache()) {
+        cache_set($cacheKey, $slides, 300);
+    }
     return $slides;
 }
 
@@ -591,9 +741,11 @@ function cms_invalidate_home_instagram_reels_cache(): void
 function cms_get_home_testimonials(): array
 {
     $cacheKey = cms_cache_key('home', 'testimonials');
-    $cached = cache_get($cacheKey);
-    if (is_array($cached)) {
-        return $cached;
+    if (!preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
     }
 
     $fallback = [
@@ -625,34 +777,42 @@ function cms_get_home_testimonials(): array
         return $fallback;
     }
 
-    $rows = db_fetch_all($pdo, 'SELECT id, name, location, content, rating, image_path FROM home_testimonials WHERE is_active = 1 ORDER BY sort_order ASC, id ASC');
+    $activeClause = preview_mode_include_drafts() ? '' : ' WHERE is_active = 1';
+    $rows = db_fetch_all($pdo, 'SELECT id, name, location, content, rating, image_path FROM home_testimonials' . $activeClause . ' ORDER BY sort_order ASC, id ASC');
     if (!$rows) {
-        cache_set($cacheKey, $fallback, 300);
+        if (!preview_mode_should_bypass_cache()) {
+            cache_set($cacheKey, $fallback, 300);
+        }
         return $fallback;
     }
 
     $out = [];
     foreach ($rows as $row) {
+        $merged = draft_merge_row((array) $row, 'home_testimonial', (int) $row['id']);
         $out[] = [
-            'id' => (int) $row['id'],
-            'name' => (string) ($row['name'] ?? ''),
-            'location' => (string) ($row['location'] ?? ''),
-            'content' => (string) ($row['content'] ?? ''),
-            'rating' => max(1, min(5, (int) ($row['rating'] ?? 5))),
-            'image_path' => (string) ($row['image_path'] ?? ''),
+            'id' => (int) ($merged['id'] ?? $row['id']),
+            'name' => (string) ($merged['name'] ?? ''),
+            'location' => (string) ($merged['location'] ?? ''),
+            'content' => (string) ($merged['content'] ?? ''),
+            'rating' => max(1, min(5, (int) ($merged['rating'] ?? 5))),
+            'image_path' => (string) ($merged['image_path'] ?? ''),
         ];
     }
 
-    cache_set($cacheKey, $out, 300);
+    if (!preview_mode_should_bypass_cache()) {
+        cache_set($cacheKey, $out, 300);
+    }
     return $out;
 }
 
 function cms_get_home_offices(): array
 {
     $cacheKey = cms_cache_key('home', 'offices');
-    $cached = cache_get($cacheKey);
-    if (is_array($cached)) {
-        return $cached;
+    if (!preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
     }
 
     $fallback = [
@@ -701,33 +861,39 @@ function cms_get_home_offices(): array
 
     $hasExtendedOfficeColumns = cms_ensure_home_offices_registration_columns($pdo);
 
+    $activeClause = preview_mode_include_drafts() ? '' : ' WHERE is_active = 1';
     $rows = db_fetch_all($pdo, $hasExtendedOfficeColumns
-        ? 'SELECT id, country, company_name, address, email, phone, registration_label, registration_number, tax_label, tax_number, image_path FROM home_offices WHERE is_active = 1 ORDER BY sort_order ASC, id ASC'
-        : 'SELECT id, country, address, email, phone, image_path FROM home_offices WHERE is_active = 1 ORDER BY sort_order ASC, id ASC'
+        ? 'SELECT id, country, company_name, address, email, phone, registration_label, registration_number, tax_label, tax_number, image_path FROM home_offices' . $activeClause . ' ORDER BY sort_order ASC, id ASC'
+        : 'SELECT id, country, address, email, phone, image_path FROM home_offices' . $activeClause . ' ORDER BY sort_order ASC, id ASC'
     );
     if (!$rows) {
-        cache_set($cacheKey, $fallback, 300);
+        if (!preview_mode_should_bypass_cache()) {
+            cache_set($cacheKey, $fallback, 300);
+        }
         return $fallback;
     }
 
     $out = [];
     foreach ($rows as $row) {
+        $merged = draft_merge_row((array) $row, 'home_office', (int) $row['id']);
         $out[] = [
-            'id' => (int) $row['id'],
-            'country' => (string) ($row['country'] ?? ''),
-            'company_name' => (string) ($row['company_name'] ?? ''),
-            'address' => (string) ($row['address'] ?? ''),
-            'email' => (string) ($row['email'] ?? ''),
-            'phone' => (string) ($row['phone'] ?? ''),
-            'registration_label' => (string) ($row['registration_label'] ?? ''),
-            'registration_number' => (string) ($row['registration_number'] ?? ''),
-            'tax_label' => (string) ($row['tax_label'] ?? ''),
-            'tax_number' => (string) ($row['tax_number'] ?? ''),
-            'image_path' => (string) ($row['image_path'] ?? ''),
+            'id' => (int) ($merged['id'] ?? $row['id']),
+            'country' => (string) ($merged['country'] ?? ''),
+            'company_name' => (string) ($merged['company_name'] ?? ''),
+            'address' => (string) ($merged['address'] ?? ''),
+            'email' => (string) ($merged['email'] ?? ''),
+            'phone' => (string) ($merged['phone'] ?? ''),
+            'registration_label' => (string) ($merged['registration_label'] ?? ''),
+            'registration_number' => (string) ($merged['registration_number'] ?? ''),
+            'tax_label' => (string) ($merged['tax_label'] ?? ''),
+            'tax_number' => (string) ($merged['tax_number'] ?? ''),
+            'image_path' => (string) ($merged['image_path'] ?? ''),
         ];
     }
 
-    cache_set($cacheKey, $out, 300);
+    if (!preview_mode_should_bypass_cache()) {
+        cache_set($cacheKey, $out, 300);
+    }
     return $out;
 }
 
@@ -787,44 +953,56 @@ function cms_get_home_instagram_reels(): array
     }
 
     $effectiveCacheKey = $cacheKey . ':' . $folderSignature;
-    $cached = cache_get($effectiveCacheKey);
-    if (is_array($cached)) {
-        return $cached;
+    if (!preview_mode_should_bypass_cache()) {
+        $cached = cache_get($effectiveCacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
     }
 
     if ($folderReels) {
-        cache_set($effectiveCacheKey, $folderReels, 300);
+        if (!preview_mode_should_bypass_cache()) {
+            cache_set($effectiveCacheKey, $folderReels, 300);
+        }
         return $folderReels;
     }
 
     $pdo = db();
     if (!$pdo) {
-        cache_set($effectiveCacheKey, $fallback, 300);
+        if (!preview_mode_should_bypass_cache()) {
+            cache_set($effectiveCacheKey, $fallback, 300);
+        }
         return $fallback;
     }
 
+    $activeClause = preview_mode_include_drafts() ? '' : ' WHERE is_active = 1';
     $rows = db_fetch_all(
         $pdo,
-        'SELECT id, reel_url, video_path, sort_order, is_active FROM home_instagram_reels WHERE is_active = 1 ORDER BY sort_order ASC, id ASC'
+        'SELECT id, reel_url, video_path, sort_order, is_active FROM home_instagram_reels' . $activeClause . ' ORDER BY sort_order ASC, id ASC'
     );
 
     $out = [];
     foreach ($rows as $row) {
+        $merged = draft_merge_row((array) $row, 'home_instagram_reel', (int) ($row['id'] ?? 0));
         $out[] = [
-            'id' => (int) ($row['id'] ?? 0),
-            'reel_url' => (string) ($row['reel_url'] ?? ''),
-            'video_path' => (string) ($row['video_path'] ?? ''),
-            'sort_order' => (int) ($row['sort_order'] ?? 0),
-            'is_active' => (int) ($row['is_active'] ?? 1),
+            'id' => (int) ($merged['id'] ?? $row['id'] ?? 0),
+            'reel_url' => (string) ($merged['reel_url'] ?? ''),
+            'video_path' => (string) ($merged['video_path'] ?? ''),
+            'sort_order' => (int) ($merged['sort_order'] ?? $row['sort_order'] ?? 0),
+            'is_active' => (int) ($merged['is_active'] ?? $row['is_active'] ?? 1),
         ];
     }
 
     if (!$out) {
-        cache_set($effectiveCacheKey, $fallback, 300);
+        if (!preview_mode_should_bypass_cache()) {
+            cache_set($effectiveCacheKey, $fallback, 300);
+        }
         return $fallback;
     }
 
-    cache_set($effectiveCacheKey, $out, 300);
+    if (!preview_mode_should_bypass_cache()) {
+        cache_set($effectiveCacheKey, $out, 300);
+    }
     return $out;
 }
 
@@ -841,7 +1019,7 @@ function cms_get_why_choose_pages(bool $publishedOnly = true): array
             WHERE p.page_group = :grp';
     $params = [':grp' => 'why_choose_us'];
 
-    if ($publishedOnly) {
+    if ($publishedOnly && !preview_mode_include_drafts()) {
         $sql .= ' AND p.status = :st';
         $params[':st'] = 'published';
     }

@@ -1,0 +1,1 @@
+a:3:{s:3:"key";s:36:"cms:setting:category_shop_subtitle_3";s:10:"expires_at";i:1785822279;s:4:"data";s:31:"Shop our Product Samples Below!";}

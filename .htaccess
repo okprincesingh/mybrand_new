@@ -1,6 +1,6 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /mybrandplease/
+    RewriteBase /mybrand_new/
 
     # Serve static files and folders directly
     RewriteCond %{REQUEST_FILENAME} -f [OR]
@@ -14,6 +14,7 @@
     RewriteRule ^([^/]+)/([^/]+)/?$ shop.php?category=$1&subcategory=$2 [B,L,QSA,NC]
 
     # Pretty URL for slug pages
+    
     RewriteRule ^([a-z0-9-]+)/?$ why-page.php?slug=$1 [L,QSA,NC]
 </IfModule>
 

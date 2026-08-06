@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/includes/catalog.php';
 require_once __DIR__ . '/includes/cms.php';
+require_once __DIR__ . '/includes/cms_homepage_sections.php';
 
 $homeProducts = array_slice(catalog_products(), 0, 8);
 $allHomeCategories = catalog_categories();
@@ -191,6 +192,8 @@ if ($homeInitialCategory) {
   $homeInitialItems = (array) ($homeInitialCategory['home_cards'] ?? []);
 }
 $homeSlides = cms_get_home_slides();
+$homeHeroVideos = cms_get_home_hero_videos();
+$homeHeroVideo = $homeHeroVideos[0] ?? null;
 $homeTestimonials = cms_get_home_testimonials();
 $homeOffices = cms_get_home_offices();
 $homeInstagramReels = cms_get_home_instagram_reels();
@@ -272,8 +275,9 @@ function closeLogoutMessage() {
     <video
         class="hero-video hero-video-desktop"
         data-hero-video="desktop"
-        data-src="<?php echo htmlspecialchars(url('https://jaikvik.in/lab/mybrand_video/mybrandvideo'), ENT_QUOTES, 'UTF-8'); ?>"
-        data-src-light="<?php echo htmlspecialchars(url('https://jaikvik.in/lab/mybrand_video/mybrandmobilevideo'), ENT_QUOTES, 'UTF-8'); ?>"
+        data-src="<?php echo htmlspecialchars(url((string) ($homeHeroVideo['desktop_video_url'] ?? 'https://jaikvik.in/lab/mybrand_video/mybrandvideo')), ENT_QUOTES, 'UTF-8'); ?>"
+        data-src-light="<?php echo htmlspecialchars(url((string) ($homeHeroVideo['desktop_light_video_url'] ?? 'https://jaikvik.in/lab/mybrand_video/mybrandmobilevideo')), ENT_QUOTES, 'UTF-8'); ?>"
+        <?php if (!empty($homeHeroVideo['poster_image'])): ?>poster="<?php echo htmlspecialchars(url((string) $homeHeroVideo['poster_image']), ENT_QUOTES, 'UTF-8'); ?>"<?php endif; ?>
         autoplay
         muted
         loop
@@ -284,7 +288,8 @@ function closeLogoutMessage() {
     <video
         class="hero-video hero-video-mobile"
         data-hero-video="mobile"
-        data-src="<?php echo htmlspecialchars(url('https://jaikvik.in/lab/mybrand_video/mybrandmobilevideo'), ENT_QUOTES, 'UTF-8'); ?>"
+        data-src="<?php echo htmlspecialchars(url((string) ($homeHeroVideo['mobile_video_url'] ?? 'https://jaikvik.in/lab/mybrand_video/mybrandmobilevideo')), ENT_QUOTES, 'UTF-8'); ?>"
+        <?php if (!empty($homeHeroVideo['poster_image'])): ?>poster="<?php echo htmlspecialchars(url((string) $homeHeroVideo['poster_image']), ENT_QUOTES, 'UTF-8'); ?>"<?php endif; ?>
         autoplay
         muted
         loop
@@ -428,102 +433,139 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
+        <?php
+        $workingProcessContent = cms_get_home_working_process_content();
+        ?>
         <!-- Working Process Section Start -->
-        <section class="working-process-section" aria-label="Why launch your own brand">
-          <div class="working-process-section__strip" aria-label="mybrandplease creative services">
-            <div class="working-process-section__strip-services">
-              <?php for ($stripLoop = 0; $stripLoop < 2; $stripLoop++): ?>
-                <span>Skin Care</span>
-                <span class="working-process-section__strip-dot">*</span>
-                <span>Hair Care</span>
-                <span class="working-process-section__strip-dot">*</span>
-                <span>Body Care</span>
-                <span class="working-process-section__strip-dot">*</span>
-                <span>Fragrances</span>
-                <span class="working-process-section__strip-dot">*</span>
-                <span>Cosmetic Packaging</span>
-                <span class="working-process-section__strip-dot">*</span>
-              <?php endfor; ?>
-            </div>
-            <div class="working-process-section__strip-brand">mybrandplease.com</div>
-          </div>
-          <div class="working-process-section__inner">
-            <div class="working-process-section__intro">
-              <span class="working-process-section__eyebrow">Private Label</span>
-              <h2 class="working-process-section__title">Why launch<br>your own brand</h2>
-              <p class="working-process-section__lead">
-                Enhance your brand reputation and profitability with premium private label cosmetic products, low minimum order quantity, and competitive pricing.
-              </p>
-            </div>
-            <div class="working-process-section__track-wrap">
-              <div class="working-process-section__track" data-working-process-track>
-                <?php
-                  $workingProcessSteps = [
-                    [
-                      'title_small' => 'Brand',
-                      'title_large' => 'Equity',
-                      'text' => 'Building sales of your own skin and hair care brand strengthens your prestige with customers and in the market.',
-                      'href' => 'contact.php',
-                      'image' => 'assets/imgs/home/4.png',
-                      'alt' => 'Brand equity',
-                    ],
-                    [
-                      'title_small' => 'Client',
-                      'title_large' => 'Retention',
-                      'text' => 'Retain customers with your own brand while offering premium product experiences at strong pricing, helping you create brand loyalty.',
-                      'href' => 'contact.php',
-                      'image' => 'assets/imgs/home/3.png',
-                      'alt' => 'Customer loyalty',
-                    ],
-                     [
-                      'title_small' => 'Increased',
-                      'title_large' => 'Sales',
-                      'text' => 'Market your own brand with margin and product sale price in your control, giving you stronger flexibility in marketing approach and decisions.',
-                      'href' => 'contact.php',
-                      'image' => 'assets/imgs/home/2.png',
-                      'alt' => 'Increased sales',
-                    ],
-                    [
-                      'title_small' => 'Higher',
-                      'title_large' => 'Profits',
-                      'text' => 'Our high-quality natural and organic-based skin and hair care products are offered at costs comparable to or lower than leading brands, while you set the sale price.',
-                      'href' => 'contact.php',
-                      'image' => 'assets/imgs/home/1.png',
-                      'alt' => 'Profit growth',
-                    ],
-                    
-                    
-                  ];
-                ?>
-                <?php foreach ($workingProcessSteps as $processStep): ?>
-                  <article class="working-process-card">
-                    <div class="working-process-card__top">
-                      <span class="working-process-card__label">
-                        <span class="working-process-card__spark" aria-hidden="true">&starf;</span>
-                        <span>Benefits of having your own brand</span>
-                      </span>
-                      <a class="working-process-card__link" href="<?php echo url($processStep['href']); ?>">
-                        <span aria-hidden="true">&nearr;</span>
-                        <!-- <span>Explore</span> -->
-                      </a>
-                    </div>
-                    <span class="working-process-card__image">
-                      <img src="<?php echo url($processStep['image']); ?>" alt="<?php echo htmlspecialchars($processStep['alt'], ENT_QUOTES, 'UTF-8'); ?>">
-                    </span>
-                    <h3 class="working-process-card__title">
-                      <span class="working-process-card__title-small"><?php echo htmlspecialchars($processStep['title_small'], ENT_QUOTES, 'UTF-8'); ?></span>
-                      <span class="working-process-card__title-large"><?php echo htmlspecialchars($processStep['title_large'], ENT_QUOTES, 'UTF-8'); ?></span>
-                    </h3>
-                    <p class="working-process-card__text"><?php echo htmlspecialchars($processStep['text'], ENT_QUOTES, 'UTF-8'); ?></p>
-                  </article>
-                <?php endforeach; ?>
-              </div>
-            </div>
-            <!-- <div class="working-process-section__steps-bg" aria-hidden="true">mybrandplease.com</div> -->
-          </div>
-        </section>
-        <!-- Working Process Section End -->
+<section class="working-process-section" aria-label="<?php echo htmlspecialchars(($workingProcessContent['title_span_text'] ?? 'Why launch') . ' ' . ($workingProcessContent['title_text'] ?? 'your own brand'), ENT_QUOTES, 'UTF-8'); ?>">
 
+    <div class="working-process-section__strip" aria-label="mybrandplease creative services">
+
+        <div class="working-process-section__strip-services">
+
+            <?php
+            $marqueeStrip = cms_get_home_marquee_strip('working_process_services');
+            $marqueeItems = $marqueeStrip['items'] ?? [
+                'Skin Care',
+                'Hair Care',
+                'Body Care',
+                'Fragrances',
+                'Cosmetic Packaging'
+            ];
+
+            for ($stripLoop = 0; $stripLoop < 2; $stripLoop++):
+                foreach ($marqueeItems as $item):
+            ?>
+
+                <span><?php echo htmlspecialchars($item, ENT_QUOTES, 'UTF-8'); ?></span>
+                <span class="working-process-section__strip-dot">*</span>
+
+            <?php
+                endforeach;
+            endfor;
+            ?>
+
+        </div>
+
+        <div class="working-process-section__strip-brand">
+            <?php echo htmlspecialchars($marqueeStrip['brand_text'] ?? 'mybrandplease.com', ENT_QUOTES, 'UTF-8'); ?>
+        </div>
+
+    </div>
+
+    <div class="working-process-section__inner">
+
+        <div class="working-process-section__intro">
+
+            <span class="working-process-section__eyebrow">
+                <?php echo htmlspecialchars($workingProcessContent['eyebrow_text'] ?? 'Private Label', ENT_QUOTES, 'UTF-8'); ?>
+            </span>
+
+            <h2 class="working-process-section__title">
+                <span class="working-process-section__title-span"><?php echo htmlspecialchars($workingProcessContent['title_span_text'] ?? 'Why launch', ENT_QUOTES, 'UTF-8'); ?></span><br><?php echo $workingProcessContent['title_text'] ?? 'your own brand'; ?>
+            </h2>
+
+            <p class="working-process-section__lead">
+                <?php echo htmlspecialchars($workingProcessContent['description_text'] ?? 'Enhance your brand reputation and profitability with premium private label cosmetic products, low minimum order quantity, and competitive pricing.', ENT_QUOTES, 'UTF-8'); ?>
+            </p>
+
+        </div>
+
+        <?php
+        $workingProcessSteps = cms_get_home_working_process();
+        ?>
+
+        <div class="working-process-section__track-wrap">
+
+            <div class="working-process-section__track"
+                 data-working-process-track
+                 data-animation-mode="<?php echo htmlspecialchars($workingProcessContent['animation_mode'] ?? 'default', ENT_QUOTES, 'UTF-8'); ?>">
+
+                <?php foreach ($workingProcessSteps as $processStep): ?>
+
+                    <article class="working-process-card">
+
+                        <div class="working-process-card__top">
+
+                            <span class="working-process-card__label">
+
+                                <span class="working-process-card__spark">
+                                    &starf;
+                                </span>
+
+                                <span>
+                                    Benefits of having your own brand
+                                </span>
+
+                            </span>
+
+                            <a class="working-process-card__link"
+                               href="<?php echo url($processStep['href']); ?>">
+
+                                <span aria-hidden="true">
+                                    &nearr;
+                                </span>
+
+                            </a>
+
+                        </div>
+
+                        <span class="working-process-card__image">
+
+                            <img
+                                src="<?php echo url($processStep['image_path']); ?>"
+                                alt="<?php echo htmlspecialchars($processStep['alt_text'], ENT_QUOTES, 'UTF-8'); ?>">
+
+                        </span>
+
+                        <h3 class="working-process-card__title">
+
+                            <span class="working-process-card__title-small">
+                                <?php echo htmlspecialchars($processStep['title_small'], ENT_QUOTES, 'UTF-8'); ?>
+                            </span>
+
+                            <span class="working-process-card__title-large">
+                                <?php echo htmlspecialchars($processStep['title_large'], ENT_QUOTES, 'UTF-8'); ?>
+                            </span>
+
+                        </h3>
+
+                        <p class="working-process-card__text">
+                            <?php echo htmlspecialchars($processStep['text'], ENT_QUOTES, 'UTF-8'); ?>
+                        </p>
+
+                    </article>
+
+                <?php endforeach; ?>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+<!-- Working Process Section End -->
 
         
 
@@ -881,44 +923,46 @@ document.addEventListener('DOMContentLoaded', function () {
         </section> -->
 
         
+        <?php
+          $brandBuilder = cms_get_home_brand_builder();
+          $brandBuilderItems = cms_get_home_brand_builder_items();
+        ?>
         <section class="brand-builder section-spacing-120" aria-labelledby="brandBuilderTitle">
           <div class="container ">
             <div class="brand-builder__shell">
               <div class="brand-builder__media">
                 <img
                   class="brand-builder__image"
-                  src="<?php echo url('assets/imgs/modern/1.jpg'); ?>"
-                  alt="Skin care product category"
+                  src="<?php echo url($brandBuilderItems[0]['image_path'] ?? 'assets/imgs/modern/1.jpg'); ?>"
+                  alt="<?php echo htmlspecialchars($brandBuilderItems[0]['image_alt'] ?? 'Skin care product category', ENT_QUOTES, 'UTF-8'); ?>"
                   data-brand-builder-image
                 >
               </div>
 
               <div class="brand-builder__content">
-                <p class="brand-builder__kicker">Just add your brand.<br>mybrandplease.com handles the rest.</p>
+                <p class="brand-builder__kicker"><?php echo $brandBuilder['kicker_text'] ?? 'Just add your brand.<br>mybrandplease.com handles the rest.'; ?></p>
                 <h2 class="brand-builder__title" id="brandBuilderTitle">
-                  The modern<br>
-                  way to build a<br>
-                  <span class="brand-builder__changing-word" data-brand-builder-word>skin care</span> <br>brand
+                  <?php echo $brandBuilder['title_text'] ?? 'The modern<br>way to build a<br><span class="brand-builder__changing-word" data-brand-builder-word>skin care</span> <br>brand'; ?>
                 </h2>
-                <p class="brand-builder__subtitle">Start Free Today! - Lowest MOQ | Premium Packaging | World-Class Manufacturing</p>
+                <p class="brand-builder__subtitle"><?php echo htmlspecialchars($brandBuilder['subtitle_text'] ?? 'Start Free Today! - Lowest MOQ | Premium Packaging | World-Class Manufacturing', ENT_QUOTES, 'UTF-8'); ?></p>
 
                 <div class="brand-builder__actions">
-                  <a class="brand-builder__btn brand-builder__btn--primary" href="<?php echo url('shop.php'); ?>">Explore Private Label</a>
-                  <a class="brand-builder__btn brand-builder__btn--secondary" href="<?php echo url('services.php'); ?>">Explore Custom Formulation</a>
+                  <a class="brand-builder__btn brand-builder__btn--primary" href="<?php echo url($brandBuilder['primary_btn_url'] ?? 'shop.php'); ?>"><?php echo htmlspecialchars($brandBuilder['primary_btn_text'] ?? 'Explore Private Label', ENT_QUOTES, 'UTF-8'); ?></a>
+                  <a class="brand-builder__btn brand-builder__btn--secondary" href="<?php echo url($brandBuilder['secondary_btn_url'] ?? 'services.php'); ?>"><?php echo htmlspecialchars($brandBuilder['secondary_btn_text'] ?? 'Explore Custom Formulation', ENT_QUOTES, 'UTF-8'); ?></a>
                 </div>
 
                 <div class="brand-builder__stats" aria-label="Brand growth highlights">
                   <div class="brand-builder__stat">
-                    <span class="brand-builder__stat-number">100K+</span>
-                    <span class="brand-builder__stat-label">Brands built</span>
+                    <span class="brand-builder__stat-number"><?php echo htmlspecialchars($brandBuilder['stat_1_number'] ?? '100K+', ENT_QUOTES, 'UTF-8'); ?></span>
+                    <span class="brand-builder__stat-label"><?php echo htmlspecialchars($brandBuilder['stat_1_label'] ?? 'Brands built', ENT_QUOTES, 'UTF-8'); ?></span>
                   </div>
                   <div class="brand-builder__stat">
-                    <span class="brand-builder__stat-number">4.9 <span class="brand-builder__star">★</span></span>
-                    <span class="brand-builder__stat-label">Over 400 reviews</span>
+                    <span class="brand-builder__stat-number"><?php echo htmlspecialchars($brandBuilder['stat_2_number'] ?? '4.9 ★', ENT_QUOTES, 'UTF-8'); ?></span>
+                    <span class="brand-builder__stat-label"><?php echo htmlspecialchars($brandBuilder['stat_2_label'] ?? 'Over 400 reviews', ENT_QUOTES, 'UTF-8'); ?></span>
                   </div>
                   <div class="brand-builder__stat">
-                    <span class="brand-builder__stat-number">1M+</span>
-                    <span class="brand-builder__stat-label">Orders shipped</span>
+                    <span class="brand-builder__stat-number"><?php echo htmlspecialchars($brandBuilder['stat_3_number'] ?? '1M+', ENT_QUOTES, 'UTF-8'); ?></span>
+                    <span class="brand-builder__stat-label"><?php echo htmlspecialchars($brandBuilder['stat_3_label'] ?? 'Orders shipped', ENT_QUOTES, 'UTF-8'); ?></span>
                   </div>
                 </div>
               </div>
@@ -935,46 +979,41 @@ document.addEventListener('DOMContentLoaded', function () {
 
             var mediaEl = imageEl.closest('.brand-builder__media');
             var items = [
-              { word: 'skin care', image: '<?php echo url('assets/imgs/modern/1.jpg'); ?>', alt: 'Skin care product category', showTitle: true },
-              { word: 'hair care', image: '<?php echo url('assets/imgs/modern/2.jpg'); ?>', alt: 'Hair care product category', showTitle: true },
-              { word: 'body care', image: '<?php echo url('assets/imgs/modern/3.jpg'); ?>', alt: 'Body care product category', showTitle: true },
-              { word: 'bath products', image: '<?php echo url('assets/imgs/modern/4.jpg'); ?>', alt: 'Bath products category', showTitle: true },
-              { word: 'styling products', image: '<?php echo url('assets/imgs/modern/5.jpg'); ?>', alt: 'Styling products category', showTitle: true },
-              { word: 'wellness products', image: '<?php echo url('assets/imgs/modern/6.jpg'); ?>', alt: 'Wellness products category', showTitle: true },
-              { word: 'nature inspired', image: '<?php echo url('assets/imgs/modern/7.jpg'); ?>', alt: 'Facial masks category', showTitle: true },
-              { word: 'essential oils', image: '<?php echo url('assets/imgs/modern/8.jpg'); ?>', alt: 'Essential oils category', showTitle: true },
-              { word: "men's grooming", image: '<?php echo url('assets/imgs/modern/9.jpg'); ?>', alt: "Men's grooming category", showTitle: true },
-              { word: 'lip balm & scrub', image: '<?php echo url('assets/imgs/modern/10.jpg'); ?>', alt: 'Lip balm and scrub category', showTitle: true },
-              { word: 'handmade soaps', image: '<?php echo url('assets/imgs/modern/11.jpg'); ?>', alt: 'Handmade soaps category', showTitle: true },
-              { word: 'medicated soaps', image: '<?php echo url('assets/imgs/modern/12.jpg'); ?>', alt: 'Medicated soaps category', showTitle: true },
-              { word: 'beauty soaps', image: '<?php echo url('assets/imgs/modern/13.jpg'); ?>', alt: 'Beauty soaps category', showTitle: true },
-              { word: 'scented candles', image: '<?php echo url('assets/imgs/modern/14.jpg'); ?>', alt: 'Scented candles category', showTitle: true },
-              { word: 'reed diffusers', image: '<?php echo url('assets/imgs/modern/15.jpg'); ?>', alt: 'Reed diffusers category', showTitle: true }
+              <?php foreach ($brandBuilderItems as $item): ?>
+              {
+                word: '<?php echo htmlspecialchars($item['word_text'], ENT_QUOTES, 'UTF-8'); ?>',
+                image: '<?php echo url($item['image_path']); ?>',
+                alt: '<?php echo htmlspecialchars($item['image_alt'], ENT_QUOTES, 'UTF-8'); ?>',
+                showTitle: true
+              },
+              <?php endforeach; ?>
             ];
             var index = 0;
 
-            setInterval(function () {
-              index = (index + 1) % items.length;
-              wordEl.classList.add('is-changing');
-              if (mediaEl) mediaEl.classList.add('is-changing');
+            if (items.length > 1) {
+              setInterval(function () {
+                index = (index + 1) % items.length;
+                wordEl.classList.add('is-changing');
+                if (mediaEl) mediaEl.classList.add('is-changing');
 
-              setTimeout(function () {
-                var item = items[index];
-                wordEl.textContent = item.word;
-                imageEl.src = item.image;
-                imageEl.alt = item.alt;
-                if (mediaTitleEl) {
-                  mediaTitleEl.textContent = item.word;
-                  mediaTitleEl.classList.toggle('is-visible', item.showTitle);
-                }
-                wordEl.classList.remove('is-changing');
-                if (mediaEl) mediaEl.classList.remove('is-changing');
-              }, 260);
-            }, 2000);
+                setTimeout(function () {
+                  var item = items[index];
+                  wordEl.textContent = item.word;
+                  imageEl.src = item.image;
+                  imageEl.alt = item.alt;
+                  if (mediaTitleEl) {
+                    mediaTitleEl.textContent = item.word;
+                    mediaTitleEl.classList.toggle('is-visible', item.showTitle);
+                  }
+                  wordEl.classList.remove('is-changing');
+                  if (mediaEl) mediaEl.classList.remove('is-changing');
+                }, 260);
+              }, 2000);
+            }
           });
         </script>
 
-        <!-- new section -->
+        <?php $gettingStartedSteps = cms_get_home_getting_started(); ?>
         <section class="gs-process gs-section section-spacing-120 ">
           <div class="petal petal--1"></div>
           <div class="petal petal--2"></div>
@@ -989,81 +1028,26 @@ document.addEventListener('DOMContentLoaded', function () {
             </p>
 
             <div class="gs-process__grid gs-grid">
+              <?php foreach ($gettingStartedSteps as $step): ?>
               <div class="gs-process__card gs-card">
                 <div class="gs-process__card-inner">
                   <div class="gs-process__card-face gs-process__card-front">
                     <div class="gs-process__icon gs-icon">
-                      <span class="gs-process__icon-glyph" aria-hidden="true">🎨</span>
-                      <span class="gs-process__step gs-step">01</span>
+                      <span class="gs-process__icon-glyph" aria-hidden="true"><?php echo htmlspecialchars($step['icon_emoji'] ?? '📦', ENT_QUOTES, 'UTF-8'); ?></span>
+                      <span class="gs-process__step gs-step"><?php echo htmlspecialchars($step['step_number'] ?? '', ENT_QUOTES, 'UTF-8'); ?></span>
                     </div>
-                    <div class="gs-process__card-title gs-card-title">Order Sample &amp; Determine Products</div>
+                    <div class="gs-process__card-title gs-card-title"><?php echo htmlspecialchars($step['title'] ?? '', ENT_QUOTES, 'UTF-8'); ?></div>
                     <p class="gs-process__card-text gs-card-text">
-                      We offer over 200 formulations in body, skin, and hair care. Choose your favourites that you know your clients will love and order samples online.
+                      <?php echo htmlspecialchars($step['description'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
                     </p>
-                    <a href="how-it-works.php#define-offerings" class="gs-process__card-link gs-card-link">Learn more</a>
+                    <a href="<?php echo htmlspecialchars($step['learn_more_url'] ?? '#', ENT_QUOTES, 'UTF-8'); ?>" class="gs-process__card-link gs-card-link">Learn more</a>
                   </div>
                   <div class="gs-process__card-face gs-process__card-back">
-                    <img src="<?php echo url('assets/imgs/how-it-works/1.png'); ?>" alt="Order samples and determine products">
+                    <img src="<?php echo url($step['back_image_path'] ?? 'assets/imgs/how-it-works/1.png'); ?>" alt="<?php echo htmlspecialchars($step['back_image_alt'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
                   </div>
                 </div>
               </div>
-
-              <div class="gs-process__card gs-card">
-                <div class="gs-process__card-inner">
-                  <div class="gs-process__card-face gs-process__card-front">
-                    <div class="gs-process__icon gs-icon">
-                      <span class="gs-process__icon-glyph" aria-hidden="true">🧴</span>
-                      <span class="gs-process__step gs-step">02</span>
-                    </div>
-                    <div class="gs-process__card-title gs-card-title">Consult with Us on Packaging</div>
-                    <p class="gs-process__card-text gs-card-text">
-                      Focus on your message and the details of your opening order. Identify which packaging works best with your products and your brand.
-                    </p>
-                    <a href="how-it-works.php#product-components" class="gs-process__card-link gs-card-link">Learn more</a>
-                  </div>
-                  <div class="gs-process__card-face gs-process__card-back">
-                    <img src="<?php echo url('assets/imgs/how-it-works/2.png'); ?>" alt="Choose product packaging components">
-                  </div>
-                </div>
-              </div>
-
-              <div class="gs-process__card gs-card">
-                <div class="gs-process__card-inner">
-                  <div class="gs-process__card-face gs-process__card-front">
-                    <div class="gs-process__icon gs-icon">
-                      <span class="gs-process__icon-glyph" aria-hidden="true">✨</span>
-                      <span class="gs-process__step gs-step">03</span>
-                    </div>
-                    <div class="gs-process__card-title gs-card-title">Get Your Label Designed</div>
-                    <p class="gs-process__card-text gs-card-text">
-                      With the help of our label designing experts, see your brand come to life. We can also assist your designer on label designing of your choice.
-                    </p>
-                    <a href="how-it-works.php#design-and-printing" class="gs-process__card-link gs-card-link">Learn more</a>
-                  </div>
-                  <div class="gs-process__card-face gs-process__card-back">
-                    <img src="<?php echo url('assets/imgs/how-it-works/3.png'); ?>" alt="Label design and printing">
-                  </div>
-                </div>
-              </div>
-
-              <div class="gs-process__card gs-card">
-                <div class="gs-process__card-inner">
-                  <div class="gs-process__card-face gs-process__card-front">
-                    <div class="gs-process__icon gs-icon">
-                      <span class="gs-process__icon-glyph" aria-hidden="true">📦</span>
-                      <span class="gs-process__step gs-step">04</span>
-                    </div>
-                    <div class="gs-process__card-title gs-card-title">Consider Finishing Touches</div>
-                    <p class="gs-process__card-text gs-card-text">
-                      Details are everything. We can assist you with product boxes, shrink wrap, inserts, and much more to perfect your presentation.
-                    </p>
-                    <a href="how-it-works.php#finishing-touches" class="gs-process__card-link gs-card-link">Learn more</a>
-                  </div>
-                  <div class="gs-process__card-face gs-process__card-back">
-                    <img src="<?php echo url('assets/imgs/how-it-works/4.png'); ?>" alt="Finishing touches for private label packaging">
-                  </div>
-                </div>
-              </div>
+              <?php endforeach; ?>
             </div>
 
             <div class="gs-process__cta gs-cta">
@@ -1689,18 +1673,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const cards = window.gsap.utils.toArray('.working-process-card', track);
     if (cards.length < 2) return;
 
+    const animationMode = (track.dataset.animationMode || 'default').trim().toLowerCase();
+    const validAnimationModes = ['default', 'top', 'bottom', 'fade_in', 'zoom', 'spin'];
+    const mode = validAnimationModes.includes(animationMode) ? animationMode : 'default';
+
     window.gsap.set(cards, {
       autoAlpha: 1,
       force3D: true,
       transformOrigin: '50% 54%'
-    });
-
-    window.gsap.set(cards.slice(1), {
-      xPercent: 118,
-      yPercent: 0,
-      rotate: 0,
-      scale: 1,
-      autoAlpha: 1
     });
 
     if (strip) {
@@ -1717,13 +1697,93 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
 
+    if (mode === 'default') {
+      window.gsap.set(cards.slice(1), {
+        xPercent: 118,
+        yPercent: 0,
+        rotate: 0,
+        scale: 1,
+        autoAlpha: 1
+      });
+
+      const timeline = window.gsap.timeline({
+        defaults: { ease: 'none' },
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 100px',
+          end: function () {
+            return '+=' + (window.innerHeight * (cards.length - 1) * 0.48);
+          },
+          scrub: 1.25,
+          pin: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true
+        }
+      });
+
+      if (strip) {
+        timeline.fromTo(strip, {
+          xPercent: -7,
+          scaleX: 0.96
+        }, {
+          xPercent: 0,
+          scaleX: 1,
+          duration: 0.9
+        }, 0);
+      }
+
+      if (stripBrand) {
+        timeline.to(stripBrand, {
+          yPercent: 9,
+          autoAlpha: 1,
+          duration: cards.length * 1.15
+        }, 0);
+      }
+
+      cards.slice(1).forEach(function (card, index) {
+        const previousCards = cards.slice(0, index + 1);
+        const position = index * 1.15;
+        timeline
+          .fromTo(card, {
+            autoAlpha: 1,
+            xPercent: 118,
+            yPercent: 0,
+            rotate: 0,
+            scale: 1
+          }, {
+            autoAlpha: 1,
+            xPercent: 0,
+            yPercent: 0,
+            rotate: 0,
+            scale: 1,
+            duration: 1.25
+          }, position)
+          .to(previousCards, {
+            scale: 0.982 - (index * 0.008),
+            yPercent: -1.4 - (index * 0.9),
+            rotate: -0.45 - (index * 0.22),
+            duration: 1.25
+          }, position);
+      });
+      return;
+    }
+
+    const cardFromStates = {
+      top: { autoAlpha: 0, yPercent: -24, xPercent: 0, scale: 1, rotate: 0 },
+      bottom: { autoAlpha: 0, yPercent: 24, xPercent: 0, scale: 1, rotate: 0 },
+      fade_in: { autoAlpha: 0, yPercent: 16, xPercent: 0, scale: 0.98, rotate: 0 },
+      zoom: { autoAlpha: 0, yPercent: 16, xPercent: 0, scale: 0.72, rotate: 0 },
+      spin: { autoAlpha: 0, yPercent: 8, xPercent: 0, scale: 0.94, rotate: -14 }
+    };
+
+    const fromState = cardFromStates[mode] || cardFromStates.fade_in;
     const timeline = window.gsap.timeline({
-      defaults: { ease: 'none' },
+      defaults: { ease: 'power3.out' },
       scrollTrigger: {
         trigger: section,
         start: 'top 100px',
         end: function () {
-          return '+=' + (window.innerHeight * (cards.length - 1) * 0.48);
+          return '+=' + (window.innerHeight * Math.max(1, cards.length - 1) * 0.75);
         },
         scrub: 1.25,
         pin: true,
@@ -1747,34 +1807,19 @@ document.addEventListener('DOMContentLoaded', function () {
       timeline.to(stripBrand, {
         yPercent: 9,
         autoAlpha: 1,
-        duration: cards.length * 1.15
+        duration: cards.length * 1.1
       }, 0);
     }
 
-    cards.slice(1).forEach(function (card, index) {
-      const previousCards = cards.slice(0, index + 1);
-      const position = index * 1.15;
-      timeline
-        .fromTo(card, {
-          autoAlpha: 1,
-          xPercent: 118,
-          yPercent: 0,
-          rotate: 0,
-          scale: 1
-        }, {
-          autoAlpha: 1,
-          xPercent: 0,
-          yPercent: 0,
-          rotate: 0,
-          scale: 1,
-          duration: 1.25
-        }, position)
-        .to(previousCards, {
-          scale: 0.982 - (index * 0.008),
-          yPercent: -1.4 - (index * 0.9),
-          rotate: -0.45 - (index * 0.22),
-          duration: 1.25
-        }, position);
+    cards.forEach(function (card, index) {
+      timeline.fromTo(card, fromState, {
+        autoAlpha: 1,
+        yPercent: 0,
+        xPercent: 0,
+        scale: 1,
+        rotate: 0,
+        duration: 1
+      }, index * 1.1);
     });
   });
 </script>
@@ -1966,71 +2011,39 @@ document.addEventListener('DOMContentLoaded', function () {
             <div class="section-heading wow fadeInUp" data-wow-delay=".3s">
               <h2 class="section-heading__title partners-carousel-section__title">~ Our Manufactured Products are Sold at ~</h2>
             </div>
-            <?php
-              $partnerCompanies = [
-                ['src' => 'assets/imgs/home/Amazon-logo-min-300x126.jpg', 'alt' => 'Amazon'],
-                ['src' => 'assets/imgs/home/Costco_Wholesale_logo-min-300x108.jpg', 'alt' => 'Costco'],
-                ['src' => 'assets/imgs/home/desertcart-logo-min-300x74.jpg', 'alt' => 'Desert Cart'],
-                ['src' => 'assets/imgs/home/EBay_logo-min-300x120.jpg', 'alt' => 'eBay'],
-                ['src' => 'assets/imgs/home/Etsy-min-300x171.jpg', 'alt' => 'Etsy'],
-                ['src' => 'assets/imgs/home/final_logo_1_37ee31bf-a041-4af1-9b0e-d86fd4b2da83-300x85.jpg', 'alt' => 'MyBrand'],
-                ['src' => 'assets/imgs/home/iherb-min-300x117.jpg', 'alt' => 'iHerb'],
-                ['src' => 'assets/imgs/home/Macys_Logo-min-300x86.jpg', 'alt' => 'Macy\'s'],
-                ['src' => 'assets/imgs/home/Nordstrom-logo-min-300x169.jpg', 'alt' => 'Nordstrom'],
-                ['src' => 'assets/imgs/home/Saks_Fifth_Avenue_Logo_-min-300x225.jpg', 'alt' => 'Saks Fifth Avenue'],
-                ['src' => 'assets/imgs/home/target-min-300x83.jpg', 'alt' => 'Target'],
-                ['src' => 'assets/imgs/home/the-detox-market-min-300x28.jpg', 'alt' => 'The Detox Market'],
-                ['src' => 'assets/imgs/home/TJ_Maxx-min-300x96.jpg', 'alt' => 'TJ Maxx'],
-                ['src' => 'assets/imgs/home/Walmart_logo.svg-min-300x72.jpg', 'alt' => 'Walmart'],
-              ];
-            ?>
+            <?php $homePartnerLogos = cms_get_home_partner_logos(); ?>
+            <?php if (!empty($homePartnerLogos)): ?>
             <div class="partners-carousel-track">
               <div class="partners-carousel-list">
                 <?php for ($loop = 0; $loop < 2; $loop++): ?>
-                  <?php foreach ($partnerCompanies as $company): ?>
+                  <?php foreach ($homePartnerLogos as $company): ?>
                     <div class="partners-carousel-card"<?php echo $loop === 1 ? ' aria-hidden="true"' : ''; ?>>
-                      <img src="<?php echo htmlspecialchars($company['src'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($company['alt'], ENT_QUOTES, 'UTF-8'); ?>">
+                      <img src="<?php echo htmlspecialchars(url($company['logo_path']), ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($company['alt_text'], ENT_QUOTES, 'UTF-8'); ?>">
                     </div>
                   <?php endforeach; ?>
                 <?php endfor; ?>
               </div>
             </div>
+            <?php endif; ?>
           </div>
         </section>
         <!-- Auto-scroll Section End -->
 
 
-<?php
-  $partnerLogos = [
-    ['src' => 'assets/imgs/partner-logos/31.png', 'alt' => 'TÜV Rheinland'],
-    ['src' => 'assets/imgs/partner-logos/CLEAN%20LABEL.png', 'alt' => 'Clean Label'],
-    ['src' => 'assets/imgs/partner-logos/COSMOS.png', 'alt' => 'Cosmos'],
-    ['src' => 'assets/imgs/partner-logos/CPNP.png', 'alt' => 'CPNP Registered'],
-    ['src' => 'assets/imgs/partner-logos/CREDO%20New.png', 'alt' => 'Credo'],
-    ['src' => 'assets/imgs/partner-logos/Cruelty%20Free.png', 'alt' => 'Cruelty Free'],
-    ['src' => 'assets/imgs/partner-logos/EWG.png', 'alt' => 'EWG Verified'],
-    ['src' => 'assets/imgs/partner-logos/GLP.png', 'alt' => 'GLP Certified'],
-    ['src' => 'assets/imgs/partner-logos/GMP.png', 'alt' => 'GMP Certified'],
-    ['src' => 'assets/imgs/partner-logos/LOW%20MOQ.png', 'alt' => 'Low MOQ'],
-    ['src' => 'assets/imgs/partner-logos/MADE%20SAFE.png', 'alt' => 'Made Safe'],
-    ['src' => 'assets/imgs/partner-logos/MOCRA.png', 'alt' => 'MOCRA Compliant'],
-    ['src' => 'assets/imgs/partner-logos/SEPHORA.png', 'alt' => 'Sephora'],
-    ['src' => 'assets/imgs/partner-logos/USDA%20ORGANIC.png', 'alt' => 'USDA Organic'],
-    ['src' => 'assets/imgs/partner-logos/USFDA.png', 'alt' => 'FDA Registered'],
-    ['src' => 'assets/imgs/partner-logos/VEGAN.png', 'alt' => 'Vegan'],
-  ];
-?>
+<?php $homeCertificationLogos = cms_get_home_certification_logos(); ?>
 <section class="auto-scroll-section auto-scroll-section--footer rr-ov-hidden">
   <div class="auto-scroll-wrapper">
     <div class="auto-scroll-content">
-      <?php for ($loop = 0; $loop < 2; $loop++): ?>
-        <?php foreach ($partnerLogos as $logo): ?>
-          <div class="auto-scroll-item"<?php echo $loop === 1 ? ' aria-hidden="true"' : ''; ?>>
-            <img src="<?php echo htmlspecialchars($logo['src'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($logo['alt'], ENT_QUOTES, 'UTF-8'); ?>">
-            <span class="auto-scroll-label"><?php echo htmlspecialchars($logo['alt'], ENT_QUOTES, 'UTF-8'); ?></span>
-          </div>
-        <?php endforeach; ?>
-      <?php endfor; ?>
+      <?php if (!empty($homeCertificationLogos)): ?>
+        <?php for ($loop = 0; $loop < 2; $loop++): ?>
+          <?php foreach ($homeCertificationLogos as $logo): ?>
+            <div class="auto-scroll-item"<?php echo $loop === 1 ? ' aria-hidden="true"' : ''; ?>>
+              <img src="<?php echo htmlspecialchars(url($logo['logo_path']), ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($logo['alt_text'], ENT_QUOTES, 'UTF-8'); ?>">
+              <span class="auto-scroll-label"><?php echo htmlspecialchars($logo['alt_text'], ENT_QUOTES, 'UTF-8'); ?></span>
+            </div>
+          <?php endforeach; ?>
+        <?php endfor; ?>
+      <?php endif; ?>
     </div>
   </div>
 </section>

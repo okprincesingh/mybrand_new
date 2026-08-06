@@ -1,0 +1,120 @@
+﻿
+.header-area.header-layoutone.home-header-overlay.is-home-header-visible .header-shell {
+  background: rgba(255, 255, 255, 0.72);
+}
+
+/* Why launch brand stacked scroll */
+.working-process-section {
+  position: relative;
+  overflow: hidden;
+  min-height: clamp(480px, 58vh, 620px);
+  padding-left: clamp(166px, 12vw, 205px);
+  background:
+    radial-gradient(circle at 16% 18%, rgba(238, 45, 122, 0.14), transparent 28%),
+    radial-gradient(circle at 84% 18%, rgba(255, 196, 97, 0.14), transparent 26%),
+    linear-gradient(145deg, #fff8fb 0%, #fff 46%, #fff1f6 100%);
+  color: var(--text-color-one);
+  isolation: isolate;
+}
+
+.working-process-section__inner {
+  position: relative;
+  min-height: clamp(430px, 48vh, 560px);
+  display: grid;
+  grid-template-columns: minmax(260px, 31vw) 1fr;
+  align-items: start;
+  gap: clamp(30px, 2vw, 78px);
+  padding: clamp(32px, 4vh, 48px) 0 clamp(28px, 4.4vh, 52px) clamp(26px, 9vw, 125px);
+}
+
+@media (min-width: 1600px) {
+  .working-process-section {
+    min-height: clamp(430px, 44vh, 540px);
+    padding-left: 0;
+  }
+
+  .working-process-section__inner {
+    width: min(100%, 1680px);
+    min-height: clamp(390px, 40vh, 500px);
+    margin: 0 auto;
+    grid-template-columns: minmax(330px, 420px) minmax(560px, 720px);
+    justify-content: center;
+    align-items: center;
+    gap: clamp(90px, 7vw, 160px);
+    padding: clamp(28px, 3vh, 42px) clamp(72px, 7vw, 140px) clamp(24px, 3vh, 38px) clamp(210px, 13vw, 270px);
+  }
+}
+
+@media (min-width: 2200px) {
+  .working-process-section {
+    min-height: clamp(420px, 41vh, 520px);
+  }
+
+  .working-process-section__inner {
+    width: min(100%, 1820px);
+    min-height: clamp(380px, 38vh, 480px);
+    grid-template-columns: 430px 760px;
+    gap: clamp(120px, 7vw, 190px);
+    padding-left: clamp(250px, 12vw, 310px);
+    padding-right: clamp(110px, 8vw, 180px);
+  }
+}
+
+.working-process-section__strip {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  bottom: 0;
+  left: clamp(18px, 8.2vw, 125px);
+  width: clamp(150px, 11vw, 185px);
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.9) 0 32%, rgba(255, 239, 242, 0.97) 32% 100%),
+    linear-gradient(180deg, var(--primary) 0%, #fff7fa 46%, var(--secondary) 100%);
+  color: var(--primary-two);
+  overflow: hidden;
+  isolation: isolate;
+  box-shadow: inset -1px 0 0 rgba(238, 45, 122, 0.12), 18px 0 36px rgba(238, 45, 122, 0.08);
+  transform: translateZ(0);
+}
+
+@media (min-width: 1600px) {
+  .working-process-section__strip {
+    left: max(42px, calc((100vw - 1680px) / 2 + 52px));
+    width: clamp(150px, 8vw, 190px);
+  }
+}
+
+@media (min-width: 2200px) {
+  .working-process-section__strip {
+    left: max(54px, calc((100vw - 1820px) / 2 + 64px));
+  }
+}
+
+.working-process-section__strip::before {
+  position: absolute;
+  content: "";
+  inset: 0;
+  background:
+    radial-gradient(circle at 24% 16%, rgba(238, 45, 122, 0.42) 0 2px, transparent 3px),
+    radial-gradient(circle at 76% 27%, rgba(238, 45, 122, 0.2) 0 2px, transparent 3px),
+    linear-gradient(180deg, rgba(238, 45, 122, 0.12), transparent 32%, rgba(234, 242, 245, 0.38));
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.working-process-section__strip::after {
+  content: "";
+  position: absolute;
+  z-index: 5;
+  inset: -28% 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.68) 46%, transparent 68%);
+  mix-blend-mode: screen;
+  opacity: 0.7;
+  transform: translateY(-58%);
+  animation: workingProcessStripSweep 5.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.working-process-section__strip-services {
+  position: absolute;
+  z-index: 4;

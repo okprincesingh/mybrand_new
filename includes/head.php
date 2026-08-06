@@ -3,6 +3,7 @@ require_once __DIR__ . '/url.php';
 require_once __DIR__ . '/security.php';
 require_once __DIR__ . '/captcha.php';
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/preview.php';
 
 $meta = $meta ?? [];
 
@@ -48,7 +49,7 @@ $brandSearch = ['mybrandplease', 'my brandplease'];
 $title = str_ireplace($brandSearch, 'mybrandplease', (string) $title);
 $description = str_ireplace($brandSearch, 'mybrandplease', (string) $description);
 $keywords = str_ireplace($brandSearch, 'mybrandplease', (string) $keywords);
-$robots = $meta['robots'] ?? 'index,follow';
+$robots = $meta['robots'] ?? preview_mode_robots_meta();
 $favicon = $meta['favicon'] ?? 'assets/imgs/logo/favicon-white.png';
 $canonical = $meta['canonical'] ?? ltrim(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/', '/');
 $breadcrumbBackgroundPath = function_exists('cms_get_breadcrumb_background_path')
@@ -728,3 +729,4 @@ if ($isAosPage) {
 <?php echo captcha_head_script(); ?>
 </head>
 <body>
+<?php echo preview_mode_banner(); ?>

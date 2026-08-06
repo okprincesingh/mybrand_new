@@ -74,11 +74,11 @@ if (!function_exists('app_base_path')) {
 }
 
 if (!function_exists('url')) {
-    function url(string $path = ''): string
+    function url(?string $path = ''): string
     {
         $base = rtrim(base_url() . app_base_path(), '/');
 
-        if ($path === '') {
+        if ($path === '' || $path === null) {
             return $base . '/';
         }
 
