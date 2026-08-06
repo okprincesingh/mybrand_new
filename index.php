@@ -865,7 +865,12 @@ document.addEventListener('DOMContentLoaded', function () {
           });
         </script>
 
-        <?php $gettingStartedSteps = cms_get_home_getting_started(); ?>
+        <?php
+          $gettingStartedSteps = cms_get_home_getting_started();
+          $gettingStartedContent = cms_get_home_getting_started_content();
+          $rawHeading = trim($gettingStartedContent['heading_text'] ?? "Here's How To Get Started");
+          $cleanHeading = trim($rawHeading, "~\t\n\r\0\x0B ");
+        ?>
         <section class="gs-process gs-section section-spacing-120 ">
           <div class="petal petal--1"></div>
           <div class="petal petal--2"></div>
@@ -873,10 +878,10 @@ document.addEventListener('DOMContentLoaded', function () {
           <div class="petal petal--4"></div>
 
           <div class="gs-process__inner gs-inner container">
-            <h1 class="gs-process__title gs-title">~ <em>Here's How To Get Started</em> ~</h1>
+            <h1 class="gs-process__title gs-title">~ <em><?php echo htmlspecialchars($cleanHeading, ENT_QUOTES, 'UTF-8'); ?></em> ~</h1>
 
             <p class="gs-process__subtitle gs-subtitle">
-              You know your brand and customers best. Let us help you build a custom private label line of offerings that are as unique as your brand.
+              <?php echo htmlspecialchars($gettingStartedContent['description_text'] ?? 'You know your brand and customers best. Let us help you build a custom private label line of offerings that are as unique as your brand.', ENT_QUOTES, 'UTF-8'); ?>
             </p>
 
             <div class="gs-process__grid gs-grid">

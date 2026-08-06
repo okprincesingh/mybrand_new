@@ -436,3 +436,15 @@ CREATE TABLE IF NOT EXISTS home_cta_cards (
   INDEX idx_home_cta_cards_active_order (is_active, sort_order, id),
   INDEX idx_home_cta_cards_key (card_key)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- Getting Started Section Content
+CREATE TABLE IF NOT EXISTS home_getting_started_content (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  section_key VARCHAR(120) NOT NULL UNIQUE,
+  heading_text VARCHAR(255) NOT NULL,
+  description_text TEXT NOT NULL,
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

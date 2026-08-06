@@ -256,6 +256,33 @@ ON DUPLICATE KEY UPDATE
     }
   }
   
+  if ($action === 'save_getting_started_content' && $tab === 'getting_started') {
+    $headingText = trim((string) ($_POST['heading_text'] ?? "Here's How To Get Started"));
+    $descriptionText = trim((string) ($_POST['description_text'] ?? ''));
+    $isActive = isset($_POST['is_active']) ? 1 : 0;
+    
+    $pdo = db();
+    $stmt = $pdo->prepare("
+INSERT INTO home_getting_started_content
+    (section_key, heading_text, description_text, is_active)
+VALUES
+    (:section_key, :heading_text, :description_text, :is_active)
+ON DUPLICATE KEY UPDATE
+    heading_text = VALUES(heading_text),
+    description_text = VALUES(description_text),
+    is_active = VALUES(is_active),
+    updated_at = CURRENT_TIMESTAMP
+");
+    $stmt->execute([
+      ':section_key' => 'main',
+      ':heading_text' => $headingText,
+      ':description_text' => $descriptionText,
+      ':is_active' => $isActive,
+    ]);
+    cms_invalidate_home_getting_started_content_cache();
+    $successMessage = 'Getting started section header & intro text updated successfully';
+  }
+  
   if ($action === 'save_getting_started' && $tab === 'getting_started') {
     $id = (int) ($_POST['id'] ?? 0);
     $stepNumber = trim((string) ($_POST['step_number'] ?? ''));
@@ -505,6 +532,7 @@ if (empty($brandBuilderItemsAdmin)) {
   $brandBuilderItemsAdmin = db_fetch_all($pdo, 'SELECT * FROM home_brand_builder_items ORDER BY sort_order ASC, id ASC');
 }
 $gettingStartedSteps = db_fetch_all($pdo, 'SELECT * FROM home_getting_started ORDER BY sort_order ASC, id ASC');
+$gettingStartedContent = cms_get_home_getting_started_content();
 $marqueeStrip = db_fetch_one($pdo, 'SELECT * FROM home_marquee_strips WHERE strip_key = :k LIMIT 1', [':k' => 'working_process_services']);
 $partnerLogos = db_fetch_all($pdo, 'SELECT * FROM home_partner_logos ORDER BY sort_order ASC, id ASC');
 $certificationLogos = db_fetch_all($pdo, 'SELECT * FROM home_certification_logos ORDER BY sort_order ASC, id ASC');
@@ -976,6 +1004,38 @@ include __DIR__ . '/_layout_top.php';
 
   <!-- ===================== GETTING STARTED ===================== -->
   <div class="tab-pane fade <?php echo $activeTab === 'getting_started' ? 'show active' : ''; ?>" id="getting-started" role="tabpanel">
+
+    <!-- Getting Started Section Header & Intro (Update-Only) -->
+    <div class="widget-card mb-4">
+      <div class="widget-header">
+        <h5 class="widget-title">Getting Started Section Header & Intro Text</h5>
+      </div>
+      <div class="widget-body p-3">
+        <form method="POST" action="" data-section-preview='{"content_type":"home_getting_started_content","entity_id":<?= (int) ($gettingStartedContent['id'] ?? 0) ?>}'>
+          <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+          <input type="hidden" name="action" value="save_getting_started_content">
+          <input type="hidden" name="tab" value="getting_started">
+
+          <div class="mb-3">
+            <label class="form-label">Heading Text <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" name="heading_text" value="<?php echo htmlspecialchars($gettingStartedContent['heading_text'] ?? "Here's How To Get Started", ENT_QUOTES, 'UTF-8'); ?>" placeholder="e.g. Here's How To Get Started" required>
+            <small class="text-muted">Enter the heading text. The formatting (<code>~ &lt;em&gt;Heading&lt;/em&gt; ~</code>) will be automatically applied on the homepage.</small>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Intro Text <span class="text-danger">*</span></label>
+            <textarea class="form-control" name="description_text" rows="3" placeholder="Enter intro description..." required><?php echo htmlspecialchars($gettingStartedContent['description_text'] ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
+          </div>
+
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" name="is_active" id="gs_content_active" <?php echo ($gettingStartedContent['is_active'] ?? 1) ? 'checked' : ''; ?>>
+            <label class="form-check-label" for="gs_content_active">Active</label>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Save Section Header & Intro</button>
+        </form>
+      </div>
+    </div>
 
     <div class="widget-card <?php echo $showGettingStartedForm ? '' : 'd-none'; ?>" id="gettingStartedFormCard">
       <div class="widget-header">

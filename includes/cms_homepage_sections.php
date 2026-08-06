@@ -30,6 +30,11 @@ function cms_invalidate_home_getting_started_cache(): void
     cache_delete('cms:home:getting_started');
 }
 
+function cms_invalidate_home_getting_started_content_cache(): void
+{
+    cache_delete('cms:home:getting_started_content');
+}
+
 function cms_invalidate_home_marquee_strips_cache(): void
 {
     cache_delete('cms:home:marquee_strips');
@@ -630,6 +635,59 @@ function cms_get_home_getting_started(): array
             'back_image_alt' => (string) ($row['back_image_alt'] ?? ''),
         ];
     }
+
+    if (!preview_mode_should_bypass_cache()) {
+        cache_set($cacheKey, $out, 300);
+    }
+    return $out;
+}
+
+function cms_get_home_getting_started_content(): array
+{
+    $cacheKey = 'cms:home:getting_started_content';
+    if (!preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $fallback = [
+        'section_key' => 'main',
+        'heading_text' => "Here's How To Get Started",
+        'description_text' => 'You know your brand and customers best. Let us help you build a custom private label line of offerings that are as unique as your brand.',
+        'is_active' => 1,
+    ];
+
+    $pdo = db();
+    if (!$pdo) {
+        return $fallback;
+    }
+
+    $activeClause = preview_mode_include_drafts() ? '' : ' AND is_active = 1';
+    $row = db_fetch_one(
+        $pdo,
+        'SELECT * FROM home_getting_started_content WHERE section_key = :k' . $activeClause . ' LIMIT 1',
+        [':k' => 'main']
+    );
+
+    if (!$row) {
+        if (!preview_mode_should_bypass_cache()) {
+            cache_set($cacheKey, $fallback, 300);
+        }
+        return $fallback;
+    }
+
+    if (preview_mode_include_drafts()) {
+        $row = draft_merge_row((array) $row, 'home_getting_started_content', (int) ($row['id'] ?? 0));
+    }
+
+    $out = [
+        'section_key' => (string) ($row['section_key'] ?? 'main'),
+        'heading_text' => (string) ($row['heading_text'] ?? "Here's How To Get Started"),
+        'description_text' => (string) ($row['description_text'] ?? ''),
+        'is_active' => (int) ($row['is_active'] ?? 1),
+    ];
 
     if (!preview_mode_should_bypass_cache()) {
         cache_set($cacheKey, $out, 300);
