@@ -49,6 +49,11 @@ function cms_invalidate_home_hero_videos_cache(): void
     cache_delete(cms_cache_key('home', 'hero_videos'));
 }
 
+function cms_invalidate_home_cta_cards_cache(): void
+{
+    cache_delete(cms_cache_key('home', 'cta_cards'));
+}
+
 function cms_ensure_home_hero_videos_table(PDO $pdo): bool
 {
     static $checked = null;
@@ -1055,4 +1060,112 @@ function cms_get_why_choose_pages(bool $publishedOnly = true): array
     });
 
     return $pages;
+}
+
+function cms_ensure_home_cta_cards_table(PDO $pdo): bool
+{
+    static $checked = null;
+    if ($checked !== null) {
+        return $checked;
+    }
+
+    try {
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS home_cta_cards (
+              id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+              card_key VARCHAR(50) NULL UNIQUE,
+              title VARCHAR(120) NOT NULL,
+              button_text VARCHAR(120) NOT NULL,
+              button_url VARCHAR(255) NOT NULL,
+              image_path VARCHAR(255) NOT NULL,
+              image_alt VARCHAR(255) NULL,
+              sort_order INT NOT NULL DEFAULT 0,
+              is_active TINYINT(1) NOT NULL DEFAULT 1,
+              created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+              updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+              INDEX idx_home_cta_cards_active_order (is_active, sort_order, id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+        ");
+
+        $count = (int) ($pdo->query("SELECT COUNT(*) FROM home_cta_cards")->fetchColumn() ?: 0);
+        if ($count === 0) {
+            $pdo->exec("
+                INSERT INTO home_cta_cards (card_key, title, button_text, button_url, image_path, image_alt, sort_order, is_active) VALUES
+                ('explore_now', 'Explore Now', 'Explore now', 'shop.php', 'assets/imgs/category/category_thumb2.jpeg', 'Explore now thumb', 1, 1),
+                ('try_products', 'Try Our Products', 'Try Our Products', 'shop.php', 'assets/imgs/category/category_thumb3.jpeg', 'Try Our Products thumb', 2, 1),
+                ('contact_us', 'Contact Us', 'Contact Us', 'shop.php', 'assets/imgs/category/category_thumb1.jpeg', 'Contact Us thumb', 3, 1)
+            ");
+        }
+        $checked = true;
+        return true;
+    } catch (Throwable $e) {
+        $checked = false;
+        return false;
+    }
+}
+
+function cms_get_home_cta_cards(): array
+{
+    $cacheKey = cms_cache_key('home', 'cta_cards');
+    if (!preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $fallback = [
+        [
+            'id' => 1,
+            'card_key' => 'explore_now',
+            'title' => 'Explore Now',
+            'button_text' => 'Explore now',
+            'button_url' => 'shop.php',
+            'image_path' => 'assets/imgs/category/category_thumb2.jpeg',
+            'image_alt' => 'Explore now thumb',
+            'sort_order' => 1,
+            'is_active' => 1
+        ],
+        [
+            'id' => 2,
+            'card_key' => 'try_products',
+            'title' => 'Try Our Products',
+            'button_text' => 'Try Our Products',
+            'button_url' => 'shop.php',
+            'image_path' => 'assets/imgs/category/category_thumb3.jpeg',
+            'image_alt' => 'Try Our Products thumb',
+            'sort_order' => 2,
+            'is_active' => 1
+        ],
+        [
+            'id' => 3,
+            'card_key' => 'contact_us',
+            'title' => 'Contact Us',
+            'button_text' => 'Contact Us',
+            'button_url' => 'shop.php',
+            'image_path' => 'assets/imgs/category/category_thumb1.jpeg',
+            'image_alt' => 'Contact Us thumb',
+            'sort_order' => 3,
+            'is_active' => 1
+        ]
+    ];
+
+    $pdo = db();
+    if (!$pdo) {
+        return $fallback;
+    }
+
+    cms_ensure_home_cta_cards_table($pdo);
+
+    $activeClause = preview_mode_include_drafts() ? '' : ' WHERE is_active = 1';
+    $rows = db_fetch_all($pdo, 'SELECT * FROM home_cta_cards' . $activeClause . ' ORDER BY sort_order ASC, id ASC');
+
+    if (empty($rows)) {
+        return $fallback;
+    }
+
+    if (!preview_mode_should_bypass_cache()) {
+        cache_set($cacheKey, $rows, 300);
+    }
+    return $rows;
 }

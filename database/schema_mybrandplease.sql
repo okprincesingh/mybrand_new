@@ -259,10 +259,17 @@ CREATE INDEX idx_page_section_items_section_sort ON page_section_items (section_
 CREATE INDEX idx_menu_items_menu_active_sort ON menu_items (menu_id, is_active, sort_order, id);
 CREATE INDEX idx_footer_links_section_sort ON footer_links (section_id, sort_order, id);
 CREATE INDEX idx_categories_active_parent_name ON categories (is_active, parent_id, name);
+CREATE INDEX idx_categories_parent_active_sort ON categories (parent_id, is_active, sort_order);
+CREATE INDEX idx_categories_name ON categories (name);
 CREATE INDEX idx_products_active_status_created ON products (is_active, status, created_at, id);
 CREATE INDEX idx_products_active_category_price ON products (is_active, category_id, price, id);
+CREATE INDEX idx_products_cat_active_status_created ON products (category_id, is_active, status, created_at);
+CREATE INDEX idx_products_cat_active_status_price ON products (category_id, is_active, status, price);
+CREATE INDEX idx_products_name ON products (name);
 CREATE INDEX idx_product_images_product_sort ON product_images (product_id, sort_order, id);
 CREATE INDEX idx_product_reviews_product_status ON product_reviews (product_id, status, id);
+CREATE INDEX idx_product_reviews_prod_status_created ON product_reviews (product_id, status, created_at);
+CREATE INDEX idx_product_attributes_prod_key ON product_attributes (product_id, attribute_key);
 
 
 CREATE TABLE IF NOT EXISTS home_slides (
@@ -356,3 +363,19 @@ CREATE TABLE IF NOT EXISTS certificates (
 ) ENGINE=InnoDB;
 
 
+-- Homepage CTA Cards
+CREATE TABLE IF NOT EXISTS home_cta_cards (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  card_key VARCHAR(50) NULL UNIQUE,
+  title VARCHAR(120) NOT NULL,
+  button_text VARCHAR(120) NOT NULL,
+  button_url VARCHAR(255) NOT NULL,
+  image_path VARCHAR(255) NOT NULL,
+  image_alt VARCHAR(255) NULL,
+  sort_order INT NOT NULL DEFAULT 0,
+  is_active TINYINT(1) NOT NULL DEFAULT 1,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_home_cta_cards_active_order (is_active, sort_order, id),
+  INDEX idx_home_cta_cards_key (card_key)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

@@ -616,16 +616,40 @@ document.addEventListener('DOMContentLoaded', function () {
                 <h2 class="section-heading__title">OUR CATEGORY</h2>
               </div> -->
               <div class="row g-4">
-                <div class="col-md-3 col-xl-3">
-                  <div class="category1-item category1-item--from-left" data-category-entrance>
+                <?php
+                $ctaCards = cms_get_home_cta_cards();
+                $cardCount = count($ctaCards);
+                foreach ($ctaCards as $idx => $card):
+                  $imgPath = !empty($card['image_path']) ? url(e((string) $card['image_path'])) : url('assets/imgs/category/category_thumb1.jpeg');
+                  $imgAlt = !empty($card['image_alt']) ? e((string) $card['image_alt']) : 'thumb';
+                  $btnText = !empty($card['button_text']) ? e((string) $card['button_text']) : 'Explore';
+                  $btnUrl = !empty($card['button_url']) ? url(e((string) $card['button_url'])) : 'shop.php';
+
+                  if ($cardCount === 3) {
+                    if ($idx === 0) {
+                      $colClass = 'col-md-3 col-xl-3';
+                      $animClass = 'category1-item--from-left';
+                    } elseif ($idx === 1) {
+                      $colClass = 'col-md-6 col-xl-6';
+                      $animClass = 'category1-item--from-top';
+                    } else {
+                      $colClass = 'col-md-3 col-xl-3';
+                      $animClass = 'category1-item--from-right';
+                    }
+                  } else {
+                    $colClass = 'col-md-4 col-xl-4';
+                    $animClass = ($idx % 2 === 0) ? 'category1-item--from-left' : 'category1-item--from-right';
+                  }
+                ?>
+                <div class="<?= $colClass ?>">
+                  <div class="category1-item <?= $animClass ?>" data-category-entrance>
                     <div class="category1-item__thumb">
-                      <img src="<?php echo url('assets/imgs/category/category_thumb2.jpeg'); ?>" alt="thumb">
+                      <img src="<?= $imgPath ?>" alt="<?= $imgAlt ?>">
                     </div>
                     <div class="category1-item__content2">
-                      </h2>
                       <div class="category1-item__button">
-                        <a href="shop.php" class="rr-btn-button2">
-                          <span class="text">Explore now</span>
+                        <a href="<?= $btnUrl ?>" class="rr-btn-button2">
+                          <span class="text"><?= $btnText ?></span>
                           <span class="icon">
                             <svg width="11" height="7" viewBox="0 0 11 7" fill="none"
                               xmlns="http://www.w3.org/2000/svg">
@@ -640,54 +664,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
                   </div>
                 </div>
-                <div class="col-md-6 col-xl-6">
-                  <div class="category1-item category1-item--from-top" data-category-entrance>
-                    <div class="category1-item__thumb">
-                      <img src="<?php echo url('assets/imgs/category/category_thumb3.jpeg'); ?>" alt="thumb">
-                    </div>
-                    <div class="category1-item__content2">
-                      </h2>
-                      <div class="category1-item__button">
-                        <a href="shop.php" class="rr-btn-button2">
-                          <span class="text">Try Our Products</span>
-                          <span class="icon">
-                            <svg width="11" height="7" viewBox="0 0 11 7" fill="none"
-                              xmlns="http://www.w3.org/2000/svg">
-                              <path
-                                d="M0.419556 3.21674H10.2097M10.2097 3.21674L7.41253 6.01393M10.2097 3.21674L7.41253 0.419556"
-                                stroke="#0C0C0C" stroke-width="0.839157" stroke-linecap="round" stroke-linejoin="round">
-                              </path>
-                            </svg>
-                          </span>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-3 col-xl-3">
-                  <div class="category1-item category1-item--from-right" data-category-entrance>
-                    <div class="category1-item__thumb">
-                      <img src="<?php echo url('assets/imgs/category/category_thumb1.jpeg'); ?>" alt="thumb">
-                    </div>
-                    <div class="category1-item__content2">
-                      </h2>
-                      <div class="category1-item__button">
-                        <a href="shop.php" class="rr-btn-button2">
-                          <span class="text">Contact Us</span>
-                          <span class="icon">
-                            <svg width="11" height="7" viewBox="0 0 11 7" fill="none"
-                              xmlns="http://www.w3.org/2000/svg">
-                              <path
-                                d="M0.419556 3.21674H10.2097M10.2097 3.21674L7.41253 6.01393M10.2097 3.21674L7.41253 0.419556"
-                                stroke="#0C0C0C" stroke-width="0.839157" stroke-linecap="round" stroke-linejoin="round">
-                              </path>
-                            </svg>
-                          </span>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <?php endforeach; ?>
               </div>
               <div class="intro1-slider__dots"></div>
             </div>
