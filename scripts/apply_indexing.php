@@ -56,6 +56,8 @@ $indexes = [
 
     ['home_cta_cards', 'idx_home_cta_cards_active_order', '(is_active, sort_order, id)'],
     ['home_cta_cards', 'idx_home_cta_cards_key', '(card_key)'],
+
+    ['home_brand_builder_items', 'idx_brand_builder_items_sec_active_order', '(section_id, is_active, sort_order, id)'],
 ];
 
 $successCount = 0;

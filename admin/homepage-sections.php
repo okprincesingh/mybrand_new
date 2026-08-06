@@ -198,6 +198,64 @@ ON DUPLICATE KEY UPDATE
     $successMessage = 'Brand builder section saved successfully';
   }
   
+  if ($action === 'save_brand_builder_item' && $tab === 'brand_builder') {
+    $id = (int) ($_POST['id'] ?? 0);
+    $wordText = trim((string) ($_POST['word_text'] ?? ''));
+    $imageAlt = trim((string) ($_POST['image_alt'] ?? ''));
+    $sortOrder = (int) ($_POST['sort_order'] ?? 0);
+    $isActive = isset($_POST['is_active']) ? 1 : 0;
+    
+    $imagePath = '';
+    if (!empty($_FILES['image_path']['name'])) {
+      $stored = store_uploaded_image($_FILES['image_path'], 'home/brand-builder', 5_000_000, false);
+      if ($stored) {
+        $imagePath = $stored['public_path'];
+      }
+    } elseif (!empty($_POST['existing_image_path'])) {
+      $imagePath = $_POST['existing_image_path'];
+    }
+    
+    if ($wordText === '') {
+      $errorMessage = 'Span / Word text is required';
+    } elseif ($imagePath === '') {
+      $errorMessage = 'Hero image is required';
+    } else {
+      $pdo = db();
+      $section = db_fetch_one($pdo, 'SELECT id FROM home_brand_builder WHERE section_key = :k LIMIT 1', [':k' => 'main']);
+      $sectionId = (int) ($section['id'] ?? 0);
+      if ($sectionId <= 0) {
+        $pdo->exec("INSERT INTO home_brand_builder (section_key, kicker_text, title_text, is_active) VALUES ('main', 'Just add your brand.', 'The modern way to build a brand', 1)");
+        $sectionId = (int) $pdo->lastInsertId();
+      }
+      
+      if ($id > 0) {
+        $stmt = $pdo->prepare('UPDATE home_brand_builder_items SET word_text = :word_text, image_path = :image_path, image_alt = :image_alt, sort_order = :sort_order, is_active = :is_active WHERE id = :id');
+        $stmt->execute([
+          ':word_text' => $wordText,
+          ':image_path' => $imagePath,
+          ':image_alt' => $imageAlt,
+          ':sort_order' => $sortOrder,
+          ':is_active' => $isActive,
+          ':id' => $id,
+        ]);
+        cms_invalidate_home_brand_builder_items_cache();
+        $successMessage = 'Rotating word & image item updated successfully';
+      } else {
+        $stmt = $pdo->prepare('INSERT INTO home_brand_builder_items (section_id, word_text, image_path, image_alt, sort_order, is_active) VALUES (:section_id, :word_text, :image_path, :image_alt, :sort_order, :is_active)');
+        $stmt->execute([
+          ':section_id' => $sectionId,
+          ':word_text' => $wordText,
+          ':image_path' => $imagePath,
+          ':image_alt' => $imageAlt,
+          ':sort_order' => $sortOrder,
+          ':is_active' => $isActive,
+        ]);
+        cms_invalidate_home_brand_builder_items_cache();
+        $successMessage = 'Rotating word & image item added successfully';
+      }
+    }
+  }
+  
   if ($action === 'save_getting_started' && $tab === 'getting_started') {
     $id = (int) ($_POST['id'] ?? 0);
     $stepNumber = trim((string) ($_POST['step_number'] ?? ''));
@@ -415,7 +473,7 @@ ON DUPLICATE KEY UPDATE
     }
   }
   
-  if ($action === 'delete' && $tab === 'getting_started') {
+  if ($action === 'delete' && ($tab === 'getting_started')) {
     $id = (int) ($_POST['id'] ?? 0);
     if ($id > 0) {
       $pdo = db();
@@ -425,16 +483,37 @@ ON DUPLICATE KEY UPDATE
       $successMessage = 'Getting started step deleted';
     }
   }
+  
+  if ($action === 'delete' && ($tab === 'brand_builder_item' || ($tab === 'brand_builder' && ($_POST['item_type'] ?? '') === 'brand_builder_item'))) {
+    $id = (int) ($_POST['id'] ?? 0);
+    if ($id > 0) {
+      $pdo = db();
+      $stmt = $pdo->prepare('DELETE FROM home_brand_builder_items WHERE id = :id');
+      $stmt->execute([':id' => $id]);
+      cms_invalidate_home_brand_builder_items_cache();
+      $successMessage = 'Rotating word & image item deleted successfully';
+    }
+  }
 }
 
 $pdo = db();
 $workingProcessSteps = db_fetch_all($pdo, 'SELECT * FROM home_working_process ORDER BY sort_order ASC, id ASC');
 $workingProcessContent = cms_get_home_working_process_content();
 $brandBuilder = db_fetch_one($pdo, 'SELECT * FROM home_brand_builder WHERE section_key = :k LIMIT 1', [':k' => 'main']);
+$brandBuilderItemsAdmin = db_fetch_all($pdo, 'SELECT bi.* FROM home_brand_builder_items bi INNER JOIN home_brand_builder bb ON bb.id = bi.section_id WHERE bb.section_key = :k ORDER BY bi.sort_order ASC, bi.id ASC', [':k' => 'main']);
+if (empty($brandBuilderItemsAdmin)) {
+  $brandBuilderItemsAdmin = db_fetch_all($pdo, 'SELECT * FROM home_brand_builder_items ORDER BY sort_order ASC, id ASC');
+}
 $gettingStartedSteps = db_fetch_all($pdo, 'SELECT * FROM home_getting_started ORDER BY sort_order ASC, id ASC');
 $marqueeStrip = db_fetch_one($pdo, 'SELECT * FROM home_marquee_strips WHERE strip_key = :k LIMIT 1', [':k' => 'working_process_services']);
 $partnerLogos = db_fetch_all($pdo, 'SELECT * FROM home_partner_logos ORDER BY sort_order ASC, id ASC');
 $certificationLogos = db_fetch_all($pdo, 'SELECT * FROM home_certification_logos ORDER BY sort_order ASC, id ASC');
+
+$editBrandBuilderItem = null;
+if ($activeTab === 'brand_builder' && isset($_GET['edit_item_id'])) {
+  $editItemId = (int) $_GET['edit_item_id'];
+  $editBrandBuilderItem = db_fetch_one($pdo, 'SELECT * FROM home_brand_builder_items WHERE id = :id LIMIT 1', [':id' => $editItemId]);
+}
 
 $editWorkingProcess = null;
 if ($activeTab === 'working_process' && isset($_GET['edit_id'])) {
@@ -759,8 +838,136 @@ include __DIR__ . '/_layout_top.php';
             <label class="form-check-label" for="bb_active">Active</label>
           </div>
 
-          <button type="submit" class="btn btn-primary">Save Brand Builder</button>
+          <button type="submit" class="btn btn-primary">Save Brand Builder Section</button>
         </form>
+      </div>
+    </div>
+
+    <!-- Rotating Words & Images Section -->
+    <div class="widget-card mt-4" id="brandBuilderItemFormCard">
+      <div class="widget-header">
+        <h5 class="widget-title"><?php echo $editBrandBuilderItem ? 'Edit Rotating Word & Image Pair' : 'Add New Rotating Word & Image Pair'; ?></h5>
+        <?php if ($editBrandBuilderItem): ?>
+          <div class="widget-actions">
+            <a href="?tab=brand_builder#brandBuilderItemsTableCard" class="btn btn-secondary btn-sm">Cancel Edit</a>
+          </div>
+        <?php endif; ?>
+      </div>
+      <div class="widget-body p-3">
+        <form method="POST" action="" enctype="multipart/form-data">
+          <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+          <input type="hidden" name="action" value="save_brand_builder_item">
+          <input type="hidden" name="tab" value="brand_builder">
+          <?php if ($editBrandBuilderItem): ?>
+            <input type="hidden" name="id" value="<?php echo $editBrandBuilderItem['id']; ?>">
+          <?php endif; ?>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Span / Rotating Word Text <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" name="word_text" value="<?php echo htmlspecialchars($editBrandBuilderItem['word_text'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" placeholder="e.g. skin care" required>
+              <small class="text-muted">This text appears highlighted in the rotating title span</small>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Image Alt Text</label>
+              <input type="text" class="form-control" name="image_alt" value="<?php echo htmlspecialchars($editBrandBuilderItem['image_alt'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" placeholder="e.g. Skin care product category">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Hero Image <?php if (!$editBrandBuilderItem): ?><span class="text-danger">*</span><?php endif; ?></label>
+              <input type="file" class="form-control" name="image_path" <?php echo $editBrandBuilderItem ? '' : 'required'; ?> accept="image/*">
+              <input type="hidden" name="existing_image_path" value="<?php echo htmlspecialchars($editBrandBuilderItem['image_path'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
+              <?php if ($editBrandBuilderItem && !empty($editBrandBuilderItem['image_path'])): ?>
+                <div class="mt-2">
+                  <small class="text-muted d-block mb-1">Current Image:</small>
+                  <img src="<?php echo url($editBrandBuilderItem['image_path']); ?>" alt="" class="img-thumbnail" style="max-height: 90px; object-fit: cover;">
+                </div>
+              <?php endif; ?>
+            </div>
+            <div class="col-md-3 mb-3">
+              <label class="form-label">Sort Order</label>
+              <input type="number" class="form-control" name="sort_order" value="<?php echo $editBrandBuilderItem['sort_order'] ?? (count($brandBuilderItemsAdmin) + 1); ?>">
+            </div>
+            <div class="col-md-3 mb-3 d-flex align-items-end">
+              <div class="form-check mb-2">
+                <input type="checkbox" class="form-check-input" name="is_active" id="bb_item_active" <?php echo ($editBrandBuilderItem['is_active'] ?? 1) ? 'checked' : ''; ?>>
+                <label class="form-check-label" for="bb_item_active">Active</label>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary"><?php echo $editBrandBuilderItem ? 'Update Pair' : 'Add Pair'; ?></button>
+          <?php if ($editBrandBuilderItem): ?>
+            <a href="?tab=brand_builder#brandBuilderItemsTableCard" class="btn btn-secondary">Cancel</a>
+          <?php endif; ?>
+        </form>
+      </div>
+    </div>
+
+    <!-- Table of Rotating Pairs -->
+    <div class="widget-card mt-4" id="brandBuilderItemsTableCard">
+      <div class="widget-header">
+        <h5 class="widget-title">Rotating Words & Images Sequence</h5>
+      </div>
+      <div class="widget-body p-3">
+        <div class="table-responsive">
+          <table class="table table-striped align-middle">
+            <thead>
+              <tr>
+                <th style="width: 60px;">#</th>
+                <th style="width: 100px;">Image</th>
+                <th>Span / Word Text</th>
+                <th>Alt Text</th>
+                <th style="width: 100px;">Sort Order</th>
+                <th style="width: 100px;">Status</th>
+                <th style="width: 140px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php if (empty($brandBuilderItemsAdmin)): ?>
+                <tr>
+                  <td colspan="7" class="text-center text-muted py-4">
+                    No rotating words & images found. Add a new pair using the form above.
+                  </td>
+                </tr>
+              <?php else: ?>
+                <?php foreach ($brandBuilderItemsAdmin as $index => $item): ?>
+                  <tr>
+                    <td><?php echo $index + 1; ?></td>
+                    <td>
+                      <img src="<?php echo url($item['image_path']); ?>" alt="<?php echo htmlspecialchars($item['image_alt'], ENT_QUOTES, 'UTF-8'); ?>" class="img-thumbnail" style="height: 50px; width: 50px; object-fit: cover;">
+                    </td>
+                    <td>
+                      <strong><span class="badge bg-light text-dark fs-6 font-monospace">&lt;span&gt;<?php echo htmlspecialchars($item['word_text'], ENT_QUOTES, 'UTF-8'); ?>&lt;/span&gt;</span></strong>
+                    </td>
+                    <td><small class="text-muted"><?php echo htmlspecialchars($item['image_alt'], ENT_QUOTES, 'UTF-8'); ?></small></td>
+                    <td><?php echo (int) $item['sort_order']; ?></td>
+                    <td>
+                      <?php if ($item['is_active']): ?>
+                        <span class="badge bg-success">Active</span>
+                      <?php else: ?>
+                        <span class="badge bg-secondary">Inactive</span>
+                      <?php endif; ?>
+                    </td>
+                    <td>
+                      <a href="?tab=brand_builder&edit_item_id=<?php echo $item['id']; ?>#brandBuilderItemFormCard" class="btn btn-sm btn-primary me-1"><i class="bi bi-pencil"></i> Edit</a>
+                      <form method="POST" action="" style="display: inline-block;" onsubmit="return confirm('Are you sure you want to delete this rotating word & image pair?')">
+                        <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+                        <input type="hidden" name="action" value="delete">
+                        <input type="hidden" name="tab" value="brand_builder">
+                        <input type="hidden" name="item_type" value="brand_builder_item">
+                        <input type="hidden" name="id" value="<?php echo $item['id']; ?>">
+                        <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                      </form>
+                    </td>
+                  </tr>
+                <?php endforeach; ?>
+              <?php endif; ?>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 

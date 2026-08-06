@@ -96,3 +96,9 @@ CREATE INDEX IF NOT EXISTS idx_home_cta_cards_active_order ON home_cta_cards (is
 -- Speeds up admin lookup by card_key
 CREATE INDEX IF NOT EXISTS idx_home_cta_cards_key ON home_cta_cards (card_key);
 
+
+-- 13. Brand Builder Rotating Items Table Optimizations
+-- Speeds up brand builder items rendering: WHERE section_id=? AND is_active=1 ORDER BY sort_order ASC, id ASC
+CREATE INDEX IF NOT EXISTS idx_brand_builder_items_sec_active_order ON home_brand_builder_items (section_id, is_active, sort_order, id);
+
+

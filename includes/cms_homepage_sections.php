@@ -20,6 +20,11 @@ function cms_invalidate_home_brand_builder_cache(): void
     cache_delete('cms:home:brand_builder_items');
 }
 
+function cms_invalidate_home_brand_builder_items_cache(): void
+{
+    cache_delete('cms:home:brand_builder_items');
+}
+
 function cms_invalidate_home_getting_started_cache(): void
 {
     cache_delete('cms:home:getting_started');
@@ -510,7 +515,7 @@ function cms_get_home_brand_builder_items(): array
     $activeClause = preview_mode_include_drafts() ? '' : ' AND bi.is_active = 1';
     $rows = db_fetch_all(
         $pdo,
-        'SELECT bi.word_text, bi.image_path, bi.image_alt FROM home_brand_builder_items bi 
+        'SELECT bi.id, bi.word_text, bi.image_path, bi.image_alt, bi.sort_order, bi.is_active FROM home_brand_builder_items bi 
          INNER JOIN home_brand_builder bb ON bb.id = bi.section_id 
          WHERE bb.section_key = :k' . $activeClause . ' 
          ORDER BY bi.sort_order ASC, bi.id ASC',
@@ -527,9 +532,12 @@ function cms_get_home_brand_builder_items(): array
     $out = [];
     foreach ($rows as $row) {
         $out[] = [
+            'id' => (int) ($row['id'] ?? 0),
             'word_text' => (string) ($row['word_text'] ?? ''),
             'image_path' => (string) ($row['image_path'] ?? ''),
             'image_alt' => (string) ($row['image_alt'] ?? ''),
+            'sort_order' => (int) ($row['sort_order'] ?? 0),
+            'is_active' => (int) ($row['is_active'] ?? 1),
         ];
     }
 

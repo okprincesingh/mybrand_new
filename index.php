@@ -787,7 +787,14 @@ document.addEventListener('DOMContentLoaded', function () {
               <div class="brand-builder__content">
                 <p class="brand-builder__kicker"><?php echo $brandBuilder['kicker_text'] ?? 'Just add your brand.<br>mybrandplease.com handles the rest.'; ?></p>
                 <h2 class="brand-builder__title" id="brandBuilderTitle">
-                  <?php echo $brandBuilder['title_text'] ?? 'The modern<br>way to build a<br><span class="brand-builder__changing-word" data-brand-builder-word>skin care</span> <br>brand'; ?>
+                  <?php
+                    $titleText = $brandBuilder['title_text'] ?? 'The modern<br>way to build a<br><span class="brand-builder__changing-word" data-brand-builder-word>skin care</span> <br>brand';
+                    if (!empty($brandBuilderItems[0]['word_text'])) {
+                      $firstWord = htmlspecialchars($brandBuilderItems[0]['word_text'], ENT_QUOTES, 'UTF-8');
+                      $titleText = preg_replace('/(<span[^>]*data-brand-builder-word[^>]*>)(.*?)(<\/span>)/is', '$1' . $firstWord . '$3', $titleText);
+                    }
+                    echo $titleText;
+                  ?>
                 </h2>
                 <p class="brand-builder__subtitle"><?php echo htmlspecialchars($brandBuilder['subtitle_text'] ?? 'Start Free Today! - Lowest MOQ | Premium Packaging | World-Class Manufacturing', ENT_QUOTES, 'UTF-8'); ?></p>
 
