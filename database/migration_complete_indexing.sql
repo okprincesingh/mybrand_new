@@ -127,3 +127,11 @@ CREATE INDEX IF NOT EXISTS idx_home_reels_content_key_active ON home_instagram_r
 
 -- Speeds up active instagram reels rendering: WHERE is_active=1 ORDER BY sort_order ASC, id ASC
 CREATE INDEX IF NOT EXISTS idx_home_reels_active_order ON home_instagram_reels (is_active, sort_order, id);
+
+
+-- 17. Home Offices Table Optimizations
+-- Speeds up home offices content retrieval: WHERE section_key=? AND is_active=1
+CREATE INDEX IF NOT EXISTS idx_home_offices_content_key_active ON home_offices_content (section_key, is_active);
+
+-- Speeds up active home offices rendering: WHERE is_active=1 ORDER BY sort_order ASC, id ASC
+CREATE INDEX IF NOT EXISTS idx_home_offices_active_order ON home_offices (is_active, sort_order, id);

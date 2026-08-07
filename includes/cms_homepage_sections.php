@@ -60,6 +60,11 @@ function cms_invalidate_home_instagram_reels_content_cache(): void
     cache_delete('cms:home:instagram_reels_content');
 }
 
+function cms_invalidate_home_offices_content_cache(): void
+{
+    cache_delete('cms:home:offices_content');
+}
+
 
 function cms_invalidate_home_marquee_strips_cache(): void
 {
@@ -1211,5 +1216,63 @@ function cms_get_home_instagram_reels_content(): array
     }
     return $out;
 }
+
+function cms_get_home_offices_content(): array
+{
+    $cacheKey = 'cms:home:offices_content';
+    if (!preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $fallback = [
+        'section_key' => 'main',
+        'eyebrow_text' => 'GLOBAL PRESENCE',
+        'heading_text' => 'Our Global Network',
+        'subheading_text' => 'Our Group of Companies & Global Registered Offices',
+        'intro_text' => 'Our registered offices across key markets bring local expertise, seamless coordination, and responsive support to every partnership.',
+        'is_active' => 1,
+    ];
+
+    $pdo = db();
+    if (!$pdo) {
+        return $fallback;
+    }
+
+    $activeClause = preview_mode_include_drafts() ? '' : ' AND is_active = 1';
+    $row = db_fetch_one(
+        $pdo,
+        'SELECT * FROM home_offices_content WHERE section_key = :k' . $activeClause . ' LIMIT 1',
+        [':k' => 'main']
+    );
+
+    if (!$row) {
+        if (!preview_mode_should_bypass_cache()) {
+            cache_set($cacheKey, $fallback, 300);
+        }
+        return $fallback;
+    }
+
+    if (preview_mode_include_drafts()) {
+        $row = draft_merge_row((array) $row, 'home_offices_content', (int) ($row['id'] ?? 0));
+    }
+
+    $out = [
+        'section_key' => (string) ($row['section_key'] ?? 'main'),
+        'eyebrow_text' => (string) ($row['eyebrow_text'] ?? 'GLOBAL PRESENCE'),
+        'heading_text' => (string) ($row['heading_text'] ?? 'Our Global Network'),
+        'subheading_text' => (string) ($row['subheading_text'] ?? 'Our Group of Companies & Global Registered Offices'),
+        'intro_text' => (string) ($row['intro_text'] ?? ''),
+        'is_active' => (int) ($row['is_active'] ?? 1),
+    ];
+
+    if (!preview_mode_should_bypass_cache()) {
+        cache_set($cacheKey, $out, 300);
+    }
+    return $out;
+}
+
 
 

@@ -63,6 +63,7 @@ $homeSlides = cms_get_home_slides();
 $homeHeroVideos = cms_get_home_hero_videos();
 $homeHeroVideo = $homeHeroVideos[0] ?? null;
 $homeOffices = cms_get_home_offices();
+$officesContent = cms_get_home_offices_content();
 $homeInstagramReels = cms_get_home_instagram_reels();
 $reelsContent = cms_get_home_instagram_reels_content();
 $milestonesContent = cms_get_home_milestones_content();
@@ -1422,10 +1423,10 @@ document.addEventListener('DOMContentLoaded', function () {
         <section class=" section-spacing-120 rr-ov-hidden">
           <div class="container">
             <div class="office-showcase__intro wow fadeInUp" data-wow-delay=".3s">
-              <span class="office-showcase__eyebrow">Global Presence</span>
-              <h2 class="office-showcase__title">~ Our Global Network ~</h2>
-              <h5 class=" text-center">Our Group of Companies & Global Registered Offices</h5>
-              <p class="office-showcase__lead text-center">Our registered offices across key markets bring local expertise, seamless coordination, and responsive support to every partnership.</p>
+              <span class="office-showcase__eyebrow"><?php echo htmlspecialchars($officesContent['eyebrow_text'] ?? 'GLOBAL PRESENCE', ENT_QUOTES, 'UTF-8'); ?></span>
+              <h2 class="office-showcase__title">~ <?php echo htmlspecialchars(trim(trim((string) ($officesContent['heading_text'] ?? 'Our Global Network')), '~'), ENT_QUOTES, 'UTF-8'); ?> ~</h2>
+              <h5 class=" text-center"><?php echo htmlspecialchars($officesContent['subheading_text'] ?? 'Our Group of Companies & Global Registered Offices', ENT_QUOTES, 'UTF-8'); ?></h5>
+              <p class="office-showcase__lead text-center"><?php echo htmlspecialchars($officesContent['intro_text'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
             </div>
             <div class="office-grid">
               <?php
@@ -1468,7 +1469,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <article class="office-card wow fadeInUp" data-wow-delay=".<?php echo (int) round($officeDelay * 10); ?>s">
                   <div class="office-card__topline"></div>
                   <div class="office-card__flag">
-                    <img src="<?php echo htmlspecialchars($officeImageUrl, ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($officeCountry, ENT_QUOTES, 'UTF-8'); ?> Office">
+                    <img src="<?php echo htmlspecialchars($officeImageUrl, ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($officeCountry, ENT_QUOTES, 'UTF-8'); ?> Office" loading="lazy">
                   </div>
                   <div class="office-card__body">
                     <h3 class="office-card__title"><?php echo htmlspecialchars($officeCountry, ENT_QUOTES, 'UTF-8'); ?></h3>

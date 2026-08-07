@@ -1,11 +1,15 @@
 <?php
 require_once __DIR__ . '/_init.php';
+require_once __DIR__ . '/../includes/cms_homepage_sections.php';
+
 $adminUser = admin_require_auth();
-$title = 'Home Offices';
+$title = 'Home Offices Management';
 $pdo = db();
 if ($pdo) {
   cms_ensure_home_offices_registration_columns($pdo);
 }
+
+$officesContent = cms_get_home_offices_content();
 
 $defaults = ['id'=>0,'country'=>'','company_name'=>'','address'=>'','email'=>'','phone'=>'','registration_label'=>'','registration_number'=>'','tax_label'=>'','tax_number'=>'','sort_order'=>0,'is_active'=>1,'image_path'=>''];
 $formData = $defaults;
@@ -18,6 +22,41 @@ if ($pdo && $editId > 0) {
 if ($pdo && $_SERVER['REQUEST_METHOD'] === 'POST') {
   verify_csrf_or_fail();
   $action = (string) ($_POST['action'] ?? 'save');
+
+  if ($action === 'save_header_content') {
+    $eyebrowText = trim((string) ($_POST['eyebrow_text'] ?? 'GLOBAL PRESENCE'));
+    $headingText = trim((string) ($_POST['heading_text'] ?? 'Our Global Network'));
+    $subheadingText = trim((string) ($_POST['subheading_text'] ?? 'Our Group of Companies & Global Registered Offices'));
+    $introText = trim((string) ($_POST['intro_text'] ?? ''));
+    $isActive = isset($_POST['is_active']) ? 1 : 0;
+
+    $stmt = $pdo->prepare("
+      INSERT INTO home_offices_content
+        (section_key, eyebrow_text, heading_text, subheading_text, intro_text, is_active)
+      VALUES
+        (:section_key, :eyebrow_text, :heading_text, :subheading_text, :intro_text, :is_active)
+      ON DUPLICATE KEY UPDATE
+        eyebrow_text = VALUES(eyebrow_text),
+        heading_text = VALUES(heading_text),
+        subheading_text = VALUES(subheading_text),
+        intro_text = VALUES(intro_text),
+        is_active = VALUES(is_active),
+        updated_at = CURRENT_TIMESTAMP
+    ");
+    $stmt->execute([
+      ':section_key' => 'main',
+      ':eyebrow_text' => $eyebrowText,
+      ':heading_text' => $headingText,
+      ':subheading_text' => $subheadingText,
+      ':intro_text' => $introText,
+      ':is_active' => $isActive,
+    ]);
+    cms_invalidate_home_offices_content_cache();
+    admin_flash('success', 'Home Offices section headers updated successfully.');
+    header('Location: home-offices.php');
+    exit;
+  }
+
   if ($action === 'delete') {
     $id = (int) ($_POST['id'] ?? 0);
     if ($id > 0) {
@@ -73,6 +112,53 @@ if ($pdo && $_SERVER['REQUEST_METHOD'] === 'POST') {
 $rows = $pdo ? db_fetch_all($pdo, 'SELECT * FROM home_offices ORDER BY sort_order ASC, id ASC') : [];
 include __DIR__ . '/_layout_top.php';
 ?>
+
+<!-- Section Header & Subheading Settings -->
+<div class="widget-card mb-4">
+  <div class="widget-header">
+    <h5 class="widget-title"><i class="bi bi-gear me-2"></i>Our Offices Section Header Settings</h5>
+  </div>
+  <div class="widget-body p-3">
+    <form method="post" action="" data-section-preview='{"content_type":"home_offices_content","entity_id":0}'>
+      <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+      <input type="hidden" name="action" value="save_header_content">
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Eyebrow Text <span class="text-danger">*</span></label>
+          <input class="form-control" name="eyebrow_text" value="<?= e((string) ($officesContent['eyebrow_text'] ?? 'GLOBAL PRESENCE')) ?>" required placeholder="e.g. GLOBAL PRESENCE">
+          <small class="text-muted">Small badge text above title (e.g. "GLOBAL PRESENCE").</small>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Main Heading <span class="text-danger">*</span></label>
+          <input class="form-control" name="heading_text" value="<?= e((string) ($officesContent['heading_text'] ?? 'Our Global Network')) ?>" required placeholder="e.g. Our Global Network">
+          <small class="text-muted">Admin enters title text only. Automatically rendered as <code>~ Heading ~</code> on frontend.</small>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Sub Heading <span class="text-danger">*</span></label>
+        <input class="form-control" name="subheading_text" value="<?= e((string) ($officesContent['subheading_text'] ?? 'Our Group of Companies & Global Registered Offices')) ?>" required placeholder="e.g. Our Group of Companies & Global Registered Offices">
+        <small class="text-muted">Subheading text below main heading.</small>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Intro Text <span class="text-danger">*</span></label>
+        <textarea class="form-control" rows="2" name="intro_text" required placeholder="e.g. Our registered offices across key markets..."><?= e((string) ($officesContent['intro_text'] ?? '')) ?></textarea>
+        <small class="text-muted">Paragraph text below subheading.</small>
+      </div>
+
+      <div class="mb-3 form-check">
+        <input class="form-check-input" type="checkbox" name="is_active" id="headerActive" <?= ((int) ($officesContent['is_active'] ?? 1)) === 1 ? 'checked' : '' ?>>
+        <label class="form-check-label" for="headerActive">Active</label>
+      </div>
+
+      <button type="submit" class="btn btn-primary"><i class="bi bi-check-circle me-1"></i>Update Header Settings</button>
+    </form>
+  </div>
+</div>
+
 <div class="row g-4">
   <div class="col-lg-5">
     <div class="form-section">
