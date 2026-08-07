@@ -8,6 +8,9 @@ function e(?string $value): string
 
 function csrf_token(): string
 {
+    if (session_status() !== PHP_SESSION_ACTIVE && !headers_sent()) {
+        session_start();
+    }
     if (empty($_SESSION['csrf_token'])) {
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
     }
@@ -16,6 +19,9 @@ function csrf_token(): string
 
 function csrf_regenerate_token(): string
 {
+    if (session_status() !== PHP_SESSION_ACTIVE && !headers_sent()) {
+        session_start();
+    }
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
     return $_SESSION['csrf_token'];
 }

@@ -110,3 +110,12 @@ CREATE INDEX IF NOT EXISTS idx_home_milestones_content_key_active ON home_milest
 CREATE INDEX IF NOT EXISTS idx_home_milestones_active_order ON home_milestones (is_active, sort_order, id);
 
 
+-- 15. Home Testimonials Table Optimizations
+-- Speeds up testimonials content retrieval: WHERE section_key=? AND is_active=1
+CREATE INDEX IF NOT EXISTS idx_home_testimonials_content_key_active ON home_testimonials_content (section_key, is_active);
+
+-- Speeds up active testimonials rendering: WHERE is_active=1 ORDER BY sort_order ASC, id ASC
+CREATE INDEX IF NOT EXISTS idx_home_testimonials_active_order ON home_testimonials (is_active, sort_order, id);
+
+-- Speeds up platform filtered testimonials: WHERE platform=? AND is_active=1 ORDER BY sort_order ASC, id ASC
+CREATE INDEX IF NOT EXISTS idx_home_testimonials_plat_active_order ON home_testimonials (platform, is_active, sort_order, id);

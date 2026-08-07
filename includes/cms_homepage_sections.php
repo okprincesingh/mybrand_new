@@ -45,6 +45,17 @@ function cms_invalidate_home_milestones_content_cache(): void
     cache_delete('cms:home:milestones_content');
 }
 
+function cms_invalidate_home_testimonials_cache(): void
+{
+    cache_delete('cms:home:testimonials');
+}
+
+function cms_invalidate_home_testimonials_content_cache(): void
+{
+    cache_delete('cms:home:testimonials_content');
+}
+
+
 function cms_invalidate_home_marquee_strips_cache(): void
 {
     cache_delete('cms:home:marquee_strips');
@@ -1008,4 +1019,134 @@ function cms_get_home_milestones(): array
         cache_set($cacheKey, $out, 300);
     }
     return $out;
-}
+}
+
+function cms_get_home_testimonials_content(): array
+{
+    $cacheKey = 'cms:home:testimonials_content';
+    if (!preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $fallback = [
+        'section_key' => 'main',
+        'eyebrow_text' => 'Verified Reviews',
+        'heading_text' => "Here's what our customers say",
+        'rating_prefix' => 'mybrandplease.com is rated',
+        'rating_highlight' => 'Excellent',
+        'is_active' => 1,
+    ];
+
+    $pdo = db();
+    if (!$pdo) {
+        return $fallback;
+    }
+
+    $activeClause = preview_mode_include_drafts() ? '' : ' AND is_active = 1';
+    $row = db_fetch_one(
+        $pdo,
+        'SELECT * FROM home_testimonials_content WHERE section_key = :k' . $activeClause . ' LIMIT 1',
+        [':k' => 'main']
+    );
+
+    if (!$row) {
+        if (!preview_mode_should_bypass_cache()) {
+            cache_set($cacheKey, $fallback, 300);
+        }
+        return $fallback;
+    }
+
+    if (preview_mode_include_drafts()) {
+        $row = draft_merge_row((array) $row, 'home_testimonials_content', (int) ($row['id'] ?? 0));
+    }
+
+    $out = [
+        'section_key' => (string) ($row['section_key'] ?? 'main'),
+        'eyebrow_text' => (string) ($row['eyebrow_text'] ?? 'Verified Reviews'),
+        'heading_text' => (string) ($row['heading_text'] ?? "Here's what our customers say"),
+        'rating_prefix' => (string) ($row['rating_prefix'] ?? 'mybrandplease.com is rated'),
+        'rating_highlight' => (string) ($row['rating_highlight'] ?? 'Excellent'),
+        'is_active' => (int) ($row['is_active'] ?? 1),
+    ];
+
+    if (!preview_mode_should_bypass_cache()) {
+        cache_set($cacheKey, $out, 300);
+    }
+    return $out;
+}
+
+function cms_get_home_testimonials(): array
+{
+    $cacheKey = 'cms:home:testimonials';
+    if (!preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $fallback = [
+        ['id' => 1, 'platform' => 'tp', 'name' => 'Steve Marc', 'content' => 'Communication was clear and professional from the beginning, the team stayed responsive, and the products arrived on time with quality that met expectations.', 'rating' => 5, 'review_date' => '8 Mar 2026', 'image_path' => '', 'sort_order' => 1, 'is_active' => 1],
+        ['id' => 2, 'platform' => 'tp', 'name' => 'Zain Sheikh', 'content' => 'A professional long-term partner with strong expertise across formulation, packaging, design, compliance, and customer service.', 'rating' => 5, 'review_date' => '21 Feb 2026', 'image_path' => '', 'sort_order' => 2, 'is_active' => 1],
+        ['id' => 3, 'platform' => 'tp', 'name' => 'Meghana Ghosh', 'content' => 'mybrandplease supported the brand from concept to launch with guidance on ingredients, positioning, compliance, packaging, and market readiness.', 'rating' => 5, 'review_date' => '15 Feb 2026', 'image_path' => '', 'sort_order' => 3, 'is_active' => 1],
+        ['id' => 4, 'platform' => 'tp', 'name' => 'Yawovi Yevoudakor', 'content' => 'Good products, helpful customer service, and a pleasant purchase experience made it easy to return for another order.', 'rating' => 5, 'review_date' => '16 Oct 2025', 'image_path' => '', 'sort_order' => 4, 'is_active' => 1],
+        ['id' => 5, 'platform' => 'tp', 'name' => 'Elina', 'content' => 'The hair care range delivered top-shelf quality and made launching a new brand feel simple and successful.', 'rating' => 5, 'review_date' => '11 May 2025', 'image_path' => '', 'sort_order' => 5, 'is_active' => 1],
+        ['id' => 6, 'platform' => 'goog', 'name' => 'Priya Mehta', 'content' => 'Incredible service from start to finish. They handled formulation and labeling while keeping the MOQ practical for a startup brand.', 'rating' => 5, 'review_date' => '9 May 2026', 'image_path' => '', 'sort_order' => 6, 'is_active' => 1],
+        ['id' => 7, 'platform' => 'goog', 'name' => 'James Carter', 'content' => 'Exceptional quality control and a responsive team. The custom formulation matched the brief and gave us confidence to expand the line.', 'rating' => 5, 'review_date' => '1 May 2026', 'image_path' => '', 'sort_order' => 7, 'is_active' => 1],
+        ['id' => 8, 'platform' => 'goog', 'name' => 'Ananya Joshi', 'content' => 'The team guided us through each step of the private label process and helped the final products look premium.', 'rating' => 5, 'review_date' => '24 Apr 2026', 'image_path' => '', 'sort_order' => 8, 'is_active' => 1],
+        ['id' => 9, 'platform' => 'goog', 'name' => 'Rahul Sharma', 'content' => 'Top quality private label formulations with noticeable customer response after switching to mybrandplease.', 'rating' => 5, 'review_date' => '18 Apr 2026', 'image_path' => '', 'sort_order' => 9, 'is_active' => 1],
+        ['id' => 10, 'platform' => 'goog', 'name' => 'Nisha Kapoor', 'content' => 'Supportive communication, polished packaging, and dependable timelines made the launch process much smoother.', 'rating' => 5, 'review_date' => '12 Apr 2026', 'image_path' => '', 'sort_order' => 10, 'is_active' => 1],
+        ['id' => 11, 'platform' => 'ali', 'name' => 'Li Wei', 'content' => 'A strong B2B supplier for private label cosmetics with fast communication and reliable bulk order delivery.', 'rating' => 5, 'review_date' => '6 May 2026', 'image_path' => '', 'sort_order' => 11, 'is_active' => 1],
+        ['id' => 12, 'platform' => 'ali', 'name' => 'Maria Santos', 'content' => 'Custom branding was handled well, the products passed quality checks, and the pricing stayed competitive for reorder planning.', 'rating' => 5, 'review_date' => '28 Apr 2026', 'image_path' => '', 'sort_order' => 12, 'is_active' => 1],
+        ['id' => 13, 'platform' => 'ali', 'name' => 'Omar Khan', 'content' => 'Samples, packaging options, and production details were explained clearly, which helped us move forward with confidence.', 'rating' => 5, 'review_date' => '19 Apr 2026', 'image_path' => '', 'sort_order' => 13, 'is_active' => 1],
+        ['id' => 14, 'platform' => 'ali', 'name' => 'Sofia Martins', 'content' => 'The team responded quickly during sourcing and kept the order organized from product selection through dispatch.', 'rating' => 5, 'review_date' => '10 Apr 2026', 'image_path' => '', 'sort_order' => 14, 'is_active' => 1],
+        ['id' => 15, 'platform' => 'ali', 'name' => 'Daniel Roberts', 'content' => 'Reliable supplier experience with clear communication, good packaging quality, and consistent private label support.', 'rating' => 5, 'review_date' => '2 Apr 2026', 'image_path' => '', 'sort_order' => 15, 'is_active' => 1],
+    ];
+
+    $pdo = db();
+    if (!$pdo) {
+        return $fallback;
+    }
+
+    $activeClause = preview_mode_include_drafts() ? '' : ' WHERE is_active = 1';
+    $rows = db_fetch_all(
+        $pdo,
+        'SELECT id, platform, name, location, content, rating, review_date, image_path, sort_order, is_active FROM home_testimonials' . $activeClause . ' ORDER BY sort_order ASC, id ASC'
+    );
+
+    if (!$rows) {
+        if (!preview_mode_should_bypass_cache()) {
+            cache_set($cacheKey, $fallback, 300);
+        }
+        return $fallback;
+    }
+
+    if (preview_mode_include_drafts()) {
+        $rows = draft_merge_rows($rows, 'home_testimonials');
+    }
+
+    $out = [];
+    foreach ($rows as $row) {
+        $out[] = [
+            'id' => (int) ($row['id'] ?? 0),
+            'platform' => (string) ($row['platform'] ?? 'tp'),
+            'name' => (string) ($row['name'] ?? ''),
+            'location' => (string) ($row['location'] ?? ''),
+            'content' => (string) ($row['content'] ?? ''),
+            'rating' => (int) ($row['rating'] ?? 5),
+            'review_date' => (string) ($row['review_date'] ?? ''),
+            'image_path' => (string) ($row['image_path'] ?? ''),
+            'sort_order' => (int) ($row['sort_order'] ?? 0),
+            'is_active' => (int) ($row['is_active'] ?? 1),
+        ];
+    }
+
+    if (!preview_mode_should_bypass_cache()) {
+        cache_set($cacheKey, $out, 300);
+    }
+    return $out;
+}
+

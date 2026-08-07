@@ -684,11 +684,6 @@ function cms_get_home_slides(): array
     return $slides;
 }
 
-function cms_invalidate_home_testimonials_cache(): void
-{
-    cache_delete(cms_cache_key('home', 'testimonials'));
-}
-
 function cms_invalidate_home_offices_cache(): void
 {
     cache_delete(cms_cache_key('home', 'offices'));
@@ -741,73 +736,6 @@ function cms_ensure_home_offices_registration_columns(PDO $pdo): bool
 function cms_invalidate_home_instagram_reels_cache(): void
 {
     cache_delete(cms_cache_key('home', 'instagram_reels'));
-}
-
-function cms_get_home_testimonials(): array
-{
-    $cacheKey = cms_cache_key('home', 'testimonials');
-    if (!preview_mode_should_bypass_cache()) {
-        $cached = cache_get($cacheKey);
-        if (is_array($cached)) {
-            return $cached;
-        }
-    }
-
-    $fallback = [
-        [
-            'name' => 'Charlotte Evans',
-            'location' => 'Birmingham, UK',
-            'content' => 'I have sensitive skin, and most products irritate me. Your formulas changed that and gave visible results quickly.',
-            'rating' => 5,
-            'image_path' => 'assets/imgs/home/testimonial-thumb3_1.png',
-        ],
-        [
-            'name' => 'Ava Thompson',
-            'location' => 'Toronto, Canada',
-            'content' => 'The private label journey was clear and professional. Their team guided us from samples to packaging and launch.',
-            'rating' => 5,
-            'image_path' => 'assets/imgs/home/testimonial-thumb3_1.png',
-        ],
-        [
-            'name' => 'Liam Carter',
-            'location' => 'Sydney, Australia',
-            'content' => 'Strong product quality, practical MOQ support, and smooth communication at every stage.',
-            'rating' => 5,
-            'image_path' => 'assets/imgs/home/testimonial-thumb3_1.png',
-        ],
-    ];
-
-    $pdo = db();
-    if (!$pdo) {
-        return $fallback;
-    }
-
-    $activeClause = preview_mode_include_drafts() ? '' : ' WHERE is_active = 1';
-    $rows = db_fetch_all($pdo, 'SELECT id, name, location, content, rating, image_path FROM home_testimonials' . $activeClause . ' ORDER BY sort_order ASC, id ASC');
-    if (!$rows) {
-        if (!preview_mode_should_bypass_cache()) {
-            cache_set($cacheKey, $fallback, 300);
-        }
-        return $fallback;
-    }
-
-    $out = [];
-    foreach ($rows as $row) {
-        $merged = draft_merge_row((array) $row, 'home_testimonial', (int) $row['id']);
-        $out[] = [
-            'id' => (int) ($merged['id'] ?? $row['id']),
-            'name' => (string) ($merged['name'] ?? ''),
-            'location' => (string) ($merged['location'] ?? ''),
-            'content' => (string) ($merged['content'] ?? ''),
-            'rating' => max(1, min(5, (int) ($merged['rating'] ?? 5))),
-            'image_path' => (string) ($merged['image_path'] ?? ''),
-        ];
-    }
-
-    if (!preview_mode_should_bypass_cache()) {
-        cache_set($cacheKey, $out, 300);
-    }
-    return $out;
 }
 
 function cms_get_home_offices(): array

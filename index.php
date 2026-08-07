@@ -62,11 +62,12 @@ if ($homeInitialCategory) {
 $homeSlides = cms_get_home_slides();
 $homeHeroVideos = cms_get_home_hero_videos();
 $homeHeroVideo = $homeHeroVideos[0] ?? null;
-$homeTestimonials = cms_get_home_testimonials();
 $homeOffices = cms_get_home_offices();
 $homeInstagramReels = cms_get_home_instagram_reels();
 $milestonesContent = cms_get_home_milestones_content();
 $milestonesCards = cms_get_home_milestones();
+$testimonialsContent = cms_get_home_testimonials_content();
+$testimonialsCards = cms_get_home_testimonials();
 $meta = [
   'title' => 'mybrandplease | Private Label Cosmetics Manufacturer',
   'description' => 'Launch premium skin care, hair care, body care, bathing soaps, and personal care products with mybrandplease private label manufacturing.',
@@ -979,9 +980,9 @@ document.addEventListener('DOMContentLoaded', function () {
         <section class="reviews-section is-all-reviews">
           <div class="reviews-section__grid">
             <div class="reviews-section__intro" id="rvIntroPanel">
-              <p class="rv-label"><span><i class="fa-solid fa-shield-halved"></i></span> Verified Reviews</p>
-              <p class="rv-sub" id="rvSubText">Here's what our customers say</p>
-              <h2 class="rv-heading" id="rvHeading">mybrandplease.com is rated <b>Excellent</b></h2>
+              <p class="rv-label"><span><i class="fa-solid fa-shield-halved"></i></span> <?php echo htmlspecialchars($testimonialsContent['eyebrow_text'] ?? 'Verified Reviews'); ?></p>
+              <p class="rv-sub" id="rvSubText"><?php echo htmlspecialchars($testimonialsContent['heading_text'] ?? "Here's what our customers say"); ?></p>
+              <h2 class="rv-heading" id="rvHeading"><?php echo htmlspecialchars($testimonialsContent['rating_prefix'] ?? 'mybrandplease.com is rated'); ?> <b><?php echo htmlspecialchars($testimonialsContent['rating_highlight'] ?? 'Excellent'); ?></b></h2>
               <div class="rv-score-card">
                 <div class="rv-score-card__brand">
                   <img src="<?php echo url('uploads/logo/trusp.png'); ?>" alt="Trustpilot" id="rvScoreLogo">
@@ -2009,4 +2010,8 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 </script>
 
+<script>
+  window.cmsTestimonials = <?php echo json_encode($testimonialsCards, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;
+  window.cmsTestimonialsContent = <?php echo json_encode($testimonialsContent, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;
+</script>
 <?php include 'includes/footer.php'; ?>
