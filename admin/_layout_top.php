@@ -44,12 +44,13 @@ $isHomepageSections = $currentPage === 'homepage-sections.php';
         <a class="admin-nav-link admin-sub-link <?= $currentPage==='home-urls.php'?'active':'' ?>" href="home-urls.php"><i class="bi bi-link-45deg"></i><span>CTA Cards</span></a>
         <a class="admin-nav-link admin-sub-link <?= $isHomepageSections && $currentTab === 'brand_builder' ?'active':'' ?>" href="homepage-sections.php?tab=brand_builder"><i class="bi bi-bricks"></i><span>Brand Builder</span></a>
         <a class="admin-nav-link admin-sub-link <?= $isHomepageSections && $currentTab === 'getting_started' ?'active':'' ?>" href="homepage-sections.php?tab=getting_started"><i class="bi bi-rocket-takeoff"></i><span>Getting Started</span></a>
+        <a class="admin-nav-link admin-sub-link <?= $isHomepageSections && $currentTab === 'our_milestones' ?'active':'' ?>" href="homepage-sections.php?tab=our_milestones"><i class="bi bi-trophy"></i><span>Our Milestones</span></a>
         <a class="admin-nav-link admin-sub-link <?= $currentPage==='home-testimonials.php'?'active':'' ?>" href="home-testimonials.php"><i class="bi bi-chat-quote"></i><span>Testimonials</span></a>
         <a class="admin-nav-link admin-sub-link <?= $currentPage==='home-instagram.php'?'active':'' ?>" href="home-instagram.php"><i class="bi bi-instagram"></i><span>Instagram Reels</span></a>
         <a class="admin-nav-link admin-sub-link <?= $currentPage==='home-offices.php'?'active':'' ?>" href="home-offices.php"><i class="bi bi-geo-alt"></i><span>Our Offices</span></a>
         <a class="admin-nav-link admin-sub-link <?= $isHomepageSections && $currentTab === 'partner_logos' ?'active':'' ?>" href="homepage-sections.php?tab=partner_logos"><i class="bi bi-building"></i><span>Partner Logos</span></a>
         <a class="admin-nav-link admin-sub-link <?= $isHomepageSections && $currentTab === 'certification_logos' ?'active':'' ?>" href="homepage-sections.php?tab=certification_logos"><i class="bi bi-award"></i><span>Certification Logos</span></a>
-        <a class="admin-nav-link admin-sub-link <?= $currentPage==='home-slider.php'?'active':'' ?>" href="home-slider.php"><i class="bi bi-sliders"></i><span>Slider</span></a>
+        <!-- <a class="admin-nav-link admin-sub-link <?= $currentPage==='home-slider.php'?'active':'' ?>" href="home-slider.php"><i class="bi bi-sliders"></i><span>Slider</span></a> -->
       </div>
 
       <div class="nav-group-label">Content</div>

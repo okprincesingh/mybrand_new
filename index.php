@@ -65,6 +65,8 @@ $homeHeroVideo = $homeHeroVideos[0] ?? null;
 $homeTestimonials = cms_get_home_testimonials();
 $homeOffices = cms_get_home_offices();
 $homeInstagramReels = cms_get_home_instagram_reels();
+$milestonesContent = cms_get_home_milestones_content();
+$milestonesCards = cms_get_home_milestones();
 $meta = [
   'title' => 'mybrandplease | Private Label Cosmetics Manufacturer',
   'description' => 'Launch premium skin care, hair care, body care, bathing soaps, and personal care products with mybrandplease private label manufacturing.',
@@ -914,50 +916,45 @@ document.addEventListener('DOMContentLoaded', function () {
         </section>
 
         <!-- Milestone Section Start -->
+        <?php if (!empty($milestonesContent['is_active'])): ?>
+        <?php
+          $mHeadingClean = trim((string) ($milestonesContent['heading_text'] ?? 'Our Milestones'), " \t\n\r\0\x0B~");
+        ?>
         <section class="milestone-highlight section-spacing-120 rr-ov-hidden">
           <div class="milestone-highlight__overlay"></div>
           <div class="container">
             <div class="milestone-highlight__intro wow fadeInUp" data-wow-delay=".2s">
-              <span class="milestone-highlight__eyebrow">Growth Snapshot</span>
-              <h2 class="milestone-highlight__title">~Our Milestones~</h2>
-              <p class="milestone-highlight__lead">A quick look at the scale, consistency, and trust we keep building with every private label partnership.</p>
+              <span class="milestone-highlight__eyebrow"><?php echo htmlspecialchars($milestonesContent['eyebrow_text'] ?? 'Growth Snapshot', ENT_QUOTES, 'UTF-8'); ?></span>
+              <h2 class="milestone-highlight__title">~<?php echo htmlspecialchars($mHeadingClean, ENT_QUOTES, 'UTF-8'); ?>~</h2>
+              <p class="milestone-highlight__lead"><?php echo htmlspecialchars($milestonesContent['description_text'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
             </div>
             <div class="milestone-grid">
-              <div class="milestone-card wow fadeInUp" data-wow-delay=".1s">
+              <?php
+              $mIndex = 0;
+              foreach ($milestonesCards as $mCard):
+                if (empty($mCard['is_active'])) continue;
+                $mIndex++;
+                $delaySec = sprintf('%.1fs', 0.1 * $mIndex);
+                $rawVal = (string) ($mCard['number_value'] ?? '');
+                $targetDigits = (int) preg_replace('/[^0-9]/', '', $rawVal);
+              ?>
+              <div class="milestone-card wow fadeInUp" data-wow-delay="<?php echo $delaySec; ?>">
                 <div class="milestone-card__icon-wrap">
-                  <img src="<?php echo url('assets/imgs/home/milestone/4381dcfc16-300x254.webp'); ?>" alt="Monthly worldwide inquiries">
+                  <img src="<?php echo url($mCard['image_path']); ?>" alt="<?php echo htmlspecialchars($mCard['image_alt'] ?: $mCard['title'], ENT_QUOTES, 'UTF-8'); ?>">
                 </div>
-                <span class="milestone-card__kicker">Monthly Avg.</span>
-                <h3 class="milestone-card__number js-milestone-number" data-target="1075">0+</h3>
-                <p class="milestone-card__text">Monthly Worldwide Inquiries</p>
+                <span class="milestone-card__kicker"><?php echo htmlspecialchars($mCard['kicker'], ENT_QUOTES, 'UTF-8'); ?></span>
+                <?php if ($targetDigits > 0): ?>
+                  <h3 class="milestone-card__number js-milestone-number" data-target="<?php echo $targetDigits; ?>">0+</h3>
+                <?php else: ?>
+                  <h3 class="milestone-card__number"><?php echo htmlspecialchars($rawVal, ENT_QUOTES, 'UTF-8'); ?></h3>
+                <?php endif; ?>
+                <p class="milestone-card__text"><?php echo htmlspecialchars($mCard['title'], ENT_QUOTES, 'UTF-8'); ?></p>
               </div>
-              <div class="milestone-card wow fadeInUp" data-wow-delay=".2s">
-                <div class="milestone-card__icon-wrap">
-                  <img src="<?php echo url('assets/imgs/home/milestone/f99c232e29-2-300x202.webp'); ?>" alt="Customers served monthly">
-                </div>
-                <span class="milestone-card__kicker">Monthly Avg.</span>
-                <h3 class="milestone-card__number js-milestone-number" data-target="950">0+</h3>
-                <p class="milestone-card__text">Customer's Served Monthly</p>
-              </div>
-              <div class="milestone-card wow fadeInUp" data-wow-delay=".3s">
-                <div class="milestone-card__icon-wrap">
-                  <img src="<?php echo url('assets/imgs/home/milestone/ec2ce0607f-150x150.webp'); ?>" alt="Contract manufacturing for brands">
-                </div>
-                <span class="milestone-card__kicker">Brand Scale</span>
-                <h3 class="milestone-card__number js-milestone-number" data-target="650">0+</h3>
-                <p class="milestone-card__text">Contract Manufacturing for Brands</p>
-              </div>
-              <div class="milestone-card wow fadeInUp" data-wow-delay=".4s">
-                <div class="milestone-card__icon-wrap">
-                  <img src="<?php echo url('assets/imgs/home/milestone/b3099fe017-150x150.webp'); ?>" alt="Ayurvedic personal care formulations">
-                </div>
-                <span class="milestone-card__kicker">Formula Library</span>
-                <h3 class="milestone-card__number js-milestone-number" data-target="525">0+</h3>
-                <p class="milestone-card__text">Ayurvedic Personal Care Formulations</p>
-              </div>
+              <?php endforeach; ?>
             </div>
           </div>
         </section>
+        <?php endif; ?>
         <!-- Milestone Section End -->
 
         <!-- Global Presence Map Section Start -->

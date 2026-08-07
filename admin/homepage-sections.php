@@ -342,6 +342,93 @@ ON DUPLICATE KEY UPDATE
       }
     }
   }
+
+  if ($action === 'save_milestones_content' && $tab === 'our_milestones') {
+    $eyebrowText = trim((string) ($_POST['eyebrow_text'] ?? 'Growth Snapshot'));
+    $headingText = trim((string) ($_POST['heading_text'] ?? 'Our Milestones'));
+    $descriptionText = trim((string) ($_POST['description_text'] ?? ''));
+    $isActive = isset($_POST['is_active']) ? 1 : 0;
+
+    $pdo = db();
+    $stmt = $pdo->prepare("
+INSERT INTO home_milestones_content
+    (section_key, eyebrow_text, heading_text, description_text, is_active)
+VALUES
+    (:section_key, :eyebrow_text, :heading_text, :description_text, :is_active)
+ON DUPLICATE KEY UPDATE
+    eyebrow_text = VALUES(eyebrow_text),
+    heading_text = VALUES(heading_text),
+    description_text = VALUES(description_text),
+    is_active = VALUES(is_active),
+    updated_at = CURRENT_TIMESTAMP
+");
+    $stmt->execute([
+      ':section_key' => 'main',
+      ':eyebrow_text' => $eyebrowText,
+      ':heading_text' => $headingText,
+      ':description_text' => $descriptionText,
+      ':is_active' => $isActive,
+    ]);
+    cms_invalidate_home_milestones_content_cache();
+    $successMessage = 'Milestones section header & intro text updated successfully';
+  }
+
+  if ($action === 'save_milestones_card' && $tab === 'our_milestones') {
+    $id = (int) ($_POST['id'] ?? 0);
+    $kicker = trim((string) ($_POST['kicker'] ?? ''));
+    $numberValue = trim((string) ($_POST['number_value'] ?? ''));
+    $titleText = trim((string) ($_POST['title'] ?? ''));
+    $imageAlt = trim((string) ($_POST['image_alt'] ?? ''));
+    $sortOrder = (int) ($_POST['sort_order'] ?? 0);
+    $isActive = isset($_POST['is_active']) ? 1 : 0;
+
+    $imagePath = '';
+    if (!empty($_FILES['image_path']['name'])) {
+      $stored = store_uploaded_image($_FILES['image_path'], 'home/milestones', 5_000_000, false);
+      if ($stored) {
+        $imagePath = $stored['public_path'];
+      }
+    } elseif (!empty($_POST['existing_image_path'])) {
+      $imagePath = $_POST['existing_image_path'];
+    }
+
+    if ($imagePath === '') {
+      $errorMessage = 'Icon / Image is required';
+    } elseif ($titleText === '') {
+      $errorMessage = 'Title / Description is required';
+    } else {
+      $pdo = db();
+      if ($id > 0) {
+        $stmt = $pdo->prepare('UPDATE home_milestones SET image_path = :image_path, image_alt = :image_alt, kicker = :kicker, number_value = :number_value, title = :title, sort_order = :sort_order, is_active = :is_active WHERE id = :id');
+        $stmt->execute([
+          ':image_path' => $imagePath,
+          ':image_alt' => $imageAlt,
+          ':kicker' => $kicker,
+          ':number_value' => $numberValue,
+          ':title' => $titleText,
+          ':sort_order' => $sortOrder,
+          ':is_active' => $isActive,
+          ':id' => $id,
+        ]);
+        cms_invalidate_home_milestones_cache();
+        $successMessage = 'Milestone card updated successfully';
+      } else {
+        $stmt = $pdo->prepare('INSERT INTO home_milestones (image_path, image_alt, kicker, number_value, title, sort_order, is_active) VALUES (:image_path, :image_alt, :kicker, :number_value, :title, :sort_order, :is_active)');
+        $stmt->execute([
+          ':image_path' => $imagePath,
+          ':image_alt' => $imageAlt,
+          ':kicker' => $kicker,
+          ':number_value' => $numberValue,
+          ':title' => $titleText,
+          ':sort_order' => $sortOrder,
+          ':is_active' => $isActive,
+        ]);
+        cms_invalidate_home_milestones_cache();
+        $successMessage = 'Milestone card added successfully';
+      }
+    }
+  }
+
   
   if ($action === 'save_marquee' && $tab === 'marquee') {
     $stripKey = trim((string) ($_POST['strip_key'] ?? ''));
@@ -510,6 +597,18 @@ ON DUPLICATE KEY UPDATE
       $successMessage = 'Getting started step deleted';
     }
   }
+
+  if ($action === 'delete' && ($tab === 'our_milestones')) {
+    $id = (int) ($_POST['id'] ?? 0);
+    if ($id > 0) {
+      $pdo = db();
+      $stmt = $pdo->prepare('DELETE FROM home_milestones WHERE id = :id');
+      $stmt->execute([':id' => $id]);
+      cms_invalidate_home_milestones_cache();
+      $successMessage = 'Milestone card deleted successfully';
+    }
+  }
+
   
   if ($action === 'delete' && ($tab === 'brand_builder_item' || ($tab === 'brand_builder' && ($_POST['item_type'] ?? '') === 'brand_builder_item'))) {
     $id = (int) ($_POST['id'] ?? 0);
@@ -533,6 +632,8 @@ if (empty($brandBuilderItemsAdmin)) {
 }
 $gettingStartedSteps = db_fetch_all($pdo, 'SELECT * FROM home_getting_started ORDER BY sort_order ASC, id ASC');
 $gettingStartedContent = cms_get_home_getting_started_content();
+$milestonesCards = db_fetch_all($pdo, 'SELECT * FROM home_milestones ORDER BY sort_order ASC, id ASC');
+$milestonesContent = cms_get_home_milestones_content();
 $marqueeStrip = db_fetch_one($pdo, 'SELECT * FROM home_marquee_strips WHERE strip_key = :k LIMIT 1', [':k' => 'working_process_services']);
 $partnerLogos = db_fetch_all($pdo, 'SELECT * FROM home_partner_logos ORDER BY sort_order ASC, id ASC');
 $certificationLogos = db_fetch_all($pdo, 'SELECT * FROM home_certification_logos ORDER BY sort_order ASC, id ASC');
@@ -574,6 +675,21 @@ if ($activeTab === 'getting_started') {
     $showGettingStartedForm = true;
   }
 }
+
+$editMilestoneCard = null;
+$showMilestonesForm = false;
+if ($activeTab === 'our_milestones') {
+  if (isset($_GET['edit_id'])) {
+    $editId = (int) $_GET['edit_id'];
+    $editMilestoneCard = db_fetch_one($pdo, 'SELECT * FROM home_milestones WHERE id = :id LIMIT 1', [':id' => $editId]);
+    if ($editMilestoneCard) {
+      $showMilestonesForm = true;
+    }
+  } elseif (isset($_GET['action']) && $_GET['action'] === 'add') {
+    $showMilestonesForm = true;
+  }
+}
+
 
 $title = 'Homepage Sections Management';
 include __DIR__ . '/_layout_top.php';
@@ -1177,6 +1293,183 @@ include __DIR__ . '/_layout_top.php';
   </div>
   <!-- ===================== END GETTING STARTED ===================== -->
 
+  <!-- ===================== OUR MILESTONES ===================== -->
+  <div class="tab-pane fade <?php echo $activeTab === 'our_milestones' ? 'show active' : ''; ?>" id="our-milestones" role="tabpanel">
+
+    <!-- Our Milestones Section Header & Intro (Update-Only) -->
+    <div class="widget-card mb-4">
+      <div class="widget-header">
+        <h5 class="widget-title">Our Milestones Header & Intro Text</h5>
+      </div>
+      <div class="widget-body p-3">
+        <form method="POST" action="" data-section-preview='{"content_type":"home_milestones_content","entity_id":0}'>
+          <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+          <input type="hidden" name="action" value="save_milestones_content">
+          <input type="hidden" name="tab" value="our_milestones">
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Growth Snapshot Badge (Eyebrow) <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" name="eyebrow_text" value="<?php echo htmlspecialchars($milestonesContent['eyebrow_text'] ?? 'Growth Snapshot', ENT_QUOTES, 'UTF-8'); ?>" required>
+              <small class="text-muted">Small badge text above the heading (e.g. "Growth Snapshot").</small>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Section Heading <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" name="heading_text" value="<?php echo htmlspecialchars($milestonesContent['heading_text'] ?? 'Our Milestones', ENT_QUOTES, 'UTF-8'); ?>" required>
+              <small class="text-muted">Enter text only (e.g. "Our Milestones"). Tildes ~ will be automatically wrapped on the frontend.</small>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Intro Text <span class="text-danger">*</span></label>
+            <textarea class="form-control" name="description_text" rows="3" required><?php echo htmlspecialchars($milestonesContent['description_text'] ?? '', ENT_QUOTES, 'UTF-8'); ?></textarea>
+            <small class="text-muted">Introductory paragraph text displayed below the section heading.</small>
+          </div>
+
+          <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" name="is_active" id="milestones_section_active" <?php echo ($milestonesContent['is_active'] ?? 1) ? 'checked' : ''; ?>>
+            <label class="form-check-label" for="milestones_section_active">Active</label>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Update Header & Intro</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Milestone Card Form (Add/Edit) -->
+    <div class="widget-card mb-4 <?php echo $showMilestonesForm ? '' : 'd-none'; ?>" id="milestonesFormCard">
+      <div class="widget-header">
+        <h5 class="widget-title" id="milestonesFormTitle"><?php echo $editMilestoneCard ? 'Edit Milestone Card' : 'Add New Milestone Card'; ?></h5>
+      </div>
+      <div class="widget-body p-3">
+        <form method="POST" action="" enctype="multipart/form-data" data-section-preview='{"content_type":"home_milestones","entity_id":<?= (int) ($editMilestoneCard['id'] ?? 0) ?>}'>
+          <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+          <input type="hidden" name="action" value="save_milestones_card">
+          <input type="hidden" name="tab" value="our_milestones">
+          <?php if ($editMilestoneCard): ?>
+            <input type="hidden" name="id" value="<?php echo $editMilestoneCard['id']; ?>">
+            <input type="hidden" name="existing_image_path" value="<?php echo htmlspecialchars($editMilestoneCard['image_path'], ENT_QUOTES, 'UTF-8'); ?>">
+          <?php endif; ?>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Icon / Image <span class="text-danger">*</span></label>
+              <input type="file" class="form-control" name="image_path" accept="image/*" <?php echo $editMilestoneCard ? '' : 'required'; ?>>
+              <?php if ($editMilestoneCard && !empty($editMilestoneCard['image_path'])): ?>
+                <div class="mt-2">
+                  <small class="text-muted d-block mb-1">Current Image:</small>
+                  <img src="<?php echo url($editMilestoneCard['image_path']); ?>" alt="Current icon" style="max-height: 60px; object-fit: contain;" class="img-thumbnail">
+                </div>
+              <?php endif; ?>
+              <small class="text-muted">If editing and no new image is chosen, the existing image will be retained.</small>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Image Alt Text</label>
+              <input type="text" class="form-control" name="image_alt" value="<?php echo htmlspecialchars($editMilestoneCard['image_alt'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" placeholder="e.g. Monthly worldwide inquiries">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Small Label (Kicker) <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" name="kicker" value="<?php echo htmlspecialchars($editMilestoneCard['kicker'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" placeholder="e.g. Monthly Avg." required>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Number / Value <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" name="number_value" value="<?php echo htmlspecialchars($editMilestoneCard['number_value'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" placeholder="e.g. 1075+" required>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Title / Description <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" name="title" value="<?php echo htmlspecialchars($editMilestoneCard['title'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" placeholder="e.g. Monthly Worldwide Inquiries" required>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Display Order</label>
+              <input type="number" class="form-control" name="sort_order" value="<?php echo (int) ($editMilestoneCard['sort_order'] ?? 0); ?>">
+            </div>
+
+            <div class="col-md-6 mb-3 d-flex align-items-end">
+              <div class="form-check mb-2">
+                <input type="checkbox" class="form-check-input" name="is_active" id="card_is_active" <?php echo ($editMilestoneCard['is_active'] ?? 1) ? 'checked' : ''; ?>>
+                <label class="form-check-label" for="card_is_active">Active</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex gap-2 mt-3">
+            <button type="submit" class="btn btn-primary" id="milestonesSubmitBtn"><?php echo $editMilestoneCard ? 'Update Card' : 'Add Card'; ?></button>
+            <button type="button" class="btn btn-secondary" id="milestonesCancelBtn">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Milestone Cards Table -->
+    <div class="widget-card mt-4">
+      <div class="widget-header">
+        <h5 class="widget-title">Milestone Cards</h5>
+        <div class="widget-actions">
+          <button type="button" class="btn btn-primary-modern btn-sm" id="addMilestonesBtn"><i class="bi bi-plus-circle me-1"></i>Add New Card</button>
+        </div>
+      </div>
+      <div class="widget-body">
+        <div class="table-responsive">
+          <table class="table table-striped align-middle">
+            <thead>
+              <tr>
+                <th>Order</th>
+                <th>Icon/Image</th>
+                <th>Small Label</th>
+                <th>Number / Value</th>
+                <th>Title / Description</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php if (empty($milestonesCards)): ?>
+                <tr>
+                  <td colspan="7" class="text-center text-muted py-4">
+                    <i class="bi bi-trophy" style="font-size:1.5rem;display:block;margin-bottom:0.3rem;opacity:0.3;"></i>
+                    No milestone cards yet. Click <strong>Add New Card</strong> to create one.
+                  </td>
+                </tr>
+              <?php endif; ?>
+              <?php foreach ($milestonesCards as $card): ?>
+                <tr>
+                  <td><?php echo (int) $card['sort_order']; ?></td>
+                  <td><img src="<?php echo url($card['image_path']); ?>" alt="<?php echo htmlspecialchars($card['image_alt'], ENT_QUOTES, 'UTF-8'); ?>" style="max-height: 45px; max-width: 60px; object-fit: contain;"></td>
+                  <td><span class="badge bg-light text-dark border"><?php echo htmlspecialchars($card['kicker'], ENT_QUOTES, 'UTF-8'); ?></span></td>
+                  <td><strong class="text-primary fs-6"><?php echo htmlspecialchars($card['number_value'], ENT_QUOTES, 'UTF-8'); ?></strong></td>
+                  <td><strong><?php echo htmlspecialchars($card['title'], ENT_QUOTES, 'UTF-8'); ?></strong></td>
+                  <td><?php echo $card['is_active'] ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-secondary">Inactive</span>'; ?></td>
+                  <td>
+                    <a href="?tab=our_milestones&edit_id=<?php echo $card['id']; ?>" class="btn btn-sm btn-primary"><i class="bi bi-pencil-square me-1"></i>Edit</a>
+                    <form method="POST" action="" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this milestone card?')">
+                      <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+                      <input type="hidden" name="action" value="delete">
+                      <input type="hidden" name="tab" value="our_milestones">
+                      <input type="hidden" name="id" value="<?php echo $card['id']; ?>">
+                      <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash me-1"></i>Delete</button>
+                    </form>
+                  </td>
+                </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- ===================== END OUR MILESTONES ===================== -->
+
+
   <!-- ===================== MARQUEE STRIP ===================== -->
   <div class="tab-pane fade <?php echo $activeTab === 'marquee' ? 'show active' : ''; ?>" id="marquee" role="tabpanel">
 
@@ -1459,6 +1752,60 @@ include __DIR__ . '/_layout_top.php';
   if (cancelBtn) {
     cancelBtn.addEventListener('click', function () {
       hideForm();
+    });
+  }
+
+  // Our Milestones form toggle
+  var mFormCard = document.getElementById('milestonesFormCard');
+  var mAddBtn = document.getElementById('addMilestonesBtn');
+  var mCancelBtn = document.getElementById('milestonesCancelBtn');
+
+  function showMilestonesForm() {
+    if (!mFormCard) return;
+    mFormCard.classList.remove('d-none');
+    mFormCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function hideMilestonesForm() {
+    if (!mFormCard) return;
+    mFormCard.classList.add('d-none');
+  }
+
+  if (mAddBtn) {
+    mAddBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      var form = mFormCard.querySelector('form');
+      if (form) {
+        form.reset();
+        var idInput = form.querySelector('input[name="id"]');
+        if (idInput) idInput.remove();
+        var existingPath = form.querySelector('input[name="existing_image_path"]');
+        if (existingPath) existingPath.remove();
+        var fileInput = form.querySelector('input[name="image_path"]');
+        if (fileInput) {
+          fileInput.required = true;
+          fileInput.value = '';
+        }
+        var titleEl = document.getElementById('milestonesFormTitle');
+        if (titleEl) titleEl.textContent = 'Add New Milestone Card';
+        var submitBtn = document.getElementById('milestonesSubmitBtn');
+        if (submitBtn) submitBtn.textContent = 'Add Card';
+        var previewAttr = form.getAttribute('data-section-preview');
+        if (previewAttr) {
+          try {
+            var cfg = JSON.parse(previewAttr);
+            cfg.entity_id = 0;
+            form.setAttribute('data-section-preview', JSON.stringify(cfg));
+          } catch (err) {}
+        }
+      }
+      showMilestonesForm();
+    });
+  }
+
+  if (mCancelBtn) {
+    mCancelBtn.addEventListener('click', function () {
+      hideMilestonesForm();
     });
   }
 })();

@@ -102,3 +102,11 @@ CREATE INDEX IF NOT EXISTS idx_home_cta_cards_key ON home_cta_cards (card_key);
 CREATE INDEX IF NOT EXISTS idx_brand_builder_items_sec_active_order ON home_brand_builder_items (section_id, is_active, sort_order, id);
 
 
+-- 14. Our Milestones Table Optimizations
+-- Speeds up milestone section content retrieval: WHERE section_key=? AND is_active=1
+CREATE INDEX IF NOT EXISTS idx_home_milestones_content_key_active ON home_milestones_content (section_key, is_active);
+
+-- Speeds up active milestone cards rendering: WHERE is_active=1 ORDER BY sort_order ASC, id ASC
+CREATE INDEX IF NOT EXISTS idx_home_milestones_active_order ON home_milestones (is_active, sort_order, id);
+
+

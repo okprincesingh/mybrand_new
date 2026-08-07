@@ -35,6 +35,16 @@ function cms_invalidate_home_getting_started_content_cache(): void
     cache_delete('cms:home:getting_started_content');
 }
 
+function cms_invalidate_home_milestones_cache(): void
+{
+    cache_delete('cms:home:milestones');
+}
+
+function cms_invalidate_home_milestones_content_cache(): void
+{
+    cache_delete('cms:home:milestones_content');
+}
+
 function cms_invalidate_home_marquee_strips_cache(): void
 {
     cache_delete('cms:home:marquee_strips');
@@ -849,3 +859,153 @@ function cms_get_home_certification_logos(): array
     }
     return $out;
 }
+
+function cms_get_home_milestones_content(): array
+{
+    $cacheKey = 'cms:home:milestones_content';
+    if (!preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $fallback = [
+        'section_key' => 'main',
+        'eyebrow_text' => 'Growth Snapshot',
+        'heading_text' => 'Our Milestones',
+        'description_text' => 'A quick look at the scale, consistency, and trust we keep building with every private label partnership.',
+        'is_active' => 1,
+    ];
+
+    $pdo = db();
+    if (!$pdo) {
+        return $fallback;
+    }
+
+    $activeClause = preview_mode_include_drafts() ? '' : ' AND is_active = 1';
+    $row = db_fetch_one(
+        $pdo,
+        'SELECT * FROM home_milestones_content WHERE section_key = :k' . $activeClause . ' LIMIT 1',
+        [':k' => 'main']
+    );
+
+    if (!$row) {
+        if (!preview_mode_should_bypass_cache()) {
+            cache_set($cacheKey, $fallback, 300);
+        }
+        return $fallback;
+    }
+
+    if (preview_mode_include_drafts()) {
+        $row = draft_merge_row((array) $row, 'home_milestones_content', (int) ($row['id'] ?? 0));
+    }
+
+    $out = [
+        'section_key' => (string) ($row['section_key'] ?? 'main'),
+        'eyebrow_text' => (string) ($row['eyebrow_text'] ?? 'Growth Snapshot'),
+        'heading_text' => (string) ($row['heading_text'] ?? 'Our Milestones'),
+        'description_text' => (string) ($row['description_text'] ?? ''),
+        'is_active' => (int) ($row['is_active'] ?? 1),
+    ];
+
+    if (!preview_mode_should_bypass_cache()) {
+        cache_set($cacheKey, $out, 300);
+    }
+    return $out;
+}
+
+function cms_get_home_milestones(): array
+{
+    $cacheKey = 'cms:home:milestones';
+    if (!preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $fallback = [
+        [
+            'id' => 1,
+            'image_path' => 'assets/imgs/home/milestone/4381dcfc16-300x254.webp',
+            'image_alt' => 'Monthly worldwide inquiries',
+            'kicker' => 'Monthly Avg.',
+            'number_value' => '1075+',
+            'title' => 'Monthly Worldwide Inquiries',
+            'sort_order' => 1,
+            'is_active' => 1,
+        ],
+        [
+            'id' => 2,
+            'image_path' => 'assets/imgs/home/milestone/f99c232e29-2-300x202.webp',
+            'image_alt' => 'Customers served monthly',
+            'kicker' => 'Monthly Avg.',
+            'number_value' => '950+',
+            'title' => "Customer's Served Monthly",
+            'sort_order' => 2,
+            'is_active' => 1,
+        ],
+        [
+            'id' => 3,
+            'image_path' => 'assets/imgs/home/milestone/ec2ce0607f-150x150.webp',
+            'image_alt' => 'Contract manufacturing for brands',
+            'kicker' => 'Brand Scale',
+            'number_value' => '650+',
+            'title' => 'Contract Manufacturing for Brands',
+            'sort_order' => 3,
+            'is_active' => 1,
+        ],
+        [
+            'id' => 4,
+            'image_path' => 'assets/imgs/home/milestone/b3099fe017-150x150.webp',
+            'image_alt' => 'Ayurvedic personal care formulations',
+            'kicker' => 'Formula Library',
+            'number_value' => '525+',
+            'title' => 'Ayurvedic Personal Care Formulations',
+            'sort_order' => 4,
+            'is_active' => 1,
+        ],
+    ];
+
+    $pdo = db();
+    if (!$pdo) {
+        return $fallback;
+    }
+
+    $activeClause = preview_mode_include_drafts() ? '' : ' WHERE is_active = 1';
+    $rows = db_fetch_all(
+        $pdo,
+        'SELECT id, image_path, image_alt, kicker, number_value, title, sort_order, is_active FROM home_milestones' . $activeClause . ' ORDER BY sort_order ASC, id ASC'
+    );
+
+    if (!$rows) {
+        if (!preview_mode_should_bypass_cache()) {
+            cache_set($cacheKey, $fallback, 300);
+        }
+        return $fallback;
+    }
+
+    if (preview_mode_include_drafts()) {
+        $rows = draft_merge_rows($rows, 'home_milestones');
+    }
+
+    $out = [];
+    foreach ($rows as $row) {
+        $out[] = [
+            'id' => (int) ($row['id'] ?? 0),
+            'image_path' => (string) ($row['image_path'] ?? ''),
+            'image_alt' => (string) ($row['image_alt'] ?? ''),
+            'kicker' => (string) ($row['kicker'] ?? ''),
+            'number_value' => (string) ($row['number_value'] ?? ''),
+            'title' => (string) ($row['title'] ?? ''),
+            'sort_order' => (int) ($row['sort_order'] ?? 0),
+            'is_active' => (int) ($row['is_active'] ?? 1),
+        ];
+    }
+
+    if (!preview_mode_should_bypass_cache()) {
+        cache_set($cacheKey, $out, 300);
+    }
+    return $out;
+}
