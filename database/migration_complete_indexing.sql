@@ -119,3 +119,11 @@ CREATE INDEX IF NOT EXISTS idx_home_testimonials_active_order ON home_testimonia
 
 -- Speeds up platform filtered testimonials: WHERE platform=? AND is_active=1 ORDER BY sort_order ASC, id ASC
 CREATE INDEX IF NOT EXISTS idx_home_testimonials_plat_active_order ON home_testimonials (platform, is_active, sort_order, id);
+
+
+-- 16. Instagram Reels Table Optimizations
+-- Speeds up instagram reels content retrieval: WHERE section_key=? AND is_active=1
+CREATE INDEX IF NOT EXISTS idx_home_reels_content_key_active ON home_instagram_reels_content (section_key, is_active);
+
+-- Speeds up active instagram reels rendering: WHERE is_active=1 ORDER BY sort_order ASC, id ASC
+CREATE INDEX IF NOT EXISTS idx_home_reels_active_order ON home_instagram_reels (is_active, sort_order, id);

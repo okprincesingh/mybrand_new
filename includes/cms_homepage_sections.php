@@ -55,6 +55,11 @@ function cms_invalidate_home_testimonials_content_cache(): void
     cache_delete('cms:home:testimonials_content');
 }
 
+function cms_invalidate_home_instagram_reels_content_cache(): void
+{
+    cache_delete('cms:home:instagram_reels_content');
+}
+
 
 function cms_invalidate_home_marquee_strips_cache(): void
 {
@@ -1149,4 +1154,62 @@ function cms_get_home_testimonials(): array
     }
     return $out;
 }
+
+function cms_get_home_instagram_reels_content(): array
+{
+    $cacheKey = 'cms:home:instagram_reels_content';
+    if (!preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $fallback = [
+        'section_key' => 'main',
+        'eyebrow_text' => 'Video Showcase',
+        'heading_html' => '<span>Watch it!</span> <span class="social-reels__title-star" aria-hidden="true">*</span> <span class="social-reels__title-love">Love it!</span> <span class="social-reels__title-star" aria-hidden="true">*</span> <span>Build it!</span>',
+        'intro_text' => 'We don’t just manufacture products. We manufacture dominance.',
+        'tagline_text' => 'mybrandplease.com - turns your ambition into artistry, and your brand into a lasting legacy.',
+        'is_active' => 1,
+    ];
+
+    $pdo = db();
+    if (!$pdo) {
+        return $fallback;
+    }
+
+    $activeClause = preview_mode_include_drafts() ? '' : ' AND is_active = 1';
+    $row = db_fetch_one(
+        $pdo,
+        'SELECT * FROM home_instagram_reels_content WHERE section_key = :k' . $activeClause . ' LIMIT 1',
+        [':k' => 'main']
+    );
+
+    if (!$row) {
+        if (!preview_mode_should_bypass_cache()) {
+            cache_set($cacheKey, $fallback, 300);
+        }
+        return $fallback;
+    }
+
+    if (preview_mode_include_drafts()) {
+        $row = draft_merge_row((array) $row, 'home_instagram_reels_content', (int) ($row['id'] ?? 0));
+    }
+
+    $out = [
+        'section_key' => (string) ($row['section_key'] ?? 'main'),
+        'eyebrow_text' => (string) ($row['eyebrow_text'] ?? 'Video Showcase'),
+        'heading_html' => (string) ($row['heading_html'] ?? ''),
+        'intro_text' => (string) ($row['intro_text'] ?? ''),
+        'tagline_text' => (string) ($row['tagline_text'] ?? ''),
+        'is_active' => (int) ($row['is_active'] ?? 1),
+    ];
+
+    if (!preview_mode_should_bypass_cache()) {
+        cache_set($cacheKey, $out, 300);
+    }
+    return $out;
+}
+
 

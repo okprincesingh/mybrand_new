@@ -64,6 +64,7 @@ $homeHeroVideos = cms_get_home_hero_videos();
 $homeHeroVideo = $homeHeroVideos[0] ?? null;
 $homeOffices = cms_get_home_offices();
 $homeInstagramReels = cms_get_home_instagram_reels();
+$reelsContent = cms_get_home_instagram_reels_content();
 $milestonesContent = cms_get_home_milestones_content();
 $milestonesCards = cms_get_home_milestones();
 $testimonialsContent = cms_get_home_testimonials_content();
@@ -1037,15 +1038,11 @@ document.addEventListener('DOMContentLoaded', function () {
         <section class="social-reels rr-ov-hidden" id="video-showcase">
           <div class="container ">
             <div class="social-reels__intro">
-              <span class="milestone-highlight__eyebrow">Video Showcase</span>
+              <span class="milestone-highlight__eyebrow"><?php echo htmlspecialchars($reelsContent['eyebrow_text'] ?? 'Video Showcase'); ?></span>
               <h2 class="social-reels__title">
-                <span>Watch it!</span>
-                <span class="social-reels__title-star" aria-hidden="true">*</span>
-                <span class="social-reels__title-love">Love it!</span>
-                <span class="social-reels__title-star" aria-hidden="true">*</span>
-                <span>Build it!</span>
+                <?php echo $reelsContent['heading_html'] ?? '<span>Watch it!</span> <span class="social-reels__title-star" aria-hidden="true">*</span> <span class="social-reels__title-love">Love it!</span> <span class="social-reels__title-star" aria-hidden="true">*</span> <span>Build it!</span>'; ?>
               </h2>
-              <p class="social-reels__lead text-center">We don’t just manufacture products. We manufacture dominance.</p>
+              <p class="social-reels__lead text-center"><?php echo htmlspecialchars($reelsContent['intro_text'] ?? ''); ?></p>
             </div>
           </div>
           <div class="social-reels__viewport">
@@ -1126,7 +1123,7 @@ document.addEventListener('DOMContentLoaded', function () {
           </div>
           <div class="container ">
             <div class="social-reels__outro">
-              <p class="social-reels__tagline">mybrandplease.com - turns your ambition into artistry, and your brand into a lasting legacy.</p>
+              <p class="social-reels__tagline"><?php echo htmlspecialchars($reelsContent['tagline_text'] ?? ''); ?></p>
             </div>
           </div>
         </section>
@@ -1163,12 +1160,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 card.classList.add('is-ready');
                 return;
               }
-              if (!video.getAttribute('src')) {
-                const source = video.getAttribute('data-src') || '';
-                if (!source) return;
-                video.setAttribute('src', source);
-                video.load();
-              }
               video.muted = true;
               video.loop = true;
               video.addEventListener('loadeddata', function () {
@@ -1177,26 +1168,33 @@ document.addEventListener('DOMContentLoaded', function () {
               if (video.readyState >= 2) {
                 card.classList.add('is-ready');
               }
+            }
+
+            function playVideoOnCard(card) {
+              const video = card.querySelector('video');
+              if (!video) return;
+
+              if (!video.getAttribute('src')) {
+                const source = video.getAttribute('data-src') || card.getAttribute('data-video-src') || '';
+                if (!source) return;
+                video.setAttribute('src', source);
+                video.load();
+              }
+
+              video.muted = true;
+              video.loop = true;
+              card.classList.add('is-ready');
+
               const playPromise = video.play();
               if (playPromise && typeof playPromise.catch === 'function') {
                 playPromise.catch(function () {});
               }
             }
 
-            function playCardVideos() {
-              section.querySelectorAll('.social-reels__video').forEach(function (video) {
-                if (!video.getAttribute('src')) {
-                  const source = video.getAttribute('data-src') || '';
-                  if (!source) return;
-                  video.setAttribute('src', source);
-                  video.load();
-                }
-                video.muted = true;
-                const playPromise = video.play();
-                if (playPromise && typeof playPromise.catch === 'function') {
-                  playPromise.catch(function () {});
-                }
-              });
+            function pauseVideoOnCard(card) {
+              const video = card.querySelector('video');
+              if (!video) return;
+              video.pause();
             }
 
             function pauseCardVideos() {
@@ -1204,6 +1202,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 video.pause();
               });
             }
+
+            // Bind hover play/pause handlers on all cards
+            section.querySelectorAll('.social-reels__card').forEach(function (card) {
+              card.addEventListener('mouseenter', function () {
+                playVideoOnCard(card);
+              });
+              card.addEventListener('mouseleave', function () {
+                pauseVideoOnCard(card);
+              });
+              card.addEventListener('pointerenter', function () {
+                playVideoOnCard(card);
+              });
+              card.addEventListener('pointerleave', function () {
+                pauseVideoOnCard(card);
+              });
+            });
 
             function updateVolumeButton(button, video) {
               const isMuted = video.muted;
@@ -1329,7 +1343,7 @@ document.addEventListener('DOMContentLoaded', function () {
               autoplay: {
                 delay: 3000,
                 disableOnInteraction: false,
-                pauseOnMouseEnter: false
+                pauseOnMouseEnter: true
               },
               navigation: {
                 prevEl: section.querySelector('.social-reels__nav--prev'),
@@ -1342,11 +1356,7 @@ document.addEventListener('DOMContentLoaded', function () {
               },
               on: {
                 init: function () {},
-                slideChangeTransitionEnd: function () {
-                  if (section.classList.contains('is-reels-active')) {
-                    playCardVideos();
-                  }
-                }
+                slideChangeTransitionEnd: function () {}
               },
               breakpoints: {
                 0: {
@@ -1366,7 +1376,6 @@ document.addEventListener('DOMContentLoaded', function () {
               if (section.classList.contains('is-reels-active')) return;
               section.classList.add('is-reels-active');
               cards.forEach(prepareCard);
-              playCardVideos();
               if (reelsSwiper.autoplay && typeof reelsSwiper.autoplay.start === 'function') {
                 reelsSwiper.autoplay.start();
               }
