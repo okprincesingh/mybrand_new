@@ -83,7 +83,8 @@ function catalog_expand_aliases(array $aliases): array
 {
     $map = [
         'especially-for-men' => ['men-s-care'],
-        'men-s-care' => ['especially-for-men'],
+        'men-s-care' => ['especially-for-men'],        'bath-and-body' => ['body-care'],
+        'body-care' => ['bath-and-body'],
         'aerosols' => ['aerosols-parfumes', 'aerosols-perfumes', 'fragrances', 'perfumes'],
         'aerosols-parfumes' => ['aerosols', 'aerosols-perfumes', 'fragrances', 'perfumes'],
         'aerosols-perfumes' => ['aerosols', 'aerosols-parfumes', 'fragrances', 'perfumes'],

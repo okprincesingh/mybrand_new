@@ -1,0 +1,1 @@
+a:3:{s:3:"key";s:36:"cms:setting:category_shop_subtitle_2";s:10:"expires_at";i:1786166694;s:4:"data";s:55:"Shop our Private Label Hair Care Products Online Below!";}
