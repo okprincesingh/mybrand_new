@@ -1216,16 +1216,20 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
         const label = document.getElementById('header-lang-label');
         const flag = document.getElementById('header-lang-flag');
         const options = switcher ? switcher.querySelectorAll('.header-lang-switcher__option') : [];
-        const supportedLanguages = ['en', 'fr', 'es'];
+        const supportedLanguages = ['en', 'es', 'fr', 'pt', 'ar'];
         const languageNames = {
           en: 'EN',
+          es: 'ES',
           fr: 'FR',
-          es: 'ES'
+          pt: 'PT',
+          ar: 'AR'
         };
         const flagClasses = {
           en: 'flag-en',
+          es: 'flag-es',
           fr: 'flag-fr',
-          es: 'flag-es'
+          pt: 'flag-pt',
+          ar: 'flag-ar'
         };
 
         if (!switcher || !trigger || !menu || !label || !flag || !options.length) return;
@@ -1242,9 +1246,25 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
 
         function clearCookie(name) {
           const hostname = window.location.hostname;
-          document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
-          if (hostname && hostname.indexOf('.') !== -1) {
-            document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=.' + hostname.replace(/^www\./i, '');
+          const expires = 'expires=Thu, 01 Jan 1970 00:00:00 GMT';
+          const paths = ['/', window.location.pathname.replace(/\/[^\/]*$/, '/') || '/'];
+          const domains = ['', hostname, hostname ? '.' + hostname.replace(/^www\./i, '') : ''];
+
+          paths.forEach(function (path) {
+            domains.forEach(function (domain) {
+              let cookie = name + '=; ' + expires + '; path=' + path;
+              if (domain && domain.indexOf('.') !== -1) {
+                cookie += '; domain=' + domain;
+              }
+              document.cookie = cookie;
+            });
+          });
+
+          try {
+            window.localStorage.removeItem(name);
+            window.sessionStorage.removeItem(name);
+          } catch (error) {
+            // Storage can be unavailable in private browsing modes.
           }
         }
 
@@ -1311,9 +1331,14 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
 
         function triggerTranslate(lang) {
           const targetLang = supportedLanguages.includes(lang) ? lang : 'en';
+          const previousLang = getCurrentLanguage();
 
           if (targetLang === 'en') {
             clearCookie('googtrans');
+            if (previousLang !== 'en') {
+              window.location.reload();
+            }
+            return;
           } else {
             setCookie('googtrans', '/en/' + targetLang, 30);
           }

@@ -111,7 +111,7 @@ function blog_get_posts(array $filters = [], array $pagination = []): array
 
     $total = (int) (db_fetch_value($pdo, "SELECT COUNT(*) FROM blog_posts WHERE {$whereSql}", $params) ?? 0);
 
-    $sql = "SELECT id,title,slug,excerpt,content,featured_image,category,author_name,published_at,status,tags
+    $sql = "SELECT id,title,slug,excerpt,content,meta_title,canonical_url,meta_keywords,meta_description,featured_image,category,author_name,published_at,status,tags
             FROM blog_posts
             WHERE {$whereSql}
             ORDER BY published_at DESC, id DESC
@@ -144,7 +144,7 @@ function blog_get_post_by_slug(string $slug): ?array
         return null;
     }
 
-    return db_fetch_one($pdo, 'SELECT id,title,slug,excerpt,content,featured_image,category,author_name,published_at,status,tags FROM blog_posts WHERE slug = :slug AND status = :st LIMIT 1', [
+    return db_fetch_one($pdo, 'SELECT id,title,slug,excerpt,content,meta_title,canonical_url,meta_keywords,meta_description,featured_image,category,author_name,published_at,status,tags FROM blog_posts WHERE slug = :slug AND status = :st LIMIT 1', [
         ':slug' => $slug,
         ':st' => 'published',
     ]);

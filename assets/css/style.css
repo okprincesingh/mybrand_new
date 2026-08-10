@@ -4513,6 +4513,9 @@ input.main-search-input::placeholder {
 .header-area.header-layoutone .header-right .header-lang-switcher__flag.flag-es {
   background-image: linear-gradient(to bottom, #AA151B 0 25%, #F1BF00 25% 75%, #AA151B 75% 100%);
 }
+.header-area.header-layoutone .header-right .header-lang-switcher__flag.flag-pt {
+  background-image: linear-gradient(to right, #046A38 0 40%, #DA291C 40% 100%);
+}
 .header-area.header-layoutone .header-right .header-lang-switcher__trigger .fa-chevron-down {
   font-size: 0.65rem;
   color: currentColor;

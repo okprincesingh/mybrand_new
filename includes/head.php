@@ -5,6 +5,7 @@ require_once __DIR__ . '/captcha.php';
 require_once __DIR__ . '/db.php';
 
 $meta = $meta ?? [];
+$skipPageMetaLookup = !empty($meta['skip_page_meta_lookup']);
 
 $currentPageId = (int) ($_GET['page_id'] ?? 0);
 $requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
@@ -17,7 +18,7 @@ if ($slugCandidate === 'index') {
 
 $seoRow = null;
 $pdo = db();
-if ($pdo) {
+if ($pdo && !$skipPageMetaLookup) {
     if ($currentPageId > 0) {
         $seoRow = db_fetch_one($pdo, 'SELECT p.id,p.slug,p.title,p.status,pm.meta_title,pm.meta_description,pm.meta_keywords,pm.canonical_url FROM pages p LEFT JOIN page_meta pm ON pm.page_id = p.id WHERE p.id = :id LIMIT 1', [':id' => $currentPageId]);
     }
