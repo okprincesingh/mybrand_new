@@ -2250,7 +2250,7 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
         }
       })();
 
-      // Site visit popup: show once for a new visitor when they scroll down to the footer.
+      // Site visit popup: show whenever the visitor scrolls down to the footer.
       (function () {
         const popup = document.getElementById('site-visit-popup');
         if (!popup) return;
@@ -2258,34 +2258,17 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
         const footer = document.querySelector('.pl-footer');
         if (!footer) return;
 
-        const popupDismissedKey = 'mybrandplease_site_visit_popup_dismissed';
-        let hasShownPopup = false;
+        let hasShownForCurrentFooterView = false;
         let previousScrollY = window.scrollY || window.pageYOffset || 0;
 
-        function isPopupDismissed() {
-          try {
-            return window.localStorage.getItem(popupDismissedKey) === '1';
-          } catch (error) {
-            return false;
-          }
-        }
-
-        function markPopupDismissed() {
-          try {
-            window.localStorage.setItem(popupDismissedKey, '1');
-          } catch (error) {
-            // Ignore storage failures and continue gracefully.
-          }
-        }
-
         function openPopup() {
-          if (hasShownPopup || isPopupDismissed()) return;
+          if (hasShownForCurrentFooterView) return;
           if (popup.classList.contains('is-open')) return;
           const enquiryModal = document.getElementById('enquiry-modal');
           if (enquiryModal && enquiryModal.classList.contains('is-open')) {
             return;
           }
-          hasShownPopup = true;
+          hasShownForCurrentFooterView = true;
           popup.classList.add('is-open');
           popup.setAttribute('aria-hidden', 'false');
           document.body.style.overflow = 'hidden';
@@ -2294,7 +2277,6 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
         function closePopup(restoreScroll) {
           popup.classList.remove('is-open');
           popup.setAttribute('aria-hidden', 'true');
-          markPopupDismissed();
           if (restoreScroll !== false) {
             document.body.style.overflow = '';
           }
@@ -2306,28 +2288,33 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
         }
 
         function handleFooterReach() {
-          if (hasShownPopup || isPopupDismissed()) return;
           const currentScrollY = window.scrollY || window.pageYOffset || 0;
           const isScrollingDown = currentScrollY >= previousScrollY;
           previousScrollY = currentScrollY;
+          const isFooterVisible = footerIsVisible();
 
-          if (isScrollingDown && footerIsVisible()) {
+          if (!isFooterVisible) {
+            hasShownForCurrentFooterView = false;
+            return;
+          }
+
+          if (isScrollingDown) {
             openPopup();
           }
         }
 
-        if (isPopupDismissed()) return;
-
         if ('IntersectionObserver' in window) {
           const observer = new IntersectionObserver(function (entries) {
             entries.forEach(function (entry) {
-              if (!entry.isIntersecting || hasShownPopup || isPopupDismissed()) return;
+              if (!entry.isIntersecting) {
+                hasShownForCurrentFooterView = false;
+                return;
+              }
               const currentScrollY = window.scrollY || window.pageYOffset || 0;
               const isScrollingDown = currentScrollY >= previousScrollY;
               previousScrollY = currentScrollY;
               if (isScrollingDown) {
                 openPopup();
-                observer.disconnect();
               }
             });
           }, {
