@@ -12,6 +12,10 @@ if (user_current()) {
 
 $error = '';
 $success = '';
+if (!empty($_SESSION['google_auth_error'])) {
+    $error = (string) $_SESSION['google_auth_error'];
+    unset($_SESSION['google_auth_error']);
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
@@ -168,14 +172,10 @@ include 'includes/header.php';
                 </div>
 
                 <div class="social-login">
-                    <button type="button" class="social-btn google-btn">
+                    <a class="social-btn google-btn" href="<?php echo e(url('google-auth.php')); ?>">
                         <i class="fa-brands fa-google"></i>
                         Sign up with Google
-                    </button>
-                    <button type="button" class="social-btn apple-btn">
-                        <i class="fa-brands fa-apple"></i>
-                        Sign up with Apple
-                    </button>
+                    </a>
                 </div>
 
                 <div class="register-footer">
@@ -362,6 +362,8 @@ include 'includes/header.php';
     cursor: pointer;
     font-size: 14px;
     font-weight: 600;
+    color: #333;
+    text-decoration: none;
     transition: all 0.3s ease;
 }
 .social-btn:hover {
@@ -370,9 +372,6 @@ include 'includes/header.php';
 }
 .google-btn i {
     color: #db4437;
-}
-.apple-btn i {
-    color: #000;
 }
 .register-footer {
     text-align: center;
