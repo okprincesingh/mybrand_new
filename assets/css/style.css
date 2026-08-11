@@ -609,23 +609,23 @@ h6 {
     }
 
     .hero-marquee {
-        min-height: 160px;
+        min-height: 100px;
     }
 
     .hero-marquee__strip {
         left: -24vw;
         width: 148vw;
-        height: 44px;
+        height: 30px;
     }
 
     .hero-marquee__strip--back {
-        top: 50px;
-        transform: rotate(5deg);
+        top: 40px;
+        transform: rotate(6deg);
     }
 
     .hero-marquee__strip--front {
-        top: 86px;
-        transform: rotate(-5deg);
+        top: 40px;
+        transform: rotate(-6deg);
     }
 
     .hero-marquee__track {
@@ -633,7 +633,7 @@ h6 {
     }
 
     .hero-marquee__track span {
-        font-size: clamp(20px, 5vw, 28px);
+        font-size: clamp(15px, 4vw, 28px);
     }
 
     .hero-marquee__star {
@@ -19649,13 +19649,16 @@ iframe.skiptranslate,
   background: linear-gradient(to left, #fff9f0, rgba(255, 249, 240, 0));
 }
 .partners-carousel-list {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  width: max-content;
+  min-width: max-content;
   gap: 1.125rem;
   padding: 0 1rem;
+  -webkit-animation: partners-marquee 36s linear infinite;
   animation: partners-marquee 36s linear infinite;
   will-change: transform;
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
 }
 .partners-carousel-track:hover .partners-carousel-list {
   animation-play-state: paused;
@@ -19733,14 +19736,17 @@ iframe.skiptranslate,
   background: linear-gradient(to left, #ffffff, rgba(255, 255, 255, 0));
 }
 .auto-scroll-content {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  width: max-content;
+  min-width: max-content;
   gap: 2rem;
   padding: 0 1rem;
+  -webkit-animation: partners-marquee 30s linear infinite reverse;
   animation: partners-marquee 30s linear infinite;
   animation-direction: reverse;
   will-change: transform;
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
 }
 .auto-scroll-item {
   display: flex;
@@ -19781,10 +19787,19 @@ iframe.skiptranslate,
 
 @keyframes partners-marquee {
   0% {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
   100% {
-    transform: translateX(-50%);
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@-webkit-keyframes partners-marquee {
+  0% {
+    -webkit-transform: translate3d(0, 0, 0);
+  }
+  100% {
+    -webkit-transform: translate3d(-50%, 0, 0);
   }
 }
 
