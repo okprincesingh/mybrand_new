@@ -51,16 +51,15 @@ $description = str_ireplace($brandSearch, 'mybrandplease', (string) $description
 $keywords = str_ireplace($brandSearch, 'mybrandplease', (string) $keywords);
 $robots = $meta['robots'] ?? 'index,follow';
 $favicon = $meta['favicon'] ?? 'assets/imgs/logo/favicon-white.png';
-$canonical = $meta['canonical'] ?? ltrim(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/', '/');
+$requestUri = (string) ($_SERVER['REQUEST_URI'] ?? '/');
+$requestUri = $requestUri !== '' && str_starts_with($requestUri, '/') ? $requestUri : '/' . ltrim($requestUri, '/');
+$canonical = rtrim(base_url(), '/') . $requestUri;
 $breadcrumbBackgroundPath = function_exists('cms_get_breadcrumb_background_path')
     ? cms_get_breadcrumb_background_path()
     : 'assets/imgs/breadcumbBg.jpg';
 $breadcrumbBackgroundUrl = preg_match('#^(https?:)?//#i', (string) $breadcrumbBackgroundPath)
     ? (string) $breadcrumbBackgroundPath
     : url((string) $breadcrumbBackgroundPath);
-if (!preg_match('#^(https?:)?//#i', (string) $canonical)) {
-    $canonical = url((string) $canonical);
-}
 
 $currentPhpPage = basename($_SERVER['PHP_SELF']);
 $isHomepage = $currentPhpPage === 'index.php';
@@ -197,7 +196,6 @@ if ($isAosPage) {
     transition: none !important;
   }
 
-  .working-process-section__strip-services,
   .map-marker__dot {
     animation: none !important;
     transform: none !important;
