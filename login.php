@@ -21,6 +21,10 @@ if (!empty($_SESSION['checkout_login_notice'])) {
     $success = (string) $_SESSION['checkout_login_notice'];
     unset($_SESSION['checkout_login_notice']);
 }
+if (!empty($_SESSION['google_auth_error'])) {
+    $error = (string) $_SESSION['google_auth_error'];
+    unset($_SESSION['google_auth_error']);
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
@@ -134,14 +138,10 @@ include 'includes/header.php';
                 </div>
 
                 <div class="social-login">
-                    <button type="button" class="social-btn google-btn">
+                    <a class="social-btn google-btn" href="<?php echo e(url('google-auth.php?redirect=' . urlencode($redirect))); ?>">
                         <i class="fa-brands fa-google"></i>
                         Continue with Google
-                    </button>
-                    <button type="button" class="social-btn apple-btn">
-                        <i class="fa-brands fa-apple"></i>
-                        Continue with Apple
-                    </button>
+                    </a>
                 </div>
 
                 <div class="login-footer">
@@ -318,6 +318,8 @@ include 'includes/header.php';
     cursor: pointer;
     font-size: 14px;
     font-weight: 600;
+    color: #333;
+    text-decoration: none;
     transition: all 0.3s ease;
 }
 .social-btn:hover {
@@ -326,9 +328,6 @@ include 'includes/header.php';
 }
 .google-btn i {
     color: #db4437;
-}
-.apple-btn i {
-    color: #000;
 }
 .login-footer {
     text-align: center;

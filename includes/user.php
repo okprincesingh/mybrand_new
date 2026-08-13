@@ -354,6 +354,95 @@ function user_login(string $email, string $password, bool $remember = false): ?a
     ];
 }
 
+function user_login_by_id(int $userId, bool $remember = false): ?array
+{
+    $user = user_get_by_id($userId);
+    if (!$user) {
+        return ['success' => false, 'message' => 'User not found'];
+    }
+
+    session_regenerate_id(true);
+    csrf_regenerate_token();
+
+    $sessionToken = user_generate_session_token();
+    $ttl = $remember ? 2592000 : 1800;
+
+    user_store_session((int) $user['id'], $sessionToken, $ttl);
+    user_set_auth_cookie('user_session', $sessionToken, $ttl);
+    $_SESSION['user_id'] = (int) $user['id'];
+    $_SESSION['user_session'] = $sessionToken;
+
+    return [
+        'success' => true,
+        'user_id' => (int) $user['id'],
+        'message' => 'Login successful'
+    ];
+}
+
+function user_login_or_register_google(string $email, string $firstName, string $lastName): ?array
+{
+    $pdo = db();
+    if (!$pdo) {
+        return ['success' => false, 'message' => 'Database connection failed'];
+    }
+    user_ensure_verification_columns($pdo);
+
+    $email = strtolower(trim($email));
+    $firstName = trim($firstName);
+    $lastName = trim($lastName);
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return ['success' => false, 'message' => 'Google did not return a valid email address'];
+    }
+
+    $existing = user_get_by_email($email);
+    if ($existing) {
+        if (empty($existing['email_verified_at'])) {
+            $stmt = $pdo->prepare('UPDATE users SET email_verified_at = NOW(), email_verification_token = NULL, updated_at = NOW() WHERE id = :id');
+            $stmt->execute([':id' => (int) $existing['id']]);
+        }
+
+        return user_login_by_id((int) $existing['id'], true);
+    }
+
+    if ($firstName === '' && $lastName === '') {
+        $firstName = strtok($email, '@') ?: 'Google';
+    }
+    if ($lastName === '') {
+        $lastName = 'User';
+    }
+
+    $passwordHash = password_hash(bin2hex(random_bytes(32)), PASSWORD_DEFAULT);
+
+    try {
+        $stmt = $pdo->prepare('INSERT INTO users (email, password_hash, first_name, last_name, email_verified_at) VALUES (:email, :password_hash, :first_name, :last_name, NOW())');
+        $stmt->execute([
+            ':email' => $email,
+            ':password_hash' => $passwordHash,
+            ':first_name' => $firstName,
+            ':last_name' => $lastName,
+        ]);
+
+        $userId = (int) $pdo->lastInsertId();
+
+        try {
+            create_notification(
+                'New Google User Registration',
+                sprintf('%s %s registered with Google email %s', $firstName, $lastName, $email),
+                'info',
+                'users.php',
+                'View Users'
+            );
+        } catch (\Throwable $notificationError) {
+            // Do not block Google registration if notification creation fails.
+        }
+
+        return user_login_by_id($userId, true);
+    } catch (\Throwable $e) {
+        return ['success' => false, 'message' => 'Google registration failed'];
+    }
+}
+
 function user_current(): ?array
 {
     $sessionUserId = (int) ($_SESSION['user_id'] ?? 0);

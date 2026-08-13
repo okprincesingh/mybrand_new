@@ -6,6 +6,7 @@ require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/preview.php';
 
 $meta = $meta ?? [];
+$skipPageMetaLookup = !empty($meta['skip_page_meta_lookup']);
 
 $currentPageId = (int) ($_GET['page_id'] ?? 0);
 $requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
@@ -18,7 +19,7 @@ if ($slugCandidate === 'index') {
 
 $seoRow = null;
 $pdo = db();
-if ($pdo) {
+if ($pdo && !$skipPageMetaLookup) {
     if ($currentPageId > 0) {
         $seoRow = db_fetch_one($pdo, 'SELECT p.id,p.slug,p.title,p.status,pm.meta_title,pm.meta_description,pm.meta_keywords,pm.canonical_url FROM pages p LEFT JOIN page_meta pm ON pm.page_id = p.id WHERE p.id = :id LIMIT 1', [':id' => $currentPageId]);
     }
@@ -51,16 +52,15 @@ $description = str_ireplace($brandSearch, 'mybrandplease', (string) $description
 $keywords = str_ireplace($brandSearch, 'mybrandplease', (string) $keywords);
 $robots = $meta['robots'] ?? preview_mode_robots_meta();
 $favicon = $meta['favicon'] ?? 'assets/imgs/logo/favicon-white.png';
-$canonical = $meta['canonical'] ?? ltrim(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/', '/');
+$requestUri = (string) ($_SERVER['REQUEST_URI'] ?? '/');
+$requestUri = $requestUri !== '' && str_starts_with($requestUri, '/') ? $requestUri : '/' . ltrim($requestUri, '/');
+$canonical = rtrim(base_url(), '/') . $requestUri;
 $breadcrumbBackgroundPath = function_exists('cms_get_breadcrumb_background_path')
     ? cms_get_breadcrumb_background_path()
     : 'assets/imgs/breadcumbBg.jpg';
 $breadcrumbBackgroundUrl = preg_match('#^(https?:)?//#i', (string) $breadcrumbBackgroundPath)
     ? (string) $breadcrumbBackgroundPath
     : url((string) $breadcrumbBackgroundPath);
-if (!preg_match('#^(https?:)?//#i', (string) $canonical)) {
-    $canonical = url((string) $canonical);
-}
 
 $currentPhpPage = basename($_SERVER['PHP_SELF']);
 $isHomepage = $currentPhpPage === 'index.php';
@@ -197,7 +197,6 @@ if ($isAosPage) {
     transition: none !important;
   }
 
-  .working-process-section__strip-services,
   .map-marker__dot {
     animation: none !important;
     transform: none !important;

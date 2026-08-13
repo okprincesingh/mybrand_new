@@ -347,13 +347,21 @@ if (!function_exists('render_header_menu_items')) {
                           <span class="header-lang-switcher__flag flag-en" aria-hidden="true"></span>
                           <span>EN</span>
                         </button>
+                        <button type="button" class="header-lang-switcher__option" data-lang="es" aria-selected="false" role="option">
+                          <span class="header-lang-switcher__flag flag-es" aria-hidden="true"></span>
+                          <span>ES</span>
+                        </button>
                         <button type="button" class="header-lang-switcher__option" data-lang="fr" aria-selected="false" role="option">
                           <span class="header-lang-switcher__flag flag-fr" aria-hidden="true"></span>
                           <span>FR</span>
                         </button>
-                        <button type="button" class="header-lang-switcher__option" data-lang="es" aria-selected="false" role="option">
-                          <span class="header-lang-switcher__flag flag-es" aria-hidden="true"></span>
-                          <span>ES</span>
+                        <button type="button" class="header-lang-switcher__option" data-lang="pt" aria-selected="false" role="option">
+                          <span class="header-lang-switcher__flag flag-pt" aria-hidden="true"></span>
+                          <span>PT</span>
+                        </button>
+                        <button type="button" class="header-lang-switcher__option" data-lang="ar" aria-selected="false" role="option">
+                          <span class="header-lang-switcher__flag flag-ar" aria-hidden="true"></span>
+                          <span>AR</span>
                         </button>
                       </div>
                     </div>

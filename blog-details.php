@@ -24,10 +24,17 @@ $contentHtml = $rawContent !== ''
   ? sanitize_rich_html(normalize_wordpress_rich_html(html_entity_decode($rawContent, ENT_QUOTES | ENT_HTML5, 'UTF-8')))
   : '';
 
+$metaTitle = trim((string) ($post['meta_title'] ?? ''));
+$metaDescription = trim((string) ($post['meta_description'] ?? ''));
+$metaKeywords = trim((string) ($post['meta_keywords'] ?? ''));
+$canonicalUrl = trim((string) ($post['canonical_url'] ?? ''));
+
 $meta = [
-  'title' => 'mybrandplease | ' . (string) $post['title'],
-  'description' => (string) ($post['excerpt'] ?: 'mybrandplease blog details'),
-  'canonical' => (string) $post['slug'],
+  'title' => $metaTitle !== '' ? $metaTitle : ('mybrandplease | ' . (string) $post['title']),
+  'description' => $metaDescription !== '' ? $metaDescription : (string) ($post['excerpt'] ?: 'mybrandplease blog details'),
+  'keywords' => $metaKeywords,
+  'canonical' => $canonicalUrl !== '' ? $canonicalUrl : (string) $post['slug'],
+  'skip_page_meta_lookup' => true,
 ];
 include 'includes/head.php';
 include 'includes/header.php';

@@ -1216,16 +1216,20 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
         const label = document.getElementById('header-lang-label');
         const flag = document.getElementById('header-lang-flag');
         const options = switcher ? switcher.querySelectorAll('.header-lang-switcher__option') : [];
-        const supportedLanguages = ['en', 'fr', 'es'];
+        const supportedLanguages = ['en', 'es', 'fr', 'pt', 'ar'];
         const languageNames = {
           en: 'EN',
+          es: 'ES',
           fr: 'FR',
-          es: 'ES'
+          pt: 'PT',
+          ar: 'AR'
         };
         const flagClasses = {
           en: 'flag-en',
+          es: 'flag-es',
           fr: 'flag-fr',
-          es: 'flag-es'
+          pt: 'flag-pt',
+          ar: 'flag-ar'
         };
 
         if (!switcher || !trigger || !menu || !label || !flag || !options.length) return;
@@ -1242,9 +1246,25 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
 
         function clearCookie(name) {
           const hostname = window.location.hostname;
-          document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
-          if (hostname && hostname.indexOf('.') !== -1) {
-            document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=.' + hostname.replace(/^www\./i, '');
+          const expires = 'expires=Thu, 01 Jan 1970 00:00:00 GMT';
+          const paths = ['/', window.location.pathname.replace(/\/[^\/]*$/, '/') || '/'];
+          const domains = ['', hostname, hostname ? '.' + hostname.replace(/^www\./i, '') : ''];
+
+          paths.forEach(function (path) {
+            domains.forEach(function (domain) {
+              let cookie = name + '=; ' + expires + '; path=' + path;
+              if (domain && domain.indexOf('.') !== -1) {
+                cookie += '; domain=' + domain;
+              }
+              document.cookie = cookie;
+            });
+          });
+
+          try {
+            window.localStorage.removeItem(name);
+            window.sessionStorage.removeItem(name);
+          } catch (error) {
+            // Storage can be unavailable in private browsing modes.
           }
         }
 
@@ -1311,9 +1331,14 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
 
         function triggerTranslate(lang) {
           const targetLang = supportedLanguages.includes(lang) ? lang : 'en';
+          const previousLang = getCurrentLanguage();
 
           if (targetLang === 'en') {
             clearCookie('googtrans');
+            if (previousLang !== 'en') {
+              window.location.reload();
+            }
+            return;
           } else {
             setCookie('googtrans', '/en/' + targetLang, 30);
           }
@@ -2225,7 +2250,7 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
         }
       })();
 
-      // Site visit popup: show once for a new visitor when they scroll down to the footer.
+      // Site visit popup: show whenever the visitor scrolls down to the footer.
       (function () {
         const popup = document.getElementById('site-visit-popup');
         if (!popup) return;
@@ -2233,34 +2258,17 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
         const footer = document.querySelector('.pl-footer');
         if (!footer) return;
 
-        const popupDismissedKey = 'mybrandplease_site_visit_popup_dismissed';
-        let hasShownPopup = false;
+        let hasShownForCurrentFooterView = false;
         let previousScrollY = window.scrollY || window.pageYOffset || 0;
 
-        function isPopupDismissed() {
-          try {
-            return window.localStorage.getItem(popupDismissedKey) === '1';
-          } catch (error) {
-            return false;
-          }
-        }
-
-        function markPopupDismissed() {
-          try {
-            window.localStorage.setItem(popupDismissedKey, '1');
-          } catch (error) {
-            // Ignore storage failures and continue gracefully.
-          }
-        }
-
         function openPopup() {
-          if (hasShownPopup || isPopupDismissed()) return;
+          if (hasShownForCurrentFooterView) return;
           if (popup.classList.contains('is-open')) return;
           const enquiryModal = document.getElementById('enquiry-modal');
           if (enquiryModal && enquiryModal.classList.contains('is-open')) {
             return;
           }
-          hasShownPopup = true;
+          hasShownForCurrentFooterView = true;
           popup.classList.add('is-open');
           popup.setAttribute('aria-hidden', 'false');
           document.body.style.overflow = 'hidden';
@@ -2269,7 +2277,6 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
         function closePopup(restoreScroll) {
           popup.classList.remove('is-open');
           popup.setAttribute('aria-hidden', 'true');
-          markPopupDismissed();
           if (restoreScroll !== false) {
             document.body.style.overflow = '';
           }
@@ -2281,28 +2288,33 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
         }
 
         function handleFooterReach() {
-          if (hasShownPopup || isPopupDismissed()) return;
           const currentScrollY = window.scrollY || window.pageYOffset || 0;
           const isScrollingDown = currentScrollY >= previousScrollY;
           previousScrollY = currentScrollY;
+          const isFooterVisible = footerIsVisible();
 
-          if (isScrollingDown && footerIsVisible()) {
+          if (!isFooterVisible) {
+            hasShownForCurrentFooterView = false;
+            return;
+          }
+
+          if (isScrollingDown) {
             openPopup();
           }
         }
 
-        if (isPopupDismissed()) return;
-
         if ('IntersectionObserver' in window) {
           const observer = new IntersectionObserver(function (entries) {
             entries.forEach(function (entry) {
-              if (!entry.isIntersecting || hasShownPopup || isPopupDismissed()) return;
+              if (!entry.isIntersecting) {
+                hasShownForCurrentFooterView = false;
+                return;
+              }
               const currentScrollY = window.scrollY || window.pageYOffset || 0;
               const isScrollingDown = currentScrollY >= previousScrollY;
               previousScrollY = currentScrollY;
               if (isScrollingDown) {
                 openPopup();
-                observer.disconnect();
               }
             });
           }, {
