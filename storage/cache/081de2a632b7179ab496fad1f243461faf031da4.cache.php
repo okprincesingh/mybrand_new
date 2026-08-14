@@ -1,1 +1,1 @@
-a:3:{s:3:"key";s:37:"cms:setting:about_private_label_image";s:10:"expires_at";i:1786685995;s:4:"data";s:97:"uploads/about/private-label/b593ee1bb78b23870a913acbdca977450cc2914f83a8c8f47b768ea61f32777d.webp";}
+a:3:{s:3:"key";s:37:"cms:setting:about_private_label_image";s:10:"expires_at";i:1786697402;s:4:"data";s:97:"uploads/about/private-label/b593ee1bb78b23870a913acbdca977450cc2914f83a8c8f47b768ea61f32777d.webp";}

@@ -492,6 +492,314 @@ function cms_get_resolved_header_menu(): array
     return cms_merge_header_menu($dbMenu, $defaultMenu);
 }
 
+function cms_invalidate_nav_cache(): void
+{
+    cache_clear_prefix('cms:nav:');
+}
+
+function cms_ensure_navbar_tables(PDO $pdo): bool
+{
+    static $checked = null;
+    if ($checked !== null) {
+        return $checked;
+    }
+
+    try {
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS nav_logo (
+                id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                logo_image VARCHAR(255) NOT NULL DEFAULT 'uploads/logo/mybrandplease-1.gif',
+                eyebrow_text VARCHAR(255) NOT NULL DEFAULT 'For dedicated Private Label Support',
+                brand_text VARCHAR(255) NOT NULL DEFAULT 'mybrandplease.com',
+                tagline_text VARCHAR(255) NOT NULL DEFAULT 'Your Vision | Our Expertise | Your Brand',
+                logo_link_url VARCHAR(500) NOT NULL DEFAULT 'index.php',
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS nav_menu_items (
+                id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                parent_id INT UNSIGNED NULL DEFAULT NULL,
+                label VARCHAR(180) NOT NULL,
+                url VARCHAR(500) NOT NULL,
+                open_in_new_tab TINYINT(1) NOT NULL DEFAULT 0,
+                has_dropdown TINYINT(1) NOT NULL DEFAULT 0,
+                sort_order INT NOT NULL DEFAULT 0,
+                status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX idx_parent_sort (parent_id, sort_order)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+
+        $logoCount = (int) db_fetch_value($pdo, 'SELECT COUNT(*) FROM nav_logo');
+        if ($logoCount === 0) {
+            $pdo->exec("INSERT INTO nav_logo (id, logo_image, eyebrow_text, brand_text, tagline_text, logo_link_url) VALUES (1, 'uploads/logo/mybrandplease-1.gif', 'For dedicated Private Label Support', 'mybrandplease.com', 'Your Vision | Our Expertise | Your Brand', '')");
+        }
+
+        $menuCount = (int) db_fetch_value($pdo, 'SELECT COUNT(*) FROM nav_menu_items');
+        if ($menuCount === 0) {
+            // Seed top-level items and dropdown children matching original URL structure (without .php)
+            $stmt = $pdo->prepare("INSERT INTO nav_menu_items (id, parent_id, label, url, open_in_new_tab, has_dropdown, sort_order, status) VALUES (:id, :parent_id, :label, :url, :open_in_new_tab, :has_dropdown, :sort_order, :status)");
+
+            $defaults = [
+                // Top-level 1: Sample
+                ['id' => 1, 'parent_id' => null, 'label' => 'Sample', 'url' => 'shop', 'open_in_new_tab' => 0, 'has_dropdown' => 1, 'sort_order' => 1, 'status' => 'active'],
+                ['id' => 101, 'parent_id' => 1, 'label' => 'Skin Care', 'url' => 'private-label-skin-care-products/', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 1, 'status' => 'active'],
+                ['id' => 102, 'parent_id' => 1, 'label' => 'Body Care', 'url' => 'bath-and-body/', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 2, 'status' => 'active'],
+                ['id' => 103, 'parent_id' => 1, 'label' => 'Hair Care', 'url' => 'private-label-hair-care-products/', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 3, 'status' => 'active'],
+                ['id' => 104, 'parent_id' => 1, 'label' => 'Bathing Soaps', 'url' => 'bathing-soaps/', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 4, 'status' => 'active'],
+                ['id' => 105, 'parent_id' => 1, 'label' => 'Especially For Men', 'url' => 'especially-for-men/', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 5, 'status' => 'active'],
+                ['id' => 106, 'parent_id' => 1, 'label' => 'Aerosols & Perfumes', 'url' => 'aerosols-perfumes/', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 6, 'status' => 'active'],
+
+                // Top-level 2: How it Works
+                ['id' => 2, 'parent_id' => null, 'label' => 'How it Works', 'url' => 'how-it-works', 'open_in_new_tab' => 0, 'has_dropdown' => 1, 'sort_order' => 2, 'status' => 'active'],
+                ['id' => 201, 'parent_id' => 2, 'label' => 'Product Components', 'url' => 'how-it-works#product-components', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 1, 'status' => 'active'],
+                ['id' => 202, 'parent_id' => 2, 'label' => 'Define Offerings', 'url' => 'how-it-works#define-offerings', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 2, 'status' => 'active'],
+                ['id' => 203, 'parent_id' => 2, 'label' => 'Design & Printing', 'url' => 'how-it-works#design-and-printing', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 3, 'status' => 'active'],
+                ['id' => 204, 'parent_id' => 2, 'label' => 'Finishing Touches', 'url' => 'how-it-works#finishing-touches', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 4, 'status' => 'active'],
+
+                // Top-level 3: Why Choose Us
+                ['id' => 3, 'parent_id' => null, 'label' => 'Why Choose Us', 'url' => 'our-services', 'open_in_new_tab' => 0, 'has_dropdown' => 1, 'sort_order' => 3, 'status' => 'active'],
+                ['id' => 301, 'parent_id' => 3, 'label' => 'Private Label Skin Care Manufacturer', 'url' => 'private-label-skin-care-manufacturer/', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 1, 'status' => 'active'],
+                ['id' => 302, 'parent_id' => 3, 'label' => 'Private Label Hair Care Manufacturer', 'url' => 'private-label-hair-care-manufacturer/', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 2, 'status' => 'active'],
+                ['id' => 303, 'parent_id' => 3, 'label' => 'Private Label Men\'s Grooming Products', 'url' => 'private-label-mens-grooming-products/', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 3, 'status' => 'active'],
+                ['id' => 304, 'parent_id' => 3, 'label' => 'Private Label Essential Oil Supplier', 'url' => 'private-label-essential-oil-supplier/', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 4, 'status' => 'active'],
+                ['id' => 305, 'parent_id' => 3, 'label' => 'Bathing Soap Manufacturer', 'url' => 'bathing-soap-manufacturer/', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 5, 'status' => 'active'],
+                ['id' => 306, 'parent_id' => 3, 'label' => 'Contract Manufacturer for Cosmetics Products', 'url' => 'contract-manufacturer-for-cosmetics-products/', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 6, 'status' => 'active'],
+
+                // Top-level 4: About Us
+                ['id' => 4, 'parent_id' => null, 'label' => 'About Us', 'url' => 'about', 'open_in_new_tab' => 0, 'has_dropdown' => 1, 'sort_order' => 4, 'status' => 'active'],
+                ['id' => 401, 'parent_id' => 4, 'label' => 'Who We Are', 'url' => 'about#who-we-are', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 1, 'status' => 'active'],
+                ['id' => 402, 'parent_id' => 4, 'label' => 'What We Offer', 'url' => 'about#what-we-offer', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 2, 'status' => 'active'],
+                ['id' => 403, 'parent_id' => 4, 'label' => 'How We Formulate', 'url' => 'about#how-we-formulate', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 3, 'status' => 'active'],
+                ['id' => 404, 'parent_id' => 4, 'label' => 'Key Benefits', 'url' => 'about#key-benifits', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 4, 'status' => 'active'],
+                ['id' => 405, 'parent_id' => 4, 'label' => 'Our Certificates', 'url' => 'our-certificates', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 5, 'status' => 'active'],
+
+                // Top-level 5: Services
+                ['id' => 5, 'parent_id' => null, 'label' => 'Services', 'url' => 'services', 'open_in_new_tab' => 0, 'has_dropdown' => 1, 'sort_order' => 5, 'status' => 'active'],
+                ['id' => 501, 'parent_id' => 5, 'label' => 'Design & Print Services', 'url' => 'services#design-print-services', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 1, 'status' => 'active'],
+                ['id' => 502, 'parent_id' => 5, 'label' => 'Product & Offering Development', 'url' => 'services#product-offering-development', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 2, 'status' => 'active'],
+                ['id' => 503, 'parent_id' => 5, 'label' => 'Finishing Touches', 'url' => 'services#finishing-touches', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 3, 'status' => 'active'],
+                ['id' => 504, 'parent_id' => 5, 'label' => 'Logistics Support', 'url' => 'services#logistics-support', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 4, 'status' => 'active'],
+                ['id' => 505, 'parent_id' => 5, 'label' => 'Build Your Own Brand', 'url' => 'services#build-your-own-brand', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 5, 'status' => 'active'],
+
+                // Top-level 6: Resources
+                ['id' => 6, 'parent_id' => null, 'label' => 'Resources', 'url' => 'blog', 'open_in_new_tab' => 0, 'has_dropdown' => 1, 'sort_order' => 6, 'status' => 'active'],
+                ['id' => 601, 'parent_id' => 6, 'label' => 'Blog', 'url' => 'blog', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 1, 'status' => 'active'],
+                ['id' => 602, 'parent_id' => 6, 'label' => 'FAQ\'s', 'url' => 'faq', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 2, 'status' => 'active'],
+                ['id' => 603, 'parent_id' => 6, 'label' => 'Contact', 'url' => 'contact', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 3, 'status' => 'active'],
+                ['id' => 604, 'parent_id' => 6, 'label' => 'Form Center', 'url' => 'form-center', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 4, 'status' => 'active'],
+                ['id' => 605, 'parent_id' => 6, 'label' => 'Product Catalog', 'url' => 'product-catalog', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 5, 'status' => 'active'],
+                ['id' => 606, 'parent_id' => 6, 'label' => 'Material Safety Data Sheets', 'url' => 'data-sheets', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 6, 'status' => 'active'],
+            ];
+
+            foreach ($defaults as $item) {
+                $stmt->execute([
+                    ':id' => $item['id'],
+                    ':parent_id' => $item['parent_id'],
+                    ':label' => $item['label'],
+                    ':url' => $item['url'],
+                    ':open_in_new_tab' => $item['open_in_new_tab'],
+                    ':has_dropdown' => $item['has_dropdown'],
+                    ':sort_order' => $item['sort_order'],
+                    ':status' => $item['status'],
+                ]);
+            }
+        }
+
+        $checked = true;
+        return true;
+    } catch (Throwable $e) {
+        error_log('cms_ensure_navbar_tables error: ' . $e->getMessage());
+        $checked = false;
+        return false;
+    }
+}
+
+function cms_get_nav_logo(bool $forceFresh = false): array
+{
+    $cacheKey = 'cms:nav:logo';
+    if (!$forceFresh && !preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $default = [
+        'id' => 1,
+        'logo_image' => 'uploads/logo/mybrandplease-1.gif',
+        'eyebrow_text' => 'For dedicated Private Label Support',
+        'brand_text' => 'mybrandplease.com',
+        'tagline_text' => 'Your Vision | Our Expertise | Your Brand',
+        'logo_link_url' => '',
+    ];
+
+    $pdo = db();
+    if (!$pdo) {
+        return $default;
+    }
+
+    cms_ensure_navbar_tables($pdo);
+
+    try {
+        $stmt = $pdo->query('SELECT id, logo_image, eyebrow_text, brand_text, tagline_text, logo_link_url, updated_at FROM nav_logo WHERE id = 1 LIMIT 1');
+        $row = $stmt ? $stmt->fetch() : null;
+        if ($row && is_array($row)) {
+            $data = [
+                'id' => (int) ($row['id'] ?? 1),
+                'logo_image' => (string) ($row['logo_image'] ?: $default['logo_image']),
+                'eyebrow_text' => (string) ($row['eyebrow_text'] ?? $default['eyebrow_text']),
+                'brand_text' => (string) ($row['brand_text'] ?? $default['brand_text']),
+                'tagline_text' => (string) ($row['tagline_text'] ?? $default['tagline_text']),
+                'logo_link_url' => (string) ($row['logo_link_url'] ?: $default['logo_link_url']),
+                'updated_at' => (string) ($row['updated_at'] ?? ''),
+            ];
+            if (!preview_mode_should_bypass_cache()) {
+                cache_set($cacheKey, $data, 600);
+            }
+            return $data;
+        }
+    } catch (Throwable $e) {
+        error_log('cms_get_nav_logo error: ' . $e->getMessage());
+    }
+
+    return $default;
+}
+
+function cms_get_nav_menu_tree(bool $forceFresh = false, bool $includeInactive = false): array
+{
+    $cacheKey = 'cms:nav:menu_tree:' . ($includeInactive ? 'all' : 'active');
+    if (!$forceFresh && !$includeInactive && !preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $pdo = db();
+    if (!$pdo) {
+        return [];
+    }
+
+    cms_ensure_navbar_tables($pdo);
+
+    try {
+        $statusSql = $includeInactive ? '' : " AND status = 'active'";
+
+        // 1. Fetch top-level items using index (parent_id, sort_order)
+        $topStmt = $pdo->query("
+            SELECT id, parent_id, label, url, open_in_new_tab, has_dropdown, sort_order, status
+            FROM nav_menu_items
+            WHERE parent_id IS NULL {$statusSql}
+            ORDER BY sort_order ASC, id ASC
+        ");
+        $topItems = $topStmt ? $topStmt->fetchAll() : [];
+
+        if (empty($topItems)) {
+            return [];
+        }
+
+        $topIds = array_column($topItems, 'id');
+        $childrenByParent = [];
+
+        // 2. Fetch all children in one single query to eliminate N+1 overhead
+        if (!empty($topIds)) {
+            $placeholders = implode(',', array_fill(0, count($topIds), '?'));
+            $childSql = "
+                SELECT id, parent_id, label, url, open_in_new_tab, has_dropdown, sort_order, status
+                FROM nav_menu_items
+                WHERE parent_id IN ({$placeholders}) {$statusSql}
+                ORDER BY sort_order ASC, id ASC
+            ";
+            $childStmt = $pdo->prepare($childSql);
+            $childStmt->execute($topIds);
+            $allChildren = $childStmt->fetchAll();
+
+            foreach ($allChildren as $child) {
+                $pid = (int) $child['parent_id'];
+                if (!isset($childrenByParent[$pid])) {
+                    $childrenByParent[$pid] = [];
+                }
+                $childrenByParent[$pid][] = [
+                    'id' => (int) $child['id'],
+                    'parent_id' => $pid,
+                    'title' => (string) $child['label'],
+                    'label' => (string) $child['label'],
+                    'url' => (string) $child['url'],
+                    'open_in_new_tab' => (int) $child['open_in_new_tab'],
+                    'has_dropdown' => (int) $child['has_dropdown'],
+                    'sort_order' => (int) $child['sort_order'],
+                    'status' => (string) $child['status'],
+                    'children' => [],
+                ];
+            }
+        }
+
+        // 3. Assemble nested tree
+        $tree = [];
+        foreach ($topItems as $top) {
+            $topId = (int) $top['id'];
+            $children = $childrenByParent[$topId] ?? [];
+            $tree[] = [
+                'id' => $topId,
+                'parent_id' => null,
+                'title' => (string) $top['label'],
+                'label' => (string) $top['label'],
+                'url' => (string) $top['url'],
+                'open_in_new_tab' => (int) $top['open_in_new_tab'],
+                'has_dropdown' => (int) $top['has_dropdown'] || !empty($children) ? 1 : 0,
+                'sort_order' => (int) $top['sort_order'],
+                'status' => (string) $top['status'],
+                'children' => $children,
+            ];
+        }
+
+        if (!$includeInactive && !preview_mode_should_bypass_cache()) {
+            cache_set($cacheKey, $tree, 600);
+        }
+
+        return $tree;
+    } catch (Throwable $e) {
+        error_log('cms_get_nav_menu_tree error: ' . $e->getMessage());
+        return [];
+    }
+}
+
+function cms_get_nav_menu_item(int $id): ?array
+{
+    $pdo = db();
+    if (!$pdo || $id <= 0) {
+        return null;
+    }
+    cms_ensure_navbar_tables($pdo);
+    $stmt = $pdo->prepare('SELECT id, parent_id, label, url, open_in_new_tab, has_dropdown, sort_order, status FROM nav_menu_items WHERE id = :id LIMIT 1');
+    $stmt->execute([':id' => $id]);
+    $item = $stmt->fetch();
+    return $item ?: null;
+}
+
+function cms_get_nav_parent_options(?int $excludeId = null): array
+{
+    $pdo = db();
+    if (!$pdo) {
+        return [];
+    }
+    cms_ensure_navbar_tables($pdo);
+    $sql = 'SELECT id, label, sort_order FROM nav_menu_items WHERE parent_id IS NULL';
+    $params = [];
+    if ($excludeId !== null && $excludeId > 0) {
+        $sql .= ' AND id != :exclude_id';
+        $params[':exclude_id'] = $excludeId;
+    }
+    $sql .= ' ORDER BY sort_order ASC, id ASC';
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
+    return $stmt->fetchAll() ?: [];
+}
+
 function cms_invalidate_footer_cache(): void
 {
     cache_clear_prefix('cms:footer:');

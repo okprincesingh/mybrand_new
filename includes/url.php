@@ -73,6 +73,35 @@ if (!function_exists('app_base_path')) {
     }
 }
 
+if (!function_exists('clean_url_path')) {
+    function clean_url_path(string $path): string
+    {
+        $trimmed = ltrim($path, '/');
+
+        // Do not alter external URLs, admin pages, api, assets, uploads, or ajax
+        if (preg_match('#^(https?:)?//#i', $path) ||
+            str_starts_with($trimmed, 'admin/') ||
+            str_starts_with($trimmed, 'admin\\') ||
+            str_starts_with($trimmed, 'assets/') ||
+            str_starts_with($trimmed, 'uploads/') ||
+            str_starts_with($trimmed, 'api/') ||
+            str_starts_with($trimmed, 'ajax/')) {
+            return $path;
+        }
+
+        // Handle index.php -> root
+        if ($trimmed === 'index.php' || $trimmed === 'index') {
+            return '';
+        }
+
+        // Remove .php before query string, fragment, or end of string
+        $cleaned = preg_replace('/^index\.php(?=[?#]|$)/i', '', $trimmed);
+        $cleaned = preg_replace('/\.php(?=[?#]|$)/i', '', (string) $cleaned);
+
+        return (string) $cleaned;
+    }
+}
+
 if (!function_exists('url')) {
     function url(?string $path = ''): string
     {
@@ -86,7 +115,12 @@ if (!function_exists('url')) {
             return $path;
         }
 
-        return $base . '/' . ltrim($path, '/');
+        $cleanPath = clean_url_path($path);
+        if ($cleanPath === '') {
+            return $base . '/';
+        }
+
+        return $base . '/' . ltrim($cleanPath, '/');
     }
 }
 

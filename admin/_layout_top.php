@@ -12,10 +12,16 @@ $servicesNavPages = ['services-sections.php','services-accordions.php','services
 $isServicesNavActive = in_array($currentPage, $servicesNavPages, true);
 $aboutNavPages = ['about-blocks.php','about-certifications.php','about-private-label.php','about-accreditations.php'];
 $isAboutNavActive = in_array($currentPage, $aboutNavPages, true);
+$navbarNavPages = ['navbar-logo.php','navbar-management.php'];
+$isNavbarNavActive = in_array($currentPage, $navbarNavPages, true);
 $footerNavPages = ['footer-brand.php','footer-links.php','footer-trust-badges.php'];
 $isFooterNavActive = in_array($currentPage, $footerNavPages, true);
 if (!isset($livePreviewUrl)) {
     switch ($currentPage) {
+        case 'navbar-logo.php':
+        case 'navbar-management.php':
+            $livePreviewUrl = url('index.php');
+            break;
         case 'how-it-works-sections.php':
         case 'how-it-works-accordions.php':
         case 'how-it-works-reorder.php':
@@ -155,6 +161,15 @@ if (!isset($livePreviewUrl)) {
       <a class="admin-nav-link <?= $currentPage==='why-pages.php' || $currentPage==='why-page-edit.php'?'active':'' ?>" href="why-pages.php"><i class="bi bi-award"></i><span>Why Choose Us</span></a>
 
       <div class="nav-group-label">Content</div>
+      <a class="admin-nav-link admin-nav-toggle <?= $isNavbarNavActive ? 'active open' : '' ?>" data-bs-toggle="collapse" href="#navbarNavCollapse" role="button" aria-expanded="<?= $isNavbarNavActive ? 'true' : 'false' ?>" aria-controls="navbarNavCollapse">
+        <i class="bi bi-menu-button-wide"></i><span>Navbar</span>
+        <span class="admin-nav-caret bi bi-chevron-down"></span>
+      </a>
+      <div class="collapse admin-nav-collapse <?= $isNavbarNavActive ? 'show' : '' ?>" id="navbarNavCollapse">
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='navbar-logo.php'?'active':'' ?>" href="navbar-logo.php"><i class="bi bi-image"></i><span>Navbar Logo</span></a>
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='navbar-management.php'?'active':'' ?>" href="navbar-management.php"><i class="bi bi-list-nested"></i><span>Menu Items</span></a>
+      </div>
+
       <a class="admin-nav-link admin-nav-toggle <?= $isFooterNavActive ? 'active open' : '' ?>" data-bs-toggle="collapse" href="#footerNavCollapse" role="button" aria-expanded="<?= $isFooterNavActive ? 'true' : 'false' ?>" aria-controls="footerNavCollapse">
         <i class="bi bi-layout-text-window-reverse"></i><span>Footer</span>
         <span class="admin-nav-caret bi bi-chevron-down"></span>
