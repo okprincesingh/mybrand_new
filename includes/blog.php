@@ -59,7 +59,42 @@ function blog_table_exists(PDO $pdo): bool
 
     $row = db_fetch_one($pdo, "SHOW TABLES LIKE 'blog_posts'");
     $checked = is_array($row);
+    if ($checked) {
+        blog_ensure_seo_columns($pdo);
+    }
     return $checked;
+}
+
+function blog_ensure_seo_columns(PDO $pdo): void
+{
+    static $checked = false;
+    if ($checked) {
+        return;
+    }
+    $checked = true;
+
+    try {
+        $columns = db_fetch_all($pdo, "SHOW COLUMNS FROM blog_posts WHERE Field IN ('meta_title', 'canonical_url', 'meta_keywords', 'meta_description')");
+        $existing = [];
+        foreach ($columns as $column) {
+            $existing[(string) ($column['Field'] ?? '')] = true;
+        }
+
+        if (empty($existing['meta_title'])) {
+            $pdo->exec('ALTER TABLE blog_posts ADD COLUMN meta_title VARCHAR(255) NULL AFTER content');
+        }
+        if (empty($existing['canonical_url'])) {
+            $pdo->exec('ALTER TABLE blog_posts ADD COLUMN canonical_url VARCHAR(255) NULL AFTER meta_title');
+        }
+        if (empty($existing['meta_keywords'])) {
+            $pdo->exec('ALTER TABLE blog_posts ADD COLUMN meta_keywords VARCHAR(500) NULL AFTER canonical_url');
+        }
+        if (empty($existing['meta_description'])) {
+            $pdo->exec('ALTER TABLE blog_posts ADD COLUMN meta_description TEXT NULL AFTER meta_keywords');
+        }
+    } catch (Throwable $e) {
+        // Let the normal query/save path surface the database problem in context.
+    }
 }
 
 function blog_get_posts(array $filters = [], array $pagination = []): array

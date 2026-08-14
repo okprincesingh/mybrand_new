@@ -54,7 +54,14 @@ $robots = $meta['robots'] ?? preview_mode_robots_meta();
 $favicon = $meta['favicon'] ?? 'assets/imgs/logo/favicon-white.png';
 $requestUri = (string) ($_SERVER['REQUEST_URI'] ?? '/');
 $requestUri = $requestUri !== '' && str_starts_with($requestUri, '/') ? $requestUri : '/' . ltrim($requestUri, '/');
-$canonical = rtrim(base_url(), '/') . $requestUri;
+$canonicalPath = trim((string) ($meta['canonical'] ?? ''));
+if ($canonicalPath !== '') {
+    $canonical = preg_match('#^https?://#i', $canonicalPath)
+        ? $canonicalPath
+        : rtrim(base_url(), '/') . '/' . ltrim($canonicalPath, '/');
+} else {
+    $canonical = rtrim(base_url(), '/') . $requestUri;
+}
 $breadcrumbBackgroundPath = function_exists('cms_get_breadcrumb_background_path')
     ? cms_get_breadcrumb_background_path()
     : 'assets/imgs/breadcumbBg.jpg';
