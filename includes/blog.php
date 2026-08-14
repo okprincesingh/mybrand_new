@@ -3,6 +3,7 @@ require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/helpers.php';
 require_once __DIR__ . '/url.php';
 require_once __DIR__ . '/preview.php';
+require_once __DIR__ . '/draft.php';
 
 function blog_fallback_posts(): array
 {
@@ -156,12 +157,18 @@ function blog_get_post_by_slug(string $slug): ?array
     if (!preview_mode_include_drafts()) {
         $params[':st'] = 'published';
     }
-    return db_fetch_one($pdo, 'SELECT id,title,slug,excerpt,content,featured_image,category,author_name,published_at,status,tags FROM blog_posts WHERE slug = :slug' . $statusClause . ' LIMIT 1', $params);
 
-    return db_fetch_one($pdo, 'SELECT id,title,slug,excerpt,content,meta_title,canonical_url,meta_keywords,meta_description,featured_image,category,author_name,published_at,status,tags FROM blog_posts WHERE slug = :slug AND status = :st LIMIT 1', [
-        ':slug' => $slug,
-        ':st' => 'published',
-    ]);
+    $row = db_fetch_one($pdo, 'SELECT id,title,slug,excerpt,content,meta_title,canonical_url,meta_keywords,meta_description,featured_image,category,author_name,published_at,status,tags FROM blog_posts WHERE slug = :slug' . $statusClause . ' LIMIT 1', $params);
+
+    if (!$row) {
+        return null;
+    }
+
+    if (preview_mode_include_drafts()) {
+        $row = draft_merge_row((array) $row, 'blog', (int) ($row['id'] ?? 0));
+    }
+
+    return is_array($row) ? $row : null;
 
 }
 

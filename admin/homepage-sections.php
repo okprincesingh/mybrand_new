@@ -692,6 +692,7 @@ if ($activeTab === 'our_milestones') {
 
 
 $title = 'Homepage Sections Management';
+$livePreviewUrl = url('index.php');
 include __DIR__ . '/_layout_top.php';
 ?>
 <?php if ($successMessage): ?>
@@ -718,7 +719,7 @@ include __DIR__ . '/_layout_top.php';
         <h5 class="widget-title">Working Process Content</h5>
       </div>
       <div class="widget-body p-3">
-        <form method="POST" action="" data-section-preview='{"content_type":"home_working_process_content","entity_id":0}'>
+        <form method="POST" action="" data-section-preview='{"content_type":"home_working_process_content","entity_id":<?= (int) ($workingProcessContent['id'] ?? 0) ?>}'>
           <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
           <input type="hidden" name="action" value="save_working_process_content">
           <input type="hidden" name="tab" value="working_process">
@@ -1302,7 +1303,7 @@ include __DIR__ . '/_layout_top.php';
         <h5 class="widget-title">Our Milestones Header & Intro Text</h5>
       </div>
       <div class="widget-body p-3">
-        <form method="POST" action="" data-section-preview='{"content_type":"home_milestones_content","entity_id":0}'>
+        <form method="POST" action="" data-section-preview='{"content_type":"home_milestones_content","entity_id":<?= (int) ($milestonesContent['id'] ?? 0) ?>}'>
           <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
           <input type="hidden" name="action" value="save_milestones_content">
           <input type="hidden" name="tab" value="our_milestones">

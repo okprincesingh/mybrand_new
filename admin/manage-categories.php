@@ -227,7 +227,7 @@ include __DIR__ . '/_layout_top.php';
   <div class="col-lg-12">
     <div class="form-section">
       <h5 class="mb-3">Section Heading</h5>
-      <form method="POST" action="">
+      <form method="POST" action="" data-section-preview='{"content_type":"category","entity_id":0}'>
         <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
         <input type="hidden" name="action" value="save_section">
         <div class="row g-3">

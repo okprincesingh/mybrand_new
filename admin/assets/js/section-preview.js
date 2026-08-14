@@ -68,6 +68,34 @@
     home_certification_logo: {
       subdir: 'home/certification-logos',
       fileFields: { 'logo_path': 'image' }
+    },
+    home_milestones: {
+      subdir: 'home/milestones',
+      fileFields: { 'image_path': 'image' }
+    },
+    home_cta_card: {
+      subdir: 'home-cta',
+      fileFields: { 'image': 'image' }
+    },
+    blog: {
+      subdir: 'blog',
+      fileFields: { 'featured_image': 'image' }
+    },
+    product: {
+      subdir: 'products',
+      fileFields: { 'featured_image': 'image' }
+    },
+    category: {
+      subdir: 'categories',
+      fileFields: { 'image_path': 'image', 'page_image_path': 'image', 'page_image': 'image' }
+    },
+    certificate: {
+      subdir: 'certificates',
+      fileFields: { 'image_path': 'image', 'file_path': 'file' }
+    },
+    how_it_works_section: {
+      subdir: 'how-it-works/sections',
+      fileFields: { 'image_path': 'image' }
     }
   };
 
@@ -643,13 +671,84 @@
     });
   };
 
+  function initFallbackModulePreview() {
+    if (document.getElementById('sectionPreviewToggle')) return;
+
+    var previewUrl = window.mybrandpleaseLivePreviewUrl || 'index.php';
+    if (previewUrl.indexOf('preview=1') === -1) {
+      previewUrl += (previewUrl.indexOf('?') === -1 ? '?' : '&') + 'preview=1';
+    }
+
+    var panelHtml =
+      '<div class="section-preview-panel" id="sectionPreviewPanel" aria-hidden="true">' +
+      '  <div class="section-preview-panel__header">' +
+      '    <span class="section-preview-panel__title"><i class="bi bi-eye-fill"></i> Section Live Preview</span>' +
+      '    <button type="button" class="section-preview-panel__close" id="sectionPreviewClose" aria-label="Close preview">&times;</button>' +
+      '  </div>' +
+      '  <div class="section-preview-panel__status">' +
+      '    <span class="section-preview-panel__status-badge section-preview-panel__status-badge--published">Live Site</span>' +
+      '    <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Showing live site preview.</span>' +
+      '  </div>' +
+      '  <div class="section-preview-panel__actions">' +
+      '    <button type="button" class="btn btn-sm btn-outline-secondary" id="sectionPreviewRefreshBtn" title="Refresh preview"><i class="bi bi-arrow-clockwise"></i> Refresh</button>' +
+      '  </div>' +
+      '  <div class="section-preview-panel__viewport">' +
+      '    <iframe class="section-preview-panel__iframe" id="sectionPreviewFrame" title="Section preview" loading="eager"></iframe>' +
+      '  </div>' +
+      '</div>';
+
+    var wrapper = document.createElement('div');
+    wrapper.innerHTML = panelHtml;
+    document.body.appendChild(wrapper.firstElementChild);
+
+    var panel = document.getElementById('sectionPreviewPanel');
+    var iframe = document.getElementById('sectionPreviewFrame');
+    var closeBtn = document.getElementById('sectionPreviewClose');
+    var refreshBtn = document.getElementById('sectionPreviewRefreshBtn');
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'section-preview-toggle';
+    btn.id = 'sectionPreviewToggle';
+    btn.innerHTML =
+      '<i class="bi bi-window-sidebar"></i>' +
+      '<span>Section Preview</span>' +
+      '<span class="section-preview-toggle__dot"></span>';
+    document.body.appendChild(btn);
+
+    function openPanel() {
+      panel.classList.add('is-open');
+      panel.setAttribute('aria-hidden', 'false');
+      if (iframe && !iframe.getAttribute('src')) {
+        iframe.src = previewUrl + (previewUrl.indexOf('?') === -1 ? '?_r=' : '&_r=') + Date.now();
+      }
+    }
+
+    function closePanel() {
+      panel.classList.remove('is-open');
+      panel.setAttribute('aria-hidden', 'true');
+    }
+
+    btn.addEventListener('click', openPanel);
+    if (closeBtn) closeBtn.addEventListener('click', closePanel);
+    if (refreshBtn) refreshBtn.addEventListener('click', function () {
+      if (iframe) iframe.src = previewUrl + (previewUrl.indexOf('?') === -1 ? '?_r=' : '&_r=') + Date.now();
+    });
+  }
+
   ready(function () {
     var forms = document.querySelectorAll('form[data-section-preview]');
+    var initialized = 0;
     forms.forEach(function (form) {
       var config = parseConfig(form);
       if (!config) return;
       var controller = new SectionPreviewController(form, config);
       controller.init();
+      initialized++;
     });
+
+    if (initialized === 0) {
+      initFallbackModulePreview();
+    }
   });
 })();

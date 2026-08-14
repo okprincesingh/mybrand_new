@@ -110,6 +110,7 @@ if ($pdo && $_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $rows = $pdo ? db_fetch_all($pdo, 'SELECT * FROM home_offices ORDER BY sort_order ASC, id ASC') : [];
+$livePreviewUrl = url('index.php');
 include __DIR__ . '/_layout_top.php';
 ?>
 
@@ -119,7 +120,7 @@ include __DIR__ . '/_layout_top.php';
     <h5 class="widget-title"><i class="bi bi-gear me-2"></i>Our Offices Section Header Settings</h5>
   </div>
   <div class="widget-body p-3">
-    <form method="post" action="" data-section-preview='{"content_type":"home_offices_content","entity_id":0}'>
+    <form method="post" action="" data-section-preview='{"content_type":"home_offices_content","entity_id":<?= (int) ($officesContent['id'] ?? 0) ?>}'>
       <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
       <input type="hidden" name="action" value="save_header_content">
 

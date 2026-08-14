@@ -442,12 +442,14 @@ function cms_get_home_working_process_content(): array
     }
 
     $out = [
+        'id' => (int) ($row['id'] ?? 0),
         'section_key' => (string) ($row['section_key'] ?? 'main'),
         'eyebrow_text' => (string) ($row['eyebrow_text'] ?? ''),
         'title_span_text' => (string) ($row['title_span_text'] ?? ''),
         'title_text' => (string) ($row['title_text'] ?? ''),
         'description_text' => (string) ($row['description_text'] ?? ''),
         'animation_mode' => (string) ($row['animation_mode'] ?? 'default'),
+        'is_active' => (int) ($row['is_active'] ?? 1),
     ];
 
     if (!preview_mode_should_bypass_cache()) {
@@ -505,6 +507,7 @@ function cms_get_home_brand_builder(): array
     }
 
     $out = [
+        'id' => (int) ($row['id'] ?? 0),
         'section_key' => (string) ($row['section_key'] ?? 'main'),
         'kicker_text' => (string) ($row['kicker_text'] ?? ''),
         'title_text' => (string) ($row['title_text'] ?? ''),
@@ -714,6 +717,7 @@ function cms_get_home_getting_started_content(): array
     }
 
     $out = [
+        'id' => (int) ($row['id'] ?? 0),
         'section_key' => (string) ($row['section_key'] ?? 'main'),
         'heading_text' => (string) ($row['heading_text'] ?? "Here's How To Get Started"),
         'description_text' => (string) ($row['description_text'] ?? ''),
@@ -923,6 +927,7 @@ function cms_get_home_milestones_content(): array
     }
 
     $out = [
+        'id' => (int) ($row['id'] ?? 0),
         'section_key' => (string) ($row['section_key'] ?? 'main'),
         'eyebrow_text' => (string) ($row['eyebrow_text'] ?? 'Growth Snapshot'),
         'heading_text' => (string) ($row['heading_text'] ?? 'Our Milestones'),
@@ -1074,6 +1079,7 @@ function cms_get_home_testimonials_content(): array
     }
 
     $out = [
+        'id' => (int) ($row['id'] ?? 0),
         'section_key' => (string) ($row['section_key'] ?? 'main'),
         'eyebrow_text' => (string) ($row['eyebrow_text'] ?? 'Verified Reviews'),
         'heading_text' => (string) ($row['heading_text'] ?? "Here's what our customers say"),
@@ -1203,6 +1209,7 @@ function cms_get_home_instagram_reels_content(): array
     }
 
     $out = [
+        'id' => (int) ($row['id'] ?? 0),
         'section_key' => (string) ($row['section_key'] ?? 'main'),
         'eyebrow_text' => (string) ($row['eyebrow_text'] ?? 'Video Showcase'),
         'heading_html' => (string) ($row['heading_html'] ?? ''),
@@ -1260,6 +1267,7 @@ function cms_get_home_offices_content(): array
     }
 
     $out = [
+        'id' => (int) ($row['id'] ?? 0),
         'section_key' => (string) ($row['section_key'] ?? 'main'),
         'eyebrow_text' => (string) ($row['eyebrow_text'] ?? 'GLOBAL PRESENCE'),
         'heading_text' => (string) ($row['heading_text'] ?? 'Our Global Network'),

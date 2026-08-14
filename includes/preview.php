@@ -35,6 +35,12 @@ if (!function_exists('preview_mode_enabled')) {
         if (!empty($GLOBALS['__preview_mode_force_request'])) {
             return true;
         }
+        // Request-scoped preview via ?preview=1 is honored for logged-in admins
+        // only (no session write). Used by the section-preview iframe redirects
+        // so public pages merge drafts even when the topbar toggle is off.
+        if (($_GET['preview'] ?? '') === '1' && function_exists('admin_current') && admin_current()) {
+            return true;
+        }
         if (session_status() !== PHP_SESSION_ACTIVE) {
             return false;
         }

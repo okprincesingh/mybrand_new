@@ -56,9 +56,10 @@ if ($pdo && $_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
+$livePreviewUrl = !empty($pageData['slug']) ? url((string) $pageData['slug']) : url('index.php');
 include __DIR__ . '/_layout_top.php';
 ?>
-<form method="post" class="card card-body">
+<form method="post" class="card card-body" data-section-preview='{"content_type":"page","entity_id":<?= (int) ($pageData['id'] ?? 0) ?>}'>
   <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
 
   <div class="row g-3">

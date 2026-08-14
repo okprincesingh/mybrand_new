@@ -206,6 +206,148 @@ $sectionRegistry = [
         ],
         'cache_invalidate' => 'cms_invalidate_home_certification_logos_cache',
     ],
+    'home_getting_started_content' => [
+        'table' => 'home_getting_started_content',
+        'columns' => ['section_key', 'heading_text', 'description_text', 'is_active'],
+        'cache_invalidate' => 'cms_invalidate_home_getting_started_content_cache',
+    ],
+    'home_milestones_content' => [
+        'table' => 'home_milestones_content',
+        'columns' => ['section_key', 'eyebrow_text', 'heading_text', 'description_text', 'is_active'],
+        'cache_invalidate' => 'cms_invalidate_home_milestones_content_cache',
+    ],
+    'home_milestones' => [
+        'table' => 'home_milestones',
+        'columns' => ['image_path', 'image_alt', 'kicker', 'number_value', 'title', 'sort_order', 'is_active'],
+        'aliases' => [
+            'existing_image_path' => 'image_path',
+        ],
+        'cache_invalidate' => 'cms_invalidate_home_milestones_cache',
+    ],
+    'home_cta_card' => [
+        'table' => 'home_cta_cards',
+        'columns' => ['card_key', 'title', 'button_text', 'button_url', 'image_path', 'image_alt', 'sort_order', 'is_active'],
+        'aliases' => [
+            'existing_image_path' => 'image_path',
+            'existing_image' => 'image_path',
+        ],
+        'cache_invalidate' => 'cms_invalidate_home_cta_cards_cache',
+    ],
+    'home_testimonials_content' => [
+        'table' => 'home_testimonials_content',
+        'columns' => ['section_key', 'eyebrow_text', 'heading_text', 'rating_prefix', 'rating_highlight', 'is_active'],
+        'cache_invalidate' => 'cms_invalidate_home_testimonials_content_cache',
+    ],
+    'home_instagram_reels_content' => [
+        'table' => 'home_instagram_reels_content',
+        'columns' => ['section_key', 'eyebrow_text', 'heading_html', 'intro_text', 'tagline_text', 'is_active'],
+        'cache_invalidate' => 'cms_invalidate_home_instagram_reels_content_cache',
+    ],
+    'home_offices_content' => [
+        'table' => 'home_offices_content',
+        'columns' => ['section_key', 'eyebrow_text', 'heading_text', 'subheading_text', 'intro_text', 'is_active'],
+        'cache_invalidate' => 'cms_invalidate_home_offices_content_cache',
+    ],
+    'blog' => [
+        'table' => 'blog_posts',
+        'columns' => ['title', 'slug', 'excerpt', 'content', 'meta_title', 'canonical_url', 'meta_keywords', 'meta_description', 'featured_image', 'category', 'author_name', 'published_at', 'status', 'tags'],
+        'aliases' => [
+            'existing_featured_image' => 'featured_image',
+        ],
+    ],
+    'page' => [
+        'table' => 'pages',
+        'columns' => ['title', 'slug', 'content', 'status', 'page_group', 'template_key'],
+    ],
+    'product' => [
+        'table' => 'products',
+        'columns' => ['name', 'slug', 'short_description', 'description', 'price', 'stock', 'status', 'featured_image', 'is_active'],
+        'aliases' => [
+            'existing_featured_image' => 'featured_image',
+        ],
+    ],
+    'category' => [
+        'table' => 'categories',
+        'columns' => ['parent_id', 'name', 'slug', 'description', 'image_path', 'page_image_path', 'is_active'],
+        'aliases' => [
+            'existing_image_path' => 'image_path',
+            'existing_page_image_path' => 'page_image_path',
+            'existing_page_image' => 'page_image_path',
+        ],
+    ],
+    'certificate' => [
+        'table' => 'certificates',
+        'columns' => ['title', 'image_path', 'file_path', 'file_type', 'category', 'sort_order', 'is_active'],
+        'aliases' => [
+            'existing_image_path' => 'image_path',
+            'existing_file_path' => 'file_path',
+        ],
+    ],
+    'how_it_works_section' => [
+        'table' => 'how_it_works_sections',
+        'columns' => ['title', 'body_1', 'body_2', 'image_path', 'sort_order', 'is_active'],
+        'aliases' => [
+            'existing_image_path' => 'image_path',
+        ],
+        'cache_invalidate' => 'cms_invalidate_how_it_works_cache',
+    ],
+    'how_it_works_accordion' => [
+        'table' => 'how_it_works_accordions',
+        'columns' => ['title', 'body', 'sort_order', 'is_open_default', 'is_active'],
+        'cache_invalidate' => 'cms_invalidate_how_it_works_cache',
+    ],
+    'site_settings' => [
+        'table' => 'site_settings',
+        'columns' => [
+            'shop_landing_title',
+            'shop_landing_description',
+            'shop_landing_subtitle',
+            'shop_category_subtitle',
+            'shop_subcategory_fallback_description',
+            'shop_related_products_title',
+            'how_it_works_hero_title',
+            'how_it_works_hero_description',
+            'how_it_works_layout',
+            'about_intro_heading',
+            'about_certifications_heading',
+            'about_private_label_heading',
+            'about_private_label_intro',
+            'about_private_label_block_title',
+            'about_private_label_image',
+            'about_accreditations_heading',
+            'about_accreditations_intro',
+        ],
+        'cache_invalidate' => 'cms_invalidate_settings_cache',
+    ],
+    'about_block' => [
+        'table' => 'about_blocks',
+        'columns' => ['section_heading', 'section_intro', 'block_title', 'body', 'image_path', 'image_alt', 'layout', 'sort_order', 'is_active'],
+        'aliases' => [
+            'existing_image_path' => 'image_path',
+        ],
+        'cache_invalidate' => 'cms_invalidate_about_cache',
+    ],
+    'about_certification' => [
+        'table' => 'about_certifications',
+        'columns' => ['icon_path', 'title', 'description', 'sort_order', 'is_active'],
+        'aliases' => [
+            'existing_icon_path' => 'icon_path',
+        ],
+        'cache_invalidate' => 'cms_invalidate_about_cache',
+    ],
+    'about_key_benefit' => [
+        'table' => 'about_key_benefits',
+        'columns' => ['label', 'description', 'sort_order', 'is_active'],
+        'cache_invalidate' => 'cms_invalidate_about_cache',
+    ],
+    'about_accreditation' => [
+        'table' => 'about_accreditations',
+        'columns' => ['image_path', 'alt_text', 'sort_order', 'is_active'],
+        'aliases' => [
+            'existing_image_path' => 'image_path',
+        ],
+        'cache_invalidate' => 'cms_invalidate_about_cache',
+    ],
 ];
 
 if (!isset($sectionRegistry[$contentType])) {

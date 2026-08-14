@@ -128,6 +128,7 @@ if ($pdo && $_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $cards = $pdo ? db_fetch_all($pdo, 'SELECT * FROM home_cta_cards ORDER BY sort_order ASC, id ASC') : [];
+$livePreviewUrl = url('index.php');
 include __DIR__ . '/_layout_top.php';
 ?>
 
@@ -141,7 +142,7 @@ include __DIR__ . '/_layout_top.php';
         <?php endif; ?>
       </div>
 
-      <form method="post" enctype="multipart/form-data" style="display:flex;flex-direction:column;gap:0.75rem;">
+      <form method="post" enctype="multipart/form-data" style="display:flex;flex-direction:column;gap:0.75rem;" data-section-preview='{"content_type":"home_cta_card","entity_id":<?= (int) $formData['id'] ?>}'>
         <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
         <input type="hidden" name="action" value="save">
         <input type="hidden" name="id" value="<?= (int) $formData['id'] ?>">

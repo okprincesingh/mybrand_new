@@ -38,6 +38,17 @@ function csrf_request_token(): string
         return $headerToken;
     }
 
+    $contentType = $_SERVER['CONTENT_TYPE'] ?? $_SERVER['HTTP_CONTENT_TYPE'] ?? '';
+    if (str_contains(strtolower((string) $contentType), 'application/json')) {
+        $raw = file_get_contents('php://input');
+        if ($raw !== false && $raw !== '') {
+            $jsonData = json_decode($raw, true);
+            if (is_array($jsonData) && !empty($jsonData['csrf_token']) && is_string($jsonData['csrf_token'])) {
+                return $jsonData['csrf_token'];
+            }
+        }
+    }
+
     return '';
 }
 

@@ -113,6 +113,7 @@ if ($pdo && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $slides = $pdo ? db_fetch_all($pdo, 'SELECT * FROM home_slides ORDER BY sort_order ASC, id ASC') : [];
 
+$livePreviewUrl = url('index.php');
 include __DIR__ . '/_layout_top.php';
 ?>
 <div class="row g-4">

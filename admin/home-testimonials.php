@@ -146,6 +146,7 @@ $platformLabels = [
     'ali' => 'Alibaba',
 ];
 
+$livePreviewUrl = url('index.php');
 include __DIR__ . '/_layout_top.php';
 ?>
 
@@ -155,7 +156,7 @@ include __DIR__ . '/_layout_top.php';
     <h5 class="widget-title"><i class="bi bi-gear me-2"></i>Testimonials Section Header & Title Settings</h5>
   </div>
   <div class="widget-body p-3">
-    <form method="post" action="" data-section-preview='{"content_type":"home_testimonials_content","entity_id":0}'>
+    <form method="post" action="" data-section-preview='{"content_type":"home_testimonials_content","entity_id":<?= (int) ($headerContent['id'] ?? 0) ?>}'>
       <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
       <input type="hidden" name="action" value="save_header_content">
 

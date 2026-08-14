@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . '/url.php';
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/preview.php';
+require_once __DIR__ . '/draft.php';
 
 if (!function_exists('our_certificates_fallback_items')) {
     function our_certificates_fallback_items(): array
@@ -134,9 +136,10 @@ if (!function_exists('our_certificates_get_items')) {
         }
 
         try {
+            $activeClause = preview_mode_include_drafts() ? '' : ' WHERE is_active = 1';
             $rows = db_fetch_all(
                 $pdo,
-                'SELECT title, image_path, file_path, category, file_type FROM certificates WHERE is_active = 1 ORDER BY sort_order ASC, id ASC'
+                'SELECT id, title, image_path, file_path, category, file_type FROM certificates' . $activeClause . ' ORDER BY sort_order ASC, id ASC'
             );
         } catch (Throwable $e) {
             $rows = [];
@@ -144,6 +147,10 @@ if (!function_exists('our_certificates_get_items')) {
 
         if (!$rows) {
             return our_certificates_fallback_items();
+        }
+
+        if (preview_mode_include_drafts()) {
+            $rows = draft_merge_rows($rows, 'certificate');
         }
 
         $certificates = [];

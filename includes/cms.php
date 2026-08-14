@@ -550,6 +550,9 @@ function get_page_by_slug(string $slug): ?array
         ':slug' => $slug,
     ]);
     if ($page) {
+        if (preview_mode_include_drafts()) {
+            $page = draft_merge_row((array) $page, 'page', (int) ($page['id'] ?? 0));
+        }
         if (!preview_mode_should_bypass_cache()) {
             cache_set($cacheKey, $page, 300);
         }
@@ -1092,8 +1095,458 @@ function cms_get_home_cta_cards(): array
         return $fallback;
     }
 
+    if (preview_mode_include_drafts()) {
+        $rows = draft_merge_rows($rows, 'home_cta_card');
+    }
+
     if (!preview_mode_should_bypass_cache()) {
         cache_set($cacheKey, $rows, 300);
     }
     return $rows;
 }
+
+function cms_invalidate_how_it_works_cache(): void
+{
+    cache_delete(cms_cache_key('how_it_works', 'sections'));
+    cache_delete(cms_cache_key('how_it_works', 'sections_active'));
+    cache_delete(cms_cache_key('how_it_works', 'sections_all'));
+    cache_delete(cms_cache_key('how_it_works', 'accordions'));
+    cache_delete(cms_cache_key('how_it_works', 'accordions_active'));
+    cache_delete(cms_cache_key('how_it_works', 'accordions_all'));
+    cache_clear_prefix('cms:how_it_works:');
+    cache_delete(cms_cache_key('setting', 'how_it_works_layout'));
+    // Hero headline & description are cached separately under cms:setting:*,
+    // so they must be invalidated here too, otherwise saved changes to the
+    // hero header only appear after the 10-minute cache TTL expires.
+    cache_delete(cms_cache_key('setting', 'how_it_works_hero_title'));
+    cache_delete(cms_cache_key('setting', 'how_it_works_hero_description'));
+}
+
+
+function cms_ensure_how_it_works_tables(PDO $pdo): bool
+{
+    static $checked = null;
+    if ($checked !== null) {
+        return $checked;
+    }
+
+    try {
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS how_it_works_sections (
+                id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                title VARCHAR(255) NOT NULL,
+                body_1 TEXT NOT NULL,
+                body_2 TEXT NULL,
+                image_path VARCHAR(255) NOT NULL,
+                sort_order INT NOT NULL DEFAULT 0,
+                is_active TINYINT(1) NOT NULL DEFAULT 1,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX idx_how_it_works_sections_active_order (is_active, sort_order, id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS how_it_works_accordions (
+                id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                title VARCHAR(255) NOT NULL,
+                body TEXT NOT NULL,
+                sort_order INT NOT NULL DEFAULT 0,
+                is_open_default TINYINT(1) NOT NULL DEFAULT 0,
+                is_active TINYINT(1) NOT NULL DEFAULT 1,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX idx_how_it_works_accordions_active_order (is_active, sort_order, id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+
+        $ensureIndex = function (PDO $pdo, string $table, string $indexName, string $columns) {
+            try {
+                $exists = db_fetch_one($pdo, "SHOW INDEX FROM `{$table}` WHERE Key_name = :k LIMIT 1", [':k' => $indexName]);
+                if (!$exists) {
+                    $pdo->exec("CREATE INDEX `{$indexName}` ON `{$table}` ({$columns})");
+                }
+            } catch (Throwable $e) {}
+        };
+
+        $ensureIndex($pdo, 'how_it_works_sections', 'idx_how_it_works_sections_active_order', 'is_active, sort_order, id');
+        $ensureIndex($pdo, 'how_it_works_sections', 'idx_how_it_works_sections_order', 'sort_order, id');
+        $ensureIndex($pdo, 'how_it_works_accordions', 'idx_how_it_works_accordions_active_order', 'is_active, sort_order, id');
+        $ensureIndex($pdo, 'how_it_works_accordions', 'idx_how_it_works_accordions_order', 'sort_order, id');
+        $ensureIndex($pdo, 'how_it_works_accordions', 'idx_how_it_works_accordions_open_default', 'is_open_default');
+
+        // Seed sections if empty
+
+        $countSec = (int) db_fetch_value($pdo, 'SELECT COUNT(*) FROM how_it_works_sections');
+        if ($countSec === 0) {
+            $pdo->exec("
+                INSERT INTO how_it_works_sections (title, body_1, body_2, image_path, sort_order, is_active) VALUES
+                ('Choose Your Product Components', 'Unleash your brand\'s potential with <span class=\"theme-color-font fw-bold\">mybrandplease.com</span>. Explore our extensive range of over 200+ formulations across body, skin, and hair care, carefully crafted for professional-grade results. Experience the luxury of high-quality ingredients, including naturally derived and certified organic components. Tailor your products to perfection with our diverse packaging options and captivating fragrances.', 'Handpick your favorites, knowing they will captivate and delight your cherished clients. Embark on a sensory journey and sample our extraordinary products today.', 'assets/imgs/how-it-works/Choose-Your-Product-Components-min-2048x1244.webp', 1, 1),
+                ('Define Your Offerings', 'Harness the power of your brand\'s message and fine-tune your opening order. Define product names, quantities, and sizes to perfection. Make key decisions that will shape your product line. Take control and let us bring your vision to reality.', 'Explore our blog for invaluable expert tips and tricks. Seize this opportunity to create a remarkable brand experience. Check out our blog for our expert tips &amp; tricks <a href=\"blog.php\" class=\"theme-color-font\">here</a>.', 'assets/imgs/how-it-works/Define-Your-Offerings-min-2048x1244.webp', 2, 1),
+                ('Label Design & Printing', 'Embark on your design journey with meticulous planning and make your labels shine. Our expert Graphic Designers are poised to create stunning logos and labels for your personal care products.', 'Benefit from our comprehensive design services or utilize our templates to collaborate with your own team. Experience the added convenience of our in-house digital print services or explore external options for unique finishes and metallic elements.', 'assets/imgs/how-it-works/Label-Design-Printing-min-2048x1243.webp', 3, 1),
+                ('Finishing Touches', 'Elevate your brand with exceptional exterior packaging and exquisite finishing touches. Enhance your marketing presence and create a luxurious impression by adding premium exterior boxes.', 'Ensure optimal protection during shipping and explore options like seals, shrink wrap, inserts, and promotional materials to make your products truly distinctive. Invest in finer details that leave a long-lasting impression.', 'assets/imgs/how-it-works/Finishing-Touches-min-768x467.webp', 4, 1)
+            ");
+        }
+
+        // Seed accordions if empty
+        $countAcc = (int) db_fetch_value($pdo, 'SELECT COUNT(*) FROM how_it_works_accordions');
+        if ($countAcc === 0) {
+            $pdo->exec("
+                INSERT INTO how_it_works_accordions (title, body, sort_order, is_open_default, is_active) VALUES
+                ('Contact our Project Consultants to place your order.', '<p class=\"text-muted lh-base fs-17 word-spacing-6\">Once you have all the elements of your order finalized, get in touch with one of our Project Consultants to place your order. The following details will be required:</p><ul class=\"order-accordion__list\"><li><strong>Products:</strong> The products you\'d like to order</li><li><strong>Fragrance:</strong> If you would like any of your products scented</li><li><strong>Sizes:</strong> The unit size of each product you would like us to produce</li><li><strong>Packaging:</strong> The containers and closures you would like to use</li><li><strong>Quantity:</strong> How many of each unit you would like to order</li><li><strong>Labels:</strong> If you need any assistance with label design and/or label printing</li><li><strong>Finishing Touches:</strong> If you require any exterior elements, such as boxes or seals</li><li><strong>Shipping Details:</strong> Where you will want your products shipped once complete.</li><li><strong>Additional Services:</strong> If you would like to use any of our additional services, such as photography or documentation preparations</li></ul>', 1, 1, 1),
+                ('Receive your Production Quote & Make Any Changes!', '<p class=\"text-muted lh-base fs-17 word-spacing-6 mb-0\">Your Project Consultant will consolidate all of your elements into a final production quote for you to review & view your unit and services pricing. This production quote will be the document that our Production Teams use to manufacture your goods, so it is essential that you make any necessary changes or modifications at this stage!</p>', 2, 0, 1),
+                ('Approve your Order & Pay your Deposit.', '<p class=\"text-muted lh-base fs-17 word-spacing-6 mb-0\">Once you have signed off on all the details of your order, we will require a 50% deposit before we move the order to production. Changes cannot be made after this time.</p>', 3, 0, 1),
+                ('Begin your Design Process with our Graphics Team or Share your Designs With us.', '<p class=\"text-muted lh-base fs-17 word-spacing-6 mb-0\">If you’ve chosen to use our graphic design services to design your labels and/or logo, the design process will begin now, after the order has been placed. You’ll be matched up with a designer and they will walk you through the process of the design. Otherwise, if you will be designing your own labels, we will provide your team with our templates at this time so they can set them up to ensure they will work with our printing presses. It is important to note that we always will need final approval on your order to proceed with any graphic design initiatives.</p>', 4, 0, 1),
+                ('Your Order Will Begin Production.', '<p class=\"text-muted lh-base fs-17 word-spacing-6 mb-0\">Now that your labels are finalized & ready for print, all of the puzzle pieces have come together and your order will go into the final stage of its production process. Our team will manufacture your order per the specifications of your approved production quote. Our standard lead time for opening orders is 8 weeks, once the labels have been finalized, however, these lead times are not guaranteed and can fluctuate to be both shorter and longer depending on a number of factors including component sourcing & seasonality.</p>', 5, 0, 1),
+                ('Your Order is Complete & Ready for Shipping! Final Payment is Required.', '<p class=\"text-muted lh-base fs-17 word-spacing-6 mb-0\">Once your order is complete and ready for shipping, we will require the balance of your order to be paid. Please note that any shipping charges will be added to your final bill, along with any applicable taxes or fees. Once paid, we will ship your products to your desired location, whether that be your personal or business address, or a fulfillment center of your choosing.</p>', 6, 0, 1),
+                ('Your Vision has Been Brought to Life & your Products are Ready for your Clients!', '<p class=\"text-muted lh-base fs-17 word-spacing-6 mb-0\">Your finished custom products have arrived! You are now ready to launch and present your personal care line to your customers.</p>', 7, 0, 1)
+            ");
+        }
+
+        $checked = true;
+        return true;
+    } catch (Throwable $e) {
+        $checked = false;
+        return false;
+    }
+}
+
+function cms_get_how_it_works_sections(bool $includeInactive = false): array
+{
+    $cacheKey = cms_cache_key('how_it_works', 'sections' . ($includeInactive ? '_all' : '_active'));
+    if (!preview_mode_should_bypass_cache() && !$includeInactive) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $pdo = db();
+    if (!$pdo || !cms_ensure_how_it_works_tables($pdo)) {
+        return [];
+    }
+
+    $activeClause = ($includeInactive || preview_mode_include_drafts()) ? '' : ' WHERE is_active = 1';
+    $rows = db_fetch_all($pdo, 'SELECT * FROM how_it_works_sections' . $activeClause . ' ORDER BY sort_order ASC, id ASC');
+
+    if (!preview_mode_should_bypass_cache() && !$includeInactive) {
+        cache_set($cacheKey, $rows, 300);
+    }
+
+    if (preview_mode_include_drafts()) {
+        $rows = draft_merge_rows($rows, 'how_it_works_section');
+    }
+
+    return $rows;
+}
+
+function cms_get_how_it_works_accordions(bool $includeInactive = false): array
+{
+    $cacheKey = cms_cache_key('how_it_works', 'accordions' . ($includeInactive ? '_all' : '_active'));
+    if (!preview_mode_should_bypass_cache() && !$includeInactive) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $pdo = db();
+    if (!$pdo || !cms_ensure_how_it_works_tables($pdo)) {
+        return [];
+    }
+
+    $activeClause = ($includeInactive || preview_mode_include_drafts()) ? '' : ' WHERE is_active = 1';
+    $rows = db_fetch_all($pdo, 'SELECT * FROM how_it_works_accordions' . $activeClause . ' ORDER BY sort_order ASC, id ASC');
+
+    if (!preview_mode_should_bypass_cache() && !$includeInactive) {
+        cache_set($cacheKey, $rows, 300);
+    }
+
+    if (preview_mode_include_drafts()) {
+        $rows = draft_merge_rows($rows, 'how_it_works_accordion');
+    }
+
+    return $rows;
+}
+
+function cms_get_how_it_works_layout(): string
+{
+    $layout = cms_get_setting('how_it_works_layout', 'default');
+    $allowed = ['default', 'left', 'right', 'center'];
+    return in_array($layout, $allowed, true) ? $layout : 'default';
+}
+
+function cms_invalidate_about_cache(): void
+{
+    cache_delete(cms_cache_key('about', 'blocks_active'));
+    cache_delete(cms_cache_key('about', 'blocks_all'));
+    cache_delete(cms_cache_key('about', 'certifications_active'));
+    cache_delete(cms_cache_key('about', 'certifications_all'));
+    cache_delete(cms_cache_key('about', 'key_benefits_active'));
+    cache_delete(cms_cache_key('about', 'key_benefits_all'));
+    cache_delete(cms_cache_key('about', 'accreditations_active'));
+    cache_delete(cms_cache_key('about', 'accreditations_all'));
+    cache_clear_prefix('cms:about:');
+    cms_invalidate_settings_cache();
+}
+
+function cms_ensure_about_tables(PDO $pdo): bool
+{
+    static $ensured = false;
+    if ($ensured) {
+        return true;
+    }
+
+    try {
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS about_blocks (
+                id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                section_heading VARCHAR(255) NULL,
+                section_intro TEXT NULL,
+                block_title VARCHAR(255) NOT NULL,
+                body TEXT NOT NULL,
+                image_path VARCHAR(255) NOT NULL,
+                image_alt VARCHAR(255) NULL,
+                layout ENUM('left', 'right') NOT NULL DEFAULT 'left',
+                sort_order INT NOT NULL DEFAULT 0,
+                is_active TINYINT(1) NOT NULL DEFAULT 1,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX idx_about_blocks_active_order (is_active, sort_order, id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS about_certifications (
+                id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                icon_path VARCHAR(255) NOT NULL,
+                title VARCHAR(255) NOT NULL,
+                description VARCHAR(255) NOT NULL,
+                sort_order INT NOT NULL DEFAULT 0,
+                is_active TINYINT(1) NOT NULL DEFAULT 1,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX idx_about_certs_active_order (is_active, sort_order, id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS about_key_benefits (
+                id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                label VARCHAR(255) NOT NULL,
+                description TEXT NOT NULL,
+                sort_order INT NOT NULL DEFAULT 0,
+                is_active TINYINT(1) NOT NULL DEFAULT 1,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX idx_about_benefits_active_order (is_active, sort_order, id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS about_accreditations (
+                id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                image_path VARCHAR(255) NOT NULL,
+                alt_text VARCHAR(255) NOT NULL,
+                sort_order INT NOT NULL DEFAULT 0,
+                is_active TINYINT(1) NOT NULL DEFAULT 1,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX idx_about_accred_active_order (is_active, sort_order, id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+
+        $ensureIndex = function (PDO $pdo, string $table, string $indexName, string $columns) {
+            try {
+                $exists = db_fetch_one($pdo, "SHOW INDEX FROM `{$table}` WHERE Key_name = :k LIMIT 1", [':k' => $indexName]);
+                if (!$exists) {
+                    $pdo->exec("CREATE INDEX `{$indexName}` ON `{$table}` ({$columns})");
+                }
+            } catch (Throwable $e) {}
+        };
+
+        $ensureIndex($pdo, 'about_blocks', 'idx_about_blocks_active_order', 'is_active, sort_order, id');
+        $ensureIndex($pdo, 'about_blocks', 'idx_about_blocks_order', 'sort_order, id');
+        $ensureIndex($pdo, 'about_certifications', 'idx_about_certs_active_order', 'is_active, sort_order, id');
+        $ensureIndex($pdo, 'about_certifications', 'idx_about_certs_order', 'sort_order, id');
+        $ensureIndex($pdo, 'about_key_benefits', 'idx_about_benefits_active_order', 'is_active, sort_order, id');
+        $ensureIndex($pdo, 'about_key_benefits', 'idx_about_benefits_order', 'sort_order, id');
+        $ensureIndex($pdo, 'about_accreditations', 'idx_about_accred_active_order', 'is_active, sort_order, id');
+        $ensureIndex($pdo, 'about_accreditations', 'idx_about_accred_order', 'sort_order, id');
+
+        // Seed defaults if empty
+        $countBlocks = (int) db_fetch_value($pdo, 'SELECT COUNT(*) FROM about_blocks');
+        if ($countBlocks === 0) {
+            $pdo->exec("
+                INSERT INTO about_blocks (section_heading, section_intro, block_title, body, image_path, image_alt, layout, sort_order, is_active) VALUES
+                (NULL, NULL, 'Who We Are?', '<p class=\"mb-2 text-muted lh-base fs-17 word-spacing-6\">With an extensive industry experience spanning over two decades, mybrandplease.com has gained the trust of numerous global brands as their preferred manufacturing partner, facilitating the realization of their vision.</p><p class=\"mb-2 text-muted lh-base fs-17 word-spacing-6\">Our team consists of dedicated personal care experts and enthusiasts who provide comprehensive assistance throughout your Private Label journey</p><p class=\"mb-2 text-muted lh-base fs-17 word-spacing-6\">We offer an expansive range of product and packaging options, enabling you to craft a distinctive product line that is not only cost-effective and of superior quality but also proudly made in INDIA with unwavering love and passion.</p>', 'assets/imgs/about/Who-we-are-min-2048x1238.jpg', 'Our Products', 'left', 1, 1),
+                ('We Located in the vibrant city of <span class=\"theme-color-font h3\">Delhi, India</span>', '<span class=\"theme-color-font\">mybrandplease.com</span> proudly operates as a trusted hub for numerous renowned brands, distinguished Spas, Hotels, Salons, &amp; Retailers across the globe.', 'What We Offer?', '<p class=\"mb-2 text-muted lh-base fs-17 word-spacing-6\">With an extensive industry experience spanning over two decades, mybrandplease.com has gained the trust of numerous global brands as their preferred manufacturing partner, facilitating the realization of their vision.</p><p class=\"mb-2 text-muted lh-base fs-17 word-spacing-6\">Our team consists of dedicated personal care experts and enthusiasts who provide comprehensive assistance throughout your Private Label journey</p><p class=\"mb-2 text-muted lh-base fs-17 word-spacing-6\">We offer an expansive range of product and packaging options, enabling you to craft a distinctive product line that is not only cost-effective and of superior quality but also proudly made in INDIA with unwavering love and passion.</p>', 'assets/imgs/about/what-do-we-offer-min-2048x1241.jpg', 'Manufacturing', 'right', 2, 1),
+                ('Our relentless pursuit: safety, efficacy, and the essence of natural formulation.', NULL, 'How We Formulate?', '<p class=\"mb-3 text-muted lh-base fs-17 word-spacing-6\">Embracing scientific rigor, our formulations epitomize excellence, with premium ingredients securing robust shelf life and customer safety.</p><p class=\"mb-3 text-muted lh-base fs-17 word-spacing-6\">The alchemy of science and nature converge in formulations that astound with tangible, transformative results. Our goal: ignite customer devotion, fueling repeat purchases and skyrocketing sales.</p><p class=\"mb-0 text-muted lh-base fs-17 word-spacing-6\">We grasp the pivotal role of results-driven formulations, fusing the epitome of scientific innovation with the bounties of nature. Unveiling nature’s finest, we harness the potency of natural and organic ingredients, unveiling a realm of unparalleled beauty and wellness.</p>', 'assets/imgs/about/How-do-we-Formulate-min-2048x1241.jpg', 'How We Formulate', 'left', 3, 1);
+            ");
+        }
+
+        $countCerts = (int) db_fetch_value($pdo, 'SELECT COUNT(*) FROM about_certifications');
+        if ($countCerts === 0) {
+            $pdo->exec("
+                INSERT INTO about_certifications (icon_path, title, description, sort_order, is_active) VALUES
+                ('assets/imgs/about/Picture-1.png-11-500x497.jpg', 'Vegan Formulas', 'The majority of our formulations offered are Vegan.', 1, 1),
+                ('assets/imgs/about/Curelty.jpg', 'Cruelty Free', 'Our formulations are never tested on animals.', 2, 1),
+                ('assets/imgs/about/GMP-500x500.jpg', 'GMP Certified', 'The products are manufactured in a GMP Certified Facility.', 3, 1),
+                ('assets/imgs/about/Organic-500x500.jpg', '100% ORGANIC', 'Our ingredients are 100% organic and safe from any side effects.', 4, 1),
+                ('assets/imgs/about/FDA-scaled-500x502.jpg', 'FDA COMPLIANT', 'Our products are made in a FDA Compliant Facility.', 5, 1),
+                ('assets/imgs/about/MOQ-500x500.jpg', 'Low MOQ', 'We strive to make starting your own line accessible to all.', 6, 1),
+                ('assets/imgs/about/9001.jpg', 'ISO Certified', 'Our facilities is ISO 9001:2015 Certified.', 7, 1),
+                ('assets/imgs/about/premium-500x500.jpg', 'Premium Quality', '100% Premium Quality Products are offered.', 8, 1);
+            ");
+        }
+
+        $countBenefits = (int) db_fetch_value($pdo, 'SELECT COUNT(*) FROM about_key_benefits');
+        if ($countBenefits === 0) {
+            $pdo->exec("
+                INSERT INTO about_key_benefits (label, description, sort_order, is_active) VALUES
+                ('Higher Profits', 'Unlock the freedom to determine your own pricing with our premium natural and organic-based skin and hair care products, delivering uncompromising quality at costs rivaling or surpassing top brands, Eliminating The Constraints of MSRP.', 1, 1),
+                ('Brand Equity', 'Elevate your brand’s reputation and market presence by selling your exclusive private label skin and hair care products, fostering customer loyalty and driving business value growth.', 2, 1),
+                ('Increased Sales', 'Empower your staff by involving them in the development of your private label products, igniting their commitment and driving remarkable growth in product sales', 3, 1),
+                ('Client Retention', 'Unleash the power of your brand as your clients become ambassadors, carrying your essence and influence straight to their homes.', 4, 1);
+            ");
+        }
+
+        $countAccred = (int) db_fetch_value($pdo, 'SELECT COUNT(*) FROM about_accreditations');
+        if ($countAccred === 0) {
+            $pdo->exec("
+                INSERT INTO about_accreditations (image_path, alt_text, sort_order, is_active) VALUES
+                ('assets/imgs/about/FDA-scaled-500x502.jpg', 'FDA Compliant Facility', 1, 1),
+                ('assets/imgs/about/TUV-500x500.jpg', 'TUV Rheinland Certified', 2, 1),
+                ('assets/imgs/about/9001.jpg', 'ISO 9001 Certified', 3, 1),
+                ('assets/imgs/about/GMP1-500x500.jpg', 'GMP Certified', 4, 1),
+                ('assets/imgs/about/PBA-500x189.jpg', 'Professional Beauty Association', 5, 1),
+                ('assets/imgs/about/FIEO-500x214.jpg', 'FIEO', 6, 1),
+                ('assets/imgs/about/EU.jpg', 'European Standards', 7, 1),
+                ('assets/imgs/about/HACCP1-1-500x268.jpg', 'HACCP Certified', 8, 1);
+            ");
+        }
+
+        $ensured = true;
+        return true;
+    } catch (Throwable $e) {
+        return false;
+    }
+}
+
+function cms_get_about_blocks(bool $includeInactive = false): array
+{
+    $cacheKey = cms_cache_key('about', 'blocks' . ($includeInactive ? '_all' : '_active'));
+    if (!preview_mode_should_bypass_cache() && !$includeInactive) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $pdo = db();
+    if (!$pdo || !cms_ensure_about_tables($pdo)) {
+        return [];
+    }
+
+    $activeClause = ($includeInactive || preview_mode_include_drafts()) ? '' : ' WHERE is_active = 1';
+    $rows = db_fetch_all($pdo, 'SELECT * FROM about_blocks' . $activeClause . ' ORDER BY sort_order ASC, id ASC');
+
+    if (!preview_mode_should_bypass_cache() && !$includeInactive) {
+        cache_set($cacheKey, $rows, 300);
+    }
+
+    if (preview_mode_include_drafts()) {
+        $rows = draft_merge_rows($rows, 'about_block');
+    }
+
+    return $rows;
+}
+
+function cms_get_about_certifications(bool $includeInactive = false): array
+{
+    $cacheKey = cms_cache_key('about', 'certifications' . ($includeInactive ? '_all' : '_active'));
+    if (!preview_mode_should_bypass_cache() && !$includeInactive) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $pdo = db();
+    if (!$pdo || !cms_ensure_about_tables($pdo)) {
+        return [];
+    }
+
+    $activeClause = ($includeInactive || preview_mode_include_drafts()) ? '' : ' WHERE is_active = 1';
+    $rows = db_fetch_all($pdo, 'SELECT * FROM about_certifications' . $activeClause . ' ORDER BY sort_order ASC, id ASC');
+
+    if (!preview_mode_should_bypass_cache() && !$includeInactive) {
+        cache_set($cacheKey, $rows, 300);
+    }
+
+    if (preview_mode_include_drafts()) {
+        $rows = draft_merge_rows($rows, 'about_certification');
+    }
+
+    return $rows;
+}
+
+function cms_get_about_key_benefits(bool $includeInactive = false): array
+{
+    $cacheKey = cms_cache_key('about', 'key_benefits' . ($includeInactive ? '_all' : '_active'));
+    if (!preview_mode_should_bypass_cache() && !$includeInactive) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $pdo = db();
+    if (!$pdo || !cms_ensure_about_tables($pdo)) {
+        return [];
+    }
+
+    $activeClause = ($includeInactive || preview_mode_include_drafts()) ? '' : ' WHERE is_active = 1';
+    $rows = db_fetch_all($pdo, 'SELECT * FROM about_key_benefits' . $activeClause . ' ORDER BY sort_order ASC, id ASC');
+
+    if (!preview_mode_should_bypass_cache() && !$includeInactive) {
+        cache_set($cacheKey, $rows, 300);
+    }
+
+    if (preview_mode_include_drafts()) {
+        $rows = draft_merge_rows($rows, 'about_key_benefit');
+    }
+
+    return $rows;
+}
+
+function cms_get_about_accreditations(bool $includeInactive = false): array
+{
+    $cacheKey = cms_cache_key('about', 'accreditations' . ($includeInactive ? '_all' : '_active'));
+    if (!preview_mode_should_bypass_cache() && !$includeInactive) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $pdo = db();
+    if (!$pdo || !cms_ensure_about_tables($pdo)) {
+        return [];
+    }
+
+    $activeClause = ($includeInactive || preview_mode_include_drafts()) ? '' : ' WHERE is_active = 1';
+    $rows = db_fetch_all($pdo, 'SELECT * FROM about_accreditations' . $activeClause . ' ORDER BY sort_order ASC, id ASC');
+
+    if (!preview_mode_should_bypass_cache() && !$includeInactive) {
+        cache_set($cacheKey, $rows, 300);
+    }
+
+    if (preview_mode_include_drafts()) {
+        $rows = draft_merge_rows($rows, 'about_accreditation');
+    }
+
+    return $rows;
+}
+
+

@@ -6,6 +6,12 @@ $meta = [
 ];
 include 'includes/head.php';
 include 'includes/header.php';
+require_once 'includes/cms.php';
+
+$layoutSetting = cms_get_how_it_works_layout();
+$heroTitle = cms_get_setting('how_it_works_hero_title', 'Unleash Your Brand\'s Potential With Our Perfect Solution.');
+$heroDescription = cms_get_setting('how_it_works_hero_description', 'Embrace complete customization, meticulously tailoring your product line to seamlessly harmonize with your brand and visionary essence.');
+$sections = cms_get_how_it_works_sections(false);
 ?>
 
 <div class="how-works-page">
@@ -31,14 +37,17 @@ include 'includes/header.php';
   <section class="how-works-hero section-spacing-120">
     <div class="container container-1352">
       <div class="text-center how-works-hero__head">
-        <h2 class="theme-color-font">Unleash Your Brand's Potential With Our Perfect Solution.</h2>
+        <h2 class="theme-color-font"><?= e($heroTitle) ?></h2>
         <div class="how-works-hero__line"></div>
-        <p class="text-muted lh-base fs-17 word-spacing-6">
-          Embrace complete customization, meticulously tailoring your product line to seamlessly harmonize with your brand and visionary essence.
-        </p>
-        <p class="text-muted lh-base fs-17 word-spacing-6 mb-0">
-          Unlock boundless possibilities with <span class="theme-color-font">mybrandplease.com</span>'s revolutionary approach to Private Label. Elevate your brand's identity and reign supreme in the industry.
-        </p>
+        <?php if (!empty($heroDescription)): ?>
+          <?php if (str_contains($heroDescription, '<p')): ?>
+            <?= $heroDescription ?>
+          <?php else: ?>
+            <p class="text-muted lh-base fs-17 word-spacing-6">
+              <?= nl2br(e($heroDescription)) ?>
+            </p>
+          <?php endif; ?>
+        <?php endif; ?>
       </div>
 
       <div class="text-center how-works-hero__subhead">
@@ -46,90 +55,77 @@ include 'includes/header.php';
         <div class="how-works-hero__subline"></div>
       </div>
 
-      <div class="how-works-hero__feature-card" id="product-components">
-        <div class="row align-items-center g-0">
-          <div class="col-lg-5">
-            <div class="how-works-hero__image-wrap">
-              <img src="assets/imgs/how-it-works/Choose-Your-Product-Components-min-2048x1244.webp" alt="Choose Your Product Components" class="img-fluid">
-            </div>
-          </div>
-          <div class="col-lg-7">
-            <div class="how-works-hero__content">
-              <h4 class="theme-color-font">Choose Your Product Components</h4>
-              <p class="text-muted lh-base fs-17 word-spacing-6">
-                Unleash your brand's potential with <span class="theme-color-font fw-bold">mybrandplease.com</span>. Explore our extensive range of over 200+ formulations across body, skin, and hair care, carefully crafted for professional-grade results. Experience the luxury of high-quality ingredients, including naturally derived and certified organic components. Tailor your products to perfection with our diverse packaging options and captivating fragrances.
-              </p>
-              <p class="text-muted lh-base fs-17 word-spacing-6 mb-0">
-                Handpick your favorites, knowing they will captivate and delight your cherished clients. Embark on a sensory journey and sample our extraordinary products today.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <div class="how-works-steps">
+        <?php foreach ($sections as $index => $sec): ?>
+          <?php
+            // Determine reverse / center class based on global layout setting
+            $isReverse = false;
+            if ($layoutSetting === 'default') {
+                $isReverse = ($index % 2 !== 0);
+            } elseif ($layoutSetting === 'right') {
+                $isReverse = true;
+            } elseif ($layoutSetting === 'left') {
+                $isReverse = false;
+            }
 
-      <div class="how-works-steps" id="define-offerings">
-        <div class="how-works-hero__feature-card how-works-hero__feature-card--reverse">
-          <div class="row align-items-center g-0">
-            <div class="col-lg-5">
-              <div class="how-works-hero__image-wrap">
-                <img src="assets/imgs/how-it-works/Define-Your-Offerings-min-2048x1244.webp" alt="Define Your Offerings" class="img-fluid">
-              </div>
-            </div>
-            <div class="col-lg-7">
-              <div class="how-works-hero__content">
-                <h4 class="theme-color-font">Define Your Offerings</h4>
-                <p class="text-muted lh-base fs-17 word-spacing-6">
-                  Harness the power of your brand's message and fine-tune your opening order. Define product names, quantities, and sizes to perfection. Make key decisions that will shape your product line. Take control and let us bring your vision to reality.
-                </p>
-                <p class="text-muted lh-base fs-17 word-spacing-6 mb-0">
-                  Explore our blog for invaluable expert tips and tricks. Seize this opportunity to create a remarkable brand experience. Check out our blog for our expert tips &amp; tricks <a href="blog.php" class="theme-color-font">here</a>.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+            // Anchor slug logic
+            $titleLower = strtolower($sec['title']);
+            $anchorId = preg_replace('/[^a-z0-9]+/', '-', $titleLower);
+            if (str_contains($titleLower, 'components')) {
+                $anchorId = 'product-components';
+            } elseif (str_contains($titleLower, 'offerings')) {
+                $anchorId = 'define-offerings';
+            } elseif (str_contains($titleLower, 'label') || str_contains($titleLower, 'printing')) {
+                $anchorId = 'design-and-printing';
+            } elseif (str_contains($titleLower, 'finishing')) {
+                $anchorId = 'finishing-touches';
+            }
+          ?>
 
-        <div class="how-works-hero__feature-card" id="design-and-printing">
-          <div class="row align-items-center g-0">
-            <div class="col-lg-5">
-              <div class="how-works-hero__image-wrap">
-                <img src="assets/imgs/how-it-works/Label-Design-Printing-min-2048x1243.webp" alt="Label Design and Printing" class="img-fluid">
-              </div>
-            </div>
-            <div class="col-lg-7">
-              <div class="how-works-hero__content">
-                <h4 class="theme-color-font">Label Design &amp; Printing</h4>
-                <p class="text-muted lh-base fs-17 word-spacing-6">
-                  Embark on your design journey with meticulous planning and make your labels shine. Our expert Graphic Designers are poised to create stunning logos and labels for your personal care products.
-                </p>
-                <p class="text-muted lh-base fs-17 word-spacing-6 mb-0">
-                  Benefit from our comprehensive design services or utilize our templates to collaborate with your own team. Experience the added convenience of our in-house digital print services or explore external options for unique finishes and metallic elements.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+          <?php
+            $renderBody1 = str_contains($sec['body_1'], '<') ? $sec['body_1'] : '<p class="text-muted lh-base fs-17 word-spacing-6">' . nl2br(e($sec['body_1'])) . '</p>';
+            $renderBody2 = !empty($sec['body_2']) ? (str_contains($sec['body_2'], '<') ? $sec['body_2'] : '<p class="text-muted lh-base fs-17 word-spacing-6 mb-0 mt-2">' . nl2br(e($sec['body_2'])) . '</p>') : '';
+          ?>
 
-        <div class="how-works-hero__feature-card how-works-hero__feature-card--reverse" id="finishing-touches">
-          <div class="row align-items-center g-0">
-            <div class="col-lg-5">
+          <?php if ($layoutSetting === 'center'): ?>
+            <div class="how-works-hero__feature-card how-works-hero__feature-card--center" id="<?= e($anchorId) ?>">
               <div class="how-works-hero__image-wrap">
-                <img src="assets/imgs/how-it-works/Finishing-Touches-min-768x467.webp" alt="Finishing Touches" class="img-fluid">
+                <img src="<?= e(url($sec['image_path'])) ?>" alt="<?= e($sec['title']) ?>" class="img-fluid">
               </div>
-            </div>
-            <div class="col-lg-7">
               <div class="how-works-hero__content">
-                <h4 class="theme-color-font">Finishing Touches</h4>
-                <p class="text-muted lh-base fs-17 word-spacing-6">
-                  Elevate your brand with exceptional exterior packaging and exquisite finishing touches. Enhance your marketing presence and create a luxurious impression by adding premium exterior boxes.
-                </p>
-                <p class="text-muted lh-base fs-17 word-spacing-6 mb-0">
-                  Ensure optimal protection during shipping and explore options like seals, shrink wrap, inserts, and promotional materials to make your products truly distinctive. Invest in finer details that leave a long-lasting impression.
-                </p>
+                <h4 class="theme-color-font"><?= e($sec['title']) ?></h4>
+                <div class="how-works-hero__body text-muted lh-base fs-17 word-spacing-6">
+                  <?= $renderBody1 ?>
+                  <?php if ($renderBody2): ?>
+                    <div class="mt-2"><?= $renderBody2 ?></div>
+                  <?php endif; ?>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
+          <?php else: ?>
+            <div class="how-works-hero__feature-card <?= $isReverse ? 'how-works-hero__feature-card--reverse' : '' ?>" id="<?= e($anchorId) ?>">
+              <div class="row align-items-center g-0">
+                <div class="col-lg-5">
+                  <div class="how-works-hero__image-wrap">
+                    <img src="<?= e(url($sec['image_path'])) ?>" alt="<?= e($sec['title']) ?>" class="img-fluid">
+                  </div>
+                </div>
+                <div class="col-lg-7">
+                  <div class="how-works-hero__content">
+                    <h4 class="theme-color-font"><?= e($sec['title']) ?></h4>
+                    <div class="how-works-hero__body text-muted lh-base fs-17 word-spacing-6">
+                      <?= $renderBody1 ?>
+                      <?php if ($renderBody2): ?>
+                        <div class="mt-2"><?= $renderBody2 ?></div>
+                      <?php endif; ?>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <?php endif; ?>
+        <?php endforeach; ?>
+
       </div>
 
       <section class="order-process section-spacing-120">
@@ -140,86 +136,7 @@ include 'includes/header.php';
           <h3>Here's What Your Order Process Will Look Like:</h3>
         </div>
 
-        <div class="order-accordion" id="orderAccordion">
-          <article class="order-accordion__item is-open">
-            <button class="order-accordion__btn" type="button">
-              <span class="order-accordion__icon" aria-hidden="true"></span>
-              <span class="order-accordion__title">Contact our Project Consultants to place your order.</span>
-            </button>
-            <div class="order-accordion__panel">
-              <div class="order-accordion__body">
-                <p class="text-muted lh-base fs-17 word-spacing-6">
-                  Once you have all the elements of your order finalized, get in touch with one of our Project Consultants to place your order. The following details will be required:
-                </p>
-                <ul class="order-accordion__list">
-                  <li><strong>Products:</strong> The products you'd like to order</li>
-                  <li><strong>Fragrance:</strong> If you would like any of your products scented</li>
-                  <li><strong>Sizes:</strong> The unit size of each product you would like us to produce</li>
-                  <li><strong>Packaging:</strong> The containers and closures you would like to use</li>
-                  <li><strong>Quantity:</strong> How many of each unit you would like to order</li>
-                  <li><strong>Labels:</strong> If you need any assistance with label design and/or label printing</li>
-                  <li><strong>Finishing Touches:</strong> If you require any exterior elements, such as boxes or seals</li>
-                  <li><strong>Shipping Details:</strong> Where you will want your products shipped once complete.</li>
-                  <li><strong>Additional Services:</strong> If you would like to use any of our additional services, such as photography or documentation preparations</li>
-                </ul>
-              </div>
-            </div>
-          </article>
-
-          <article class="order-accordion__item">
-            <button class="order-accordion__btn" type="button">
-              <span class="order-accordion__icon" aria-hidden="true"></span>
-              <span class="order-accordion__title">Receive your Production Quote &amp; Make Any Changes!</span>
-            </button>
-            <div class="order-accordion__panel">
-              <div class="order-accordion__body">
-                <p class="text-muted lh-base fs-17 word-spacing-6 mb-0">
-                  Your Project Consultant will consolidate all of your elements into a final production quote for you to review & view your unit and services pricing. This production quote will be the document that our Production Teams use to manufacture your goods, so it is essential that you make any necessary changes or modifications at this stage!
-                </p>
-              </div>
-            </div>
-          </article>
-
-          <article class="order-accordion__item">
-            <button class="order-accordion__btn" type="button">
-              <span class="order-accordion__icon" aria-hidden="true"></span>
-              <span class="order-accordion__title">Approve your Order &amp; Pay your Deposit.</span>
-            </button>
-            <div class="order-accordion__panel"><div class="order-accordion__body"><p class="text-muted lh-base fs-17 word-spacing-6 mb-0">Once you have signed off on all the details of your order, we will require a 50% deposit before we move the order to production. Changes cannot be made after this time.</p></div></div>
-          </article>
-
-          <article class="order-accordion__item">
-            <button class="order-accordion__btn" type="button">
-              <span class="order-accordion__icon" aria-hidden="true"></span>
-              <span class="order-accordion__title">Begin your Design Process with our Graphics Team or Share your Designs With us.</span>
-            </button>
-            <div class="order-accordion__panel"><div class="order-accordion__body"><p class="text-muted lh-base fs-17 word-spacing-6 mb-0">If you’ve chosen to use our graphic design services to design your labels and/or logo, the design process will begin now, after the order has been placed. You’ll be matched up with a designer and they will walk you through the process of the design. Otherwise, if you will be designing your own labels, we will provide your team with our templates at this time so they can set them up to ensure they will work with our printing presses. It is important to note that we always will need final approval on your order to proceed with any graphic design initiatives.</p></div></div>
-          </article>
-
-          <article class="order-accordion__item">
-            <button class="order-accordion__btn" type="button">
-              <span class="order-accordion__icon" aria-hidden="true"></span>
-              <span class="order-accordion__title">Your Order Will Begin Production.</span>
-            </button>
-            <div class="order-accordion__panel"><div class="order-accordion__body"><p class="text-muted lh-base fs-17 word-spacing-6 mb-0">Now that your labels are finalized & ready for print, all of the puzzle pieces have come together and your order will go into the final stage of its production process. Our team will manufacture your order per the specifications of your approved production quote. Our standard lead time for opening orders is 8 weeks, once the labels have been finalized, however, these lead times are not guaranteed and can fluctuate to be both shorter and longer depending on a number of factors including component sourcing & seasonality.</p></div></div>
-          </article>
-
-          <article class="order-accordion__item">
-            <button class="order-accordion__btn" type="button">
-              <span class="order-accordion__icon" aria-hidden="true"></span>
-              <span class="order-accordion__title">Your Order is Complete &amp; Ready for Shipping! Final Payment is Required.</span>
-            </button>
-            <div class="order-accordion__panel"><div class="order-accordion__body"><p class="text-muted lh-base fs-17 word-spacing-6 mb-0">Once your order is complete and ready for shipping, we will require the balance of your order to be paid. Please note that any shipping charges will be added to your final bill, along with any applicable taxes or fees. Once paid, we will ship your products to your desired location, whether that be your personal or business address, or a fulfillment center of your choosing.</p></div></div>
-          </article>
-
-          <article class="order-accordion__item">
-            <button class="order-accordion__btn" type="button">
-              <span class="order-accordion__icon" aria-hidden="true"></span>
-              <span class="order-accordion__title">Your Vision has Been Brought to Life &amp; your Products are Ready for your Clients!</span>
-            </button>
-            <div class="order-accordion__panel"><div class="order-accordion__body"><p class="text-muted lh-base fs-17 word-spacing-6 mb-0"></p></div></div>
-          </article>
-        </div>
+        <?php include 'includes/order-process-accordion.php'; ?>
       </section>
     </div>
   </section>
@@ -251,4 +168,3 @@ include 'includes/header.php';
 </script>
 
 <?php include 'includes/footer.php'; ?>
-

@@ -6,12 +6,64 @@ $currentTab = $_GET['tab'] ?? '';
 $homeNavPages = ['home-hero-video.php','home-slider.php','home-testimonials.php','home-offices.php','home-instagram.php','homepage-sections.php','manage-categories.php','home-urls.php'];
 $isHomeNavActive = in_array($currentPage, $homeNavPages, true);
 $isHomepageSections = $currentPage === 'homepage-sections.php';
+$sectionsNavPages = ['how-it-works-sections.php','how-it-works-accordions.php','how-it-works-reorder.php','why-pages.php','why-page-edit.php'];
+$isSectionsNavActive = in_array($currentPage, $sectionsNavPages, true);
+$aboutNavPages = ['about-blocks.php','about-certifications.php','about-private-label.php','about-accreditations.php'];
+$isAboutNavActive = in_array($currentPage, $aboutNavPages, true);
+if (!isset($livePreviewUrl)) {
+    switch ($currentPage) {
+        case 'how-it-works-sections.php':
+        case 'how-it-works-accordions.php':
+        case 'how-it-works-reorder.php':
+            $livePreviewUrl = url('how-it-works.php');
+            break;
+        case 'why-pages.php':
+        case 'why-page-edit.php':
+            $livePreviewUrl = url('why-page.php');
+            break;
+        case 'certificates.php':
+            $livePreviewUrl = url('our-certificates.php');
+            break;
+        case 'faq-pages.php':
+        case 'faq-page-edit.php':
+            $livePreviewUrl = url('faq.php');
+            break;
+        case 'blogs.php':
+        case 'blog-edit.php':
+            $livePreviewUrl = url('blog.php');
+            break;
+        case 'about-blocks.php':
+        case 'about-certifications.php':
+        case 'about-private-label.php':
+        case 'about-accreditations.php':
+            $livePreviewUrl = url('about.php');
+            break;
+        case 'products.php':
+        case 'product-edit.php':
+        case 'categories.php':
+        case 'manage-categories.php':
+        case 'shop-content.php':
+        case 'reviews.php':
+            $livePreviewUrl = url('shop.php');
+            break;
+        case 'coupons.php':
+        case 'coupon-edit.php':
+        case 'shipping-methods.php':
+        case 'payment-settings.php':
+            $livePreviewUrl = url('checkout.php');
+            break;
+        default:
+            $livePreviewUrl = url('index.php');
+            break;
+    }
+}
 ?><!doctype html>
 <html lang="en" data-theme="light">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?= e($title ?? 'Admin Panel') ?></title>
+  <script>window.mybrandpleaseLivePreviewUrl = <?= json_encode($livePreviewUrl) ?>;</script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link href="<?php echo url('admin/assets/css/style.css'); ?>" rel="stylesheet">
@@ -54,7 +106,27 @@ $isHomepageSections = $currentPage === 'homepage-sections.php';
       </div>
 
       <div class="nav-group-label">Content</div>
-      <a class="admin-nav-link <?= $currentPage==='why-pages.php' || $currentPage==='why-page-edit.php'?'active':'' ?>" href="why-pages.php"><i class="bi bi-award"></i><span>Why Choose Us</span></a>
+      <a class="admin-nav-link admin-nav-toggle <?= $isSectionsNavActive ? 'active open' : '' ?>" data-bs-toggle="collapse" href="#sectionsNavCollapse" role="button" aria-expanded="<?= $isSectionsNavActive ? 'true' : 'false' ?>" aria-controls="sectionsNavCollapse">
+        <i class="bi bi-collection"></i><span>Sections</span>
+        <span class="admin-nav-caret bi bi-chevron-down"></span>
+      </a>
+      <div class="collapse admin-nav-collapse <?= $isSectionsNavActive ? 'show' : '' ?>" id="sectionsNavCollapse">
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='how-it-works-sections.php'?'active':'' ?>" href="how-it-works-sections.php"><i class="bi bi-layout-split"></i><span>How It Works — Sections</span></a>
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='how-it-works-accordions.php'?'active':'' ?>" href="how-it-works-accordions.php"><i class="bi bi-list-nested"></i><span>How It Works — Accordion</span></a>
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='why-pages.php' || $currentPage==='why-page-edit.php'?'active':'' ?>" href="why-pages.php"><i class="bi bi-award"></i><span>Why Choose Us</span></a>
+      </div>
+
+      <a class="admin-nav-link admin-nav-toggle <?= $isAboutNavActive ? 'active open' : '' ?>" data-bs-toggle="collapse" href="#aboutNavCollapse" role="button" aria-expanded="<?= $isAboutNavActive ? 'true' : 'false' ?>" aria-controls="aboutNavCollapse">
+        <i class="bi bi-info-circle"></i><span>About Us</span>
+        <span class="admin-nav-caret bi bi-chevron-down"></span>
+      </a>
+      <div class="collapse admin-nav-collapse <?= $isAboutNavActive ? 'show' : '' ?>" id="aboutNavCollapse">
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='about-blocks.php'?'active':'' ?>" href="about-blocks.php"><i class="bi bi-layout-split"></i><span>Info Blocks</span></a>
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='about-certifications.php'?'active':'' ?>" href="about-certifications.php"><i class="bi bi-award"></i><span>Certifications</span></a>
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='about-private-label.php'?'active':'' ?>" href="about-private-label.php"><i class="bi bi-box-seam"></i><span>Private Label & Benefits</span></a>
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='about-accreditations.php'?'active':'' ?>" href="about-accreditations.php"><i class="bi bi-shield-check"></i><span>Accreditations</span></a>
+      </div>
+
       <a class="admin-nav-link <?= $currentPage==='certificates.php'?'active':'' ?>" href="certificates.php"><i class="bi bi-patch-check"></i><span>Certificates</span></a>
       <a class="admin-nav-link <?= $currentPage==='faq-pages.php' || $currentPage==='faq-page-edit.php'?'active':'' ?>" href="faq-pages.php"><i class="bi bi-question-circle"></i><span>FAQs</span></a>
       <a class="admin-nav-link <?= $currentPage==='blogs.php' || $currentPage==='blog-edit.php'?'active':'' ?>" href="blogs.php"><i class="bi bi-journal-richtext"></i><span>Blog</span></a>
@@ -155,7 +227,7 @@ $isHomepageSections = $currentPage === 'homepage-sections.php';
             <span><i class="bi bi-eye-fill"></i> Live Preview — Draft content shown here. Visitors see the live site.</span>
             <button type="button" id="livePreviewClose" class="btn btn-sm" aria-label="Close live preview">&times;</button>
           </div>
-          <iframe id="livePreviewFrame" data-src="<?= e(url('index.php')) ?>" title="Live site preview" loading="eager"></iframe>
+          <iframe id="livePreviewFrame" data-src="<?= e($livePreviewUrl ?? url('index.php')) ?>" title="Live site preview" loading="eager"></iframe>
         </div>
         <style>
           .admin-live-preview {

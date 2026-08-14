@@ -699,6 +699,194 @@ if (!function_exists('section_render_certification_logos')) {
     }
 }
 
+if (!function_exists('section_render_getting_started_content')) {
+    /**
+     * Render the full homepage "Getting Started" section (header content + step cards).
+     * Mirrors index.php so the preview is pixel-perfect.
+     *
+     * @param array $content Merged home_getting_started_content row.
+     * @param array $steps   List of merged getting started rows.
+     * @return string HTML <section> fragment.
+     */
+    function section_render_getting_started_content(array $content, array $steps): string
+    {
+        $heading = trim((string) ($content['heading_text'] ?? "Here's How To Get Started"), " \t\n\r\0\x0B~");
+        $description = (string) ($content['description_text'] ?? 'You know your brand and customers best. Let us help you build a custom private label line of offerings that are as unique as your brand.');
+
+        ob_start();
+        ?>
+        <section class="gs-process gs-section section-spacing-120">
+            <div class="petal petal--1"></div>
+            <div class="petal petal--2"></div>
+            <div class="petal petal--3"></div>
+            <div class="petal petal--4"></div>
+
+            <div class="gs-process__inner gs-inner container">
+                <h1 class="gs-process__title gs-title">~ <em><?php echo htmlspecialchars($heading, ENT_QUOTES, 'UTF-8'); ?></em> ~</h1>
+
+                <p class="gs-process__subtitle gs-subtitle">
+                    <?php echo htmlspecialchars($description, ENT_QUOTES, 'UTF-8'); ?>
+                </p>
+
+                <div class="gs-process__grid gs-grid">
+                    <?php foreach ($steps as $step): ?>
+                    <div class="gs-process__card gs-card">
+                        <div class="gs-process__card-inner">
+                            <div class="gs-process__card-face gs-process__card-front">
+                                <div class="gs-process__icon gs-icon">
+                                    <span class="gs-process__icon-glyph" aria-hidden="true"><?php echo htmlspecialchars($step['icon_emoji'] ?? '📦', ENT_QUOTES, 'UTF-8'); ?></span>
+                                    <span class="gs-process__step gs-step"><?php echo htmlspecialchars($step['step_number'] ?? '', ENT_QUOTES, 'UTF-8'); ?></span>
+                                </div>
+                                <div class="gs-process__card-title gs-card-title"><?php echo htmlspecialchars($step['title'] ?? '', ENT_QUOTES, 'UTF-8'); ?></div>
+                                <p class="gs-process__card-text gs-card-text">
+                                    <?php echo htmlspecialchars($step['description'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
+                                </p>
+                                <a href="<?php echo htmlspecialchars($step['learn_more_url'] ?? '#', ENT_QUOTES, 'UTF-8'); ?>" class="gs-process__card-link gs-card-link">Learn more</a>
+                            </div>
+                            <div class="gs-process__card-face gs-process__card-back">
+                                <img src="<?php echo url($step['back_image_path'] ?? 'assets/imgs/how-it-works/1.png'); ?>" alt="<?php echo htmlspecialchars($step['back_image_alt'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
+                            </div>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+
+                <div class="gs-process__cta gs-cta">
+                    <a href="how-it-works.php" class="gs-process__btn gs-btn">Start Your Journey <span class="gs-process__dot dot"></span></a>
+                </div>
+            </div>
+        </section>
+        <?php
+        return ob_get_clean();
+    }
+}
+if (!function_exists('section_render_milestones')) {
+    /**
+     * Render the full homepage "Our Milestones" section (header content + milestone cards).
+     * Mirrors index.php so the preview is pixel-perfect.
+     *
+     * @param array $content Merged home_milestones_content row.
+     * @param array $cards   List of merged home_milestones rows.
+     * @return string HTML <section> fragment.
+     */
+    function section_render_milestones(array $content, array $cards): string
+    {
+        if (empty($content['is_active'])) {
+            return '';
+        }
+        $headingClean = trim((string) ($content['heading_text'] ?? 'Our Milestones'), " \t\n\r\0\x0B~");
+
+        ob_start();
+        ?>
+        <section class="milestone-highlight section-spacing-120 rr-ov-hidden">
+            <div class="milestone-highlight__overlay"></div>
+            <div class="container">
+                <div class="milestone-highlight__intro wow fadeInUp" data-wow-delay=".2s">
+                    <span class="milestone-highlight__eyebrow"><?php echo htmlspecialchars($content['eyebrow_text'] ?? 'Growth Snapshot', ENT_QUOTES, 'UTF-8'); ?></span>
+                    <h2 class="milestone-highlight__title">~<?php echo htmlspecialchars($headingClean, ENT_QUOTES, 'UTF-8'); ?>~</h2>
+                    <p class="milestone-highlight__lead"><?php echo htmlspecialchars($content['description_text'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
+                </div>
+                <div class="milestone-grid">
+                    <?php
+                    $mIndex = 0;
+                    foreach ($cards as $mCard):
+                        if (empty($mCard['is_active'])) continue;
+                        $mIndex++;
+                        $delaySec = sprintf('%.1fs', 0.1 * $mIndex);
+                        $rawVal = (string) ($mCard['number_value'] ?? '');
+                        $targetDigits = (int) preg_replace('/[^0-9]/', '', $rawVal);
+                    ?>
+                    <div class="milestone-card wow fadeInUp" data-wow-delay="<?php echo $delaySec; ?>">
+                        <div class="milestone-card__icon-wrap">
+                            <img src="<?php echo url($mCard['image_path'] ?? ''); ?>" alt="<?php echo htmlspecialchars(($mCard['image_alt'] ?? '') ?: ($mCard['title'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>">
+                        </div>
+                        <span class="milestone-card__kicker"><?php echo htmlspecialchars($mCard['kicker'] ?? '', ENT_QUOTES, 'UTF-8'); ?></span>
+                        <?php if ($targetDigits > 0): ?>
+                            <h3 class="milestone-card__number js-milestone-number" data-target="<?php echo $targetDigits; ?>">0+</h3>
+                        <?php else: ?>
+                            <h3 class="milestone-card__number"><?php echo htmlspecialchars($rawVal, ENT_QUOTES, 'UTF-8'); ?></h3>
+                        <?php endif; ?>
+                        <p class="milestone-card__text"><?php echo htmlspecialchars($mCard['title'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </section>
+        <?php
+        return ob_get_clean();
+    }
+}
+
+if (!function_exists('section_render_cta_cards')) {
+    /**
+     * Render the homepage CTA cards section ("category1").
+     * Mirrors index.php so the preview is pixel-perfect.
+     *
+     * @param array $cards List of merged home_cta_cards rows.
+     * @return string HTML <section> fragment.
+     */
+    function section_render_cta_cards(array $cards): string
+    {
+        ob_start();
+        ?>
+        <section class="category1 section-spacing-120 rr-ov-hidden js-category-entrance">
+            <div class="category1-wrapper">
+                <div class="container">
+                    <div class="row g-4">
+                        <?php
+                        $cardCount = count($cards);
+                        foreach ($cards as $idx => $card):
+                            $imgPath = !empty($card['image_path']) ? url(htmlspecialchars((string) $card['image_path'], ENT_QUOTES, 'UTF-8')) : url('assets/imgs/category/category_thumb1.jpeg');
+                            $imgAlt = !empty($card['image_alt']) ? htmlspecialchars((string) $card['image_alt'], ENT_QUOTES, 'UTF-8') : 'thumb';
+                            $btnText = !empty($card['button_text']) ? htmlspecialchars((string) $card['button_text'], ENT_QUOTES, 'UTF-8') : 'Explore';
+                            $btnUrl = !empty($card['button_url']) ? url(htmlspecialchars((string) $card['button_url'], ENT_QUOTES, 'UTF-8')) : 'shop.php';
+
+                            if ($cardCount === 3) {
+                                if ($idx === 0) {
+                                    $colClass = 'col-md-3 col-xl-3';
+                                    $animClass = 'category1-item--from-left';
+                                } elseif ($idx === 1) {
+                                    $colClass = 'col-md-6 col-xl-6';
+                                    $animClass = 'category1-item--from-top';
+                                } else {
+                                    $colClass = 'col-md-3 col-xl-3';
+                                    $animClass = 'category1-item--from-right';
+                                }
+                            } else {
+                                $colClass = 'col-md-4 col-xl-4';
+                                $animClass = ($idx % 2 === 0) ? 'category1-item--from-left' : 'category1-item--from-right';
+                            }
+                        ?>
+                        <div class="<?= $colClass ?>">
+                            <div class="category1-item <?= $animClass ?>" data-category-entrance>
+                                <div class="category1-item__thumb">
+                                    <img src="<?= $imgPath ?>" alt="<?= $imgAlt ?>">
+                                </div>
+                                <div class="category1-item__content2">
+                                    <div class="category1-item__button">
+                                        <a href="<?= $btnUrl ?>" class="rr-btn-button2">
+                                            <span class="text"><?= $btnText ?></span>
+                                            <span class="icon">
+                                                <svg width="11" height="7" viewBox="0 0 11 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M0.419556 3.21674H10.2097M10.2097 3.21674L7.41253 6.01393M10.2097 3.21674L7.41253 0.419556" stroke="#0C0C0C" stroke-width="0.839157" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                </svg>
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <div class="intro1-slider__dots"></div>
+                </div>
+            </div>
+        </section>
+        <?php
+        return ob_get_clean();
+    }
+}
+
 if (!function_exists('section_render_by_type')) {
     /**
      * Dispatch helper: render a section by its content_type.
@@ -732,6 +920,22 @@ if (!function_exists('section_render_by_type')) {
                 return section_render_partner_logos($data);
             case 'home_certification_logo':
                 return section_render_certification_logos($data);
+            case 'home_working_process_content':
+                return section_render_working_process_content_preview($data[0] ?? [], $data[1] ?? []);
+            case 'home_getting_started_content':
+                return section_render_getting_started_content($data[0] ?? [], $data[1] ?? []);
+            case 'home_milestones':
+                return section_render_milestones($data[0] ?? [], $data[1] ?? []);
+            case 'home_milestones_content':
+                return section_render_milestones($data[0] ?? [], $data[1] ?? []);
+            case 'home_cta_card':
+                return section_render_cta_cards($data);
+            case 'home_testimonials_content':
+                return section_render_testimonials($data[0] ?? []);
+            case 'home_instagram_reels_content':
+                return section_render_instagram($data[0] ?? []);
+            case 'home_offices_content':
+                return section_render_offices($data[0] ?? []);
             default:
                 return '<div class="alert alert-warning m-4">Unknown section type: ' . htmlspecialchars($contentType, ENT_QUOTES, 'UTF-8') . '</div>';
         }

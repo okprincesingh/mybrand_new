@@ -4,6 +4,7 @@ require_once __DIR__ . '/url.php';
 require_once __DIR__ . '/security.php';
 require_once __DIR__ . '/cache.php';
 require_once __DIR__ . '/preview.php';
+require_once __DIR__ . '/draft.php';
 
 function catalog_cache_key(string $key): string
 {
@@ -193,6 +194,10 @@ function catalog_categories(): array
     $rows = db_fetch_all($pdo, 'SELECT id,parent_id,name,slug,description,image_path,' . $pageImageSelect . ',sort_order FROM categories' . $activeClause . ' ORDER BY parent_id ASC, sort_order ASC, name ASC');
     if (!$rows) {
         return catalog_fallback_categories();
+    }
+
+    if (preview_mode_include_drafts()) {
+        $rows = draft_merge_rows($rows, 'category');
     }
 
     $top = [];
@@ -559,6 +564,10 @@ function get_product_by_slug(string $slug): ?array
         LIMIT 1", [':slug' => $slug]);
     if (!$r) {
         return null;
+    }
+
+    if (preview_mode_include_drafts()) {
+        $r = draft_merge_row((array) $r, 'product', (int) ($r['id'] ?? 0));
     }
 
     $images = [];

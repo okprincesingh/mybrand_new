@@ -123,8 +123,114 @@ switch ($contentType) {
         $sectionHtml = section_render_certification_logos($logos);
         break;
 
+    case 'home_getting_started_content':
+        $gettingStartedSteps = cms_get_home_getting_started();
+        $gettingStartedContent = cms_get_home_getting_started_content();
+        $sectionHtml = section_render_getting_started_content($gettingStartedContent, $gettingStartedSteps);
+        break;
+
+    case 'home_milestones':
+    case 'home_milestones_content':
+        $milestonesContent = cms_get_home_milestones_content();
+        $milestonesCards = cms_get_home_milestones();
+        $sectionHtml = section_render_milestones($milestonesContent, $milestonesCards);
+        break;
+
+    case 'home_cta_card':
+        $ctaCards = cms_get_home_cta_cards();
+        $sectionHtml = section_render_cta_cards($ctaCards);
+        break;
+
+    case 'home_testimonials_content':
+        $testimonials = cms_get_home_testimonials();
+        $sectionHtml = section_render_testimonials($testimonials);
+        break;
+
+    case 'home_instagram_reels_content':
+        $reels = cms_get_home_instagram_reels();
+        $sectionHtml = section_render_instagram($reels);
+        break;
+
+    case 'home_offices_content':
+        $offices = cms_get_home_offices();
+        $sectionHtml = section_render_offices($offices);
+        break;
+
+    // ------------------ Full-page content types ------------------
+    // These have natural standalone public URLs, so the preview iframe
+    // 302-redirects to the live page in preview mode (?preview=1 merges drafts).
+    case 'blog':
+        $previewRec = $entityId > 0 ? db_fetch_one(db(), 'SELECT slug FROM blog_posts WHERE id = :id LIMIT 1', [':id' => $entityId]) : null;
+        if ($previewRec && !empty($previewRec['slug'])) {
+            header('Location: ' . url('blog-details.php?slug=' . rawurlencode((string) $previewRec['slug']) . '&preview=1'));
+            exit;
+        }
+        header('Location: ' . url('blog.php?preview=1'));
+        exit;
+
+    case 'page':
+        $previewRec = $entityId > 0 ? db_fetch_one(db(), 'SELECT slug, page_group FROM pages WHERE id = :id LIMIT 1', [':id' => $entityId]) : null;
+        if ($previewRec && !empty($previewRec['slug'])) {
+            $previewGroup = (string) ($previewRec['page_group'] ?? '');
+            $previewTarget = in_array($previewGroup, ['faq'], true)
+                ? 'faq.php?slug=' . rawurlencode((string) $previewRec['slug']) . '&preview=1'
+                : 'why-page.php?slug=' . rawurlencode((string) $previewRec['slug']) . '&preview=1';
+            header('Location: ' . url($previewTarget));
+            exit;
+        }
+        header('Location: ' . url('index.php?preview=1'));
+        exit;
+
+    case 'product':
+        $previewRec = $entityId > 0 ? db_fetch_one(db(), 'SELECT slug FROM products WHERE id = :id LIMIT 1', [':id' => $entityId]) : null;
+        if ($previewRec && !empty($previewRec['slug'])) {
+            header('Location: ' . url('product-details.php?slug=' . rawurlencode((string) $previewRec['slug']) . '&preview=1'));
+            exit;
+        }
+        header('Location: ' . url('shop.php?preview=1'));
+        exit;
+
+    case 'category':
+        $previewRec = $entityId > 0 ? db_fetch_one(db(), 'SELECT slug FROM categories WHERE id = :id LIMIT 1', [':id' => $entityId]) : null;
+        if ($previewRec && !empty($previewRec['slug'])) {
+            header('Location: ' . url('shop.php?category=' . rawurlencode((string) $previewRec['slug']) . '&preview=1'));
+            exit;
+        }
+        header('Location: ' . url('shop.php?preview=1'));
+        exit;
+
+    case 'certificate':
+        header('Location: ' . url('our-certificates.php?preview=1'));
+        exit;
+
+    case 'how_it_works_section':
+    case 'how_it_works_accordion':
+        header('Location: ' . url('how-it-works.php?preview=1'));
+        exit;
+
+    case 'about_block':
+    case 'about_certification':
+    case 'about_key_benefit':
+    case 'about_accreditation':
+        header('Location: ' . url('about.php?preview=1'));
+        exit;
+
+    case 'site_settings':
+        $referer = $_SERVER['HTTP_REFERER'] ?? '';
+        if (str_contains($referer, 'how-it-works')) {
+            header('Location: ' . url('how-it-works.php?preview=1'));
+        } elseif (str_contains($referer, 'about')) {
+            header('Location: ' . url('about.php?preview=1'));
+        } elseif (str_contains($referer, 'shop')) {
+            header('Location: ' . url('shop.php?preview=1'));
+        } else {
+            header('Location: ' . url('index.php?preview=1'));
+        }
+        exit;
+
     default:
-        $sectionHtml = '<div class="alert alert-warning m-4">Unknown section type: ' . htmlspecialchars($contentType, ENT_QUOTES, 'UTF-8') . '</div>';
+        header('Location: ' . url('index.php?preview=1'));
+        exit;
 }
 
 // Build the list of frontend stylesheets (same as includes/head.php uses).
