@@ -2,11 +2,11 @@
 require_once __DIR__ . '/_init.php';
 
 $adminUser = admin_require_auth();
-$title = 'How It Works — Feature Sections';
+$title = 'Services — Feature Sections';
 $pdo = db();
 
 if ($pdo) {
-    cms_ensure_how_it_works_tables($pdo);
+    cms_ensure_services_tables($pdo);
 }
 
 // Handle Form Submissions
@@ -16,32 +16,32 @@ if ($pdo && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // 1. Save Layout Setting
     if ($action === 'save_layout_setting') {
-        $layout = trim((string) ($_POST['how_it_works_layout'] ?? 'default'));
+        $layout = trim((string) ($_POST['services_layout'] ?? 'default'));
         if (!in_array($layout, ['default', 'left', 'right', 'center'], true)) {
             $layout = 'default';
         }
 
         $stmt = $pdo->prepare('INSERT INTO site_settings (setting_key, setting_value) VALUES (:k, :v) ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)');
-        $stmt->execute([':k' => 'how_it_works_layout', ':v' => $layout]);
+        $stmt->execute([':k' => 'services_layout', ':v' => $layout]);
 
-        cms_invalidate_how_it_works_cache();
+        cms_invalidate_services_cache();
         admin_flash('success', 'Section layout setting updated successfully.');
-        header('Location: how-it-works-sections.php');
+        header('Location: services-sections.php');
         exit;
     }
 
     // 2. Save Hero Content Setting
     if ($action === 'save_hero_setting') {
-        $heroTitle = trim((string) ($_POST['how_it_works_hero_title'] ?? ''));
-        $heroDesc = trim((string) ($_POST['how_it_works_hero_description'] ?? ''));
+        $heroTitle = trim((string) ($_POST['services_hero_title'] ?? ''));
+        $heroDesc = trim((string) ($_POST['services_hero_description'] ?? ''));
 
         $stmt = $pdo->prepare('INSERT INTO site_settings (setting_key, setting_value) VALUES (:k, :v) ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)');
-        $stmt->execute([':k' => 'how_it_works_hero_title', ':v' => $heroTitle]);
-        $stmt->execute([':k' => 'how_it_works_hero_description', ':v' => $heroDesc]);
+        $stmt->execute([':k' => 'services_hero_title', ':v' => $heroTitle]);
+        $stmt->execute([':k' => 'services_hero_description', ':v' => $heroDesc]);
 
-        cms_invalidate_how_it_works_cache();
+        cms_invalidate_services_cache();
         admin_flash('success', 'Hero headline & description updated successfully.');
-        header('Location: how-it-works-sections.php');
+        header('Location: services-sections.php');
         exit;
     }
 
@@ -57,7 +57,7 @@ if ($pdo && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $imagePath = $existingImage;
         if (!empty($_FILES['image']['name'])) {
-            $stored = store_uploaded_image($_FILES['image'], 'how-it-works', 5_000_000, false);
+            $stored = store_uploaded_image($_FILES['image'], 'services', 5_000_000, false);
             if ($stored) {
                 $imagePath = (string) $stored['public_path'];
             }
@@ -65,18 +65,18 @@ if ($pdo && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($sectionTitle === '' || $body1 === '') {
             admin_flash('danger', 'Title and Paragraph 1 are required.');
-            header('Location: how-it-works-sections.php' . ($id > 0 ? '?edit=' . $id : '?action=add'));
+            header('Location: services-sections.php' . ($id > 0 ? '?edit=' . $id : '?action=add'));
             exit;
         }
 
         if ($imagePath === '') {
             admin_flash('danger', 'Feature section image is required.');
-            header('Location: how-it-works-sections.php' . ($id > 0 ? '?edit=' . $id : '?action=add'));
+            header('Location: services-sections.php' . ($id > 0 ? '?edit=' . $id : '?action=add'));
             exit;
         }
 
         if ($id > 0) {
-            $stmt = $pdo->prepare('UPDATE how_it_works_sections SET title = :title, body_1 = :body_1, body_2 = :body_2, image_path = :image_path, sort_order = :sort_order, is_active = :is_active WHERE id = :id');
+            $stmt = $pdo->prepare('UPDATE services_sections SET title = :title, body_1 = :body_1, body_2 = :body_2, image_path = :image_path, sort_order = :sort_order, is_active = :is_active WHERE id = :id');
             $stmt->execute([
                 ':title' => $sectionTitle,
                 ':body_1' => $body1,
@@ -88,7 +88,7 @@ if ($pdo && $_SERVER['REQUEST_METHOD'] === 'POST') {
             ]);
             admin_flash('success', 'Feature section updated successfully.');
         } else {
-            $stmt = $pdo->prepare('INSERT INTO how_it_works_sections (title, body_1, body_2, image_path, sort_order, is_active) VALUES (:title, :body_1, :body_2, :image_path, :sort_order, :is_active)');
+            $stmt = $pdo->prepare('INSERT INTO services_sections (title, body_1, body_2, image_path, sort_order, is_active) VALUES (:title, :body_1, :body_2, :image_path, :sort_order, :is_active)');
             $stmt->execute([
                 ':title' => $sectionTitle,
                 ':body_1' => $body1,
@@ -100,8 +100,8 @@ if ($pdo && $_SERVER['REQUEST_METHOD'] === 'POST') {
             admin_flash('success', 'Feature section added successfully.');
         }
 
-        cms_invalidate_how_it_works_cache();
-        header('Location: how-it-works-sections.php');
+        cms_invalidate_services_cache();
+        header('Location: services-sections.php');
         exit;
     }
 
@@ -109,11 +109,11 @@ if ($pdo && $_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($action === 'toggle_active') {
         $id = (int) ($_POST['id'] ?? 0);
         if ($id > 0) {
-            db_execute($pdo, 'UPDATE how_it_works_sections SET is_active = NOT is_active WHERE id = :id', [':id' => $id]);
-            cms_invalidate_how_it_works_cache();
+            db_execute($pdo, 'UPDATE services_sections SET is_active = NOT is_active WHERE id = :id', [':id' => $id]);
+            cms_invalidate_services_cache();
             admin_flash('success', 'Status toggled successfully.');
         }
-        header('Location: how-it-works-sections.php');
+        header('Location: services-sections.php');
         exit;
     }
 
@@ -121,11 +121,11 @@ if ($pdo && $_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($action === 'delete') {
         $id = (int) ($_POST['id'] ?? 0);
         if ($id > 0) {
-            db_execute($pdo, 'DELETE FROM how_it_works_sections WHERE id = :id', [':id' => $id]);
-            cms_invalidate_how_it_works_cache();
+            db_execute($pdo, 'DELETE FROM services_sections WHERE id = :id', [':id' => $id]);
+            cms_invalidate_services_cache();
             admin_flash('success', 'Section deleted successfully.');
         }
-        header('Location: how-it-works-sections.php');
+        header('Location: services-sections.php');
         exit;
     }
 
@@ -135,21 +135,21 @@ if ($pdo && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $ids = array_filter($ids, fn($i) => $i > 0);
         if (!empty($ids)) {
             $placeholders = implode(',', array_fill(0, count($ids), '?'));
-            $stmt = $pdo->prepare("DELETE FROM how_it_works_sections WHERE id IN ({$placeholders})");
+            $stmt = $pdo->prepare("DELETE FROM services_sections WHERE id IN ({$placeholders})");
             $stmt->execute(array_values($ids));
-            cms_invalidate_how_it_works_cache();
+            cms_invalidate_services_cache();
             admin_flash('success', count($ids) . ' sections deleted successfully.');
         }
-        header('Location: how-it-works-sections.php');
+        header('Location: services-sections.php');
         exit;
     }
 }
 
 // Fetch Current Settings & Sections
-$currentLayout = cms_get_how_it_works_layout();
-$heroTitle = cms_get_setting('how_it_works_hero_title', 'Unleash Your Brand\'s Potential With Our Perfect Solution.');
-$heroDescription = cms_get_setting('how_it_works_hero_description', 'Embrace complete customization, meticulously tailoring your product line to seamlessly harmonize with your brand and visionary essence.');
-$sections = $pdo ? cms_get_how_it_works_sections(true) : [];
+$currentLayout = cms_get_services_layout();
+$heroTitle = cms_get_setting('services_hero_title', 'Unleash Your Brand\'s Potential With Our Perfect Solution.');
+$heroDescription = cms_get_setting('services_hero_description', 'Embrace complete customization, meticulously tailoring your product line to seamlessly harmonize with your brand and visionary essence.');
+$sections = $pdo ? cms_get_services_sections(true) : [];
 
 // Form Mode (Edit or Add)
 $editId = (int) ($_GET['edit'] ?? 0);
@@ -165,13 +165,13 @@ $formData = [
 ];
 
 if ($editId > 0 && $pdo) {
-    $row = db_fetch_one($pdo, 'SELECT * FROM how_it_works_sections WHERE id = :id LIMIT 1', [':id' => $editId]);
+    $row = db_fetch_one($pdo, 'SELECT * FROM services_sections WHERE id = :id LIMIT 1', [':id' => $editId]);
     if ($row) {
         $formData = array_merge($formData, $row);
     }
 }
 
-$livePreviewUrl = url('how-it-works.php');
+$livePreviewUrl = url('services.php');
 include __DIR__ . '/_layout_top.php';
 ?>
 
@@ -185,7 +185,7 @@ include __DIR__ . '/_layout_top.php';
         </h5>
       </div>
       <div class="card-body">
-        <form method="post" action="how-it-works-sections.php">
+        <form method="post" action="services-sections.php">
           <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
           <input type="hidden" name="action" value="save_layout_setting">
           
@@ -194,28 +194,28 @@ include __DIR__ . '/_layout_top.php';
           <div class="row g-3">
             <div class="col-6 col-md-3">
               <label class="card h-100 border p-2 text-center layout-card <?= $currentLayout === 'default' ? 'border-primary bg-light' : '' ?>" style="cursor:pointer;">
-                <input type="radio" name="how_it_works_layout" value="default" class="d-none" <?= $currentLayout === 'default' ? 'checked' : '' ?> onchange="this.form.submit()">
+                <input type="radio" name="services_layout" value="default" class="d-none" <?= $currentLayout === 'default' ? 'checked' : '' ?> onchange="this.form.submit()">
                 <div class="fw-bold mb-1 fs-14">Default</div>
                 <small class="text-muted fs-12">Alternate Left / Right</small>
               </label>
             </div>
             <div class="col-6 col-md-3">
               <label class="card h-100 border p-2 text-center layout-card <?= $currentLayout === 'left' ? 'border-primary bg-light' : '' ?>" style="cursor:pointer;">
-                <input type="radio" name="how_it_works_layout" value="left" class="d-none" <?= $currentLayout === 'left' ? 'checked' : '' ?> onchange="this.form.submit()">
+                <input type="radio" name="services_layout" value="left" class="d-none" <?= $currentLayout === 'left' ? 'checked' : '' ?> onchange="this.form.submit()">
                 <div class="fw-bold mb-1 fs-14">Image Left</div>
                 <small class="text-muted fs-12">All images on left</small>
               </label>
             </div>
             <div class="col-6 col-md-3">
               <label class="card h-100 border p-2 text-center layout-card <?= $currentLayout === 'right' ? 'border-primary bg-light' : '' ?>" style="cursor:pointer;">
-                <input type="radio" name="how_it_works_layout" value="right" class="d-none" <?= $currentLayout === 'right' ? 'checked' : '' ?> onchange="this.form.submit()">
+                <input type="radio" name="services_layout" value="right" class="d-none" <?= $currentLayout === 'right' ? 'checked' : '' ?> onchange="this.form.submit()">
                 <div class="fw-bold mb-1 fs-14">Image Right</div>
                 <small class="text-muted fs-12">All images on right</small>
               </label>
             </div>
             <div class="col-6 col-md-3">
               <label class="card h-100 border p-2 text-center layout-card <?= $currentLayout === 'center' ? 'border-primary bg-light' : '' ?>" style="cursor:pointer;">
-                <input type="radio" name="how_it_works_layout" value="center" class="d-none" <?= $currentLayout === 'center' ? 'checked' : '' ?> onchange="this.form.submit()">
+                <input type="radio" name="services_layout" value="center" class="d-none" <?= $currentLayout === 'center' ? 'checked' : '' ?> onchange="this.form.submit()">
                 <div class="fw-bold mb-1 fs-14">Centered</div>
                 <small class="text-muted fs-12">Image top, stacked</small>
               </label>
@@ -236,17 +236,17 @@ include __DIR__ . '/_layout_top.php';
         </h5>
       </div>
       <div class="card-body">
-        <form method="post" action="how-it-works-sections.php" data-section-preview='{"content_type":"site_settings","entity_id":0}'>
+        <form method="post" action="services-sections.php" data-section-preview='{"content_type":"site_settings","entity_id":0}'>
           <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
           <input type="hidden" name="action" value="save_hero_setting">
           
           <div class="mb-2">
             <label class="form-label fw-semibold">Headline</label>
-            <input type="text" name="how_it_works_hero_title" class="form-control form-control-sm" value="<?= e($heroTitle) ?>" required>
+            <input type="text" name="services_hero_title" class="form-control form-control-sm" value="<?= e($heroTitle) ?>" required>
           </div>
           <div class="mb-2">
             <label class="form-label fw-semibold">Intro Description</label>
-            <textarea name="how_it_works_hero_description" class="form-control form-control-sm" rows="3"><?= e($heroDescription) ?></textarea>
+            <textarea name="services_hero_description" class="form-control form-control-sm" rows="3"><?= e($heroDescription) ?></textarea>
             <small class="text-muted">HTML tags supported (e.g. <code>&lt;p&gt;</code>, <code>&lt;span class="theme-color-font"&gt;</code>, <code>&lt;strong&gt;</code>, <code>&lt;a&gt;</code>).</small>
           </div>
           <button type="submit" class="btn btn-sm btn-primary"><i class="bi bi-check-lg"></i> Save Hero Text</button>
@@ -264,10 +264,10 @@ include __DIR__ . '/_layout_top.php';
       <i class="bi <?= $editId > 0 ? 'bi-pencil-square text-warning' : 'bi-plus-circle-fill text-success' ?>"></i>
       <?= $editId > 0 ? 'Edit Feature Section' : 'Add New Feature Section' ?>
     </h5>
-    <a href="how-it-works-sections.php" class="btn btn-sm btn-outline-secondary"><i class="bi bi-x-lg"></i> Cancel</a>
+    <a href="services-sections.php" class="btn btn-sm btn-outline-secondary"><i class="bi bi-x-lg"></i> Cancel</a>
   </div>
   <div class="card-body">
-    <form method="post" action="how-it-works-sections.php" enctype="multipart/form-data" data-section-preview='{"content_type":"how_it_works_section","entity_id":<?= (int) ($formData['id'] ?? 0) ?>}'>
+    <form method="post" action="services-sections.php" enctype="multipart/form-data" data-section-preview='{"content_type":"services_section","entity_id":<?= (int) ($formData['id'] ?? 0) ?>}'>
       <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
       <input type="hidden" name="action" value="save_section">
       <input type="hidden" name="id" value="<?= (int) $formData['id'] ?>">
@@ -317,7 +317,7 @@ include __DIR__ . '/_layout_top.php';
 
       <div class="mt-4 d-flex gap-2">
         <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Save Section</button>
-        <a href="how-it-works-sections.php" class="btn btn-outline-secondary">Cancel</a>
+        <a href="services-sections.php" class="btn btn-outline-secondary">Cancel</a>
       </div>
     </form>
   </div>
@@ -331,10 +331,10 @@ include __DIR__ . '/_layout_top.php';
       <h5 class="card-title mb-0">Feature Sections</h5>
       <small class="text-muted">Drag rows to reorder or click Edit to update details.</small>
     </div>
-    <a href="how-it-works-sections.php?action=add" class="btn btn-sm btn-success"><i class="bi bi-plus-lg"></i> Add Section</a>
+    <a href="services-sections.php?action=add" class="btn btn-sm btn-success"><i class="bi bi-plus-lg"></i> Add Section</a>
   </div>
   <div class="card-body p-0">
-    <form id="bulkForm" method="post" action="how-it-works-sections.php">
+    <form id="bulkForm" method="post" action="services-sections.php">
       <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
       <input type="hidden" name="action" id="bulkActionInput" value="bulk_delete">
 
@@ -389,7 +389,7 @@ include __DIR__ . '/_layout_top.php';
                     <span class="badge bg-light text-dark border px-2 py-1 fs-13"><?= (int) $sec['sort_order'] ?></span>
                   </td>
                   <td>
-                    <form method="post" action="how-it-works-sections.php" class="d-inline">
+                    <form method="post" action="services-sections.php" class="d-inline">
                       <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
                       <input type="hidden" name="action" value="toggle_active">
                       <input type="hidden" name="id" value="<?= (int) $sec['id'] ?>">
@@ -404,8 +404,8 @@ include __DIR__ . '/_layout_top.php';
                   </td>
                   <td class="text-end">
                     <div class="btn-group btn-group-sm me-2">
-                      <a href="how-it-works-sections.php?edit=<?= (int) $sec['id'] ?>" class="btn btn-outline-primary" title="Edit"><i class="bi bi-pencil"></i></a>
-                      <form method="post" action="how-it-works-sections.php" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this section?');">
+                      <a href="services-sections.php?edit=<?= (int) $sec['id'] ?>" class="btn btn-outline-primary" title="Edit"><i class="bi bi-pencil"></i></a>
+                      <form method="post" action="services-sections.php" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this section?');">
                         <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
                         <input type="hidden" name="action" value="delete">
                         <input type="hidden" name="id" value="<?= (int) $sec['id'] ?>">
@@ -450,7 +450,6 @@ include __DIR__ . '/_layout_top.php';
         }
       });
     }
-
 
     // Bulk Checkbox Handling
     const selectAll = document.getElementById('selectAll');
@@ -510,7 +509,7 @@ include __DIR__ . '/_layout_top.php';
 
       function saveOrder() {
         const order = Array.from(tbody.querySelectorAll('.draggable-row')).map(r => r.getAttribute('data-id'));
-        fetch('api/how-it-works-reorder.php', {
+        fetch('api/services-reorder.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -521,7 +520,7 @@ include __DIR__ . '/_layout_top.php';
         })
         .then(res => res.json())
         .then(data => {
-          if (data.success) {
+          if (data && data.success) {
             // Update sort badge displays visually
             tbody.querySelectorAll('.draggable-row').forEach((row, idx) => {
               const badge = row.querySelector('.badge.bg-light');

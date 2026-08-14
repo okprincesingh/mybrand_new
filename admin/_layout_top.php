@@ -6,8 +6,10 @@ $currentTab = $_GET['tab'] ?? '';
 $homeNavPages = ['home-hero-video.php','home-slider.php','home-testimonials.php','home-offices.php','home-instagram.php','homepage-sections.php','manage-categories.php','home-urls.php'];
 $isHomeNavActive = in_array($currentPage, $homeNavPages, true);
 $isHomepageSections = $currentPage === 'homepage-sections.php';
-$sectionsNavPages = ['how-it-works-sections.php','how-it-works-accordions.php','how-it-works-reorder.php','why-pages.php','why-page-edit.php'];
-$isSectionsNavActive = in_array($currentPage, $sectionsNavPages, true);
+$howItWorksNavPages = ['how-it-works-sections.php','how-it-works-accordions.php','how-it-works-reorder.php'];
+$isHowItWorksNavActive = in_array($currentPage, $howItWorksNavPages, true);
+$servicesNavPages = ['services-sections.php','services-accordions.php','services-reorder.php'];
+$isServicesNavActive = in_array($currentPage, $servicesNavPages, true);
 $aboutNavPages = ['about-blocks.php','about-certifications.php','about-private-label.php','about-accreditations.php'];
 $isAboutNavActive = in_array($currentPage, $aboutNavPages, true);
 if (!isset($livePreviewUrl)) {
@@ -16,6 +18,13 @@ if (!isset($livePreviewUrl)) {
         case 'how-it-works-accordions.php':
         case 'how-it-works-reorder.php':
             $livePreviewUrl = url('how-it-works.php');
+            break;
+        case 'services-sections.php':
+        case 'services-accordions.php':
+        case 'services-reorder.php':
+        case 'services-hero.php':
+        case 'services-cards.php':
+            $livePreviewUrl = url('services.php');
             break;
         case 'why-pages.php':
         case 'why-page-edit.php':
@@ -105,16 +114,39 @@ if (!isset($livePreviewUrl)) {
         <!-- <a class="admin-nav-link admin-sub-link <?= $currentPage==='home-slider.php'?'active':'' ?>" href="home-slider.php"><i class="bi bi-sliders"></i><span>Slider</span></a> -->
       </div>
 
-      <div class="nav-group-label">Content</div>
-      <a class="admin-nav-link admin-nav-toggle <?= $isSectionsNavActive ? 'active open' : '' ?>" data-bs-toggle="collapse" href="#sectionsNavCollapse" role="button" aria-expanded="<?= $isSectionsNavActive ? 'true' : 'false' ?>" aria-controls="sectionsNavCollapse">
-        <i class="bi bi-collection"></i><span>Sections</span>
+      <div class="nav-group-label">Nav Tabs</div>
+      <a class="admin-nav-link admin-nav-toggle <?= $isHowItWorksNavActive ? 'active open' : '' ?>" data-bs-toggle="collapse" href="#howItWorksNavCollapse" role="button" aria-expanded="<?= $isHowItWorksNavActive ? 'true' : 'false' ?>" aria-controls="howItWorksNavCollapse">
+        <i class="bi bi-collection"></i><span>How It Works</span>
         <span class="admin-nav-caret bi bi-chevron-down"></span>
       </a>
-      <div class="collapse admin-nav-collapse <?= $isSectionsNavActive ? 'show' : '' ?>" id="sectionsNavCollapse">
+      <div class="collapse admin-nav-collapse <?= $isHowItWorksNavActive ? 'show' : '' ?>" id="howItWorksNavCollapse">
         <a class="admin-nav-link admin-sub-link <?= $currentPage==='how-it-works-sections.php'?'active':'' ?>" href="how-it-works-sections.php"><i class="bi bi-layout-split"></i><span>How It Works — Sections</span></a>
         <a class="admin-nav-link admin-sub-link <?= $currentPage==='how-it-works-accordions.php'?'active':'' ?>" href="how-it-works-accordions.php"><i class="bi bi-list-nested"></i><span>How It Works — Accordion</span></a>
-        <a class="admin-nav-link admin-sub-link <?= $currentPage==='why-pages.php' || $currentPage==='why-page-edit.php'?'active':'' ?>" href="why-pages.php"><i class="bi bi-award"></i><span>Why Choose Us</span></a>
       </div>
+
+      <a class="admin-nav-link admin-nav-toggle <?= $isServicesNavActive ? 'active open' : '' ?>" data-bs-toggle="collapse" href="#servicesNavCollapse" role="button" aria-expanded="<?= $isServicesNavActive ? 'true' : 'false' ?>" aria-controls="servicesNavCollapse">
+        <i class="bi bi-gear-wide-connected"></i><span>Services</span>
+        <span class="admin-nav-caret bi bi-chevron-down"></span>
+      </a>
+      <div class="collapse admin-nav-collapse <?= $isServicesNavActive ? 'show' : '' ?>" id="servicesNavCollapse">
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='services-sections.php'?'active':'' ?>" href="services-sections.php"><i class="bi bi-layout-split"></i><span>Services — Sections</span></a>
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='services-accordions.php'?'active':'' ?>" href="services-accordions.php"><i class="bi bi-list-nested"></i><span>Services — Accordion</span></a>
+      </div>
+
+      <a class="admin-nav-link admin-nav-toggle <?= $isAboutNavActive ? 'active open' : '' ?>" data-bs-toggle="collapse" href="#aboutNavCollapse" role="button" aria-expanded="<?= $isAboutNavActive ? 'true' : 'false' ?>" aria-controls="aboutNavCollapse">
+        <i class="bi bi-info-circle"></i><span>About Us</span>
+        <span class="admin-nav-caret bi bi-chevron-down"></span>
+      </a>
+      <div class="collapse admin-nav-collapse <?= $isAboutNavActive ? 'show' : '' ?>" id="aboutNavCollapse">
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='about-blocks.php'?'active':'' ?>" href="about-blocks.php"><i class="bi bi-layout-split"></i><span>Info Blocks</span></a>
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='about-certifications.php'?'active':'' ?>" href="about-certifications.php"><i class="bi bi-award"></i><span>Certifications</span></a>
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='about-private-label.php'?'active':'' ?>" href="about-private-label.php"><i class="bi bi-box-seam"></i><span>Private Label & Benefits</span></a>
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='about-accreditations.php'?'active':'' ?>" href="about-accreditations.php"><i class="bi bi-shield-check"></i><span>Accreditations</span></a>
+      </div>
+
+      <a class="admin-nav-link <?= $currentPage==='why-pages.php' || $currentPage==='why-page-edit.php'?'active':'' ?>" href="why-pages.php"><i class="bi bi-award"></i><span>Why Choose Us</span></a>
+
+      <div class="nav-group-label">Content</div>
 
       <a class="admin-nav-link admin-nav-toggle <?= $isAboutNavActive ? 'active open' : '' ?>" data-bs-toggle="collapse" href="#aboutNavCollapse" role="button" aria-expanded="<?= $isAboutNavActive ? 'true' : 'false' ?>" aria-controls="aboutNavCollapse">
         <i class="bi bi-info-circle"></i><span>About Us</span>

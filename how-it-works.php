@@ -40,13 +40,15 @@ $sections = cms_get_how_it_works_sections(false);
         <h2 class="theme-color-font"><?= e($heroTitle) ?></h2>
         <div class="how-works-hero__line"></div>
         <?php if (!empty($heroDescription)): ?>
-          <?php if (str_contains($heroDescription, '<p')): ?>
-            <?= $heroDescription ?>
-          <?php else: ?>
-            <p class="text-muted lh-base fs-17 word-spacing-6">
-              <?= nl2br(e($heroDescription)) ?>
-            </p>
-          <?php endif; ?>
+          <div class="how-works-hero__desc text-muted lh-base fs-17 word-spacing-6">
+            <?php if (str_contains($heroDescription, '<p') || str_contains($heroDescription, '<div')): ?>
+              <?= $heroDescription ?>
+            <?php else: ?>
+              <p class="text-muted lh-base fs-17 word-spacing-6 mb-0">
+                <?= nl2br($heroDescription) ?>
+              </p>
+            <?php endif; ?>
+          </div>
         <?php endif; ?>
       </div>
 

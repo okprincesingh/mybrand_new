@@ -1550,3 +1550,173 @@ function cms_get_about_accreditations(bool $includeInactive = false): array
 }
 
 
+// ============================================================================
+// Services Page
+// ============================================================================
+
+function cms_invalidate_services_cache(): void
+{
+    cache_delete(cms_cache_key('services', 'sections'));
+    cache_delete(cms_cache_key('services', 'sections_active'));
+    cache_delete(cms_cache_key('services', 'sections_all'));
+    cache_delete(cms_cache_key('services', 'accordions'));
+    cache_delete(cms_cache_key('services', 'accordions_active'));
+    cache_delete(cms_cache_key('services', 'accordions_all'));
+    cache_clear_prefix('cms:services:');
+    cache_delete(cms_cache_key('setting', 'services_layout'));
+    cache_delete(cms_cache_key('setting', 'services_hero_title'));
+    cache_delete(cms_cache_key('setting', 'services_hero_description'));
+}
+
+function cms_ensure_services_tables(PDO $pdo): bool
+{
+    static $checked = null;
+    if ($checked !== null) {
+        return $checked;
+    }
+
+    try {
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS services_sections (
+                id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                title VARCHAR(255) NOT NULL,
+                body_1 TEXT NOT NULL,
+                body_2 TEXT NULL,
+                image_path VARCHAR(255) NOT NULL,
+                sort_order INT NOT NULL DEFAULT 0,
+                is_active TINYINT(1) NOT NULL DEFAULT 1,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX idx_services_sections_active_order (is_active, sort_order, id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS services_accordions (
+                id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                title VARCHAR(255) NOT NULL,
+                body TEXT NOT NULL,
+                sort_order INT NOT NULL DEFAULT 0,
+                is_open_default TINYINT(1) NOT NULL DEFAULT 0,
+                is_active TINYINT(1) NOT NULL DEFAULT 1,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX idx_services_accordions_active_order (is_active, sort_order, id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+
+        $ensureIndex = function (PDO $pdo, string $table, string $indexName, string $columns) {
+            try {
+                $exists = db_fetch_one($pdo, "SHOW INDEX FROM `{$table}` WHERE Key_name = :k LIMIT 1", [':k' => $indexName]);
+                if (!$exists) {
+                    $pdo->exec("CREATE INDEX `{$indexName}` ON `{$table}` ({$columns})");
+                }
+            } catch (Throwable $e) {}
+        };
+
+        $ensureIndex($pdo, 'services_sections', 'idx_services_sections_active_order', 'is_active, sort_order, id');
+        $ensureIndex($pdo, 'services_sections', 'idx_services_sections_order', 'sort_order, id');
+        $ensureIndex($pdo, 'services_accordions', 'idx_services_accordions_active_order', 'is_active, sort_order, id');
+        $ensureIndex($pdo, 'services_accordions', 'idx_services_accordions_order', 'sort_order, id');
+        $ensureIndex($pdo, 'services_accordions', 'idx_services_accordions_open_default', 'is_open_default');
+
+        // Seed sections if empty
+        $countSec = (int) db_fetch_value($pdo, 'SELECT COUNT(*) FROM services_sections');
+        if ($countSec === 0) {
+            $pdo->exec("
+                INSERT INTO services_sections (title, body_1, body_2, image_path, sort_order, is_active) VALUES
+                ('Choose Your Product Components', 'Unleash your brand\'s potential with <span class=\"theme-color-font fw-bold\">mybrandplease.com</span>. Explore our extensive range of over 200+ formulations across body, skin, and hair care, carefully crafted for professional-grade results. Experience the luxury of high-quality ingredients, including naturally derived and certified organic components. Tailor your products to perfection with our diverse packaging options and captivating fragrances.', 'Handpick your favorites, knowing they will captivate and delight your cherished clients. Embark on a sensory journey and sample our extraordinary products today.', 'assets/imgs/how-it-works/Choose-Your-Product-Components-min-2048x1244.webp', 1, 1),
+                ('Define Your Offerings', 'Harness the power of your brand\'s message and fine-tune your opening order. Define product names, quantities, and sizes to perfection. Make key decisions that will shape your product line. Take control and let us bring your vision to reality.', 'Explore our blog for invaluable expert tips and tricks. Seize this opportunity to create a remarkable brand experience. Check out our blog for our expert tips &amp; tricks <a href=\"blog.php\" class=\"theme-color-font\">here</a>.', 'assets/imgs/how-it-works/Define-Your-Offerings-min-2048x1244.webp', 2, 1),
+                ('Label Design & Printing', 'Embark on your design journey with meticulous planning and make your labels shine. Our expert Graphic Designers are poised to create stunning logos and labels for your personal care products.', 'Benefit from our comprehensive design services or utilize our templates to collaborate with your own team. Experience the added convenience of our in-house digital print services or explore external options for unique finishes and metallic elements.', 'assets/imgs/how-it-works/Label-Design-Printing-min-2048x1243.webp', 3, 1),
+                ('Finishing Touches', 'Elevate your brand with exceptional exterior packaging and exquisite finishing touches. Enhance your marketing presence and create a luxurious impression by adding premium exterior boxes.', 'Ensure optimal protection during shipping and explore options like seals, shrink wrap, inserts, and promotional materials to make your products truly distinctive. Invest in finer details that leave a long-lasting impression.', 'assets/imgs/how-it-works/Finishing-Touches-min-768x467.webp', 4, 1)
+            ");
+        }
+
+        // Seed accordions if empty
+        $countAcc = (int) db_fetch_value($pdo, 'SELECT COUNT(*) FROM services_accordions');
+        if ($countAcc === 0) {
+            $pdo->exec("
+                INSERT INTO services_accordions (title, body, sort_order, is_open_default, is_active) VALUES
+                ('Contact our Project Consultants to place your order.', '<p class=\"text-muted lh-base fs-17 word-spacing-6\">Once you have all the elements of your order finalized, get in touch with one of our Project Consultants to place your order. The following details will be required:</p><ul class=\"order-accordion__list\"><li><strong>Products:</strong> The products you\'d like to order</li><li><strong>Fragrance:</strong> If you would like any of your products scented</li><li><strong>Sizes:</strong> The unit size of each product you would like us to produce</li><li><strong>Packaging:</strong> The containers and closures you would like to use</li><li><strong>Quantity:</strong> How many of each unit you would like to order</li><li><strong>Labels:</strong> If you need any assistance with label design and/or label printing</li><li><strong>Finishing Touches:</strong> If you require any exterior elements, such as boxes or seals</li><li><strong>Shipping Details:</strong> Where you will want your products shipped once complete.</li><li><strong>Additional Services:</strong> If you would like to use any of our additional services, such as photography or documentation preparations</li></ul>', 1, 1, 1),
+                ('Receive your Production Quote & Make Any Changes!', '<p class=\"text-muted lh-base fs-17 word-spacing-6 mb-0\">Your Project Consultant will consolidate all of your elements into a final production quote for you to review & view your unit and services pricing. This production quote will be the document that our Production Teams use to manufacture your goods, so it is essential that you make any necessary changes or modifications at this stage!</p>', 2, 0, 1),
+                ('Approve your Order & Pay your Deposit.', '<p class=\"text-muted lh-base fs-17 word-spacing-6 mb-0\">Once you have signed off on all the details of your order, we will require a 50% deposit before we move the order to production. Changes cannot be made after this time.</p>', 3, 0, 1),
+                ('Begin your Design Process with our Graphics Team or Share your Designs With us.', '<p class=\"text-muted lh-base fs-17 word-spacing-6 mb-0\">If you’ve chosen to use our graphic design services to design your labels and/or logo, the design process will begin now, after the order has been placed. You’ll be matched up with a designer and they will walk you through the process of the design. Otherwise, if you will be designing your own labels, we will provide your team with our templates at this time so they can set them up to ensure they will work with our printing presses. It is important to note that we always will need final approval on your order to proceed with any graphic design initiatives.</p>', 4, 0, 1),
+                ('Your Order Will Begin Production.', '<p class=\"text-muted lh-base fs-17 word-spacing-6 mb-0\">Now that your labels are finalized & ready for print, all of the puzzle pieces have come together and your order will go into the final stage of its production process. Our team will manufacture your order per the specifications of your approved production quote. Our standard lead time for opening orders is 8 weeks, once the labels have been finalized, however, these lead times are not guaranteed and can fluctuate to be both shorter and longer depending on a number of factors including component sourcing & seasonality.</p>', 5, 0, 1),
+                ('Your Order is Complete & Ready for Shipping! Final Payment is Required.', '<p class=\"text-muted lh-base fs-17 word-spacing-6 mb-0\">Once your order is complete and ready for shipping, we will require the balance of your order to be paid. Please note that any shipping charges will be added to your final bill, along with any applicable taxes or fees. Once paid, we will ship your products to your desired location, whether that be your personal or business address, or a fulfillment center of your choosing.</p>', 6, 0, 1),
+                ('Your Vision has Been Brought to Life & your Products are Ready for your Clients!', '<p class=\"text-muted lh-base fs-17 word-spacing-6 mb-0\">Your finished custom products have arrived! You are now ready to launch and present your personal care line to your customers.</p>', 7, 0, 1)
+            ");
+        }
+
+        $checked = true;
+        return true;
+    } catch (Throwable $e) {
+        $checked = false;
+        return false;
+    }
+}
+
+function cms_get_services_sections(bool $includeInactive = false): array
+{
+    $cacheKey = cms_cache_key('services', 'sections' . ($includeInactive ? '_all' : '_active'));
+    if (!preview_mode_should_bypass_cache() && !$includeInactive) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $pdo = db();
+    if (!$pdo || !cms_ensure_services_tables($pdo)) {
+        return [];
+    }
+
+    $activeClause = ($includeInactive || preview_mode_include_drafts()) ? '' : ' WHERE is_active = 1';
+    $rows = db_fetch_all($pdo, 'SELECT * FROM services_sections' . $activeClause . ' ORDER BY sort_order ASC, id ASC');
+
+    if (!preview_mode_should_bypass_cache() && !$includeInactive) {
+        cache_set($cacheKey, $rows, 300);
+    }
+
+    if (preview_mode_include_drafts()) {
+        $rows = draft_merge_rows($rows, 'services_section');
+    }
+
+    return $rows;
+}
+
+function cms_get_services_accordions(bool $includeInactive = false): array
+{
+    $cacheKey = cms_cache_key('services', 'accordions' . ($includeInactive ? '_all' : '_active'));
+    if (!preview_mode_should_bypass_cache() && !$includeInactive) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $pdo = db();
+    if (!$pdo || !cms_ensure_services_tables($pdo)) {
+        return [];
+    }
+
+    $activeClause = ($includeInactive || preview_mode_include_drafts()) ? '' : ' WHERE is_active = 1';
+    $rows = db_fetch_all($pdo, 'SELECT * FROM services_accordions' . $activeClause . ' ORDER BY sort_order ASC, id ASC');
+
+    if (!preview_mode_should_bypass_cache() && !$includeInactive) {
+        cache_set($cacheKey, $rows, 300);
+    }
+
+    if (preview_mode_include_drafts()) {
+        $rows = draft_merge_rows($rows, 'services_accordion');
+    }
+
+    return $rows;
+}
+
+function cms_get_services_layout(): string
+{
+    $layout = cms_get_setting('services_layout', 'default');
+    $allowed = ['default', 'left', 'right', 'center'];
+    return in_array($layout, $allowed, true) ? $layout : 'default';
+}
+
