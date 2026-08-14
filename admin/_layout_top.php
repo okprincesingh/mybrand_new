@@ -3,24 +3,42 @@ $adminUser = $adminUser ?? admin_current();
 $flash = admin_flash_get();
 $currentPage = basename($_SERVER['PHP_SELF'] ?? '');
 $currentTab = $_GET['tab'] ?? '';
-$homeNavPages = ['home-hero-video.php','home-slider.php','home-testimonials.php','home-offices.php','home-instagram.php','homepage-sections.php','manage-categories.php','home-urls.php'];
+$homeNavPages = ['home-hero-video.php','home-slider.php','home-testimonials.php','home-offices.php','home-instagram.php','homepage-sections.php','home-urls.php'];
 $isHomeNavActive = in_array($currentPage, $homeNavPages, true);
 $isHomepageSections = $currentPage === 'homepage-sections.php';
-$howItWorksNavPages = ['how-it-works-sections.php','how-it-works-accordions.php','how-it-works-reorder.php'];
-$isHowItWorksNavActive = in_array($currentPage, $howItWorksNavPages, true);
-$servicesNavPages = ['services-sections.php','services-accordions.php','services-reorder.php'];
-$isServicesNavActive = in_array($currentPage, $servicesNavPages, true);
-$aboutNavPages = ['about-blocks.php','about-certifications.php','about-private-label.php','about-accreditations.php'];
-$isAboutNavActive = in_array($currentPage, $aboutNavPages, true);
+
+$navTabsPages = ['how-it-works-sections.php','how-it-works-accordions.php','how-it-works-reorder.php','about-blocks.php','about-certifications.php','about-private-label.php','about-accreditations.php','services-sections.php','services-accordions.php','services-reorder.php','why-pages.php','why-page-edit.php'];
+$isNavTabsActive = in_array($currentPage, $navTabsPages, true);
+
 $navbarNavPages = ['navbar-logo.php','navbar-management.php'];
 $isNavbarNavActive = in_array($currentPage, $navbarNavPages, true);
+
 $footerNavPages = ['footer-brand.php','footer-links.php','footer-trust-badges.php'];
 $isFooterNavActive = in_array($currentPage, $footerNavPages, true);
+
+$contentNavPages = ['certificates.php','faq-pages.php','faq-page-edit.php','blogs.php','blog-edit.php','pages.php','page-edit.php','shop-content.php'];
+$isContentNavActive = in_array($currentPage, $contentNavPages, true);
+
+$ordersNavPages = ['orders.php','shipping-methods.php','payment-settings.php'];
+$isOrdersNavActive = in_array($currentPage, $ordersNavPages, true);
+
+$enquiriesNavPages = ['enquiries.php','reviews.php'];
+$isEnquiriesNavActive = in_array($currentPage, $enquiriesNavPages, true);
+
+$sessionNavPages = ['settings.php','users.php'];
+$isSessionNavActive = in_array($currentPage, $sessionNavPages, true);
+
+$marketingNavPages = ['coupons.php','coupon-edit.php','reports.php'];
+$isMarketingNavActive = in_array($currentPage, $marketingNavPages, true);
+
+$catalogNavPages = ['products.php','product-edit.php','categories.php','manage-categories.php'];
+$isCatalogNavActive = in_array($currentPage, $catalogNavPages, true);
+
 if (!isset($livePreviewUrl)) {
     switch ($currentPage) {
         case 'navbar-logo.php':
         case 'navbar-management.php':
-            $livePreviewUrl = url('index.php');
+            $livePreviewUrl = url('');
             break;
         case 'how-it-works-sections.php':
         case 'how-it-works-accordions.php':
@@ -111,11 +129,10 @@ if (!isset($livePreviewUrl)) {
         <i class="bi bi-house-door"></i><span>Home</span>
         <span class="admin-nav-caret bi bi-chevron-down"></span>
       </a>
-      <div class="collapse admin-nav-collapse <?= $isHomeNavActive ? 'show' : '' ?>" id="homeNavCollapse">
+      <div class="collapse admin-nav-collapse <?= $isHomeNavActive ? 'show' : '' ?>" id="homeNavCollapse" data-bs-parent="#adminSidebar">
         <a class="admin-nav-link admin-sub-link <?= $currentPage==='home-hero-video.php'?'active':'' ?>" href="home-hero-video.php"><i class="bi bi-play-btn"></i><span>Hero Video</span></a>
         <a class="admin-nav-link admin-sub-link <?= $isHomepageSections && ($currentTab === '' || $currentTab === 'working_process') ?'active':'' ?>" href="homepage-sections.php?tab=working_process"><i class="bi bi-list-task"></i><span>Working Process</span></a>
         <a class="admin-nav-link admin-sub-link <?= $isHomepageSections && $currentTab === 'marquee' ?'active':'' ?>" href="homepage-sections.php?tab=marquee"><i class="bi bi-arrow-repeat"></i><span>Marquee Strip</span></a>
-        <a class="admin-nav-link admin-sub-link <?= $currentPage==='manage-categories.php'?'active':'' ?>" href="manage-categories.php"><i class="bi bi-tags"></i><span>Manage Categories</span></a>
         <a class="admin-nav-link admin-sub-link <?= $currentPage==='home-urls.php'?'active':'' ?>" href="home-urls.php"><i class="bi bi-link-45deg"></i><span>CTA Cards</span></a>
         <a class="admin-nav-link admin-sub-link <?= $isHomepageSections && $currentTab === 'brand_builder' ?'active':'' ?>" href="homepage-sections.php?tab=brand_builder"><i class="bi bi-bricks"></i><span>Brand Builder</span></a>
         <a class="admin-nav-link admin-sub-link <?= $isHomepageSections && $currentTab === 'getting_started' ?'active':'' ?>" href="homepage-sections.php?tab=getting_started"><i class="bi bi-rocket-takeoff"></i><span>Getting Started</span></a>
@@ -125,88 +142,111 @@ if (!isset($livePreviewUrl)) {
         <a class="admin-nav-link admin-sub-link <?= $currentPage==='home-offices.php'?'active':'' ?>" href="home-offices.php"><i class="bi bi-geo-alt"></i><span>Our Offices</span></a>
         <a class="admin-nav-link admin-sub-link <?= $isHomepageSections && $currentTab === 'partner_logos' ?'active':'' ?>" href="homepage-sections.php?tab=partner_logos"><i class="bi bi-building"></i><span>Partner Logos</span></a>
         <a class="admin-nav-link admin-sub-link <?= $isHomepageSections && $currentTab === 'certification_logos' ?'active':'' ?>" href="homepage-sections.php?tab=certification_logos"><i class="bi bi-award"></i><span>Certification Logos</span></a>
-        <!-- <a class="admin-nav-link admin-sub-link <?= $currentPage==='home-slider.php'?'active':'' ?>" href="home-slider.php"><i class="bi bi-sliders"></i><span>Slider</span></a> -->
       </div>
 
-      <div class="nav-group-label">Nav Tabs</div>
-      <a class="admin-nav-link admin-nav-toggle <?= $isHowItWorksNavActive ? 'active open' : '' ?>" data-bs-toggle="collapse" href="#howItWorksNavCollapse" role="button" aria-expanded="<?= $isHowItWorksNavActive ? 'true' : 'false' ?>" aria-controls="howItWorksNavCollapse">
-        <i class="bi bi-collection"></i><span>How It Works</span>
+      <div class="nav-group-label">Navigation</div>
+      <!-- Nav Tabs (dropdown) -->
+      <a class="admin-nav-link admin-nav-toggle <?= $isNavTabsActive ? 'active open' : '' ?>" data-bs-toggle="collapse" href="#navTabsCollapse" role="button" aria-expanded="<?= $isNavTabsActive ? 'true' : 'false' ?>" aria-controls="navTabsCollapse">
+        <i class="bi bi-segmented-nav"></i><span>Nav Tabs</span>
         <span class="admin-nav-caret bi bi-chevron-down"></span>
       </a>
-      <div class="collapse admin-nav-collapse <?= $isHowItWorksNavActive ? 'show' : '' ?>" id="howItWorksNavCollapse">
-        <a class="admin-nav-link admin-sub-link <?= $currentPage==='how-it-works-sections.php'?'active':'' ?>" href="how-it-works-sections.php"><i class="bi bi-layout-split"></i><span>How It Works — Sections</span></a>
-        <a class="admin-nav-link admin-sub-link <?= $currentPage==='how-it-works-accordions.php'?'active':'' ?>" href="how-it-works-accordions.php"><i class="bi bi-list-nested"></i><span>How It Works — Accordion</span></a>
+      <div class="collapse admin-nav-collapse <?= $isNavTabsActive ? 'show' : '' ?>" id="navTabsCollapse" data-bs-parent="#adminSidebar">
+        <a class="admin-nav-link admin-sub-link <?= in_array($currentPage, ['how-it-works-sections.php','how-it-works-accordions.php','how-it-works-reorder.php'], true)?'active':'' ?>" href="how-it-works-sections.php"><i class="bi bi-collection"></i><span>How It Works</span></a>
+        <a class="admin-nav-link admin-sub-link <?= in_array($currentPage, ['about-blocks.php','about-certifications.php','about-private-label.php','about-accreditations.php'], true)?'active':'' ?>" href="about-blocks.php"><i class="bi bi-info-circle"></i><span>About</span></a>
+        <a class="admin-nav-link admin-sub-link <?= in_array($currentPage, ['services-sections.php','services-accordions.php','services-reorder.php'], true)?'active':'' ?>" href="services-sections.php"><i class="bi bi-gear-wide-connected"></i><span>Services</span></a>
+        <a class="admin-nav-link admin-sub-link <?= in_array($currentPage, ['why-pages.php','why-page-edit.php'], true)?'active':'' ?>" href="why-pages.php"><i class="bi bi-award"></i><span>Why Choose Us</span></a>
       </div>
 
-      <a class="admin-nav-link admin-nav-toggle <?= $isServicesNavActive ? 'active open' : '' ?>" data-bs-toggle="collapse" href="#servicesNavCollapse" role="button" aria-expanded="<?= $isServicesNavActive ? 'true' : 'false' ?>" aria-controls="servicesNavCollapse">
-        <i class="bi bi-gear-wide-connected"></i><span>Services</span>
-        <span class="admin-nav-caret bi bi-chevron-down"></span>
-      </a>
-      <div class="collapse admin-nav-collapse <?= $isServicesNavActive ? 'show' : '' ?>" id="servicesNavCollapse">
-        <a class="admin-nav-link admin-sub-link <?= $currentPage==='services-sections.php'?'active':'' ?>" href="services-sections.php"><i class="bi bi-layout-split"></i><span>Services — Sections</span></a>
-        <a class="admin-nav-link admin-sub-link <?= $currentPage==='services-accordions.php'?'active':'' ?>" href="services-accordions.php"><i class="bi bi-list-nested"></i><span>Services — Accordion</span></a>
-      </div>
-
-      <a class="admin-nav-link admin-nav-toggle <?= $isAboutNavActive ? 'active open' : '' ?>" data-bs-toggle="collapse" href="#aboutNavCollapse" role="button" aria-expanded="<?= $isAboutNavActive ? 'true' : 'false' ?>" aria-controls="aboutNavCollapse">
-        <i class="bi bi-info-circle"></i><span>About Us</span>
-        <span class="admin-nav-caret bi bi-chevron-down"></span>
-      </a>
-      <div class="collapse admin-nav-collapse <?= $isAboutNavActive ? 'show' : '' ?>" id="aboutNavCollapse">
-        <a class="admin-nav-link admin-sub-link <?= $currentPage==='about-blocks.php'?'active':'' ?>" href="about-blocks.php"><i class="bi bi-layout-split"></i><span>Info Blocks</span></a>
-        <a class="admin-nav-link admin-sub-link <?= $currentPage==='about-certifications.php'?'active':'' ?>" href="about-certifications.php"><i class="bi bi-award"></i><span>Certifications</span></a>
-        <a class="admin-nav-link admin-sub-link <?= $currentPage==='about-private-label.php'?'active':'' ?>" href="about-private-label.php"><i class="bi bi-box-seam"></i><span>Private Label & Benefits</span></a>
-        <a class="admin-nav-link admin-sub-link <?= $currentPage==='about-accreditations.php'?'active':'' ?>" href="about-accreditations.php"><i class="bi bi-shield-check"></i><span>Accreditations</span></a>
-      </div>
-
-      <a class="admin-nav-link <?= $currentPage==='why-pages.php' || $currentPage==='why-page-edit.php'?'active':'' ?>" href="why-pages.php"><i class="bi bi-award"></i><span>Why Choose Us</span></a>
-
-      <div class="nav-group-label">Content</div>
+      <!-- Navbar (dropdown) -->
       <a class="admin-nav-link admin-nav-toggle <?= $isNavbarNavActive ? 'active open' : '' ?>" data-bs-toggle="collapse" href="#navbarNavCollapse" role="button" aria-expanded="<?= $isNavbarNavActive ? 'true' : 'false' ?>" aria-controls="navbarNavCollapse">
         <i class="bi bi-menu-button-wide"></i><span>Navbar</span>
         <span class="admin-nav-caret bi bi-chevron-down"></span>
       </a>
-      <div class="collapse admin-nav-collapse <?= $isNavbarNavActive ? 'show' : '' ?>" id="navbarNavCollapse">
-        <a class="admin-nav-link admin-sub-link <?= $currentPage==='navbar-logo.php'?'active':'' ?>" href="navbar-logo.php"><i class="bi bi-image"></i><span>Navbar Logo</span></a>
-        <a class="admin-nav-link admin-sub-link <?= $currentPage==='navbar-management.php'?'active':'' ?>" href="navbar-management.php"><i class="bi bi-list-nested"></i><span>Menu Items</span></a>
+      <div class="collapse admin-nav-collapse <?= $isNavbarNavActive ? 'show' : '' ?>" id="navbarNavCollapse" data-bs-parent="#adminSidebar">
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='navbar-logo.php'?'active':'' ?>" href="navbar-logo.php"><i class="bi bi-image"></i><span>Navbar — Logo</span></a>
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='navbar-management.php'?'active':'' ?>" href="navbar-management.php"><i class="bi bi-list-nested"></i><span>Navbar — Menu Management</span></a>
       </div>
 
+      <!-- Footer (dropdown) -->
       <a class="admin-nav-link admin-nav-toggle <?= $isFooterNavActive ? 'active open' : '' ?>" data-bs-toggle="collapse" href="#footerNavCollapse" role="button" aria-expanded="<?= $isFooterNavActive ? 'true' : 'false' ?>" aria-controls="footerNavCollapse">
         <i class="bi bi-layout-text-window-reverse"></i><span>Footer</span>
         <span class="admin-nav-caret bi bi-chevron-down"></span>
       </a>
-      <div class="collapse admin-nav-collapse <?= $isFooterNavActive ? 'show' : '' ?>" id="footerNavCollapse">
-        <a class="admin-nav-link admin-sub-link <?= $currentPage==='footer-brand.php'?'active':'' ?>" href="footer-brand.php"><i class="bi bi-shop"></i><span>Brand &amp; Contact</span></a>
-        <a class="admin-nav-link admin-sub-link <?= $currentPage==='footer-links.php'?'active':'' ?>" href="footer-links.php"><i class="bi bi-link-45deg"></i><span>Footer Links</span></a>
-        <a class="admin-nav-link admin-sub-link <?= $currentPage==='footer-trust-badges.php'?'active':'' ?>" href="footer-trust-badges.php"><i class="bi bi-shield-check"></i><span>Trust Badges</span></a>
+      <div class="collapse admin-nav-collapse <?= $isFooterNavActive ? 'show' : '' ?>" id="footerNavCollapse" data-bs-parent="#adminSidebar">
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='footer-brand.php'?'active':'' ?>" href="footer-brand.php"><i class="bi bi-shop"></i><span>Footer — Brand &amp; Contact</span></a>
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='footer-links.php'?'active':'' ?>" href="footer-links.php"><i class="bi bi-link-45deg"></i><span>Footer — Links</span></a>
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='footer-trust-badges.php'?'active':'' ?>" href="footer-trust-badges.php"><i class="bi bi-shield-check"></i><span>Footer — Trust Badges</span></a>
       </div>
 
+      <!-- Social Media (Standalone Top-Level) -->
       <a class="admin-nav-link <?= $currentPage==='social-media.php'?'active':'' ?>" href="social-media.php"><i class="bi bi-share"></i><span>Social Media</span></a>
-      <a class="admin-nav-link <?= $currentPage==='certificates.php'?'active':'' ?>" href="certificates.php"><i class="bi bi-patch-check"></i><span>Certificates</span></a>
-      <a class="admin-nav-link <?= $currentPage==='faq-pages.php' || $currentPage==='faq-page-edit.php'?'active':'' ?>" href="faq-pages.php"><i class="bi bi-question-circle"></i><span>FAQs</span></a>
-      <a class="admin-nav-link <?= $currentPage==='blogs.php' || $currentPage==='blog-edit.php'?'active':'' ?>" href="blogs.php"><i class="bi bi-journal-richtext"></i><span>Blog</span></a>
-      <a class="admin-nav-link <?= $currentPage==='pages.php' || $currentPage==='page-edit.php'?'active':'' ?>" href="pages.php"><i class="bi bi-file-earmark-text"></i><span>SEO Pages</span></a>
 
-      <div class="nav-group-label">Catalog</div>
-      <a class="admin-nav-link <?= $currentPage==='products.php' || $currentPage==='product-edit.php'?'active':'' ?>" href="products.php"><i class="bi bi-box-seam"></i><span>Products</span></a>
-      <a class="admin-nav-link <?= $currentPage==='categories.php'?'active':'' ?>" href="categories.php"><i class="bi bi-diagram-3"></i><span>Categories</span></a>
-      <a class="admin-nav-link <?= $currentPage==='shop-content.php'?'active':'' ?>" href="shop-content.php"><i class="bi bi-shop-window"></i><span>Shop Content</span></a>
-      <a class="admin-nav-link <?= $currentPage==='reviews.php'?'active':'' ?>" href="reviews.php"><i class="bi bi-chat-left-text"></i><span>Reviews</span></a>
+      <div class="nav-group-label">Manage</div>
+      <!-- Content (dropdown) -->
+      <a class="admin-nav-link admin-nav-toggle <?= $isContentNavActive ? 'active open' : '' ?>" data-bs-toggle="collapse" href="#contentNavCollapse" role="button" aria-expanded="<?= $isContentNavActive ? 'true' : 'false' ?>" aria-controls="contentNavCollapse">
+        <i class="bi bi-file-earmark-richtext"></i><span>Content</span>
+        <span class="admin-nav-caret bi bi-chevron-down"></span>
+      </a>
+      <div class="collapse admin-nav-collapse <?= $isContentNavActive ? 'show' : '' ?>" id="contentNavCollapse" data-bs-parent="#adminSidebar">
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='certificates.php'?'active':'' ?>" href="certificates.php"><i class="bi bi-patch-check"></i><span>Certificates</span></a>
+        <a class="admin-nav-link admin-sub-link <?= in_array($currentPage, ['faq-pages.php','faq-page-edit.php'], true)?'active':'' ?>" href="faq-pages.php"><i class="bi bi-question-circle"></i><span>FAQs</span></a>
+        <a class="admin-nav-link admin-sub-link <?= in_array($currentPage, ['blogs.php','blog-edit.php'], true)?'active':'' ?>" href="blogs.php"><i class="bi bi-journal-richtext"></i><span>Blogs</span></a>
+        <a class="admin-nav-link admin-sub-link <?= in_array($currentPage, ['pages.php','page-edit.php'], true)?'active':'' ?>" href="pages.php"><i class="bi bi-file-earmark-text"></i><span>SEO Pages</span></a>
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='shop-content.php'?'active':'' ?>" href="shop-content.php"><i class="bi bi-shop-window"></i><span>Shop Content</span></a>
+      </div>
 
-      <div class="nav-group-label">Users</div>
-      <a class="admin-nav-link <?= $currentPage==='users.php'?'active':'' ?>" href="users.php"><i class="bi bi-people"></i><span>Users</span></a>
-      <a class="admin-nav-link <?= $currentPage==='enquiries.php'?'active':'' ?>" href="enquiries.php"><i class="bi bi-envelope-paper"></i><span>Enquiries</span></a>
+      <!-- Orders (dropdown) -->
+      <a class="admin-nav-link admin-nav-toggle <?= $isOrdersNavActive ? 'active open' : '' ?>" data-bs-toggle="collapse" href="#ordersNavCollapse" role="button" aria-expanded="<?= $isOrdersNavActive ? 'true' : 'false' ?>" aria-controls="ordersNavCollapse">
+        <i class="bi bi-receipt"></i><span>Orders</span>
+        <span class="admin-nav-caret bi bi-chevron-down"></span>
+      </a>
+      <div class="collapse admin-nav-collapse <?= $isOrdersNavActive ? 'show' : '' ?>" id="ordersNavCollapse" data-bs-parent="#adminSidebar">
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='orders.php'?'active':'' ?>" href="orders.php"><i class="bi bi-receipt-cutoff"></i><span>Orders</span></a>
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='shipping-methods.php'?'active':'' ?>" href="shipping-methods.php"><i class="bi bi-truck"></i><span>Shipping</span></a>
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='payment-settings.php'?'active':'' ?>" href="payment-settings.php"><i class="bi bi-credit-card"></i><span>Payments</span></a>
+      </div>
 
-      <div class="nav-group-label">Orders</div>
-      <a class="admin-nav-link <?= $currentPage==='orders.php'?'active':'' ?>" href="orders.php"><i class="bi bi-receipt"></i><span>Orders</span></a>
-      <a class="admin-nav-link <?= $currentPage==='shipping-methods.php'?'active':'' ?>" href="shipping-methods.php"><i class="bi bi-truck"></i><span>Shipping</span></a>
-      <a class="admin-nav-link <?= $currentPage==='payment-settings.php'?'active':'' ?>" href="payment-settings.php"><i class="bi bi-credit-card"></i><span>Payments</span></a>
+      <!-- Enquiries (dropdown) -->
+      <a class="admin-nav-link admin-nav-toggle <?= $isEnquiriesNavActive ? 'active open' : '' ?>" data-bs-toggle="collapse" href="#enquiriesNavCollapse" role="button" aria-expanded="<?= $isEnquiriesNavActive ? 'true' : 'false' ?>" aria-controls="enquiriesNavCollapse">
+        <i class="bi bi-envelope-paper"></i><span>Enquiries</span>
+        <span class="admin-nav-caret bi bi-chevron-down"></span>
+      </a>
+      <div class="collapse admin-nav-collapse <?= $isEnquiriesNavActive ? 'show' : '' ?>" id="enquiriesNavCollapse" data-bs-parent="#adminSidebar">
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='enquiries.php'?'active':'' ?>" href="enquiries.php"><i class="bi bi-envelope"></i><span>Enquiries</span></a>
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='reviews.php'?'active':'' ?>" href="reviews.php"><i class="bi bi-chat-left-text"></i><span>Reviews</span></a>
+      </div>
 
-      <div class="nav-group-label">Marketing</div>
-      <a class="admin-nav-link <?= $currentPage==='coupons.php' || $currentPage==='coupon-edit.php'?'active':'' ?>" href="coupons.php"><i class="bi bi-tag"></i><span>Coupons</span></a>
-      <a class="admin-nav-link <?= $currentPage==='reports.php'?'active':'' ?>" href="reports.php"><i class="bi bi-bar-chart"></i><span>Reports</span></a>
+      <!-- Session (dropdown) -->
+      <a class="admin-nav-link admin-nav-toggle <?= $isSessionNavActive ? 'active open' : '' ?>" data-bs-toggle="collapse" href="#sessionNavCollapse" role="button" aria-expanded="<?= $isSessionNavActive ? 'true' : 'false' ?>" aria-controls="sessionNavCollapse">
+        <i class="bi bi-person-gear"></i><span>Session</span>
+        <span class="admin-nav-caret bi bi-chevron-down"></span>
+      </a>
+      <div class="collapse admin-nav-collapse <?= $isSessionNavActive ? 'show' : '' ?>" id="sessionNavCollapse" data-bs-parent="#adminSidebar">
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='settings.php'?'active':'' ?>" href="settings.php"><i class="bi bi-gear"></i><span>Settings</span></a>
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='users.php'?'active':'' ?>" href="users.php"><i class="bi bi-people"></i><span>Users</span></a>
+      </div>
 
-      <div class="nav-group-label">Session</div>
-      <a class="admin-nav-link <?= $currentPage==='settings.php'?'active':'' ?>" href="settings.php"><i class="bi bi-gear"></i><span>Settings</span></a>
+      <!-- Marketing (dropdown) -->
+      <a class="admin-nav-link admin-nav-toggle <?= $isMarketingNavActive ? 'active open' : '' ?>" data-bs-toggle="collapse" href="#marketingNavCollapse" role="button" aria-expanded="<?= $isMarketingNavActive ? 'true' : 'false' ?>" aria-controls="marketingNavCollapse">
+        <i class="bi bi-megaphone"></i><span>Marketing</span>
+        <span class="admin-nav-caret bi bi-chevron-down"></span>
+      </a>
+      <div class="collapse admin-nav-collapse <?= $isMarketingNavActive ? 'show' : '' ?>" id="marketingNavCollapse" data-bs-parent="#adminSidebar">
+        <a class="admin-nav-link admin-sub-link <?= in_array($currentPage, ['coupons.php','coupon-edit.php'], true)?'active':'' ?>" href="coupons.php"><i class="bi bi-tag"></i><span>Coupons</span></a>
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='reports.php'?'active':'' ?>" href="reports.php"><i class="bi bi-bar-chart"></i><span>Reports</span></a>
+      </div>
+
+      <!-- Catalog (dropdown) -->
+      <a class="admin-nav-link admin-nav-toggle <?= $isCatalogNavActive ? 'active open' : '' ?>" data-bs-toggle="collapse" href="#catalogNavCollapse" role="button" aria-expanded="<?= $isCatalogNavActive ? 'true' : 'false' ?>" aria-controls="catalogNavCollapse">
+        <i class="bi bi-box-seam"></i><span>Catalog</span>
+        <span class="admin-nav-caret bi bi-chevron-down"></span>
+      </a>
+      <div class="collapse admin-nav-collapse <?= $isCatalogNavActive ? 'show' : '' ?>" id="catalogNavCollapse" data-bs-parent="#adminSidebar">
+        <a class="admin-nav-link admin-sub-link <?= in_array($currentPage, ['products.php','product-edit.php'], true)?'active':'' ?>" href="products.php"><i class="bi bi-box-seam"></i><span>Products</span></a>
+        <a class="admin-nav-link admin-sub-link <?= in_array($currentPage, ['categories.php','manage-categories.php'], true)?'active':'' ?>" href="categories.php"><i class="bi bi-diagram-3"></i><span>Categories</span></a>
+      </div>
+
+      <div class="nav-group-label">Exit</div>
       <a class="admin-nav-link" href="logout.php"><i class="bi bi-box-arrow-right"></i><span>Logout</span></a>
     </aside>
 
