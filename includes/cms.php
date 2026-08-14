@@ -492,38 +492,322 @@ function cms_get_resolved_header_menu(): array
     return cms_merge_header_menu($dbMenu, $defaultMenu);
 }
 
-function cms_get_footer_sections(): array
+function cms_invalidate_footer_cache(): void
 {
+    cache_clear_prefix('cms:footer:');
+}
+
+function cms_invalidate_social_cache(): void
+{
+    cache_clear_prefix('cms:social:');
+}
+
+function cms_ensure_footer_and_social_tables(PDO $pdo): bool
+{
+    static $checked = null;
+    if ($checked !== null) {
+        return $checked;
+    }
+
+    try {
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS footer_brand (
+                id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                logo VARCHAR(255) NOT NULL DEFAULT 'uploads/logo/mybrandfooter.gif',
+                tagline TEXT NOT NULL,
+                phone VARCHAR(100) NOT NULL DEFAULT '+91 (971) 700 4615',
+                email VARCHAR(150) NOT NULL DEFAULT 'info@mybrandplease.com',
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS footer_links (
+                id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                group_key ENUM('quick_links', 'compliances', 'legal_disclaimers') NOT NULL,
+                label VARCHAR(180) NOT NULL,
+                url VARCHAR(500) NOT NULL,
+                open_in_new_tab TINYINT(1) NOT NULL DEFAULT 0,
+                sort_order INT NOT NULL DEFAULT 0,
+                status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX idx_group_sort (group_key, status, sort_order)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS footer_bottom (
+                id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                copyright_text TEXT NOT NULL,
+                developer_credit_text VARCHAR(255) NOT NULL DEFAULT 'Developed and Maintained by',
+                developer_credit_label VARCHAR(100) NOT NULL DEFAULT 'JTPL',
+                developer_credit_url VARCHAR(500) NOT NULL DEFAULT 'https://jaikviktechnology.com/',
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS social_media_links (
+                id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                platform VARCHAR(60) NOT NULL,
+                icon_class VARCHAR(100) NOT NULL,
+                icon_image VARCHAR(255) NULL,
+                url VARCHAR(500) NOT NULL,
+                open_in_new_tab TINYINT(1) NOT NULL DEFAULT 1,
+                sort_order INT NOT NULL DEFAULT 0,
+                status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX idx_sort_status (status, sort_order)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS footer_trust_badges (
+                id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                label VARCHAR(255) NOT NULL DEFAULT '',
+                image VARCHAR(500) NOT NULL DEFAULT '',
+                link_url VARCHAR(500) NULL DEFAULT NULL,
+                open_in_new_tab TINYINT(1) NOT NULL DEFAULT 1,
+                sort_order INT NOT NULL DEFAULT 0,
+                status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX idx_sort_status (status, sort_order)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+
+        $brandCount = (int) db_fetch_value($pdo, 'SELECT COUNT(*) FROM footer_brand');
+        if ($brandCount === 0) {
+            $pdo->exec("INSERT INTO footer_brand (id, logo, tagline, phone, email) VALUES (1, 'uploads/logo/mybrandfooter.gif', 'Get in touch with us however is most convenient for you.', '+91 (971) 700 4615', 'info@mybrandplease.com')");
+        }
+
+        $bottomCount = (int) db_fetch_value($pdo, 'SELECT COUNT(*) FROM footer_bottom');
+        if ($bottomCount === 0) {
+            $pdo->exec("INSERT INTO footer_bottom (id, copyright_text, developer_credit_text, developer_credit_label, developer_credit_url) VALUES (1, '&copy; 2005-2026 NIMISHA IMPEX WORLDWIDE (P) LIMITED | All rights reserved', 'Developed and Maintained by', 'JTPL', 'https://jaikviktechnology.com/')");
+        }
+
+        $badgeCount = (int) db_fetch_value($pdo, 'SELECT COUNT(*) FROM footer_trust_badges');
+        if ($badgeCount === 0) {
+            $pdo->exec("INSERT INTO footer_trust_badges (label, image, link_url, open_in_new_tab, sort_order, status) VALUES
+                ('Google Reviews',  'assets/imgs/home/footer/google-Reviews_mybrand.webp', 'https://g.co/kgs/YgaRfY', 1, 1, 'active'),
+                ('Trustpilot',      'assets/imgs/home/footer/Trust-Pilot-Reviews_mybrand.webp', 'https://www.trustpilot.com/review/mybrandplease.com?utm_medium=trustbox&utm_source=TrustBoxReviewCollector', 1, 2, 'active'),
+                ('USFDA',           'assets/imgs/home/footer/fei.webp', NULL, 0, 3, 'active'),
+                ('DUNS',            'assets/imgs/home/footer/duns.webp', NULL, 0, 4, 'active'),
+                ('CPNP Registered', 'assets/imgs/home/footer/CPNP-Registered.webp', NULL, 0, 5, 'active'),
+                ('Stripe Payment',  'assets/imgs/home/footer/stripe.png', NULL, 0, 6, 'active')");
+        }
+
+        $checked = true;
+        return true;
+    } catch (Throwable $e) {
+        $checked = false;
+        return false;
+    }
+}
+
+function cms_get_footer_brand(bool $forceFresh = false): array
+{
+    $default = [
+        'id' => 1,
+        'logo' => 'uploads/logo/mybrandfooter.gif',
+        'tagline' => 'Get in touch with us however is most convenient for you.',
+        'phone' => '+91 (971) 700 4615',
+        'email' => 'info@mybrandplease.com',
+    ];
+
+    $cacheKey = cms_cache_key('footer', 'brand');
+    if (!$forceFresh) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return array_merge($default, $cached);
+        }
+    }
+
+    $pdo = db();
+    if (!$pdo) {
+        return $default;
+    }
+
+    cms_ensure_footer_and_social_tables($pdo);
+    $row = db_fetch_one($pdo, 'SELECT id, logo, tagline, phone, email, updated_at FROM footer_brand WHERE id = 1 LIMIT 1');
+    if (!$row) {
+        $row = db_fetch_one($pdo, 'SELECT id, logo, tagline, phone, email, updated_at FROM footer_brand ORDER BY id ASC LIMIT 1');
+    }
+
+    $data = $row ? array_merge($default, $row) : $default;
+    cache_set($cacheKey, $data, 3600);
+    return $data;
+}
+
+function cms_get_footer_bottom(bool $forceFresh = false): array
+{
+    $default = [
+        'id' => 1,
+        'copyright_text' => '&copy; 2005-2026 NIMISHA IMPEX WORLDWIDE (P) LIMITED | All rights reserved',
+        'developer_credit_text' => 'Developed and Maintained by',
+        'developer_credit_label' => 'JTPL',
+        'developer_credit_url' => 'https://jaikviktechnology.com/',
+    ];
+
+    $cacheKey = cms_cache_key('footer', 'bottom');
+    if (!$forceFresh) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return array_merge($default, $cached);
+        }
+    }
+
+    $pdo = db();
+    if (!$pdo) {
+        return $default;
+    }
+
+    cms_ensure_footer_and_social_tables($pdo);
+    $row = db_fetch_one($pdo, 'SELECT id, copyright_text, developer_credit_text, developer_credit_label, developer_credit_url, updated_at FROM footer_bottom WHERE id = 1 LIMIT 1');
+    if (!$row) {
+        $row = db_fetch_one($pdo, 'SELECT id, copyright_text, developer_credit_text, developer_credit_label, developer_credit_url, updated_at FROM footer_bottom ORDER BY id ASC LIMIT 1');
+    }
+
+    $data = $row ? array_merge($default, $row) : $default;
+    cache_set($cacheKey, $data, 3600);
+    return $data;
+}
+
+function cms_get_footer_links(?string $groupKey = null, bool $activeOnly = true, bool $forceFresh = false): array
+{
+    $cacheKey = cms_cache_key('footer', 'links_' . ($groupKey ?? 'all') . '_' . ($activeOnly ? 'active' : 'all'));
+    if (!$forceFresh) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
     $pdo = db();
     if (!$pdo) {
         return [];
     }
 
-    $rows = $pdo->query('SELECT fs.id, fs.title, fl.label, fl.url FROM footer_sections fs LEFT JOIN footer_links fl ON fl.section_id = fs.id ORDER BY fs.sort_order ASC, fs.id ASC, fl.sort_order ASC, fl.id ASC')->fetchAll();
-    if (!$rows) {
+    cms_ensure_footer_and_social_tables($pdo);
+
+    $sql = 'SELECT id, group_key, label, url, open_in_new_tab, sort_order, status, created_at, updated_at FROM footer_links WHERE 1=1';
+    $params = [];
+
+    if ($groupKey !== null && $groupKey !== '') {
+        $sql .= ' AND group_key = :group_key';
+        $params[':group_key'] = $groupKey;
+    }
+
+    if ($activeOnly) {
+        $sql .= ' AND status = "active"';
+    }
+
+    $sql .= ' ORDER BY sort_order ASC, id ASC';
+
+    $rows = db_fetch_all($pdo, $sql, $params);
+
+    if ($groupKey === null) {
+        $grouped = [
+            'quick_links' => [],
+            'compliances' => [],
+            'legal_disclaimers' => [],
+        ];
+        foreach ($rows as $row) {
+            $gk = (string) ($row['group_key'] ?? '');
+            if (isset($grouped[$gk])) {
+                $grouped[$gk][] = $row;
+            }
+        }
+        cache_set($cacheKey, $grouped, 3600);
+        return $grouped;
+    }
+
+    cache_set($cacheKey, $rows, 3600);
+    return $rows;
+}
+
+function cms_get_social_media_links(bool $activeOnly = true, bool $forceFresh = false): array
+{
+    $cacheKey = cms_cache_key('social', 'links_' . ($activeOnly ? 'active' : 'all'));
+    if (!$forceFresh) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $pdo = db();
+    if (!$pdo) {
         return [];
     }
 
-    $result = [];
-    foreach ($rows as $row) {
-        $sid = (int) $row['id'];
-        if (!isset($result[$sid])) {
-            $result[$sid] = [
-                'id' => $sid,
-                'title' => (string) $row['title'],
-                'links' => [],
-            ];
-        }
+    cms_ensure_footer_and_social_tables($pdo);
 
-        if ($row['label'] !== null) {
-            $result[$sid]['links'][] = [
-                'label' => (string) $row['label'],
-                'url' => (string) $row['url'],
-            ];
+    $sql = 'SELECT id, platform, icon_class, icon_image, url, open_in_new_tab, sort_order, status, created_at, updated_at FROM social_media_links WHERE 1=1';
+    if ($activeOnly) {
+        $sql .= ' AND status = "active"';
+    }
+    $sql .= ' ORDER BY sort_order ASC, id ASC';
+
+    $rows = db_fetch_all($pdo, $sql);
+    cache_set($cacheKey, $rows, 3600);
+    return $rows;
+}
+
+function cms_invalidate_trust_badges_cache(): void
+{
+    cache_clear_prefix('cms:trust_badges:');
+}
+
+function cms_get_trust_badges(bool $activeOnly = true, bool $forceFresh = false): array
+{
+    $cacheKey = cms_cache_key('trust_badges', 'list_' . ($activeOnly ? 'active' : 'all'));
+    if (!$forceFresh) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
         }
     }
 
-    return array_values($result);
+    $pdo = db();
+    if (!$pdo) {
+        return [];
+    }
+
+    cms_ensure_footer_and_social_tables($pdo);
+
+    $sql = 'SELECT id, label, image, link_url, open_in_new_tab, sort_order, status FROM footer_trust_badges WHERE 1=1';
+    if ($activeOnly) {
+        $sql .= ' AND status = "active"';
+    }
+    $sql .= ' ORDER BY sort_order ASC, id ASC';
+
+    $rows = db_fetch_all($pdo, $sql);
+    cache_set($cacheKey, $rows, 3600);
+    return $rows;
+}
+
+function cms_get_footer_sections(): array
+{
+    $grouped = cms_get_footer_links(null, true);
+    $result = [];
+    if (!empty($grouped['quick_links'])) {
+        $result[] = [
+            'id' => 1,
+            'title' => 'QUICK LINKS',
+            'links' => $grouped['quick_links'],
+        ];
+    }
+    if (!empty($grouped['legal_disclaimers'])) {
+        $result[] = [
+            'id' => 2,
+            'title' => 'LEGAL DISCLAIMERS',
+            'links' => $grouped['legal_disclaimers'],
+        ];
+    }
+    return $result;
 }
 
 function get_page_by_slug(string $slug): ?array

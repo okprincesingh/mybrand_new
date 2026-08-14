@@ -12,6 +12,8 @@ $servicesNavPages = ['services-sections.php','services-accordions.php','services
 $isServicesNavActive = in_array($currentPage, $servicesNavPages, true);
 $aboutNavPages = ['about-blocks.php','about-certifications.php','about-private-label.php','about-accreditations.php'];
 $isAboutNavActive = in_array($currentPage, $aboutNavPages, true);
+$footerNavPages = ['footer-brand.php','footer-links.php','footer-trust-badges.php'];
+$isFooterNavActive = in_array($currentPage, $footerNavPages, true);
 if (!isset($livePreviewUrl)) {
     switch ($currentPage) {
         case 'how-it-works-sections.php':
@@ -60,6 +62,12 @@ if (!isset($livePreviewUrl)) {
         case 'shipping-methods.php':
         case 'payment-settings.php':
             $livePreviewUrl = url('checkout.php');
+            break;
+        case 'footer-brand.php':
+        case 'footer-links.php':
+        case 'footer-trust-badges.php':
+        case 'social-media.php':
+            $livePreviewUrl = url('index.php');
             break;
         default:
             $livePreviewUrl = url('index.php');
@@ -147,18 +155,17 @@ if (!isset($livePreviewUrl)) {
       <a class="admin-nav-link <?= $currentPage==='why-pages.php' || $currentPage==='why-page-edit.php'?'active':'' ?>" href="why-pages.php"><i class="bi bi-award"></i><span>Why Choose Us</span></a>
 
       <div class="nav-group-label">Content</div>
-
-      <a class="admin-nav-link admin-nav-toggle <?= $isAboutNavActive ? 'active open' : '' ?>" data-bs-toggle="collapse" href="#aboutNavCollapse" role="button" aria-expanded="<?= $isAboutNavActive ? 'true' : 'false' ?>" aria-controls="aboutNavCollapse">
-        <i class="bi bi-info-circle"></i><span>About Us</span>
+      <a class="admin-nav-link admin-nav-toggle <?= $isFooterNavActive ? 'active open' : '' ?>" data-bs-toggle="collapse" href="#footerNavCollapse" role="button" aria-expanded="<?= $isFooterNavActive ? 'true' : 'false' ?>" aria-controls="footerNavCollapse">
+        <i class="bi bi-layout-text-window-reverse"></i><span>Footer</span>
         <span class="admin-nav-caret bi bi-chevron-down"></span>
       </a>
-      <div class="collapse admin-nav-collapse <?= $isAboutNavActive ? 'show' : '' ?>" id="aboutNavCollapse">
-        <a class="admin-nav-link admin-sub-link <?= $currentPage==='about-blocks.php'?'active':'' ?>" href="about-blocks.php"><i class="bi bi-layout-split"></i><span>Info Blocks</span></a>
-        <a class="admin-nav-link admin-sub-link <?= $currentPage==='about-certifications.php'?'active':'' ?>" href="about-certifications.php"><i class="bi bi-award"></i><span>Certifications</span></a>
-        <a class="admin-nav-link admin-sub-link <?= $currentPage==='about-private-label.php'?'active':'' ?>" href="about-private-label.php"><i class="bi bi-box-seam"></i><span>Private Label & Benefits</span></a>
-        <a class="admin-nav-link admin-sub-link <?= $currentPage==='about-accreditations.php'?'active':'' ?>" href="about-accreditations.php"><i class="bi bi-shield-check"></i><span>Accreditations</span></a>
+      <div class="collapse admin-nav-collapse <?= $isFooterNavActive ? 'show' : '' ?>" id="footerNavCollapse">
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='footer-brand.php'?'active':'' ?>" href="footer-brand.php"><i class="bi bi-shop"></i><span>Brand &amp; Contact</span></a>
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='footer-links.php'?'active':'' ?>" href="footer-links.php"><i class="bi bi-link-45deg"></i><span>Footer Links</span></a>
+        <a class="admin-nav-link admin-sub-link <?= $currentPage==='footer-trust-badges.php'?'active':'' ?>" href="footer-trust-badges.php"><i class="bi bi-shield-check"></i><span>Trust Badges</span></a>
       </div>
 
+      <a class="admin-nav-link <?= $currentPage==='social-media.php'?'active':'' ?>" href="social-media.php"><i class="bi bi-share"></i><span>Social Media</span></a>
       <a class="admin-nav-link <?= $currentPage==='certificates.php'?'active':'' ?>" href="certificates.php"><i class="bi bi-patch-check"></i><span>Certificates</span></a>
       <a class="admin-nav-link <?= $currentPage==='faq-pages.php' || $currentPage==='faq-page-edit.php'?'active':'' ?>" href="faq-pages.php"><i class="bi bi-question-circle"></i><span>FAQs</span></a>
       <a class="admin-nav-link <?= $currentPage==='blogs.php' || $currentPage==='blog-edit.php'?'active':'' ?>" href="blogs.php"><i class="bi bi-journal-richtext"></i><span>Blog</span></a>

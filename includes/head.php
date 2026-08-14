@@ -618,16 +618,19 @@ if ($isAosPage) {
   "slogan": "Private Label Is Now Simplified",
   "email": "info@mybrandplease.com",
   "telephone": "+91-97170-04615",
-  "sameAs": [
-    "https://www.facebook.com/mybrandplease",
-    "https://www.instagram.com/mybrandplease_/",
-    "https://x.com/mybrandplease",
-    "https://www.linkedin.com/in/mybrandplease/",
-    "https://in.pinterest.com/mybrandplease/",
-    "https://www.youtube.com/@mybrandplease",
-    "https://www.trustpilot.com/review/mybrandplease.com",
-    "https://g.co/kgs/YgaRfYo"
-  ],
+  "sameAs": <?php
+    $headSocialLinks = function_exists('cms_get_social_media_links') ? cms_get_social_media_links(true) : [];
+    $headSameAs = [];
+    foreach ($headSocialLinks as $hsl) {
+        if (!empty($hsl['url'])) {
+            $headSameAs[] = $hsl['url'];
+        }
+    }
+    $headSameAs[] = 'https://www.trustpilot.com/review/mybrandplease.com';
+    $headSameAs[] = 'https://g.co/kgs/YgaRfYo';
+    $headSameAs = array_values(array_unique($headSameAs));
+    echo json_encode($headSameAs, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+  ?>,
   "address": {
     "@type": "PostalAddress",
     "streetAddress": "D226, 10th Avenue, Gaur City 2",

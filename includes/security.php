@@ -112,7 +112,7 @@ function validate_uploaded_image(array $file, int $maxBytes = 5_000_000): ?strin
     $base = basename($name);
     $extension = strtolower(pathinfo($base, PATHINFO_EXTENSION));
     $nameWithoutExt = pathinfo($base, PATHINFO_FILENAME);
-    $allowedExt = ['jpg', 'jpeg', 'png', 'webp'];
+    $allowedExt = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg'];
     if (!in_array($extension, $allowedExt, true)) {
         return 'Invalid image extension.';
     }
@@ -132,6 +132,11 @@ function validate_uploaded_image(array $file, int $maxBytes = 5_000_000): ?strin
         'image/jpeg' => ['jpg', 'jpeg'],
         'image/png' => ['png'],
         'image/webp' => ['webp'],
+        'image/gif' => ['gif'],
+        'image/svg+xml' => ['svg'],
+        'image/svg' => ['svg'],
+        'text/xml' => ['svg'],
+        'text/plain' => ['svg'],
     ];
 
     if (!isset($allowedMimeToExt[$mime])) {
@@ -140,6 +145,20 @@ function validate_uploaded_image(array $file, int $maxBytes = 5_000_000): ?strin
 
     if (!in_array($extension, $allowedMimeToExt[$mime], true)) {
         return 'File extension does not match MIME type.';
+    }
+
+    if ($extension === 'svg') {
+        $svgContent = @file_get_contents($tmp);
+        if ($svgContent === false || stripos($svgContent, '<svg') === false) {
+            return 'Invalid SVG file.';
+        }
+        // Basic check for script tags / unsafe event attributes in SVG
+        $disallowedPatterns = ['/<script/i', '/javascript\s*:/i', '/onload\s*=/i', '/onerror\s*=/i', '/onclick\s*=/i', '/<foreignObject/i'];
+        foreach ($disallowedPatterns as $pattern) {
+            if (preg_match($pattern, $svgContent)) {
+                return 'SVG contains disallowed executable code.';
+            }
+        }
     }
 
     return null;
