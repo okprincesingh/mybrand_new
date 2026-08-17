@@ -66,6 +66,73 @@ function cms_invalidate_home_offices_content_cache(): void
 }
 
 
+function cms_invalidate_home_global_footprint_cache(): void
+{
+    cache_delete('cms:home:global_footprint');
+}
+
+/** Create the Global Footprint table on installations that predate this feature. */
+function cms_ensure_home_global_footprint_table(PDO $pdo): bool
+{
+    static $checked = null;
+    if ($checked !== null) {
+        return $checked;
+    }
+
+    try {
+        $pdo->exec("CREATE TABLE IF NOT EXISTS home_global_footprint_locations (
+            id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            location_name VARCHAR(255) NOT NULL,
+            formatted_address VARCHAR(500) NULL,
+            latitude DECIMAL(10,7) NOT NULL,
+            longitude DECIMAL(10,7) NOT NULL,
+            map_top DECIMAL(6,3) NOT NULL,
+            map_left DECIMAL(6,3) NOT NULL,
+            pin_height SMALLINT UNSIGNED NOT NULL DEFAULT 55,
+            sort_order INT NOT NULL DEFAULT 0,
+            is_active TINYINT(1) NOT NULL DEFAULT 1,
+            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_home_global_footprint_active_order (is_active, sort_order, id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+        $checked = true;
+        return true;
+    } catch (Throwable $e) {
+        $checked = false;
+        return false;
+    }
+}
+
+/** Converts geographic coordinates to the current globe artwork's percentage grid. */
+function cms_global_footprint_map_position(float $latitude, float $longitude): array
+{
+    $left = max(2.0, min(98.0, (($longitude + 180.0) / 360.0) * 100.0));
+    $top = max(14.0, min(86.0, 50.0 - ($latitude * 0.36)));
+    return ['top' => round($top, 3), 'left' => round($left, 3)];
+}
+
+function cms_get_home_global_footprint_locations(): array
+{
+    $cacheKey = 'cms:home:global_footprint';
+    if (!preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $pdo = db();
+    if (!$pdo || !cms_ensure_home_global_footprint_table($pdo)) {
+        return [];
+    }
+    $activeClause = preview_mode_include_drafts() ? '' : ' WHERE is_active = 1';
+    $rows = db_fetch_all($pdo, 'SELECT id, location_name, formatted_address, latitude, longitude, map_top, map_left, pin_height FROM home_global_footprint_locations' . $activeClause . ' ORDER BY sort_order ASC, id ASC');
+    if (!preview_mode_should_bypass_cache()) {
+        cache_set($cacheKey, $rows, 300);
+    }
+    return $rows;
+}
+
 function cms_invalidate_home_marquee_strips_cache(): void
 {
     cache_delete('cms:home:marquee_strips');

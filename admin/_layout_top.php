@@ -3,7 +3,7 @@ $adminUser = $adminUser ?? admin_current();
 $flash = admin_flash_get();
 $currentPage = basename($_SERVER['PHP_SELF'] ?? '');
 $currentTab = $_GET['tab'] ?? '';
-$homeNavPages = ['home-hero-video.php','home-slider.php','home-testimonials.php','home-offices.php','home-instagram.php','homepage-sections.php','home-urls.php'];
+$homeNavPages = ['home-hero-video.php','home-slider.php','home-testimonials.php','home-offices.php','home-global-footprints.php','home-instagram.php','homepage-sections.php','home-urls.php'];
 $isHomeNavActive = in_array($currentPage, $homeNavPages, true);
 $isHomepageSections = $currentPage === 'homepage-sections.php';
 
@@ -140,6 +140,7 @@ if (!isset($livePreviewUrl)) {
         <a class="admin-nav-link admin-sub-link <?= $currentPage==='home-testimonials.php'?'active':'' ?>" href="home-testimonials.php"><i class="bi bi-chat-quote"></i><span>Testimonials</span></a>
         <a class="admin-nav-link admin-sub-link <?= $currentPage==='home-instagram.php'?'active':'' ?>" href="home-instagram.php"><i class="bi bi-instagram"></i><span>Instagram Reels</span></a>
         <a class="admin-nav-link admin-sub-link <?= $currentPage==='home-offices.php'?'active':'' ?>" href="home-offices.php"><i class="bi bi-geo-alt"></i><span>Our Offices</span></a>
+        <!-- <a class="admin-nav-link admin-sub-link <?= $currentPage==='home-global-footprints.php'?'active':'' ?>" href="home-global-footprints.php"><i class="bi bi-globe2"></i><span>Our Golbal Footprints</span></a> -->
         <a class="admin-nav-link admin-sub-link <?= $isHomepageSections && $currentTab === 'partner_logos' ?'active':'' ?>" href="homepage-sections.php?tab=partner_logos"><i class="bi bi-building"></i><span>Partner Logos</span></a>
         <a class="admin-nav-link admin-sub-link <?= $isHomepageSections && $currentTab === 'certification_logos' ?'active':'' ?>" href="homepage-sections.php?tab=certification_logos"><i class="bi bi-award"></i><span>Certification Logos</span></a>
       </div>

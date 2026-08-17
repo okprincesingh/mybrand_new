@@ -960,6 +960,10 @@ document.addEventListener('DOMContentLoaded', function () {
         <?php endif; ?>
         <!-- Milestone Section End -->
 
+        <?php $globalFootprintLocations = cms_get_home_global_footprint_locations(); ?>
+        <script>
+          window.homeGlobalFootprintLocations = <?php echo json_encode($globalFootprintLocations, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+        </script>
         <!-- Global Presence Map Section Start -->
         <section class="global-presence section-spacing-120 rr-ov-hidden js-global-presence pb-md-0">
           <div class="container-fluid" id="section-map">
@@ -1833,7 +1837,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const pinsContainer = root.getElementById('pinsContainer');
         if (!stage || !pinsContainer) return;
 
-        const locations = [
+        const defaultLocations = [
           { name: 'North America', top: 44, left: 15, height: 20 },
           { name: 'Canada', top: 32, left: 18, height: 40 },
           { name: 'Africa', top: 54, left: 52, height: 80 },
@@ -1843,6 +1847,17 @@ document.addEventListener('DOMContentLoaded', function () {
           { name: 'South America', top: 68, left: 27, height: 60 },
           { name: 'Australia', top: 82, left: 89, height: 60 }
         ];
+        const managedLocations = Array.isArray(window.homeGlobalFootprintLocations)
+          ? window.homeGlobalFootprintLocations
+          : [];
+        const locations = defaultLocations.concat(managedLocations.map(function (location) {
+              return {
+                name: location.location_name,
+                top: Number(location.map_top),
+                left: Number(location.map_left),
+                height: Number(location.pin_height) || 55
+              };
+            }));
 
         const pinElements = [];
         let hasActivatedOnScroll = false;
