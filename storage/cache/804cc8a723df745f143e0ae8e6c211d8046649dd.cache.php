@@ -1,1 +1,1 @@
-a:3:{s:3:"key";s:38:"cms:setting:breadcumb_background_image";s:10:"expires_at";i:1786697654;s:4:"data";s:0:"";}
+a:3:{s:3:"key";s:38:"cms:setting:breadcumb_background_image";s:10:"expires_at";i:1786948441;s:4:"data";s:0:"";}

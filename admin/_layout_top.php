@@ -25,7 +25,7 @@ $isOrdersNavActive = in_array($currentPage, $ordersNavPages, true);
 $enquiriesNavPages = ['enquiries.php','reviews.php'];
 $isEnquiriesNavActive = in_array($currentPage, $enquiriesNavPages, true);
 
-$sessionNavPages = ['settings.php','users.php'];
+$sessionNavPages = ['settings.php','users.php','access-management.php'];
 $isSessionNavActive = in_array($currentPage, $sessionNavPages, true);
 
 $marketingNavPages = ['coupons.php','coupon-edit.php','reports.php'];
@@ -218,12 +218,15 @@ if (!isset($livePreviewUrl)) {
 
       <!-- Session (dropdown) -->
       <a class="admin-nav-link admin-nav-toggle <?= $isSessionNavActive ? 'active open' : '' ?>" data-bs-toggle="collapse" href="#sessionNavCollapse" role="button" aria-expanded="<?= $isSessionNavActive ? 'true' : 'false' ?>" aria-controls="sessionNavCollapse">
-        <i class="bi bi-person-gear"></i><span>Session</span>
+        <i class="bi bi-person-gear"></i><span>Admin Settings</span>
         <span class="admin-nav-caret bi bi-chevron-down"></span>
       </a>
       <div class="collapse admin-nav-collapse <?= $isSessionNavActive ? 'show' : '' ?>" id="sessionNavCollapse" data-bs-parent="#adminSidebar">
         <a class="admin-nav-link admin-sub-link <?= $currentPage==='settings.php'?'active':'' ?>" href="settings.php"><i class="bi bi-gear"></i><span>Settings</span></a>
         <a class="admin-nav-link admin-sub-link <?= $currentPage==='users.php'?'active':'' ?>" href="users.php"><i class="bi bi-people"></i><span>Users</span></a>
+        <?php if ($adminUser && admin_can($adminUser, 'administration.permissions.manage')): ?>
+          <a class="admin-nav-link admin-sub-link <?= $currentPage==='access-management.php'?'active':'' ?>" href="access-management.php"><i class="bi bi-shield-lock"></i><span>Access Management</span></a>
+        <?php endif; ?>
       </div>
 
       <!-- Marketing (dropdown) -->
@@ -249,6 +252,19 @@ if (!isset($livePreviewUrl)) {
       <div class="nav-group-label">Exit</div>
       <a class="admin-nav-link" href="logout.php"><i class="bi bi-box-arrow-right"></i><span>Logout</span></a>
     </aside>
+
+    <?php
+    // Sidebar visibility uses the exact same registry keys as server-side guards.
+    // This is presentation only; _init.php remains the authoritative protection.
+    $cmsSidebarPermissions = [];
+    $cmsSidebarPermissions['dashboard.php'] = admin_can($adminUser ?? [], 'dashboard.view');
+    foreach (cms_all_permissions() as $module) {
+        foreach ($module['permissions'] as $permission) {
+            if (!empty($permission['page'])) $cmsSidebarPermissions[$permission['page']] = admin_can($adminUser ?? [], $permission['key']);
+        }
+    }
+    ?>
+    <script>document.addEventListener('DOMContentLoaded',function(){const allowed=<?= json_encode($cmsSidebarPermissions) ?>;document.querySelectorAll('#adminSidebar a[href]').forEach(function(link){const page=(link.getAttribute('href')||'').split('?')[0];if(Object.prototype.hasOwnProperty.call(allowed,page)&&!allowed[page])link.remove();});document.querySelectorAll('#adminSidebar .admin-nav-collapse').forEach(function(group){if(!group.querySelector('a'))group.previousElementSibling?.remove();});});</script>
 
     <main class="col-12 col-lg-10 admin-main">
       <div class="admin-topbar d-flex flex-wrap justify-content-between align-items-center gap-2">

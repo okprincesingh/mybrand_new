@@ -1,1 +1,1 @@
-a:3:{s:3:"key";s:25:"cms:home:category_section";s:10:"expires_at";i:1786697350;s:4:"data";a:3:{s:11:"section_key";s:4:"main";s:10:"title_text";s:26:"Nature Powered Ingredients";s:9:"is_active";i:1;}}
+a:3:{s:3:"key";s:25:"cms:home:category_section";s:10:"expires_at";i:1786947986;s:4:"data";a:3:{s:11:"section_key";s:4:"main";s:10:"title_text";s:26:"Nature Powered Ingredients";s:9:"is_active";i:1;}}

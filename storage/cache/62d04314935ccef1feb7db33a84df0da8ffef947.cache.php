@@ -1,1 +1,0 @@
-a:3:{s:3:"key";s:38:"cms:setting:about_accreditations_intro";s:10:"expires_at";i:1786697402;s:4:"data";s:85:"Trusted compliance and industry partnerships that reinforce global quality standards.";}

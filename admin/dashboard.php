@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . '/_init.php';
 $adminUser = admin_require_auth();
+admin_require_permission('dashboard.view', $adminUser);
+$dashboardSection = fn(string $key): bool => admin_can_dashboard_section($adminUser, $key);
 $title = 'Dashboard';
 $pdo = db();
 $counts = ['pages'=>0,'products'=>0,'categories'=>0,'reviews'=>0,'users'=>0,'orders'=>0,'coupons'=>0,'nav_menu_items'=>0,'blogs'=>0,'faqs'=>0,'enquiries'=>0,'social_links'=>0];
@@ -20,6 +22,7 @@ if ($pdo) {
 }
 
 // Get recent users
+
 $recentUsers = [];
 if ($pdo) {
     $stmt = $pdo->prepare('SELECT id, email, first_name, last_name, created_at FROM users WHERE is_active = 1 ORDER BY created_at DESC LIMIT 5');
@@ -76,7 +79,7 @@ if ($pdo) {
 include __DIR__ . '/_layout_top.php';
 ?>
 <!-- Top Stats Row -->
-<div class="dashboard-grid mb-4">
+<div class="dashboard-grid mb-4<?= $dashboardSection('dashboard.metrics') ? '' : ' d-none' ?>">
   <div class="stat-card">
     <div class="stat-header">
       <span class="stat-title">Total Revenue</span>
@@ -116,7 +119,7 @@ include __DIR__ . '/_layout_top.php';
 
 <!-- Quick Stats Grid -->
 <div class="dashboard-grid mb-4">
-  <div class="stat-card" style="grid-column:span 3;">
+  <div class="stat-card<?= $dashboardSection('dashboard.catalog') ? '' : ' d-none' ?>" style="grid-column:span 3;">
     <div class="stat-header">
       <span class="stat-title">Products</span>
       <span class="stat-icon" style="background: #dbeafe; color: #2563eb;"><i class="bi bi-box-seam"></i></span>
@@ -128,7 +131,7 @@ include __DIR__ . '/_layout_top.php';
     </div>
   </div>
   
-  <div class="stat-card" style="grid-column:span 3;">
+  <div class="stat-card<?= $dashboardSection('dashboard.catalog') ? '' : ' d-none' ?>" style="grid-column:span 3;">
     <div class="stat-header">
       <span class="stat-title">Content</span>
       <span class="stat-icon" style="background: #fce7f3; color: #db2777;"><i class="bi bi-file-earmark-text"></i></span>
@@ -141,7 +144,7 @@ include __DIR__ . '/_layout_top.php';
     </div>
   </div>
   
-  <div class="stat-card" style="grid-column:span 3;">
+  <div class="stat-card<?= $dashboardSection('dashboard.order_status') ? '' : ' d-none' ?>" style="grid-column:span 3;">
     <div class="stat-header">
       <span class="stat-title">Orders by Status</span>
       <span class="stat-icon" style="background: #ecfdf5; color: #059669;"><i class="bi bi-pie-chart"></i></span>
@@ -167,7 +170,7 @@ include __DIR__ . '/_layout_top.php';
     </div>
   </div>
   
-  <div class="stat-card" style="grid-column:span 3;">
+  <div class="stat-card<?= $dashboardSection('dashboard.quick_actions') ? '' : ' d-none' ?>" style="grid-column:span 3;">
     <div class="stat-header">
       <span class="stat-title">Quick Actions</span>
       <span class="stat-icon" style="background: #e0f2fe; color: #0284c7;"><i class="bi bi-lightning-fill"></i></span>
@@ -186,7 +189,7 @@ include __DIR__ . '/_layout_top.php';
 
 <div class="row g-4">
   <!-- Recent Orders -->
-  <div class="col-lg-6">
+  <div class="col-lg-6<?= $dashboardSection('dashboard.recent_orders') ? '' : ' d-none' ?>">
     <div class="widget-card">
       <div class="widget-header">
         <h5 class="widget-title">Recent Orders</h5>
@@ -250,7 +253,7 @@ include __DIR__ . '/_layout_top.php';
   </div>
   
   <!-- Recent Products -->
-  <div class="col-lg-6">
+  <div class="col-lg-6<?= $dashboardSection('dashboard.recent_products') ? '' : ' d-none' ?>">
     <div class="widget-card">
       <div class="widget-header">
         <h5 class="widget-title">Recent Products</h5>
@@ -309,7 +312,7 @@ include __DIR__ . '/_layout_top.php';
   </div>
   
   <!-- Recent Users -->
-  <div class="col-lg-6">
+  <div class="col-lg-6<?= $dashboardSection('dashboard.recent_users') ? '' : ' d-none' ?>">
     <div class="widget-card">
       <div class="widget-header">
         <h5 class="widget-title">Recent Users</h5>
@@ -358,7 +361,7 @@ include __DIR__ . '/_layout_top.php';
   </div>
   
   <!-- Quick Overview -->
-  <div class="col-lg-6">
+  <div class="col-lg-6<?= $dashboardSection('dashboard.overview') ? '' : ' d-none' ?>">
     <div class="widget-card">
       <div class="widget-header">
         <h5 class="widget-title">Overview Summary</h5>
@@ -426,7 +429,7 @@ include __DIR__ . '/_layout_top.php';
 
 <div class="row g-4 mt-2">
   <!-- Navigation shortcuts -->
-  <div class="col-12">
+  <div class="col-12<?= $dashboardSection('dashboard.navigation') ? '' : ' d-none' ?>">
     <div class="widget-card" style="background:linear-gradient(135deg, var(--sidebar), var(--sidebar-soft));border:none;">
       <div class="widget-header" style="border-bottom-color:rgba(255,255,255,0.1);">
         <h5 class="widget-title" style="color:#fff;">Quick Navigation</h5>

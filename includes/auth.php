@@ -2,6 +2,7 @@
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/jwt.php';
 require_once __DIR__ . '/security.php';
+require_once __DIR__ . '/permissions.php';
 
 function admin_cookie_secure(): bool
 {
@@ -305,7 +306,7 @@ function admin_current(): ?array
     if ($accessToken !== '') {
         $admin = admin_verify_access_token($accessToken);
         if ($admin) {
-            return $admin;
+            return admin_apply_request_authorization($admin);
         }
     }
 
@@ -314,7 +315,7 @@ function admin_current(): ?array
         $admin = admin_verify_access_token($newAccess);
         if ($admin) {
             $_SESSION['admin_user_id'] = (int) $admin['id'];
-            return $admin;
+            return admin_apply_request_authorization($admin);
         }
     }
 
@@ -322,11 +323,25 @@ function admin_current(): ?array
     if ($sessionAdminId > 0) {
         $admin = admin_fetch_active_by_id($sessionAdminId);
         if ($admin) {
-            return $admin;
+            return admin_apply_request_authorization($admin);
         }
     }
 
     return null;
+}
+
+/** Applies the shared page/API guard even to legacy endpoints that do not use _init.php. */
+function admin_apply_request_authorization(array $admin): array
+{
+    $permission = function_exists('cms_current_page_permission') ? cms_current_page_permission() : null;
+    if ($permission !== null && function_exists('admin_can') && !admin_can($admin, $permission)) {
+        $isApi = str_contains(str_replace('\\', '/', (string)($_SERVER['PHP_SELF'] ?? '')), '/admin/api/');
+        http_response_code(403);
+        if ($isApi) { header('Content-Type: application/json'); echo json_encode(['success' => false, 'message' => 'Forbidden']); }
+        else echo '403 Forbidden';
+        exit;
+    }
+    return $admin;
 }
 
 function admin_require_auth(): array

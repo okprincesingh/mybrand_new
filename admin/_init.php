@@ -5,6 +5,7 @@ if (session_status() !== PHP_SESSION_ACTIVE && !headers_sent()) {
 require_once __DIR__ . '/../includes/db.php';
 require_once __DIR__ . '/../includes/security.php';
 require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/permissions.php';
 require_once __DIR__ . '/../includes/cms.php';
 require_once __DIR__ . '/../includes/catalog.php';
 require_once __DIR__ . '/../includes/url.php';
@@ -51,6 +52,13 @@ if (!function_exists('admin_pagination_items')) {
 }
 
 enforce_csrf_on_post();
+
+// Page-level authorization is additive and preserves every existing URL.
+// Super admins bypass this check, including permissions introduced in future.
+$cmsRequiredPermission = cms_current_page_permission();
+if ($cmsRequiredPermission !== null && ($cmsAdmin = admin_current()) !== null) {
+    admin_require_permission($cmsRequiredPermission, $cmsAdmin);
+}
 
 // Handle Preview Mode toggle from the admin topbar.
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'preview_toggle') {
