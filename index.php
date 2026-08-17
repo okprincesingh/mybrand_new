@@ -1531,7 +1531,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const strip = section ? section.querySelector('.working-process-section__strip') : null;
     const stripBrand = section ? section.querySelector('.working-process-section__strip-brand') : null;
     if (!section || !track) return;
-    if (window.matchMedia('(max-width: 767px)').matches) return;
 
     window.gsap.registerPlugin(window.ScrollTrigger);
 
@@ -1541,6 +1540,56 @@ document.addEventListener('DOMContentLoaded', function () {
     const animationMode = (track.dataset.animationMode || 'default').trim().toLowerCase();
     const validAnimationModes = ['default', 'top', 'bottom', 'fade_in', 'zoom', 'spin'];
     const mode = validAnimationModes.includes(animationMode) ? animationMode : 'default';
+
+    // Mobile cards are laid out vertically, so the desktop pinned stack cannot
+    // be reused. Keep its animation modes, but trigger each card as it enters
+    // the viewport instead of disabling the effect below 768px.
+    if (window.matchMedia('(max-width: 767px)').matches) {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      const mobileFromStates = {
+        default: { autoAlpha: 0, xPercent: 18, yPercent: 0, scale: 1, rotate: 0 },
+        top: { autoAlpha: 0, yPercent: -24, xPercent: 0, scale: 1, rotate: 0 },
+        bottom: { autoAlpha: 0, yPercent: 24, xPercent: 0, scale: 1, rotate: 0 },
+        fade_in: { autoAlpha: 0, yPercent: 16, xPercent: 0, scale: 0.98, rotate: 0 },
+        zoom: { autoAlpha: 0, yPercent: 16, xPercent: 0, scale: 0.72, rotate: 0 },
+        spin: { autoAlpha: 0, yPercent: 8, xPercent: 0, scale: 0.94, rotate: -14 }
+      };
+      const fromState = mobileFromStates[mode];
+      window.gsap.set(cards, Object.assign({}, fromState, { force3D: true, transformOrigin: '50% 54%' }));
+
+      const revealCard = function (card, index) {
+        window.gsap.to(card, {
+          autoAlpha: 1,
+          xPercent: 0,
+          yPercent: 0,
+          scale: 1,
+          rotate: 0,
+          duration: 0.72,
+          delay: Math.min(index * 0.08, 0.24),
+          ease: 'power3.out',
+          overwrite: 'auto'
+        });
+      };
+
+      if (!('IntersectionObserver' in window)) {
+        cards.forEach(revealCard);
+        return;
+      }
+
+      const mobileObserver = new IntersectionObserver(function (entries, observer) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          revealCard(entry.target, cards.indexOf(entry.target));
+          observer.unobserve(entry.target);
+        });
+      }, { threshold: 0.14, rootMargin: '0px 0px -8% 0px' });
+
+      cards.forEach(function (card, index) {
+        mobileObserver.observe(card);
+      });
+      return;
+    }
 
     window.gsap.set(cards, {
       autoAlpha: 1,
