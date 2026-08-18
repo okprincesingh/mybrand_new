@@ -133,11 +133,12 @@ if (!$attrs) {
   ];
 }
 
+$livePreviewUrl = !empty($data['slug']) ? url('product-details.php?slug=' . urlencode((string) $data['slug'])) : url('shop.php');
 include __DIR__ . '/_layout_top.php';
 ?>
 <div class="form-section">
   <h5 class="mb-4"><?= $id ? 'Edit Product' : 'Add New Product' ?></h5>
-  <form method="post" enctype="multipart/form-data" class="form-row">
+  <form method="post" enctype="multipart/form-data" class="form-row" data-section-preview='{"content_type":"product","entity_id":<?= (int) ($data['id'] ?? 0) ?>}'>
     <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
 
     <div class="form-group">

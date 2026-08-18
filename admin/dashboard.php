@@ -1,9 +1,11 @@
 <?php
 require_once __DIR__ . '/_init.php';
 $adminUser = admin_require_auth();
+admin_require_permission('dashboard.view', $adminUser);
+$dashboardSection = fn(string $key): bool => admin_can_dashboard_section($adminUser, $key);
 $title = 'Dashboard';
 $pdo = db();
-$counts = ['pages'=>0,'products'=>0,'categories'=>0,'reviews'=>0,'users'=>0,'orders'=>0,'coupons'=>0];
+$counts = ['pages'=>0,'products'=>0,'categories'=>0,'reviews'=>0,'users'=>0,'orders'=>0,'coupons'=>0,'nav_menu_items'=>0,'blogs'=>0,'faqs'=>0,'enquiries'=>0,'social_links'=>0];
 if ($pdo) {
     $counts['pages'] = (int) $pdo->query('SELECT COUNT(*) FROM pages')->fetchColumn();
     $counts['products'] = (int) $pdo->query('SELECT COUNT(*) FROM products')->fetchColumn();
@@ -12,9 +14,15 @@ if ($pdo) {
     $counts['users'] = (int) $pdo->query('SELECT COUNT(*) FROM users WHERE is_active = 1')->fetchColumn();
     $counts['orders'] = (int) $pdo->query('SELECT COUNT(*) FROM orders')->fetchColumn();
     $counts['coupons'] = (int) $pdo->query('SELECT COUNT(*) FROM coupons')->fetchColumn();
+    try { $counts['nav_menu_items'] = (int) $pdo->query('SELECT COUNT(*) FROM nav_menu_items')->fetchColumn(); } catch (Throwable $e) {}
+    try { $counts['blogs'] = (int) $pdo->query('SELECT COUNT(*) FROM blog_posts')->fetchColumn(); } catch (Throwable $e) {}
+    try { $counts['faqs'] = (int) $pdo->query('SELECT COUNT(*) FROM faq_pages')->fetchColumn(); } catch (Throwable $e) {}
+    try { $counts['enquiries'] = (int) $pdo->query('SELECT COUNT(*) FROM enquiries')->fetchColumn(); } catch (Throwable $e) {}
+    try { $counts['social_links'] = (int) $pdo->query('SELECT COUNT(*) FROM social_media_links')->fetchColumn(); } catch (Throwable $e) {}
 }
 
 // Get recent users
+
 $recentUsers = [];
 if ($pdo) {
     $stmt = $pdo->prepare('SELECT id, email, first_name, last_name, created_at FROM users WHERE is_active = 1 ORDER BY created_at DESC LIMIT 5');
@@ -71,7 +79,7 @@ if ($pdo) {
 include __DIR__ . '/_layout_top.php';
 ?>
 <!-- Top Stats Row -->
-<div class="dashboard-grid mb-4">
+<div class="dashboard-grid mb-4<?= $dashboardSection('dashboard.metrics') ? '' : ' d-none' ?>">
   <div class="stat-card">
     <div class="stat-header">
       <span class="stat-title">Total Revenue</span>
@@ -111,7 +119,7 @@ include __DIR__ . '/_layout_top.php';
 
 <!-- Quick Stats Grid -->
 <div class="dashboard-grid mb-4">
-  <div class="stat-card" style="grid-column:span 3;">
+  <div class="stat-card<?= $dashboardSection('dashboard.catalog') ? '' : ' d-none' ?>" style="grid-column:span 3;">
     <div class="stat-header">
       <span class="stat-title">Products</span>
       <span class="stat-icon" style="background: #dbeafe; color: #2563eb;"><i class="bi bi-box-seam"></i></span>
@@ -123,7 +131,7 @@ include __DIR__ . '/_layout_top.php';
     </div>
   </div>
   
-  <div class="stat-card" style="grid-column:span 3;">
+  <div class="stat-card<?= $dashboardSection('dashboard.catalog') ? '' : ' d-none' ?>" style="grid-column:span 3;">
     <div class="stat-header">
       <span class="stat-title">Content</span>
       <span class="stat-icon" style="background: #fce7f3; color: #db2777;"><i class="bi bi-file-earmark-text"></i></span>
@@ -136,7 +144,7 @@ include __DIR__ . '/_layout_top.php';
     </div>
   </div>
   
-  <div class="stat-card" style="grid-column:span 3;">
+  <div class="stat-card<?= $dashboardSection('dashboard.order_status') ? '' : ' d-none' ?>" style="grid-column:span 3;">
     <div class="stat-header">
       <span class="stat-title">Orders by Status</span>
       <span class="stat-icon" style="background: #ecfdf5; color: #059669;"><i class="bi bi-pie-chart"></i></span>
@@ -162,7 +170,7 @@ include __DIR__ . '/_layout_top.php';
     </div>
   </div>
   
-  <div class="stat-card" style="grid-column:span 3;">
+  <div class="stat-card<?= $dashboardSection('dashboard.quick_actions') ? '' : ' d-none' ?>" style="grid-column:span 3;">
     <div class="stat-header">
       <span class="stat-title">Quick Actions</span>
       <span class="stat-icon" style="background: #e0f2fe; color: #0284c7;"><i class="bi bi-lightning-fill"></i></span>
@@ -171,7 +179,9 @@ include __DIR__ . '/_layout_top.php';
       <a href="product-edit.php" class="btn btn-primary-modern btn-sm"><i class="bi bi-plus-circle me-1"></i>Add Product</a>
       <a href="coupon-edit.php" class="btn btn-primary-modern btn-sm" style="background:linear-gradient(135deg,#059669,#047857);"><i class="bi bi-tag me-1"></i>Add Coupon</a>
       <a href="blog-edit.php" class="btn btn-primary-modern btn-sm" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);"><i class="bi bi-pencil-square me-1"></i>Write Blog</a>
-      <a href="home-slider.php" class="btn btn-secondary-modern btn-sm"><i class="bi bi-sliders me-1"></i>Slider</a>
+      <a href="navbar-management.php" class="btn btn-secondary-modern btn-sm"><i class="bi bi-menu-button-wide me-1"></i>Navbar</a>
+      <a href="footer-brand.php" class="btn btn-secondary-modern btn-sm"><i class="bi bi-layout-text-window-reverse me-1"></i>Footer</a>
+      <a href="social-media.php" class="btn btn-secondary-modern btn-sm"><i class="bi bi-share me-1"></i>Social</a>
       <a href="orders.php" class="btn btn-secondary-modern btn-sm"><i class="bi bi-receipt me-1"></i>Orders</a>
     </div>
   </div>
@@ -179,7 +189,7 @@ include __DIR__ . '/_layout_top.php';
 
 <div class="row g-4">
   <!-- Recent Orders -->
-  <div class="col-lg-6">
+  <div class="col-lg-6<?= $dashboardSection('dashboard.recent_orders') ? '' : ' d-none' ?>">
     <div class="widget-card">
       <div class="widget-header">
         <h5 class="widget-title">Recent Orders</h5>
@@ -243,7 +253,7 @@ include __DIR__ . '/_layout_top.php';
   </div>
   
   <!-- Recent Products -->
-  <div class="col-lg-6">
+  <div class="col-lg-6<?= $dashboardSection('dashboard.recent_products') ? '' : ' d-none' ?>">
     <div class="widget-card">
       <div class="widget-header">
         <h5 class="widget-title">Recent Products</h5>
@@ -302,7 +312,7 @@ include __DIR__ . '/_layout_top.php';
   </div>
   
   <!-- Recent Users -->
-  <div class="col-lg-6">
+  <div class="col-lg-6<?= $dashboardSection('dashboard.recent_users') ? '' : ' d-none' ?>">
     <div class="widget-card">
       <div class="widget-header">
         <h5 class="widget-title">Recent Users</h5>
@@ -351,7 +361,7 @@ include __DIR__ . '/_layout_top.php';
   </div>
   
   <!-- Quick Overview -->
-  <div class="col-lg-6">
+  <div class="col-lg-6<?= $dashboardSection('dashboard.overview') ? '' : ' d-none' ?>">
     <div class="widget-card">
       <div class="widget-header">
         <h5 class="widget-title">Overview Summary</h5>
@@ -396,6 +406,22 @@ include __DIR__ . '/_layout_top.php';
           <span class="text-muted"><i class="bi bi-star me-2"></i>Reviews</span>
           <span class="status-badge status-active"><?= (int)$counts['reviews'] ?></span>
         </div>
+        <div class="d-flex justify-content-between align-items-center p-2 rounded" style="background:var(--surface-soft);">
+          <span class="text-muted"><i class="bi bi-menu-button-wide me-2"></i>Navbar Menu Items</span>
+          <span class="status-badge status-active"><?= (int)$counts['nav_menu_items'] ?></span>
+        </div>
+        <div class="d-flex justify-content-between align-items-center p-2 rounded" style="background:var(--surface-soft);">
+          <span class="text-muted"><i class="bi bi-journal-richtext me-2"></i>Blog Posts</span>
+          <span class="status-badge status-active"><?= (int)$counts['blogs'] ?></span>
+        </div>
+        <div class="d-flex justify-content-between align-items-center p-2 rounded" style="background:var(--surface-soft);">
+          <span class="text-muted"><i class="bi bi-envelope-paper me-2"></i>Enquiries</span>
+          <span class="status-badge status-active"><?= (int)$counts['enquiries'] ?></span>
+        </div>
+        <div class="d-flex justify-content-between align-items-center p-2 rounded" style="background:var(--surface-soft);">
+          <span class="text-muted"><i class="bi bi-share me-2"></i>Social Links</span>
+          <span class="status-badge status-active"><?= (int)$counts['social_links'] ?></span>
+        </div>
       </div>
     </div>
   </div>
@@ -403,7 +429,7 @@ include __DIR__ . '/_layout_top.php';
 
 <div class="row g-4 mt-2">
   <!-- Navigation shortcuts -->
-  <div class="col-12">
+  <div class="col-12<?= $dashboardSection('dashboard.navigation') ? '' : ' d-none' ?>">
     <div class="widget-card" style="background:linear-gradient(135deg, var(--sidebar), var(--sidebar-soft));border:none;">
       <div class="widget-header" style="border-bottom-color:rgba(255,255,255,0.1);">
         <h5 class="widget-title" style="color:#fff;">Quick Navigation</h5>
@@ -419,6 +445,18 @@ include __DIR__ . '/_layout_top.php';
         <a href="reviews.php" class="btn btn-sm" style="background:rgba(255,255,255,0.1);color:#e2e8f0;border:1px solid rgba(255,255,255,0.1);"><i class="bi bi-chat-left-text me-1"></i>Reviews</a>
         <a href="enquiries.php" class="btn btn-sm" style="background:rgba(255,255,255,0.1);color:#e2e8f0;border:1px solid rgba(255,255,255,0.1);"><i class="bi bi-envelope-paper me-1"></i>Enquiries</a>
         <a href="reports.php" class="btn btn-sm" style="background:rgba(255,255,255,0.1);color:#e2e8f0;border:1px solid rgba(255,255,255,0.1);"><i class="bi bi-bar-chart me-1"></i>Reports</a>
+        <a href="navbar-logo.php" class="btn btn-sm" style="background:rgba(255,255,255,0.1);color:#e2e8f0;border:1px solid rgba(255,255,255,0.1);"><i class="bi bi-image me-1"></i>Navbar Logo</a>
+        <a href="navbar-management.php" class="btn btn-sm" style="background:rgba(255,255,255,0.1);color:#e2e8f0;border:1px solid rgba(255,255,255,0.1);"><i class="bi bi-menu-button-wide me-1"></i>Menu Items</a>
+        <a href="footer-brand.php" class="btn btn-sm" style="background:rgba(255,255,255,0.1);color:#e2e8f0;border:1px solid rgba(255,255,255,0.1);"><i class="bi bi-shop me-1"></i>Footer Brand</a>
+        <a href="footer-links.php" class="btn btn-sm" style="background:rgba(255,255,255,0.1);color:#e2e8f0;border:1px solid rgba(255,255,255,0.1);"><i class="bi bi-link-45deg me-1"></i>Footer Links</a>
+        <a href="footer-trust-badges.php" class="btn btn-sm" style="background:rgba(255,255,255,0.1);color:#e2e8f0;border:1px solid rgba(255,255,255,0.1);"><i class="bi bi-shield-check me-1"></i>Trust Badges</a>
+        <a href="social-media.php" class="btn btn-sm" style="background:rgba(255,255,255,0.1);color:#e2e8f0;border:1px solid rgba(255,255,255,0.1);"><i class="bi bi-share me-1"></i>Social Media</a>
+        <a href="certificates.php" class="btn btn-sm" style="background:rgba(255,255,255,0.1);color:#e2e8f0;border:1px solid rgba(255,255,255,0.1);"><i class="bi bi-patch-check me-1"></i>Certificates</a>
+        <a href="faq-pages.php" class="btn btn-sm" style="background:rgba(255,255,255,0.1);color:#e2e8f0;border:1px solid rgba(255,255,255,0.1);"><i class="bi bi-question-circle me-1"></i>FAQs</a>
+        <a href="pages.php" class="btn btn-sm" style="background:rgba(255,255,255,0.1);color:#e2e8f0;border:1px solid rgba(255,255,255,0.1);"><i class="bi bi-file-earmark-text me-1"></i>SEO Pages</a>
+        <a href="settings.php" class="btn btn-sm" style="background:rgba(255,255,255,0.1);color:#e2e8f0;border:1px solid rgba(255,255,255,0.1);"><i class="bi bi-gear me-1"></i>Settings</a>
+        <a href="shipping-methods.php" class="btn btn-sm" style="background:rgba(255,255,255,0.1);color:#e2e8f0;border:1px solid rgba(255,255,255,0.1);"><i class="bi bi-truck me-1"></i>Shipping</a>
+        <a href="payment-settings.php" class="btn btn-sm" style="background:rgba(255,255,255,0.1);color:#e2e8f0;border:1px solid rgba(255,255,255,0.1);"><i class="bi bi-credit-card me-1"></i>Payments</a>
       </div>
     </div>
   </div>

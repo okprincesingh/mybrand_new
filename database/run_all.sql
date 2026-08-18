@@ -10,3 +10,5 @@ SOURCE database/migration_why_pages.sql;
 SOURCE database/migration_why_accordion.sql;
 SOURCE database/migration_remove_media_library.sql;
 SOURCE database/migration_shipping_system.sql;
+SOURCE database/migration_home_categories.sql;
+SOURCE database/migration_home_global_footprints.sql;

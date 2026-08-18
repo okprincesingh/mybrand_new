@@ -305,6 +305,7 @@ if ($tableReady && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $rows = $tableReady ? db_fetch_all($pdo, 'SELECT * FROM certificates ORDER BY sort_order ASC, id ASC') : [];
 
+$livePreviewUrl = url('our-certificates.php');
 include __DIR__ . '/_layout_top.php';
 ?>
 <?php if (!$tableReady): ?>
@@ -315,7 +316,7 @@ include __DIR__ . '/_layout_top.php';
   <div class="col-lg-5">
     <div class="form-section">
       <h5 class="mb-4"><?= (int) $formData['id'] > 0 ? 'Edit Certificate' : 'Add New Certificate' ?></h5>
-      <form method="post" enctype="multipart/form-data" class="d-grid gap-3">
+      <form method="post" enctype="multipart/form-data" class="d-grid gap-3" data-section-preview='{"content_type":"certificate","entity_id":<?= (int) ($formData['id'] ?? 0) ?>}'>
         <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
         <input type="hidden" name="action" value="save">
         <input type="hidden" name="id" value="<?= (int) $formData['id'] ?>">

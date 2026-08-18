@@ -221,6 +221,19 @@ if ($isCombinedAerosolPerfume) {
     $activeCategory = $buildCombinedAerosolPerfumeCategory();
     $catalogSourceCategory = $activeCategory;
 }
+
+// A single-segment category pretty-URL is routed to shop.php for EVERY one-segment
+// path (including content slugs). If the requested value is not a real catalog
+// category, hand off to the content-slug (why-page) lookup so genuine content
+// pages (about-us, contact, etc.) are not swallowed by the category rule. If
+// neither the category nor the slug matches, why-page.php fires the existing
+// Error_404 template as before.
+if ($category !== '' && !$isCombinedAerosolPerfume && !$activeCategory) {
+    $_GET['slug'] = $category;
+    unset($_GET['category'], $_GET['subcategory']);
+    require __DIR__ . '/why-page.php';
+    exit;
+}
 if ($activeCategory && !empty($activeCategory['id'])) {
     $cid = (int) $activeCategory['id'];
     $categorySpecificHeading = (string) (cms_get_setting('category_shop_heading_' . $cid, '') ?? '');

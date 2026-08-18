@@ -1,10 +1,15 @@
 <?php
+if (session_status() !== PHP_SESSION_ACTIVE && !headers_sent()) {
+    session_start();
+}
 require_once __DIR__ . '/../includes/db.php';
 require_once __DIR__ . '/../includes/security.php';
 require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/permissions.php';
 require_once __DIR__ . '/../includes/cms.php';
 require_once __DIR__ . '/../includes/catalog.php';
 require_once __DIR__ . '/../includes/url.php';
+require_once __DIR__ . '/../includes/preview.php';
 if (!function_exists('admin_flash_set')) {
     function admin_flash_set(string $type, string $message): void
     {
@@ -47,4 +52,21 @@ if (!function_exists('admin_pagination_items')) {
 }
 
 enforce_csrf_on_post();
+
+// Page-level authorization is additive and preserves every existing URL.
+// Super admins bypass this check, including permissions introduced in future.
+$cmsRequiredPermission = cms_current_page_permission();
+if ($cmsRequiredPermission !== null && ($cmsAdmin = admin_current()) !== null) {
+    admin_require_permission($cmsRequiredPermission, $cmsAdmin);
+}
+
+// Handle Preview Mode toggle from the admin topbar.
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'preview_toggle') {
+    verify_csrf_or_fail();
+    $previewEnabled = !empty($_POST['preview_enabled']);
+    preview_mode_toggle($previewEnabled);
+    admin_flash('success', $previewEnabled ? 'Preview Mode enabled. You can now view draft content on the site.' : 'Preview Mode disabled.');
+    header('Location: ' . ($_POST['redirect'] ?? 'dashboard.php'));
+    exit;
+}
 

@@ -3,6 +3,7 @@ require_once __DIR__ . '/url.php';
 require_once __DIR__ . '/security.php';
 require_once __DIR__ . '/captcha.php';
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/preview.php';
 
 $meta = $meta ?? [];
 $skipPageMetaLookup = !empty($meta['skip_page_meta_lookup']);
@@ -49,7 +50,7 @@ $brandSearch = ['mybrandplease', 'my brandplease'];
 $title = str_ireplace($brandSearch, 'mybrandplease', (string) $title);
 $description = str_ireplace($brandSearch, 'mybrandplease', (string) $description);
 $keywords = str_ireplace($brandSearch, 'mybrandplease', (string) $keywords);
-$robots = $meta['robots'] ?? 'index,follow';
+$robots = $meta['robots'] ?? preview_mode_robots_meta();
 $favicon = $meta['favicon'] ?? 'assets/imgs/logo/favicon-white.png';
 $requestUri = (string) ($_SERVER['REQUEST_URI'] ?? '/');
 $requestUri = $requestUri !== '' && str_starts_with($requestUri, '/') ? $requestUri : '/' . ltrim($requestUri, '/');
@@ -617,16 +618,19 @@ if ($isAosPage) {
   "slogan": "Private Label Is Now Simplified",
   "email": "info@mybrandplease.com",
   "telephone": "+91-97170-04615",
-  "sameAs": [
-    "https://www.facebook.com/mybrandplease",
-    "https://www.instagram.com/mybrandplease_/",
-    "https://x.com/mybrandplease",
-    "https://www.linkedin.com/in/mybrandplease/",
-    "https://in.pinterest.com/mybrandplease/",
-    "https://www.youtube.com/@mybrandplease",
-    "https://www.trustpilot.com/review/mybrandplease.com",
-    "https://g.co/kgs/YgaRfYo"
-  ],
+  "sameAs": <?php
+    $headSocialLinks = function_exists('cms_get_social_media_links') ? cms_get_social_media_links(true) : [];
+    $headSameAs = [];
+    foreach ($headSocialLinks as $hsl) {
+        if (!empty($hsl['url'])) {
+            $headSameAs[] = $hsl['url'];
+        }
+    }
+    $headSameAs[] = 'https://www.trustpilot.com/review/mybrandplease.com';
+    $headSameAs[] = 'https://g.co/kgs/YgaRfYo';
+    $headSameAs = array_values(array_unique($headSameAs));
+    echo json_encode($headSameAs, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+  ?>,
   "address": {
     "@type": "PostalAddress",
     "streetAddress": "D226, 10th Avenue, Gaur City 2",
@@ -734,3 +738,4 @@ if ($isAosPage) {
 <?php echo captcha_head_script(); ?>
 </head>
 <body>
+<?php echo preview_mode_banner(); ?>

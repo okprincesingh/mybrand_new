@@ -112,9 +112,10 @@ if (!$accordionRows) {
   ];
 }
 
+$livePreviewUrl = !empty($pageData['slug']) ? url('faq.php?slug=' . urlencode((string) $pageData['slug'])) : url('faq.php');
 include __DIR__ . '/_layout_top.php';
 ?>
-<form method="post" class="card card-body" id="faqPageForm">
+<form method="post" class="card card-body" id="faqPageForm" data-section-preview='{"content_type":"page","entity_id":<?= (int) ($pageData['id'] ?? 0) ?>}'>
   <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
   <div class="row g-3">
     <div class="col-md-6"><label class="form-label">Page Name (Breadcrumb Title)</label><input class="form-control" name="title" value="<?= e((string)$pageData['title']) ?>" required></div>

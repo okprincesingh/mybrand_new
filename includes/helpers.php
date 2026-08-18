@@ -68,7 +68,9 @@ function validate_max_length(?string $value, int $max): bool
 
 function db_bind_values(PDOStatement $stmt, array $params): void
 {
+    $isZeroIndexed = isset($params[0]);
     foreach ($params as $key => $value) {
+        $paramKey = is_int($key) ? ($isZeroIndexed ? $key + 1 : $key) : $key;
         $type = PDO::PARAM_STR;
         if (is_int($value)) {
             $type = PDO::PARAM_INT;
@@ -77,7 +79,7 @@ function db_bind_values(PDOStatement $stmt, array $params): void
         } elseif ($value === null) {
             $type = PDO::PARAM_NULL;
         }
-        $stmt->bindValue($key, $value, $type);
+        $stmt->bindValue($paramKey, $value, $type);
     }
 }
 

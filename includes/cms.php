@@ -4,6 +4,8 @@ require_once __DIR__ . '/security.php';
 require_once __DIR__ . '/url.php';
 require_once __DIR__ . '/cache.php';
 require_once __DIR__ . '/catalog.php';
+require_once __DIR__ . '/preview.php';
+require_once __DIR__ . '/draft.php';
 
 function cms_cache_key(string $bucket, string $key): string
 {
@@ -42,12 +44,146 @@ function cms_invalidate_home_slides_cache(): void
     cache_delete(cms_cache_key('home', 'slides'));
 }
 
+function cms_invalidate_home_hero_videos_cache(): void
+{
+    cache_delete(cms_cache_key('home', 'hero_videos'));
+}
+
+function cms_invalidate_home_cta_cards_cache(): void
+{
+    cache_delete(cms_cache_key('home', 'cta_cards'));
+}
+
+function cms_ensure_home_hero_videos_table(PDO $pdo): bool
+{
+    static $checked = null;
+    if ($checked !== null) {
+        return $checked;
+    }
+
+    try {
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS home_hero_videos (
+                id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                label VARCHAR(180) NULL,
+                desktop_video_url VARCHAR(500) NULL,
+                desktop_light_video_url VARCHAR(500) NULL,
+                mobile_video_url VARCHAR(500) NULL,
+                desktop_video_file VARCHAR(255) NULL,
+                desktop_light_video_file VARCHAR(255) NULL,
+                mobile_video_file VARCHAR(255) NULL,
+                poster_image VARCHAR(255) NULL,
+                sort_order INT NOT NULL DEFAULT 0,
+                is_active TINYINT(1) NOT NULL DEFAULT 1,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX idx_home_hero_videos_active_order (is_active, sort_order, id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        ");
+
+        // Ensure new file columns exist on existing installs.
+        $columns = db_fetch_all($pdo, 'SHOW COLUMNS FROM home_hero_videos');
+        $existing = [];
+        foreach ($columns as $column) {
+            $existing[strtolower((string) ($column['Field'] ?? ''))] = true;
+        }
+        if (empty($existing['desktop_video_file'])) {
+            $pdo->exec('ALTER TABLE home_hero_videos ADD COLUMN desktop_video_file VARCHAR(255) NULL AFTER desktop_video_url');
+        }
+        if (empty($existing['desktop_light_video_file'])) {
+            $pdo->exec('ALTER TABLE home_hero_videos ADD COLUMN desktop_light_video_file VARCHAR(255) NULL AFTER desktop_light_video_url');
+        }
+        if (empty($existing['mobile_video_file'])) {
+            $pdo->exec('ALTER TABLE home_hero_videos ADD COLUMN mobile_video_file VARCHAR(255) NULL AFTER mobile_video_url');
+        }
+
+        $checked = true;
+        return true;
+    } catch (Throwable $e) {
+        $checked = false;
+        return false;
+    }
+}
+
+function cms_get_home_hero_videos(): array
+{
+    $cacheKey = cms_cache_key('home', 'hero_videos');
+    if (!preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $fallbackDesktop = 'https://jaikvik.in/lab/mybrand_video/mybrandvideo';
+    $fallbackDesktopLight = 'https://jaikvik.in/lab/mybrand_video/mybrandmobilevideo';
+    $fallbackMobile = 'https://jaikvik.in/lab/mybrand_video/mybrandmobilevideo';
+    $fallback = [
+        [
+            'id' => 0,
+            'label' => 'Default Hero Video',
+            'desktop_video_url' => $fallbackDesktop,
+            'desktop_light_video_url' => $fallbackDesktopLight,
+            'mobile_video_url' => $fallbackMobile,
+            'poster_image' => '',
+        ],
+    ];
+
+    $pdo = db();
+    if (!$pdo || !cms_ensure_home_hero_videos_table($pdo)) {
+        return $fallback;
+    }
+
+    $activeClause = preview_mode_include_drafts() ? '' : ' WHERE is_active = 1';
+    $rows = db_fetch_all(
+        $pdo,
+        'SELECT id, label, desktop_video_url, desktop_light_video_url, mobile_video_url, desktop_video_file, desktop_light_video_file, mobile_video_file, poster_image FROM home_hero_videos' . $activeClause . ' ORDER BY sort_order ASC, id ASC'
+    );
+
+    if (!$rows) {
+        if (!preview_mode_should_bypass_cache()) {
+            cache_set($cacheKey, $fallback, 300);
+        }
+        return $fallback;
+    }
+
+    $videos = [];
+    foreach ($rows as $row) {
+        $merged = draft_merge_row((array) $row, 'home_hero_video', (int) $row['id']);
+
+        // Resolve each video source: prefer uploaded file, then URL, then fallback.
+        $desktopFile = trim((string) ($merged['desktop_video_file'] ?? ''));
+        $desktopLightFile = trim((string) ($merged['desktop_light_video_file'] ?? ''));
+        $mobileFile = trim((string) ($merged['mobile_video_file'] ?? ''));
+
+        $desktopUrl = trim((string) ($merged['desktop_video_url'] ?? ''));
+        $desktopLightUrl = trim((string) ($merged['desktop_light_video_url'] ?? ''));
+        $mobileUrl = trim((string) ($merged['mobile_video_url'] ?? ''));
+
+        $videos[] = [
+            'id' => (int) ($merged['id'] ?? $row['id']),
+            'label' => (string) ($merged['label'] ?? ''),
+            'desktop_video_url' => $desktopFile !== '' ? url($desktopFile) : ($desktopUrl !== '' ? $desktopUrl : $fallbackDesktop),
+            'desktop_light_video_url' => $desktopLightFile !== '' ? url($desktopLightFile) : ($desktopLightUrl !== '' ? $desktopLightUrl : $fallbackDesktopLight),
+            'mobile_video_url' => $mobileFile !== '' ? url($mobileFile) : ($mobileUrl !== '' ? $mobileUrl : $fallbackMobile),
+            'poster_image' => (string) ($merged['poster_image'] ?? ''),
+        ];
+    }
+
+    if (!preview_mode_should_bypass_cache()) {
+        cache_set($cacheKey, $videos, 300);
+    }
+    return $videos;
+}
+
 function cms_get_setting(string $key, ?string $default = null): ?string
 {
     $cacheKey = cms_cache_key('setting', $key);
-    $cached = cache_get($cacheKey);
-    if ($cached !== null) {
-        return (string) $cached;
+    if (!preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if ($cached !== null) {
+            return (string) $cached;
+        }
     }
 
     $pdo = db();
@@ -60,7 +196,7 @@ function cms_get_setting(string $key, ?string $default = null): ?string
     ]);
 
     $resolved = $value !== false ? (string) $value : $default;
-    if ($resolved !== null) {
+    if ($resolved !== null && !preview_mode_should_bypass_cache()) {
         cache_set($cacheKey, $resolved, 600);
     }
 
@@ -100,9 +236,11 @@ function cms_get_breadcrumb_background_path(): string
 function cms_get_menu(string $locationKey): array
 {
     $cacheKey = cms_cache_key('menu', $locationKey);
-    $cached = cache_get($cacheKey);
-    if (is_array($cached)) {
-        return $cached;
+    if (!preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
     }
 
     $pdo = db();
@@ -137,7 +275,9 @@ function cms_get_menu(string $locationKey): array
     };
 
     $menu = $build(0);
-    cache_set($cacheKey, $menu, 600);
+    if (!preview_mode_should_bypass_cache()) {
+        cache_set($cacheKey, $menu, 600);
+    }
     return $menu;
 }
 
@@ -352,38 +492,630 @@ function cms_get_resolved_header_menu(): array
     return cms_merge_header_menu($dbMenu, $defaultMenu);
 }
 
-function cms_get_footer_sections(): array
+function cms_invalidate_nav_cache(): void
 {
+    cache_clear_prefix('cms:nav:');
+}
+
+function cms_ensure_navbar_tables(PDO $pdo): bool
+{
+    static $checked = null;
+    if ($checked !== null) {
+        return $checked;
+    }
+
+    try {
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS nav_logo (
+                id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                logo_image VARCHAR(255) NOT NULL DEFAULT 'uploads/logo/mybrandplease-1.gif',
+                eyebrow_text VARCHAR(255) NOT NULL DEFAULT 'For dedicated Private Label Support',
+                brand_text VARCHAR(255) NOT NULL DEFAULT 'mybrandplease.com',
+                tagline_text VARCHAR(255) NOT NULL DEFAULT 'Your Vision | Our Expertise | Your Brand',
+                logo_link_url VARCHAR(500) NOT NULL DEFAULT 'index.php',
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS nav_menu_items (
+                id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                parent_id INT UNSIGNED NULL DEFAULT NULL,
+                label VARCHAR(180) NOT NULL,
+                url VARCHAR(500) NOT NULL,
+                open_in_new_tab TINYINT(1) NOT NULL DEFAULT 0,
+                has_dropdown TINYINT(1) NOT NULL DEFAULT 0,
+                sort_order INT NOT NULL DEFAULT 0,
+                status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX idx_parent_sort (parent_id, sort_order)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+
+        $logoCount = (int) db_fetch_value($pdo, 'SELECT COUNT(*) FROM nav_logo');
+        if ($logoCount === 0) {
+            $pdo->exec("INSERT INTO nav_logo (id, logo_image, eyebrow_text, brand_text, tagline_text, logo_link_url) VALUES (1, 'uploads/logo/mybrandplease-1.gif', 'For dedicated Private Label Support', 'mybrandplease.com', 'Your Vision | Our Expertise | Your Brand', '')");
+        }
+
+        $menuCount = (int) db_fetch_value($pdo, 'SELECT COUNT(*) FROM nav_menu_items');
+        if ($menuCount === 0) {
+            // Seed top-level items and dropdown children matching original URL structure (without .php)
+            $stmt = $pdo->prepare("INSERT INTO nav_menu_items (id, parent_id, label, url, open_in_new_tab, has_dropdown, sort_order, status) VALUES (:id, :parent_id, :label, :url, :open_in_new_tab, :has_dropdown, :sort_order, :status)");
+
+            $defaults = [
+                // Top-level 1: Sample
+                ['id' => 1, 'parent_id' => null, 'label' => 'Sample', 'url' => 'shop', 'open_in_new_tab' => 0, 'has_dropdown' => 1, 'sort_order' => 1, 'status' => 'active'],
+                ['id' => 101, 'parent_id' => 1, 'label' => 'Skin Care', 'url' => 'private-label-skin-care-products/', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 1, 'status' => 'active'],
+                ['id' => 102, 'parent_id' => 1, 'label' => 'Body Care', 'url' => 'bath-and-body/', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 2, 'status' => 'active'],
+                ['id' => 103, 'parent_id' => 1, 'label' => 'Hair Care', 'url' => 'private-label-hair-care-products/', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 3, 'status' => 'active'],
+                ['id' => 104, 'parent_id' => 1, 'label' => 'Bathing Soaps', 'url' => 'bathing-soaps/', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 4, 'status' => 'active'],
+                ['id' => 105, 'parent_id' => 1, 'label' => 'Especially For Men', 'url' => 'especially-for-men/', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 5, 'status' => 'active'],
+                ['id' => 106, 'parent_id' => 1, 'label' => 'Aerosols & Perfumes', 'url' => 'aerosols-perfumes/', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 6, 'status' => 'active'],
+
+                // Top-level 2: How it Works
+                ['id' => 2, 'parent_id' => null, 'label' => 'How it Works', 'url' => 'how-it-works', 'open_in_new_tab' => 0, 'has_dropdown' => 1, 'sort_order' => 2, 'status' => 'active'],
+                ['id' => 201, 'parent_id' => 2, 'label' => 'Product Components', 'url' => 'how-it-works#product-components', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 1, 'status' => 'active'],
+                ['id' => 202, 'parent_id' => 2, 'label' => 'Define Offerings', 'url' => 'how-it-works#define-offerings', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 2, 'status' => 'active'],
+                ['id' => 203, 'parent_id' => 2, 'label' => 'Design & Printing', 'url' => 'how-it-works#design-and-printing', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 3, 'status' => 'active'],
+                ['id' => 204, 'parent_id' => 2, 'label' => 'Finishing Touches', 'url' => 'how-it-works#finishing-touches', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 4, 'status' => 'active'],
+
+                // Top-level 3: Why Choose Us
+                ['id' => 3, 'parent_id' => null, 'label' => 'Why Choose Us', 'url' => 'our-services', 'open_in_new_tab' => 0, 'has_dropdown' => 1, 'sort_order' => 3, 'status' => 'active'],
+                ['id' => 301, 'parent_id' => 3, 'label' => 'Private Label Skin Care Manufacturer', 'url' => 'private-label-skin-care-manufacturer/', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 1, 'status' => 'active'],
+                ['id' => 302, 'parent_id' => 3, 'label' => 'Private Label Hair Care Manufacturer', 'url' => 'private-label-hair-care-manufacturer/', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 2, 'status' => 'active'],
+                ['id' => 303, 'parent_id' => 3, 'label' => 'Private Label Men\'s Grooming Products', 'url' => 'private-label-mens-grooming-products/', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 3, 'status' => 'active'],
+                ['id' => 304, 'parent_id' => 3, 'label' => 'Private Label Essential Oil Supplier', 'url' => 'private-label-essential-oil-supplier/', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 4, 'status' => 'active'],
+                ['id' => 305, 'parent_id' => 3, 'label' => 'Bathing Soap Manufacturer', 'url' => 'bathing-soap-manufacturer/', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 5, 'status' => 'active'],
+                ['id' => 306, 'parent_id' => 3, 'label' => 'Contract Manufacturer for Cosmetics Products', 'url' => 'contract-manufacturer-for-cosmetics-products/', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 6, 'status' => 'active'],
+
+                // Top-level 4: About Us
+                ['id' => 4, 'parent_id' => null, 'label' => 'About Us', 'url' => 'about', 'open_in_new_tab' => 0, 'has_dropdown' => 1, 'sort_order' => 4, 'status' => 'active'],
+                ['id' => 401, 'parent_id' => 4, 'label' => 'Who We Are', 'url' => 'about#who-we-are', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 1, 'status' => 'active'],
+                ['id' => 402, 'parent_id' => 4, 'label' => 'What We Offer', 'url' => 'about#what-we-offer', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 2, 'status' => 'active'],
+                ['id' => 403, 'parent_id' => 4, 'label' => 'How We Formulate', 'url' => 'about#how-we-formulate', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 3, 'status' => 'active'],
+                ['id' => 404, 'parent_id' => 4, 'label' => 'Key Benefits', 'url' => 'about#key-benifits', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 4, 'status' => 'active'],
+                ['id' => 405, 'parent_id' => 4, 'label' => 'Our Certificates', 'url' => 'our-certificates', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 5, 'status' => 'active'],
+
+                // Top-level 5: Services
+                ['id' => 5, 'parent_id' => null, 'label' => 'Services', 'url' => 'services', 'open_in_new_tab' => 0, 'has_dropdown' => 1, 'sort_order' => 5, 'status' => 'active'],
+                ['id' => 501, 'parent_id' => 5, 'label' => 'Design & Print Services', 'url' => 'services#design-print-services', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 1, 'status' => 'active'],
+                ['id' => 502, 'parent_id' => 5, 'label' => 'Product & Offering Development', 'url' => 'services#product-offering-development', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 2, 'status' => 'active'],
+                ['id' => 503, 'parent_id' => 5, 'label' => 'Finishing Touches', 'url' => 'services#finishing-touches', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 3, 'status' => 'active'],
+                ['id' => 504, 'parent_id' => 5, 'label' => 'Logistics Support', 'url' => 'services#logistics-support', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 4, 'status' => 'active'],
+                ['id' => 505, 'parent_id' => 5, 'label' => 'Build Your Own Brand', 'url' => 'services#build-your-own-brand', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 5, 'status' => 'active'],
+
+                // Top-level 6: Resources
+                ['id' => 6, 'parent_id' => null, 'label' => 'Resources', 'url' => 'blog', 'open_in_new_tab' => 0, 'has_dropdown' => 1, 'sort_order' => 6, 'status' => 'active'],
+                ['id' => 601, 'parent_id' => 6, 'label' => 'Blog', 'url' => 'blog', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 1, 'status' => 'active'],
+                ['id' => 602, 'parent_id' => 6, 'label' => 'FAQ\'s', 'url' => 'faq', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 2, 'status' => 'active'],
+                ['id' => 603, 'parent_id' => 6, 'label' => 'Contact', 'url' => 'contact', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 3, 'status' => 'active'],
+                ['id' => 604, 'parent_id' => 6, 'label' => 'Form Center', 'url' => 'form-center', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 4, 'status' => 'active'],
+                ['id' => 605, 'parent_id' => 6, 'label' => 'Product Catalog', 'url' => 'product-catalog', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 5, 'status' => 'active'],
+                ['id' => 606, 'parent_id' => 6, 'label' => 'Material Safety Data Sheets', 'url' => 'data-sheets', 'open_in_new_tab' => 0, 'has_dropdown' => 0, 'sort_order' => 6, 'status' => 'active'],
+            ];
+
+            foreach ($defaults as $item) {
+                $stmt->execute([
+                    ':id' => $item['id'],
+                    ':parent_id' => $item['parent_id'],
+                    ':label' => $item['label'],
+                    ':url' => $item['url'],
+                    ':open_in_new_tab' => $item['open_in_new_tab'],
+                    ':has_dropdown' => $item['has_dropdown'],
+                    ':sort_order' => $item['sort_order'],
+                    ':status' => $item['status'],
+                ]);
+            }
+        }
+
+        $checked = true;
+        return true;
+    } catch (Throwable $e) {
+        error_log('cms_ensure_navbar_tables error: ' . $e->getMessage());
+        $checked = false;
+        return false;
+    }
+}
+
+function cms_get_nav_logo(bool $forceFresh = false): array
+{
+    $cacheKey = 'cms:nav:logo';
+    if (!$forceFresh && !preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $default = [
+        'id' => 1,
+        'logo_image' => 'uploads/logo/mybrandplease-1.gif',
+        'eyebrow_text' => 'For dedicated Private Label Support',
+        'brand_text' => 'mybrandplease.com',
+        'tagline_text' => 'Your Vision | Our Expertise | Your Brand',
+        'logo_link_url' => '',
+    ];
+
+    $pdo = db();
+    if (!$pdo) {
+        return $default;
+    }
+
+    cms_ensure_navbar_tables($pdo);
+
+    try {
+        $stmt = $pdo->query('SELECT id, logo_image, eyebrow_text, brand_text, tagline_text, logo_link_url, updated_at FROM nav_logo WHERE id = 1 LIMIT 1');
+        $row = $stmt ? $stmt->fetch() : null;
+        if ($row && is_array($row)) {
+            $data = [
+                'id' => (int) ($row['id'] ?? 1),
+                'logo_image' => (string) ($row['logo_image'] ?: $default['logo_image']),
+                'eyebrow_text' => (string) ($row['eyebrow_text'] ?? $default['eyebrow_text']),
+                'brand_text' => (string) ($row['brand_text'] ?? $default['brand_text']),
+                'tagline_text' => (string) ($row['tagline_text'] ?? $default['tagline_text']),
+                'logo_link_url' => (string) ($row['logo_link_url'] ?: $default['logo_link_url']),
+                'updated_at' => (string) ($row['updated_at'] ?? ''),
+            ];
+            if (!preview_mode_should_bypass_cache()) {
+                cache_set($cacheKey, $data, 600);
+            }
+            return $data;
+        }
+    } catch (Throwable $e) {
+        error_log('cms_get_nav_logo error: ' . $e->getMessage());
+    }
+
+    return $default;
+}
+
+function cms_get_nav_menu_tree(bool $forceFresh = false, bool $includeInactive = false): array
+{
+    $cacheKey = 'cms:nav:menu_tree:' . ($includeInactive ? 'all' : 'active');
+    if (!$forceFresh && !$includeInactive && !preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
     $pdo = db();
     if (!$pdo) {
         return [];
     }
 
-    $rows = $pdo->query('SELECT fs.id, fs.title, fl.label, fl.url FROM footer_sections fs LEFT JOIN footer_links fl ON fl.section_id = fs.id ORDER BY fs.sort_order ASC, fs.id ASC, fl.sort_order ASC, fl.id ASC')->fetchAll();
-    if (!$rows) {
+    cms_ensure_navbar_tables($pdo);
+
+    try {
+        $statusSql = $includeInactive ? '' : " AND status = 'active'";
+
+        // 1. Fetch top-level items using index (parent_id, sort_order)
+        $topStmt = $pdo->query("
+            SELECT id, parent_id, label, url, open_in_new_tab, has_dropdown, sort_order, status
+            FROM nav_menu_items
+            WHERE parent_id IS NULL {$statusSql}
+            ORDER BY sort_order ASC, id ASC
+        ");
+        $topItems = $topStmt ? $topStmt->fetchAll() : [];
+
+        if (empty($topItems)) {
+            return [];
+        }
+
+        $topIds = array_column($topItems, 'id');
+        $childrenByParent = [];
+
+        // 2. Fetch all children in one single query to eliminate N+1 overhead
+        if (!empty($topIds)) {
+            $placeholders = implode(',', array_fill(0, count($topIds), '?'));
+            $childSql = "
+                SELECT id, parent_id, label, url, open_in_new_tab, has_dropdown, sort_order, status
+                FROM nav_menu_items
+                WHERE parent_id IN ({$placeholders}) {$statusSql}
+                ORDER BY sort_order ASC, id ASC
+            ";
+            $childStmt = $pdo->prepare($childSql);
+            $childStmt->execute($topIds);
+            $allChildren = $childStmt->fetchAll();
+
+            foreach ($allChildren as $child) {
+                $pid = (int) $child['parent_id'];
+                if (!isset($childrenByParent[$pid])) {
+                    $childrenByParent[$pid] = [];
+                }
+                $childrenByParent[$pid][] = [
+                    'id' => (int) $child['id'],
+                    'parent_id' => $pid,
+                    'title' => (string) $child['label'],
+                    'label' => (string) $child['label'],
+                    'url' => (string) $child['url'],
+                    'open_in_new_tab' => (int) $child['open_in_new_tab'],
+                    'has_dropdown' => (int) $child['has_dropdown'],
+                    'sort_order' => (int) $child['sort_order'],
+                    'status' => (string) $child['status'],
+                    'children' => [],
+                ];
+            }
+        }
+
+        // 3. Assemble nested tree
+        $tree = [];
+        foreach ($topItems as $top) {
+            $topId = (int) $top['id'];
+            $children = $childrenByParent[$topId] ?? [];
+            $tree[] = [
+                'id' => $topId,
+                'parent_id' => null,
+                'title' => (string) $top['label'],
+                'label' => (string) $top['label'],
+                'url' => (string) $top['url'],
+                'open_in_new_tab' => (int) $top['open_in_new_tab'],
+                'has_dropdown' => (int) $top['has_dropdown'] || !empty($children) ? 1 : 0,
+                'sort_order' => (int) $top['sort_order'],
+                'status' => (string) $top['status'],
+                'children' => $children,
+            ];
+        }
+
+        if (!$includeInactive && !preview_mode_should_bypass_cache()) {
+            cache_set($cacheKey, $tree, 600);
+        }
+
+        return $tree;
+    } catch (Throwable $e) {
+        error_log('cms_get_nav_menu_tree error: ' . $e->getMessage());
+        return [];
+    }
+}
+
+function cms_get_nav_menu_item(int $id): ?array
+{
+    $pdo = db();
+    if (!$pdo || $id <= 0) {
+        return null;
+    }
+    cms_ensure_navbar_tables($pdo);
+    $stmt = $pdo->prepare('SELECT id, parent_id, label, url, open_in_new_tab, has_dropdown, sort_order, status FROM nav_menu_items WHERE id = :id LIMIT 1');
+    $stmt->execute([':id' => $id]);
+    $item = $stmt->fetch();
+    return $item ?: null;
+}
+
+function cms_get_nav_parent_options(?int $excludeId = null): array
+{
+    $pdo = db();
+    if (!$pdo) {
+        return [];
+    }
+    cms_ensure_navbar_tables($pdo);
+    $sql = 'SELECT id, label, sort_order FROM nav_menu_items WHERE parent_id IS NULL';
+    $params = [];
+    if ($excludeId !== null && $excludeId > 0) {
+        $sql .= ' AND id != :exclude_id';
+        $params[':exclude_id'] = $excludeId;
+    }
+    $sql .= ' ORDER BY sort_order ASC, id ASC';
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
+    return $stmt->fetchAll() ?: [];
+}
+
+function cms_invalidate_footer_cache(): void
+{
+    cache_clear_prefix('cms:footer:');
+}
+
+function cms_invalidate_social_cache(): void
+{
+    cache_clear_prefix('cms:social:');
+}
+
+function cms_ensure_footer_and_social_tables(PDO $pdo): bool
+{
+    static $checked = null;
+    if ($checked !== null) {
+        return $checked;
+    }
+
+    try {
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS footer_brand (
+                id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                logo VARCHAR(255) NOT NULL DEFAULT 'uploads/logo/mybrandfooter.gif',
+                tagline TEXT NOT NULL,
+                phone VARCHAR(100) NOT NULL DEFAULT '+91 (971) 700 4615',
+                email VARCHAR(150) NOT NULL DEFAULT 'info@mybrandplease.com',
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS footer_links (
+                id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                group_key ENUM('quick_links', 'compliances', 'legal_disclaimers') NOT NULL,
+                label VARCHAR(180) NOT NULL,
+                url VARCHAR(500) NOT NULL,
+                open_in_new_tab TINYINT(1) NOT NULL DEFAULT 0,
+                sort_order INT NOT NULL DEFAULT 0,
+                status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX idx_group_sort (group_key, status, sort_order)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS footer_bottom (
+                id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                copyright_text TEXT NOT NULL,
+                developer_credit_text VARCHAR(255) NOT NULL DEFAULT 'Developed and Maintained by',
+                developer_credit_label VARCHAR(100) NOT NULL DEFAULT 'JTPL',
+                developer_credit_url VARCHAR(500) NOT NULL DEFAULT 'https://jaikviktechnology.com/',
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS social_media_links (
+                id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                platform VARCHAR(60) NOT NULL,
+                icon_class VARCHAR(100) NOT NULL,
+                icon_image VARCHAR(255) NULL,
+                url VARCHAR(500) NOT NULL,
+                open_in_new_tab TINYINT(1) NOT NULL DEFAULT 1,
+                sort_order INT NOT NULL DEFAULT 0,
+                status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX idx_sort_status (status, sort_order)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS footer_trust_badges (
+                id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                label VARCHAR(255) NOT NULL DEFAULT '',
+                image VARCHAR(500) NOT NULL DEFAULT '',
+                link_url VARCHAR(500) NULL DEFAULT NULL,
+                open_in_new_tab TINYINT(1) NOT NULL DEFAULT 1,
+                sort_order INT NOT NULL DEFAULT 0,
+                status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX idx_sort_status (status, sort_order)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+
+        $brandCount = (int) db_fetch_value($pdo, 'SELECT COUNT(*) FROM footer_brand');
+        if ($brandCount === 0) {
+            $pdo->exec("INSERT INTO footer_brand (id, logo, tagline, phone, email) VALUES (1, 'uploads/logo/mybrandfooter.gif', 'Get in touch with us however is most convenient for you.', '+91 (971) 700 4615', 'info@mybrandplease.com')");
+        }
+
+        $bottomCount = (int) db_fetch_value($pdo, 'SELECT COUNT(*) FROM footer_bottom');
+        if ($bottomCount === 0) {
+            $pdo->exec("INSERT INTO footer_bottom (id, copyright_text, developer_credit_text, developer_credit_label, developer_credit_url) VALUES (1, '&copy; 2005-2026 NIMISHA IMPEX WORLDWIDE (P) LIMITED | All rights reserved', 'Developed and Maintained by', 'JTPL', 'https://jaikviktechnology.com/')");
+        }
+
+        $badgeCount = (int) db_fetch_value($pdo, 'SELECT COUNT(*) FROM footer_trust_badges');
+        if ($badgeCount === 0) {
+            $pdo->exec("INSERT INTO footer_trust_badges (label, image, link_url, open_in_new_tab, sort_order, status) VALUES
+                ('Google Reviews',  'assets/imgs/home/footer/google-Reviews_mybrand.webp', 'https://g.co/kgs/YgaRfY', 1, 1, 'active'),
+                ('Trustpilot',      'assets/imgs/home/footer/Trust-Pilot-Reviews_mybrand.webp', 'https://www.trustpilot.com/review/mybrandplease.com?utm_medium=trustbox&utm_source=TrustBoxReviewCollector', 1, 2, 'active'),
+                ('USFDA',           'assets/imgs/home/footer/fei.webp', NULL, 0, 3, 'active'),
+                ('DUNS',            'assets/imgs/home/footer/duns.webp', NULL, 0, 4, 'active'),
+                ('CPNP Registered', 'assets/imgs/home/footer/CPNP-Registered.webp', NULL, 0, 5, 'active'),
+                ('Stripe Payment',  'assets/imgs/home/footer/stripe.png', NULL, 0, 6, 'active')");
+        }
+
+        $checked = true;
+        return true;
+    } catch (Throwable $e) {
+        $checked = false;
+        return false;
+    }
+}
+
+function cms_get_footer_brand(bool $forceFresh = false): array
+{
+    $default = [
+        'id' => 1,
+        'logo' => 'uploads/logo/mybrandfooter.gif',
+        'tagline' => 'Get in touch with us however is most convenient for you.',
+        'phone' => '+91 (971) 700 4615',
+        'email' => 'info@mybrandplease.com',
+    ];
+
+    $cacheKey = cms_cache_key('footer', 'brand');
+    if (!$forceFresh) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return array_merge($default, $cached);
+        }
+    }
+
+    $pdo = db();
+    if (!$pdo) {
+        return $default;
+    }
+
+    cms_ensure_footer_and_social_tables($pdo);
+    $row = db_fetch_one($pdo, 'SELECT id, logo, tagline, phone, email, updated_at FROM footer_brand WHERE id = 1 LIMIT 1');
+    if (!$row) {
+        $row = db_fetch_one($pdo, 'SELECT id, logo, tagline, phone, email, updated_at FROM footer_brand ORDER BY id ASC LIMIT 1');
+    }
+
+    $data = $row ? array_merge($default, $row) : $default;
+    cache_set($cacheKey, $data, 3600);
+    return $data;
+}
+
+function cms_get_footer_bottom(bool $forceFresh = false): array
+{
+    $default = [
+        'id' => 1,
+        'copyright_text' => '&copy; 2005-2026 NIMISHA IMPEX WORLDWIDE (P) LIMITED | All rights reserved',
+        'developer_credit_text' => 'Developed and Maintained by',
+        'developer_credit_label' => 'JTPL',
+        'developer_credit_url' => 'https://jaikviktechnology.com/',
+    ];
+
+    $cacheKey = cms_cache_key('footer', 'bottom');
+    if (!$forceFresh) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return array_merge($default, $cached);
+        }
+    }
+
+    $pdo = db();
+    if (!$pdo) {
+        return $default;
+    }
+
+    cms_ensure_footer_and_social_tables($pdo);
+    $row = db_fetch_one($pdo, 'SELECT id, copyright_text, developer_credit_text, developer_credit_label, developer_credit_url, updated_at FROM footer_bottom WHERE id = 1 LIMIT 1');
+    if (!$row) {
+        $row = db_fetch_one($pdo, 'SELECT id, copyright_text, developer_credit_text, developer_credit_label, developer_credit_url, updated_at FROM footer_bottom ORDER BY id ASC LIMIT 1');
+    }
+
+    $data = $row ? array_merge($default, $row) : $default;
+    cache_set($cacheKey, $data, 3600);
+    return $data;
+}
+
+function cms_get_footer_links(?string $groupKey = null, bool $activeOnly = true, bool $forceFresh = false): array
+{
+    $cacheKey = cms_cache_key('footer', 'links_' . ($groupKey ?? 'all') . '_' . ($activeOnly ? 'active' : 'all'));
+    if (!$forceFresh) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $pdo = db();
+    if (!$pdo) {
         return [];
     }
 
-    $result = [];
-    foreach ($rows as $row) {
-        $sid = (int) $row['id'];
-        if (!isset($result[$sid])) {
-            $result[$sid] = [
-                'id' => $sid,
-                'title' => (string) $row['title'],
-                'links' => [],
-            ];
-        }
+    cms_ensure_footer_and_social_tables($pdo);
 
-        if ($row['label'] !== null) {
-            $result[$sid]['links'][] = [
-                'label' => (string) $row['label'],
-                'url' => (string) $row['url'],
-            ];
+    $sql = 'SELECT id, group_key, label, url, open_in_new_tab, sort_order, status, created_at, updated_at FROM footer_links WHERE 1=1';
+    $params = [];
+
+    if ($groupKey !== null && $groupKey !== '') {
+        $sql .= ' AND group_key = :group_key';
+        $params[':group_key'] = $groupKey;
+    }
+
+    if ($activeOnly) {
+        $sql .= ' AND status = "active"';
+    }
+
+    $sql .= ' ORDER BY sort_order ASC, id ASC';
+
+    $rows = db_fetch_all($pdo, $sql, $params);
+
+    if ($groupKey === null) {
+        $grouped = [
+            'quick_links' => [],
+            'compliances' => [],
+            'legal_disclaimers' => [],
+        ];
+        foreach ($rows as $row) {
+            $gk = (string) ($row['group_key'] ?? '');
+            if (isset($grouped[$gk])) {
+                $grouped[$gk][] = $row;
+            }
+        }
+        cache_set($cacheKey, $grouped, 3600);
+        return $grouped;
+    }
+
+    cache_set($cacheKey, $rows, 3600);
+    return $rows;
+}
+
+function cms_get_social_media_links(bool $activeOnly = true, bool $forceFresh = false): array
+{
+    $cacheKey = cms_cache_key('social', 'links_' . ($activeOnly ? 'active' : 'all'));
+    if (!$forceFresh) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
         }
     }
 
-    return array_values($result);
+    $pdo = db();
+    if (!$pdo) {
+        return [];
+    }
+
+    cms_ensure_footer_and_social_tables($pdo);
+
+    $sql = 'SELECT id, platform, icon_class, icon_image, url, open_in_new_tab, sort_order, status, created_at, updated_at FROM social_media_links WHERE 1=1';
+    if ($activeOnly) {
+        $sql .= ' AND status = "active"';
+    }
+    $sql .= ' ORDER BY sort_order ASC, id ASC';
+
+    $rows = db_fetch_all($pdo, $sql);
+    cache_set($cacheKey, $rows, 3600);
+    return $rows;
+}
+
+function cms_invalidate_trust_badges_cache(): void
+{
+    cache_clear_prefix('cms:trust_badges:');
+}
+
+function cms_get_trust_badges(bool $activeOnly = true, bool $forceFresh = false): array
+{
+    $cacheKey = cms_cache_key('trust_badges', 'list_' . ($activeOnly ? 'active' : 'all'));
+    if (!$forceFresh) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $pdo = db();
+    if (!$pdo) {
+        return [];
+    }
+
+    cms_ensure_footer_and_social_tables($pdo);
+
+    $sql = 'SELECT id, label, image, link_url, open_in_new_tab, sort_order, status FROM footer_trust_badges WHERE 1=1';
+    if ($activeOnly) {
+        $sql .= ' AND status = "active"';
+    }
+    $sql .= ' ORDER BY sort_order ASC, id ASC';
+
+    $rows = db_fetch_all($pdo, $sql);
+    cache_set($cacheKey, $rows, 3600);
+    return $rows;
+}
+
+function cms_get_footer_sections(): array
+{
+    $grouped = cms_get_footer_links(null, true);
+    $result = [];
+    if (!empty($grouped['quick_links'])) {
+        $result[] = [
+            'id' => 1,
+            'title' => 'QUICK LINKS',
+            'links' => $grouped['quick_links'],
+        ];
+    }
+    if (!empty($grouped['legal_disclaimers'])) {
+        $result[] = [
+            'id' => 2,
+            'title' => 'LEGAL DISCLAIMERS',
+            'links' => $grouped['legal_disclaimers'],
+        ];
+    }
+    return $result;
 }
 
 function get_page_by_slug(string $slug): ?array
@@ -393,9 +1125,11 @@ function get_page_by_slug(string $slug): ?array
     }
 
     $cacheKey = cms_cache_key('page_slug', $slug);
-    $cached = cache_get($cacheKey);
-    if (is_array($cached) || $cached === false) {
-        return $cached === false ? null : $cached;
+    if (!preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached) || $cached === false) {
+            return $cached === false ? null : $cached;
+        }
     }
 
     $pdo = db();
@@ -403,15 +1137,23 @@ function get_page_by_slug(string $slug): ?array
         return null;
     }
 
-    $page = db_fetch_one($pdo, 'SELECT p.*, pm.meta_title, pm.meta_description, pm.meta_keywords, pm.canonical_url FROM pages p LEFT JOIN page_meta pm ON pm.page_id = p.id WHERE p.slug = :slug AND p.status = "published" LIMIT 1', [
+    $statusClause = preview_mode_include_drafts() ? '' : ' AND p.status = "published"';
+    $page = db_fetch_one($pdo, 'SELECT p.*, pm.meta_title, pm.meta_description, pm.meta_keywords, pm.canonical_url FROM pages p LEFT JOIN page_meta pm ON pm.page_id = p.id WHERE p.slug = :slug' . $statusClause . ' LIMIT 1', [
         ':slug' => $slug,
     ]);
     if ($page) {
-        cache_set($cacheKey, $page, 300);
+        if (preview_mode_include_drafts()) {
+            $page = draft_merge_row((array) $page, 'page', (int) ($page['id'] ?? 0));
+        }
+        if (!preview_mode_should_bypass_cache()) {
+            cache_set($cacheKey, $page, 300);
+        }
         return $page;
     }
 
-    cache_set($cacheKey, false, 120);
+    if (!preview_mode_should_bypass_cache()) {
+        cache_set($cacheKey, false, 120);
+    }
     return null;
 }
 
@@ -461,9 +1203,11 @@ function get_page_sections(int $pageId): array
 function cms_get_home_slides(): array
 {
     $cacheKey = cms_cache_key('home', 'slides');
-    $cached = cache_get($cacheKey);
-    if (is_array($cached)) {
-        return $cached;
+    if (!preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
     }
 
     $fallback = [
@@ -501,37 +1245,38 @@ function cms_get_home_slides(): array
         return $fallback;
     }
 
+    $activeClause = preview_mode_include_drafts() ? '' : ' WHERE is_active = 1';
     $rows = db_fetch_all(
         $pdo,
-        'SELECT id, badge_text, title, description, button_text, button_url, image_path, image_alt FROM home_slides WHERE is_active = 1 ORDER BY sort_order ASC, id ASC'
+        'SELECT id, badge_text, title, description, button_text, button_url, image_path, image_alt FROM home_slides' . $activeClause . ' ORDER BY sort_order ASC, id ASC'
     );
 
     if (!$rows) {
-        cache_set($cacheKey, $fallback, 300);
+        if (!preview_mode_should_bypass_cache()) {
+            cache_set($cacheKey, $fallback, 300);
+        }
         return $fallback;
     }
 
     $slides = [];
     foreach ($rows as $row) {
+        $merged = draft_merge_row((array) $row, 'home_slide', (int) $row['id']);
         $slides[] = [
-            'id' => (int) $row['id'],
-            'badge_text' => (string) ($row['badge_text'] ?? ''),
-            'title' => (string) ($row['title'] ?? ''),
-            'description' => (string) ($row['description'] ?? ''),
-            'button_text' => (string) ($row['button_text'] ?? ''),
-            'button_url' => (string) ($row['button_url'] ?? ''),
-            'image_path' => (string) ($row['image_path'] ?? ''),
-            'image_alt' => (string) ($row['image_alt'] ?? ''),
+            'id' => (int) ($merged['id'] ?? $row['id']),
+            'badge_text' => (string) ($merged['badge_text'] ?? ''),
+            'title' => (string) ($merged['title'] ?? ''),
+            'description' => (string) ($merged['description'] ?? ''),
+            'button_text' => (string) ($merged['button_text'] ?? ''),
+            'button_url' => (string) ($merged['button_url'] ?? ''),
+            'image_path' => (string) ($merged['image_path'] ?? ''),
+            'image_alt' => (string) ($merged['image_alt'] ?? ''),
         ];
     }
 
-    cache_set($cacheKey, $slides, 300);
+    if (!preview_mode_should_bypass_cache()) {
+        cache_set($cacheKey, $slides, 300);
+    }
     return $slides;
-}
-
-function cms_invalidate_home_testimonials_cache(): void
-{
-    cache_delete(cms_cache_key('home', 'testimonials'));
 }
 
 function cms_invalidate_home_offices_cache(): void
@@ -588,71 +1333,14 @@ function cms_invalidate_home_instagram_reels_cache(): void
     cache_delete(cms_cache_key('home', 'instagram_reels'));
 }
 
-function cms_get_home_testimonials(): array
-{
-    $cacheKey = cms_cache_key('home', 'testimonials');
-    $cached = cache_get($cacheKey);
-    if (is_array($cached)) {
-        return $cached;
-    }
-
-    $fallback = [
-        [
-            'name' => 'Charlotte Evans',
-            'location' => 'Birmingham, UK',
-            'content' => 'I have sensitive skin, and most products irritate me. Your formulas changed that and gave visible results quickly.',
-            'rating' => 5,
-            'image_path' => 'assets/imgs/home/testimonial-thumb3_1.png',
-        ],
-        [
-            'name' => 'Ava Thompson',
-            'location' => 'Toronto, Canada',
-            'content' => 'The private label journey was clear and professional. Their team guided us from samples to packaging and launch.',
-            'rating' => 5,
-            'image_path' => 'assets/imgs/home/testimonial-thumb3_1.png',
-        ],
-        [
-            'name' => 'Liam Carter',
-            'location' => 'Sydney, Australia',
-            'content' => 'Strong product quality, practical MOQ support, and smooth communication at every stage.',
-            'rating' => 5,
-            'image_path' => 'assets/imgs/home/testimonial-thumb3_1.png',
-        ],
-    ];
-
-    $pdo = db();
-    if (!$pdo) {
-        return $fallback;
-    }
-
-    $rows = db_fetch_all($pdo, 'SELECT id, name, location, content, rating, image_path FROM home_testimonials WHERE is_active = 1 ORDER BY sort_order ASC, id ASC');
-    if (!$rows) {
-        cache_set($cacheKey, $fallback, 300);
-        return $fallback;
-    }
-
-    $out = [];
-    foreach ($rows as $row) {
-        $out[] = [
-            'id' => (int) $row['id'],
-            'name' => (string) ($row['name'] ?? ''),
-            'location' => (string) ($row['location'] ?? ''),
-            'content' => (string) ($row['content'] ?? ''),
-            'rating' => max(1, min(5, (int) ($row['rating'] ?? 5))),
-            'image_path' => (string) ($row['image_path'] ?? ''),
-        ];
-    }
-
-    cache_set($cacheKey, $out, 300);
-    return $out;
-}
-
 function cms_get_home_offices(): array
 {
     $cacheKey = cms_cache_key('home', 'offices');
-    $cached = cache_get($cacheKey);
-    if (is_array($cached)) {
-        return $cached;
+    if (!preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
     }
 
     $fallback = [
@@ -701,33 +1389,39 @@ function cms_get_home_offices(): array
 
     $hasExtendedOfficeColumns = cms_ensure_home_offices_registration_columns($pdo);
 
+    $activeClause = preview_mode_include_drafts() ? '' : ' WHERE is_active = 1';
     $rows = db_fetch_all($pdo, $hasExtendedOfficeColumns
-        ? 'SELECT id, country, company_name, address, email, phone, registration_label, registration_number, tax_label, tax_number, image_path FROM home_offices WHERE is_active = 1 ORDER BY sort_order ASC, id ASC'
-        : 'SELECT id, country, address, email, phone, image_path FROM home_offices WHERE is_active = 1 ORDER BY sort_order ASC, id ASC'
+        ? 'SELECT id, country, company_name, address, email, phone, registration_label, registration_number, tax_label, tax_number, image_path FROM home_offices' . $activeClause . ' ORDER BY sort_order ASC, id ASC'
+        : 'SELECT id, country, address, email, phone, image_path FROM home_offices' . $activeClause . ' ORDER BY sort_order ASC, id ASC'
     );
     if (!$rows) {
-        cache_set($cacheKey, $fallback, 300);
+        if (!preview_mode_should_bypass_cache()) {
+            cache_set($cacheKey, $fallback, 300);
+        }
         return $fallback;
     }
 
     $out = [];
     foreach ($rows as $row) {
+        $merged = draft_merge_row((array) $row, 'home_office', (int) $row['id']);
         $out[] = [
-            'id' => (int) $row['id'],
-            'country' => (string) ($row['country'] ?? ''),
-            'company_name' => (string) ($row['company_name'] ?? ''),
-            'address' => (string) ($row['address'] ?? ''),
-            'email' => (string) ($row['email'] ?? ''),
-            'phone' => (string) ($row['phone'] ?? ''),
-            'registration_label' => (string) ($row['registration_label'] ?? ''),
-            'registration_number' => (string) ($row['registration_number'] ?? ''),
-            'tax_label' => (string) ($row['tax_label'] ?? ''),
-            'tax_number' => (string) ($row['tax_number'] ?? ''),
-            'image_path' => (string) ($row['image_path'] ?? ''),
+            'id' => (int) ($merged['id'] ?? $row['id']),
+            'country' => (string) ($merged['country'] ?? ''),
+            'company_name' => (string) ($merged['company_name'] ?? ''),
+            'address' => (string) ($merged['address'] ?? ''),
+            'email' => (string) ($merged['email'] ?? ''),
+            'phone' => (string) ($merged['phone'] ?? ''),
+            'registration_label' => (string) ($merged['registration_label'] ?? ''),
+            'registration_number' => (string) ($merged['registration_number'] ?? ''),
+            'tax_label' => (string) ($merged['tax_label'] ?? ''),
+            'tax_number' => (string) ($merged['tax_number'] ?? ''),
+            'image_path' => (string) ($merged['image_path'] ?? ''),
         ];
     }
 
-    cache_set($cacheKey, $out, 300);
+    if (!preview_mode_should_bypass_cache()) {
+        cache_set($cacheKey, $out, 300);
+    }
     return $out;
 }
 
@@ -787,44 +1481,56 @@ function cms_get_home_instagram_reels(): array
     }
 
     $effectiveCacheKey = $cacheKey . ':' . $folderSignature;
-    $cached = cache_get($effectiveCacheKey);
-    if (is_array($cached)) {
-        return $cached;
+    if (!preview_mode_should_bypass_cache()) {
+        $cached = cache_get($effectiveCacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
     }
 
     if ($folderReels) {
-        cache_set($effectiveCacheKey, $folderReels, 300);
+        if (!preview_mode_should_bypass_cache()) {
+            cache_set($effectiveCacheKey, $folderReels, 300);
+        }
         return $folderReels;
     }
 
     $pdo = db();
     if (!$pdo) {
-        cache_set($effectiveCacheKey, $fallback, 300);
+        if (!preview_mode_should_bypass_cache()) {
+            cache_set($effectiveCacheKey, $fallback, 300);
+        }
         return $fallback;
     }
 
+    $activeClause = preview_mode_include_drafts() ? '' : ' WHERE is_active = 1';
     $rows = db_fetch_all(
         $pdo,
-        'SELECT id, reel_url, video_path, sort_order, is_active FROM home_instagram_reels WHERE is_active = 1 ORDER BY sort_order ASC, id ASC'
+        'SELECT id, reel_url, video_path, sort_order, is_active FROM home_instagram_reels' . $activeClause . ' ORDER BY sort_order ASC, id ASC'
     );
 
     $out = [];
     foreach ($rows as $row) {
+        $merged = draft_merge_row((array) $row, 'home_instagram_reel', (int) ($row['id'] ?? 0));
         $out[] = [
-            'id' => (int) ($row['id'] ?? 0),
-            'reel_url' => (string) ($row['reel_url'] ?? ''),
-            'video_path' => (string) ($row['video_path'] ?? ''),
-            'sort_order' => (int) ($row['sort_order'] ?? 0),
-            'is_active' => (int) ($row['is_active'] ?? 1),
+            'id' => (int) ($merged['id'] ?? $row['id'] ?? 0),
+            'reel_url' => (string) ($merged['reel_url'] ?? ''),
+            'video_path' => (string) ($merged['video_path'] ?? ''),
+            'sort_order' => (int) ($merged['sort_order'] ?? $row['sort_order'] ?? 0),
+            'is_active' => (int) ($merged['is_active'] ?? $row['is_active'] ?? 1),
         ];
     }
 
     if (!$out) {
-        cache_set($effectiveCacheKey, $fallback, 300);
+        if (!preview_mode_should_bypass_cache()) {
+            cache_set($effectiveCacheKey, $fallback, 300);
+        }
         return $fallback;
     }
 
-    cache_set($effectiveCacheKey, $out, 300);
+    if (!preview_mode_should_bypass_cache()) {
+        cache_set($effectiveCacheKey, $out, 300);
+    }
     return $out;
 }
 
@@ -841,7 +1547,7 @@ function cms_get_why_choose_pages(bool $publishedOnly = true): array
             WHERE p.page_group = :grp';
     $params = [':grp' => 'why_choose_us'];
 
-    if ($publishedOnly) {
+    if ($publishedOnly && !preview_mode_include_drafts()) {
         $sql .= ' AND p.status = :st';
         $params[':st'] = 'published';
     }
@@ -878,3 +1584,731 @@ function cms_get_why_choose_pages(bool $publishedOnly = true): array
 
     return $pages;
 }
+
+function cms_ensure_home_cta_cards_table(PDO $pdo): bool
+{
+    static $checked = null;
+    if ($checked !== null) {
+        return $checked;
+    }
+
+    try {
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS home_cta_cards (
+              id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+              card_key VARCHAR(50) NULL UNIQUE,
+              title VARCHAR(120) NOT NULL,
+              button_text VARCHAR(120) NOT NULL,
+              button_url VARCHAR(255) NOT NULL,
+              image_path VARCHAR(255) NOT NULL,
+              image_alt VARCHAR(255) NULL,
+              sort_order INT NOT NULL DEFAULT 0,
+              is_active TINYINT(1) NOT NULL DEFAULT 1,
+              created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+              updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+              INDEX idx_home_cta_cards_active_order (is_active, sort_order, id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+        ");
+
+        $count = (int) ($pdo->query("SELECT COUNT(*) FROM home_cta_cards")->fetchColumn() ?: 0);
+        if ($count === 0) {
+            $pdo->exec("
+                INSERT INTO home_cta_cards (card_key, title, button_text, button_url, image_path, image_alt, sort_order, is_active) VALUES
+                ('explore_now', 'Explore Now', 'Explore now', 'shop.php', 'assets/imgs/category/category_thumb2.jpeg', 'Explore now thumb', 1, 1),
+                ('try_products', 'Try Our Products', 'Try Our Products', 'shop.php', 'assets/imgs/category/category_thumb3.jpeg', 'Try Our Products thumb', 2, 1),
+                ('contact_us', 'Contact Us', 'Contact Us', 'shop.php', 'assets/imgs/category/category_thumb1.jpeg', 'Contact Us thumb', 3, 1)
+            ");
+        }
+        $checked = true;
+        return true;
+    } catch (Throwable $e) {
+        $checked = false;
+        return false;
+    }
+}
+
+function cms_get_home_cta_cards(): array
+{
+    $cacheKey = cms_cache_key('home', 'cta_cards');
+    if (!preview_mode_should_bypass_cache()) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $fallback = [
+        [
+            'id' => 1,
+            'card_key' => 'explore_now',
+            'title' => 'Explore Now',
+            'button_text' => 'Explore now',
+            'button_url' => 'shop.php',
+            'image_path' => 'assets/imgs/category/category_thumb2.jpeg',
+            'image_alt' => 'Explore now thumb',
+            'sort_order' => 1,
+            'is_active' => 1
+        ],
+        [
+            'id' => 2,
+            'card_key' => 'try_products',
+            'title' => 'Try Our Products',
+            'button_text' => 'Try Our Products',
+            'button_url' => 'shop.php',
+            'image_path' => 'assets/imgs/category/category_thumb3.jpeg',
+            'image_alt' => 'Try Our Products thumb',
+            'sort_order' => 2,
+            'is_active' => 1
+        ],
+        [
+            'id' => 3,
+            'card_key' => 'contact_us',
+            'title' => 'Contact Us',
+            'button_text' => 'Contact Us',
+            'button_url' => 'shop.php',
+            'image_path' => 'assets/imgs/category/category_thumb1.jpeg',
+            'image_alt' => 'Contact Us thumb',
+            'sort_order' => 3,
+            'is_active' => 1
+        ]
+    ];
+
+    $pdo = db();
+    if (!$pdo) {
+        return $fallback;
+    }
+
+    cms_ensure_home_cta_cards_table($pdo);
+
+    $activeClause = preview_mode_include_drafts() ? '' : ' WHERE is_active = 1';
+    $rows = db_fetch_all($pdo, 'SELECT * FROM home_cta_cards' . $activeClause . ' ORDER BY sort_order ASC, id ASC');
+
+    if (empty($rows)) {
+        return $fallback;
+    }
+
+    if (preview_mode_include_drafts()) {
+        $rows = draft_merge_rows($rows, 'home_cta_card');
+    }
+
+    if (!preview_mode_should_bypass_cache()) {
+        cache_set($cacheKey, $rows, 300);
+    }
+    return $rows;
+}
+
+function cms_invalidate_how_it_works_cache(): void
+{
+    cache_delete(cms_cache_key('how_it_works', 'sections'));
+    cache_delete(cms_cache_key('how_it_works', 'sections_active'));
+    cache_delete(cms_cache_key('how_it_works', 'sections_all'));
+    cache_delete(cms_cache_key('how_it_works', 'accordions'));
+    cache_delete(cms_cache_key('how_it_works', 'accordions_active'));
+    cache_delete(cms_cache_key('how_it_works', 'accordions_all'));
+    cache_clear_prefix('cms:how_it_works:');
+    cache_delete(cms_cache_key('setting', 'how_it_works_layout'));
+    // Hero headline & description are cached separately under cms:setting:*,
+    // so they must be invalidated here too, otherwise saved changes to the
+    // hero header only appear after the 10-minute cache TTL expires.
+    cache_delete(cms_cache_key('setting', 'how_it_works_hero_title'));
+    cache_delete(cms_cache_key('setting', 'how_it_works_hero_description'));
+}
+
+
+function cms_ensure_how_it_works_tables(PDO $pdo): bool
+{
+    static $checked = null;
+    if ($checked !== null) {
+        return $checked;
+    }
+
+    try {
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS how_it_works_sections (
+                id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                title VARCHAR(255) NOT NULL,
+                body_1 TEXT NOT NULL,
+                body_2 TEXT NULL,
+                image_path VARCHAR(255) NOT NULL,
+                sort_order INT NOT NULL DEFAULT 0,
+                is_active TINYINT(1) NOT NULL DEFAULT 1,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX idx_how_it_works_sections_active_order (is_active, sort_order, id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS how_it_works_accordions (
+                id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                title VARCHAR(255) NOT NULL,
+                body TEXT NOT NULL,
+                sort_order INT NOT NULL DEFAULT 0,
+                is_open_default TINYINT(1) NOT NULL DEFAULT 0,
+                is_active TINYINT(1) NOT NULL DEFAULT 1,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX idx_how_it_works_accordions_active_order (is_active, sort_order, id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+
+        $ensureIndex = function (PDO $pdo, string $table, string $indexName, string $columns) {
+            try {
+                $exists = db_fetch_one($pdo, "SHOW INDEX FROM `{$table}` WHERE Key_name = :k LIMIT 1", [':k' => $indexName]);
+                if (!$exists) {
+                    $pdo->exec("CREATE INDEX `{$indexName}` ON `{$table}` ({$columns})");
+                }
+            } catch (Throwable $e) {}
+        };
+
+        $ensureIndex($pdo, 'how_it_works_sections', 'idx_how_it_works_sections_active_order', 'is_active, sort_order, id');
+        $ensureIndex($pdo, 'how_it_works_sections', 'idx_how_it_works_sections_order', 'sort_order, id');
+        $ensureIndex($pdo, 'how_it_works_accordions', 'idx_how_it_works_accordions_active_order', 'is_active, sort_order, id');
+        $ensureIndex($pdo, 'how_it_works_accordions', 'idx_how_it_works_accordions_order', 'sort_order, id');
+        $ensureIndex($pdo, 'how_it_works_accordions', 'idx_how_it_works_accordions_open_default', 'is_open_default');
+
+        // Seed sections if empty
+
+        $countSec = (int) db_fetch_value($pdo, 'SELECT COUNT(*) FROM how_it_works_sections');
+        if ($countSec === 0) {
+            $pdo->exec("
+                INSERT INTO how_it_works_sections (title, body_1, body_2, image_path, sort_order, is_active) VALUES
+                ('Choose Your Product Components', 'Unleash your brand\'s potential with <span class=\"theme-color-font fw-bold\">mybrandplease.com</span>. Explore our extensive range of over 200+ formulations across body, skin, and hair care, carefully crafted for professional-grade results. Experience the luxury of high-quality ingredients, including naturally derived and certified organic components. Tailor your products to perfection with our diverse packaging options and captivating fragrances.', 'Handpick your favorites, knowing they will captivate and delight your cherished clients. Embark on a sensory journey and sample our extraordinary products today.', 'assets/imgs/how-it-works/Choose-Your-Product-Components-min-2048x1244.webp', 1, 1),
+                ('Define Your Offerings', 'Harness the power of your brand\'s message and fine-tune your opening order. Define product names, quantities, and sizes to perfection. Make key decisions that will shape your product line. Take control and let us bring your vision to reality.', 'Explore our blog for invaluable expert tips and tricks. Seize this opportunity to create a remarkable brand experience. Check out our blog for our expert tips &amp; tricks <a href=\"blog.php\" class=\"theme-color-font\">here</a>.', 'assets/imgs/how-it-works/Define-Your-Offerings-min-2048x1244.webp', 2, 1),
+                ('Label Design & Printing', 'Embark on your design journey with meticulous planning and make your labels shine. Our expert Graphic Designers are poised to create stunning logos and labels for your personal care products.', 'Benefit from our comprehensive design services or utilize our templates to collaborate with your own team. Experience the added convenience of our in-house digital print services or explore external options for unique finishes and metallic elements.', 'assets/imgs/how-it-works/Label-Design-Printing-min-2048x1243.webp', 3, 1),
+                ('Finishing Touches', 'Elevate your brand with exceptional exterior packaging and exquisite finishing touches. Enhance your marketing presence and create a luxurious impression by adding premium exterior boxes.', 'Ensure optimal protection during shipping and explore options like seals, shrink wrap, inserts, and promotional materials to make your products truly distinctive. Invest in finer details that leave a long-lasting impression.', 'assets/imgs/how-it-works/Finishing-Touches-min-768x467.webp', 4, 1)
+            ");
+        }
+
+        // Seed accordions if empty
+        $countAcc = (int) db_fetch_value($pdo, 'SELECT COUNT(*) FROM how_it_works_accordions');
+        if ($countAcc === 0) {
+            $pdo->exec("
+                INSERT INTO how_it_works_accordions (title, body, sort_order, is_open_default, is_active) VALUES
+                ('Contact our Project Consultants to place your order.', '<p class=\"text-muted lh-base fs-17 word-spacing-6\">Once you have all the elements of your order finalized, get in touch with one of our Project Consultants to place your order. The following details will be required:</p><ul class=\"order-accordion__list\"><li><strong>Products:</strong> The products you\'d like to order</li><li><strong>Fragrance:</strong> If you would like any of your products scented</li><li><strong>Sizes:</strong> The unit size of each product you would like us to produce</li><li><strong>Packaging:</strong> The containers and closures you would like to use</li><li><strong>Quantity:</strong> How many of each unit you would like to order</li><li><strong>Labels:</strong> If you need any assistance with label design and/or label printing</li><li><strong>Finishing Touches:</strong> If you require any exterior elements, such as boxes or seals</li><li><strong>Shipping Details:</strong> Where you will want your products shipped once complete.</li><li><strong>Additional Services:</strong> If you would like to use any of our additional services, such as photography or documentation preparations</li></ul>', 1, 1, 1),
+                ('Receive your Production Quote & Make Any Changes!', '<p class=\"text-muted lh-base fs-17 word-spacing-6 mb-0\">Your Project Consultant will consolidate all of your elements into a final production quote for you to review & view your unit and services pricing. This production quote will be the document that our Production Teams use to manufacture your goods, so it is essential that you make any necessary changes or modifications at this stage!</p>', 2, 0, 1),
+                ('Approve your Order & Pay your Deposit.', '<p class=\"text-muted lh-base fs-17 word-spacing-6 mb-0\">Once you have signed off on all the details of your order, we will require a 50% deposit before we move the order to production. Changes cannot be made after this time.</p>', 3, 0, 1),
+                ('Begin your Design Process with our Graphics Team or Share your Designs With us.', '<p class=\"text-muted lh-base fs-17 word-spacing-6 mb-0\">If you’ve chosen to use our graphic design services to design your labels and/or logo, the design process will begin now, after the order has been placed. You’ll be matched up with a designer and they will walk you through the process of the design. Otherwise, if you will be designing your own labels, we will provide your team with our templates at this time so they can set them up to ensure they will work with our printing presses. It is important to note that we always will need final approval on your order to proceed with any graphic design initiatives.</p>', 4, 0, 1),
+                ('Your Order Will Begin Production.', '<p class=\"text-muted lh-base fs-17 word-spacing-6 mb-0\">Now that your labels are finalized & ready for print, all of the puzzle pieces have come together and your order will go into the final stage of its production process. Our team will manufacture your order per the specifications of your approved production quote. Our standard lead time for opening orders is 8 weeks, once the labels have been finalized, however, these lead times are not guaranteed and can fluctuate to be both shorter and longer depending on a number of factors including component sourcing & seasonality.</p>', 5, 0, 1),
+                ('Your Order is Complete & Ready for Shipping! Final Payment is Required.', '<p class=\"text-muted lh-base fs-17 word-spacing-6 mb-0\">Once your order is complete and ready for shipping, we will require the balance of your order to be paid. Please note that any shipping charges will be added to your final bill, along with any applicable taxes or fees. Once paid, we will ship your products to your desired location, whether that be your personal or business address, or a fulfillment center of your choosing.</p>', 6, 0, 1),
+                ('Your Vision has Been Brought to Life & your Products are Ready for your Clients!', '<p class=\"text-muted lh-base fs-17 word-spacing-6 mb-0\">Your finished custom products have arrived! You are now ready to launch and present your personal care line to your customers.</p>', 7, 0, 1)
+            ");
+        }
+
+        $checked = true;
+        return true;
+    } catch (Throwable $e) {
+        $checked = false;
+        return false;
+    }
+}
+
+function cms_get_how_it_works_sections(bool $includeInactive = false): array
+{
+    $cacheKey = cms_cache_key('how_it_works', 'sections' . ($includeInactive ? '_all' : '_active'));
+    if (!preview_mode_should_bypass_cache() && !$includeInactive) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $pdo = db();
+    if (!$pdo || !cms_ensure_how_it_works_tables($pdo)) {
+        return [];
+    }
+
+    $activeClause = ($includeInactive || preview_mode_include_drafts()) ? '' : ' WHERE is_active = 1';
+    $rows = db_fetch_all($pdo, 'SELECT * FROM how_it_works_sections' . $activeClause . ' ORDER BY sort_order ASC, id ASC');
+
+    if (!preview_mode_should_bypass_cache() && !$includeInactive) {
+        cache_set($cacheKey, $rows, 300);
+    }
+
+    if (preview_mode_include_drafts()) {
+        $rows = draft_merge_rows($rows, 'how_it_works_section');
+    }
+
+    return $rows;
+}
+
+function cms_get_how_it_works_accordions(bool $includeInactive = false): array
+{
+    $cacheKey = cms_cache_key('how_it_works', 'accordions' . ($includeInactive ? '_all' : '_active'));
+    if (!preview_mode_should_bypass_cache() && !$includeInactive) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $pdo = db();
+    if (!$pdo || !cms_ensure_how_it_works_tables($pdo)) {
+        return [];
+    }
+
+    $activeClause = ($includeInactive || preview_mode_include_drafts()) ? '' : ' WHERE is_active = 1';
+    $rows = db_fetch_all($pdo, 'SELECT * FROM how_it_works_accordions' . $activeClause . ' ORDER BY sort_order ASC, id ASC');
+
+    if (!preview_mode_should_bypass_cache() && !$includeInactive) {
+        cache_set($cacheKey, $rows, 300);
+    }
+
+    if (preview_mode_include_drafts()) {
+        $rows = draft_merge_rows($rows, 'how_it_works_accordion');
+    }
+
+    return $rows;
+}
+
+function cms_get_how_it_works_layout(): string
+{
+    $layout = cms_get_setting('how_it_works_layout', 'default');
+    $allowed = ['default', 'left', 'right', 'center'];
+    return in_array($layout, $allowed, true) ? $layout : 'default';
+}
+
+function cms_invalidate_about_cache(): void
+{
+    cache_delete(cms_cache_key('about', 'blocks_active'));
+    cache_delete(cms_cache_key('about', 'blocks_all'));
+    cache_delete(cms_cache_key('about', 'certifications_active'));
+    cache_delete(cms_cache_key('about', 'certifications_all'));
+    cache_delete(cms_cache_key('about', 'key_benefits_active'));
+    cache_delete(cms_cache_key('about', 'key_benefits_all'));
+    cache_delete(cms_cache_key('about', 'accreditations_active'));
+    cache_delete(cms_cache_key('about', 'accreditations_all'));
+    cache_clear_prefix('cms:about:');
+    cms_invalidate_settings_cache();
+}
+
+function cms_ensure_about_tables(PDO $pdo): bool
+{
+    static $ensured = false;
+    if ($ensured) {
+        return true;
+    }
+
+    try {
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS about_blocks (
+                id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                section_heading VARCHAR(255) NULL,
+                section_intro TEXT NULL,
+                block_title VARCHAR(255) NOT NULL,
+                body TEXT NOT NULL,
+                image_path VARCHAR(255) NOT NULL,
+                image_alt VARCHAR(255) NULL,
+                layout ENUM('left', 'right') NOT NULL DEFAULT 'left',
+                sort_order INT NOT NULL DEFAULT 0,
+                is_active TINYINT(1) NOT NULL DEFAULT 1,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX idx_about_blocks_active_order (is_active, sort_order, id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS about_certifications (
+                id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                icon_path VARCHAR(255) NOT NULL,
+                title VARCHAR(255) NOT NULL,
+                description VARCHAR(255) NOT NULL,
+                sort_order INT NOT NULL DEFAULT 0,
+                is_active TINYINT(1) NOT NULL DEFAULT 1,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX idx_about_certs_active_order (is_active, sort_order, id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS about_key_benefits (
+                id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                label VARCHAR(255) NOT NULL,
+                description TEXT NOT NULL,
+                sort_order INT NOT NULL DEFAULT 0,
+                is_active TINYINT(1) NOT NULL DEFAULT 1,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX idx_about_benefits_active_order (is_active, sort_order, id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS about_accreditations (
+                id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                image_path VARCHAR(255) NOT NULL,
+                alt_text VARCHAR(255) NOT NULL,
+                sort_order INT NOT NULL DEFAULT 0,
+                is_active TINYINT(1) NOT NULL DEFAULT 1,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX idx_about_accred_active_order (is_active, sort_order, id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+
+        $ensureIndex = function (PDO $pdo, string $table, string $indexName, string $columns) {
+            try {
+                $exists = db_fetch_one($pdo, "SHOW INDEX FROM `{$table}` WHERE Key_name = :k LIMIT 1", [':k' => $indexName]);
+                if (!$exists) {
+                    $pdo->exec("CREATE INDEX `{$indexName}` ON `{$table}` ({$columns})");
+                }
+            } catch (Throwable $e) {}
+        };
+
+        $ensureIndex($pdo, 'about_blocks', 'idx_about_blocks_active_order', 'is_active, sort_order, id');
+        $ensureIndex($pdo, 'about_blocks', 'idx_about_blocks_order', 'sort_order, id');
+        $ensureIndex($pdo, 'about_certifications', 'idx_about_certs_active_order', 'is_active, sort_order, id');
+        $ensureIndex($pdo, 'about_certifications', 'idx_about_certs_order', 'sort_order, id');
+        $ensureIndex($pdo, 'about_key_benefits', 'idx_about_benefits_active_order', 'is_active, sort_order, id');
+        $ensureIndex($pdo, 'about_key_benefits', 'idx_about_benefits_order', 'sort_order, id');
+        $ensureIndex($pdo, 'about_accreditations', 'idx_about_accred_active_order', 'is_active, sort_order, id');
+        $ensureIndex($pdo, 'about_accreditations', 'idx_about_accred_order', 'sort_order, id');
+
+        // Seed defaults if empty
+        $countBlocks = (int) db_fetch_value($pdo, 'SELECT COUNT(*) FROM about_blocks');
+        if ($countBlocks === 0) {
+            $pdo->exec("
+                INSERT INTO about_blocks (section_heading, section_intro, block_title, body, image_path, image_alt, layout, sort_order, is_active) VALUES
+                (NULL, NULL, 'Who We Are?', '<p class=\"mb-2 text-muted lh-base fs-17 word-spacing-6\">With an extensive industry experience spanning over two decades, mybrandplease.com has gained the trust of numerous global brands as their preferred manufacturing partner, facilitating the realization of their vision.</p><p class=\"mb-2 text-muted lh-base fs-17 word-spacing-6\">Our team consists of dedicated personal care experts and enthusiasts who provide comprehensive assistance throughout your Private Label journey</p><p class=\"mb-2 text-muted lh-base fs-17 word-spacing-6\">We offer an expansive range of product and packaging options, enabling you to craft a distinctive product line that is not only cost-effective and of superior quality but also proudly made in INDIA with unwavering love and passion.</p>', 'assets/imgs/about/Who-we-are-min-2048x1238.jpg', 'Our Products', 'left', 1, 1),
+                ('We Located in the vibrant city of <span class=\"theme-color-font h3\">Delhi, India</span>', '<span class=\"theme-color-font\">mybrandplease.com</span> proudly operates as a trusted hub for numerous renowned brands, distinguished Spas, Hotels, Salons, &amp; Retailers across the globe.', 'What We Offer?', '<p class=\"mb-2 text-muted lh-base fs-17 word-spacing-6\">With an extensive industry experience spanning over two decades, mybrandplease.com has gained the trust of numerous global brands as their preferred manufacturing partner, facilitating the realization of their vision.</p><p class=\"mb-2 text-muted lh-base fs-17 word-spacing-6\">Our team consists of dedicated personal care experts and enthusiasts who provide comprehensive assistance throughout your Private Label journey</p><p class=\"mb-2 text-muted lh-base fs-17 word-spacing-6\">We offer an expansive range of product and packaging options, enabling you to craft a distinctive product line that is not only cost-effective and of superior quality but also proudly made in INDIA with unwavering love and passion.</p>', 'assets/imgs/about/what-do-we-offer-min-2048x1241.jpg', 'Manufacturing', 'right', 2, 1),
+                ('Our relentless pursuit: safety, efficacy, and the essence of natural formulation.', NULL, 'How We Formulate?', '<p class=\"mb-3 text-muted lh-base fs-17 word-spacing-6\">Embracing scientific rigor, our formulations epitomize excellence, with premium ingredients securing robust shelf life and customer safety.</p><p class=\"mb-3 text-muted lh-base fs-17 word-spacing-6\">The alchemy of science and nature converge in formulations that astound with tangible, transformative results. Our goal: ignite customer devotion, fueling repeat purchases and skyrocketing sales.</p><p class=\"mb-0 text-muted lh-base fs-17 word-spacing-6\">We grasp the pivotal role of results-driven formulations, fusing the epitome of scientific innovation with the bounties of nature. Unveiling nature’s finest, we harness the potency of natural and organic ingredients, unveiling a realm of unparalleled beauty and wellness.</p>', 'assets/imgs/about/How-do-we-Formulate-min-2048x1241.jpg', 'How We Formulate', 'left', 3, 1);
+            ");
+        }
+
+        $countCerts = (int) db_fetch_value($pdo, 'SELECT COUNT(*) FROM about_certifications');
+        if ($countCerts === 0) {
+            $pdo->exec("
+                INSERT INTO about_certifications (icon_path, title, description, sort_order, is_active) VALUES
+                ('assets/imgs/about/Picture-1.png-11-500x497.jpg', 'Vegan Formulas', 'The majority of our formulations offered are Vegan.', 1, 1),
+                ('assets/imgs/about/Curelty.jpg', 'Cruelty Free', 'Our formulations are never tested on animals.', 2, 1),
+                ('assets/imgs/about/GMP-500x500.jpg', 'GMP Certified', 'The products are manufactured in a GMP Certified Facility.', 3, 1),
+                ('assets/imgs/about/Organic-500x500.jpg', '100% ORGANIC', 'Our ingredients are 100% organic and safe from any side effects.', 4, 1),
+                ('assets/imgs/about/FDA-scaled-500x502.jpg', 'FDA COMPLIANT', 'Our products are made in a FDA Compliant Facility.', 5, 1),
+                ('assets/imgs/about/MOQ-500x500.jpg', 'Low MOQ', 'We strive to make starting your own line accessible to all.', 6, 1),
+                ('assets/imgs/about/9001.jpg', 'ISO Certified', 'Our facilities is ISO 9001:2015 Certified.', 7, 1),
+                ('assets/imgs/about/premium-500x500.jpg', 'Premium Quality', '100% Premium Quality Products are offered.', 8, 1);
+            ");
+        }
+
+        $countBenefits = (int) db_fetch_value($pdo, 'SELECT COUNT(*) FROM about_key_benefits');
+        if ($countBenefits === 0) {
+            $pdo->exec("
+                INSERT INTO about_key_benefits (label, description, sort_order, is_active) VALUES
+                ('Higher Profits', 'Unlock the freedom to determine your own pricing with our premium natural and organic-based skin and hair care products, delivering uncompromising quality at costs rivaling or surpassing top brands, Eliminating The Constraints of MSRP.', 1, 1),
+                ('Brand Equity', 'Elevate your brand’s reputation and market presence by selling your exclusive private label skin and hair care products, fostering customer loyalty and driving business value growth.', 2, 1),
+                ('Increased Sales', 'Empower your staff by involving them in the development of your private label products, igniting their commitment and driving remarkable growth in product sales', 3, 1),
+                ('Client Retention', 'Unleash the power of your brand as your clients become ambassadors, carrying your essence and influence straight to their homes.', 4, 1);
+            ");
+        }
+
+        $countAccred = (int) db_fetch_value($pdo, 'SELECT COUNT(*) FROM about_accreditations');
+        if ($countAccred === 0) {
+            $pdo->exec("
+                INSERT INTO about_accreditations (image_path, alt_text, sort_order, is_active) VALUES
+                ('assets/imgs/about/FDA-scaled-500x502.jpg', 'FDA Compliant Facility', 1, 1),
+                ('assets/imgs/about/TUV-500x500.jpg', 'TUV Rheinland Certified', 2, 1),
+                ('assets/imgs/about/9001.jpg', 'ISO 9001 Certified', 3, 1),
+                ('assets/imgs/about/GMP1-500x500.jpg', 'GMP Certified', 4, 1),
+                ('assets/imgs/about/PBA-500x189.jpg', 'Professional Beauty Association', 5, 1),
+                ('assets/imgs/about/FIEO-500x214.jpg', 'FIEO', 6, 1),
+                ('assets/imgs/about/EU.jpg', 'European Standards', 7, 1),
+                ('assets/imgs/about/HACCP1-1-500x268.jpg', 'HACCP Certified', 8, 1);
+            ");
+        }
+
+        $ensured = true;
+        return true;
+    } catch (Throwable $e) {
+        return false;
+    }
+}
+
+function cms_get_about_blocks(bool $includeInactive = false): array
+{
+    $cacheKey = cms_cache_key('about', 'blocks' . ($includeInactive ? '_all' : '_active'));
+    if (!preview_mode_should_bypass_cache() && !$includeInactive) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $pdo = db();
+    if (!$pdo || !cms_ensure_about_tables($pdo)) {
+        return [];
+    }
+
+    $activeClause = ($includeInactive || preview_mode_include_drafts()) ? '' : ' WHERE is_active = 1';
+    $rows = db_fetch_all($pdo, 'SELECT * FROM about_blocks' . $activeClause . ' ORDER BY sort_order ASC, id ASC');
+
+    if (!preview_mode_should_bypass_cache() && !$includeInactive) {
+        cache_set($cacheKey, $rows, 300);
+    }
+
+    if (preview_mode_include_drafts()) {
+        $rows = draft_merge_rows($rows, 'about_block');
+    }
+
+    return $rows;
+}
+
+function cms_get_about_certifications(bool $includeInactive = false): array
+{
+    $cacheKey = cms_cache_key('about', 'certifications' . ($includeInactive ? '_all' : '_active'));
+    if (!preview_mode_should_bypass_cache() && !$includeInactive) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $pdo = db();
+    if (!$pdo || !cms_ensure_about_tables($pdo)) {
+        return [];
+    }
+
+    $activeClause = ($includeInactive || preview_mode_include_drafts()) ? '' : ' WHERE is_active = 1';
+    $rows = db_fetch_all($pdo, 'SELECT * FROM about_certifications' . $activeClause . ' ORDER BY sort_order ASC, id ASC');
+
+    if (!preview_mode_should_bypass_cache() && !$includeInactive) {
+        cache_set($cacheKey, $rows, 300);
+    }
+
+    if (preview_mode_include_drafts()) {
+        $rows = draft_merge_rows($rows, 'about_certification');
+    }
+
+    return $rows;
+}
+
+function cms_get_about_key_benefits(bool $includeInactive = false): array
+{
+    $cacheKey = cms_cache_key('about', 'key_benefits' . ($includeInactive ? '_all' : '_active'));
+    if (!preview_mode_should_bypass_cache() && !$includeInactive) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $pdo = db();
+    if (!$pdo || !cms_ensure_about_tables($pdo)) {
+        return [];
+    }
+
+    $activeClause = ($includeInactive || preview_mode_include_drafts()) ? '' : ' WHERE is_active = 1';
+    $rows = db_fetch_all($pdo, 'SELECT * FROM about_key_benefits' . $activeClause . ' ORDER BY sort_order ASC, id ASC');
+
+    if (!preview_mode_should_bypass_cache() && !$includeInactive) {
+        cache_set($cacheKey, $rows, 300);
+    }
+
+    if (preview_mode_include_drafts()) {
+        $rows = draft_merge_rows($rows, 'about_key_benefit');
+    }
+
+    return $rows;
+}
+
+function cms_get_about_accreditations(bool $includeInactive = false): array
+{
+    $cacheKey = cms_cache_key('about', 'accreditations' . ($includeInactive ? '_all' : '_active'));
+    if (!preview_mode_should_bypass_cache() && !$includeInactive) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $pdo = db();
+    if (!$pdo || !cms_ensure_about_tables($pdo)) {
+        return [];
+    }
+
+    $activeClause = ($includeInactive || preview_mode_include_drafts()) ? '' : ' WHERE is_active = 1';
+    $rows = db_fetch_all($pdo, 'SELECT * FROM about_accreditations' . $activeClause . ' ORDER BY sort_order ASC, id ASC');
+
+    if (!preview_mode_should_bypass_cache() && !$includeInactive) {
+        cache_set($cacheKey, $rows, 300);
+    }
+
+    if (preview_mode_include_drafts()) {
+        $rows = draft_merge_rows($rows, 'about_accreditation');
+    }
+
+    return $rows;
+}
+
+
+// ============================================================================
+// Services Page
+// ============================================================================
+
+function cms_invalidate_services_cache(): void
+{
+    cache_delete(cms_cache_key('services', 'sections'));
+    cache_delete(cms_cache_key('services', 'sections_active'));
+    cache_delete(cms_cache_key('services', 'sections_all'));
+    cache_delete(cms_cache_key('services', 'accordions'));
+    cache_delete(cms_cache_key('services', 'accordions_active'));
+    cache_delete(cms_cache_key('services', 'accordions_all'));
+    cache_clear_prefix('cms:services:');
+    cache_delete(cms_cache_key('setting', 'services_layout'));
+    cache_delete(cms_cache_key('setting', 'services_hero_title'));
+    cache_delete(cms_cache_key('setting', 'services_hero_description'));
+}
+
+function cms_ensure_services_tables(PDO $pdo): bool
+{
+    static $checked = null;
+    if ($checked !== null) {
+        return $checked;
+    }
+
+    try {
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS services_sections (
+                id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                title VARCHAR(255) NOT NULL,
+                body_1 TEXT NOT NULL,
+                body_2 TEXT NULL,
+                image_path VARCHAR(255) NOT NULL,
+                sort_order INT NOT NULL DEFAULT 0,
+                is_active TINYINT(1) NOT NULL DEFAULT 1,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX idx_services_sections_active_order (is_active, sort_order, id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS services_accordions (
+                id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                title VARCHAR(255) NOT NULL,
+                body TEXT NOT NULL,
+                sort_order INT NOT NULL DEFAULT 0,
+                is_open_default TINYINT(1) NOT NULL DEFAULT 0,
+                is_active TINYINT(1) NOT NULL DEFAULT 1,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX idx_services_accordions_active_order (is_active, sort_order, id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+
+        $ensureIndex = function (PDO $pdo, string $table, string $indexName, string $columns) {
+            try {
+                $exists = db_fetch_one($pdo, "SHOW INDEX FROM `{$table}` WHERE Key_name = :k LIMIT 1", [':k' => $indexName]);
+                if (!$exists) {
+                    $pdo->exec("CREATE INDEX `{$indexName}` ON `{$table}` ({$columns})");
+                }
+            } catch (Throwable $e) {}
+        };
+
+        $ensureIndex($pdo, 'services_sections', 'idx_services_sections_active_order', 'is_active, sort_order, id');
+        $ensureIndex($pdo, 'services_sections', 'idx_services_sections_order', 'sort_order, id');
+        $ensureIndex($pdo, 'services_accordions', 'idx_services_accordions_active_order', 'is_active, sort_order, id');
+        $ensureIndex($pdo, 'services_accordions', 'idx_services_accordions_order', 'sort_order, id');
+        $ensureIndex($pdo, 'services_accordions', 'idx_services_accordions_open_default', 'is_open_default');
+
+        // Seed sections if empty
+        $countSec = (int) db_fetch_value($pdo, 'SELECT COUNT(*) FROM services_sections');
+        if ($countSec === 0) {
+            $pdo->exec("
+                INSERT INTO services_sections (title, body_1, body_2, image_path, sort_order, is_active) VALUES
+                ('Choose Your Product Components', 'Unleash your brand\'s potential with <span class=\"theme-color-font fw-bold\">mybrandplease.com</span>. Explore our extensive range of over 200+ formulations across body, skin, and hair care, carefully crafted for professional-grade results. Experience the luxury of high-quality ingredients, including naturally derived and certified organic components. Tailor your products to perfection with our diverse packaging options and captivating fragrances.', 'Handpick your favorites, knowing they will captivate and delight your cherished clients. Embark on a sensory journey and sample our extraordinary products today.', 'assets/imgs/how-it-works/Choose-Your-Product-Components-min-2048x1244.webp', 1, 1),
+                ('Define Your Offerings', 'Harness the power of your brand\'s message and fine-tune your opening order. Define product names, quantities, and sizes to perfection. Make key decisions that will shape your product line. Take control and let us bring your vision to reality.', 'Explore our blog for invaluable expert tips and tricks. Seize this opportunity to create a remarkable brand experience. Check out our blog for our expert tips &amp; tricks <a href=\"blog.php\" class=\"theme-color-font\">here</a>.', 'assets/imgs/how-it-works/Define-Your-Offerings-min-2048x1244.webp', 2, 1),
+                ('Label Design & Printing', 'Embark on your design journey with meticulous planning and make your labels shine. Our expert Graphic Designers are poised to create stunning logos and labels for your personal care products.', 'Benefit from our comprehensive design services or utilize our templates to collaborate with your own team. Experience the added convenience of our in-house digital print services or explore external options for unique finishes and metallic elements.', 'assets/imgs/how-it-works/Label-Design-Printing-min-2048x1243.webp', 3, 1),
+                ('Finishing Touches', 'Elevate your brand with exceptional exterior packaging and exquisite finishing touches. Enhance your marketing presence and create a luxurious impression by adding premium exterior boxes.', 'Ensure optimal protection during shipping and explore options like seals, shrink wrap, inserts, and promotional materials to make your products truly distinctive. Invest in finer details that leave a long-lasting impression.', 'assets/imgs/how-it-works/Finishing-Touches-min-768x467.webp', 4, 1)
+            ");
+        }
+
+        // Seed accordions if empty
+        $countAcc = (int) db_fetch_value($pdo, 'SELECT COUNT(*) FROM services_accordions');
+        if ($countAcc === 0) {
+            $pdo->exec("
+                INSERT INTO services_accordions (title, body, sort_order, is_open_default, is_active) VALUES
+                ('Contact our Project Consultants to place your order.', '<p class=\"text-muted lh-base fs-17 word-spacing-6\">Once you have all the elements of your order finalized, get in touch with one of our Project Consultants to place your order. The following details will be required:</p><ul class=\"order-accordion__list\"><li><strong>Products:</strong> The products you\'d like to order</li><li><strong>Fragrance:</strong> If you would like any of your products scented</li><li><strong>Sizes:</strong> The unit size of each product you would like us to produce</li><li><strong>Packaging:</strong> The containers and closures you would like to use</li><li><strong>Quantity:</strong> How many of each unit you would like to order</li><li><strong>Labels:</strong> If you need any assistance with label design and/or label printing</li><li><strong>Finishing Touches:</strong> If you require any exterior elements, such as boxes or seals</li><li><strong>Shipping Details:</strong> Where you will want your products shipped once complete.</li><li><strong>Additional Services:</strong> If you would like to use any of our additional services, such as photography or documentation preparations</li></ul>', 1, 1, 1),
+                ('Receive your Production Quote & Make Any Changes!', '<p class=\"text-muted lh-base fs-17 word-spacing-6 mb-0\">Your Project Consultant will consolidate all of your elements into a final production quote for you to review & view your unit and services pricing. This production quote will be the document that our Production Teams use to manufacture your goods, so it is essential that you make any necessary changes or modifications at this stage!</p>', 2, 0, 1),
+                ('Approve your Order & Pay your Deposit.', '<p class=\"text-muted lh-base fs-17 word-spacing-6 mb-0\">Once you have signed off on all the details of your order, we will require a 50% deposit before we move the order to production. Changes cannot be made after this time.</p>', 3, 0, 1),
+                ('Begin your Design Process with our Graphics Team or Share your Designs With us.', '<p class=\"text-muted lh-base fs-17 word-spacing-6 mb-0\">If you’ve chosen to use our graphic design services to design your labels and/or logo, the design process will begin now, after the order has been placed. You’ll be matched up with a designer and they will walk you through the process of the design. Otherwise, if you will be designing your own labels, we will provide your team with our templates at this time so they can set them up to ensure they will work with our printing presses. It is important to note that we always will need final approval on your order to proceed with any graphic design initiatives.</p>', 4, 0, 1),
+                ('Your Order Will Begin Production.', '<p class=\"text-muted lh-base fs-17 word-spacing-6 mb-0\">Now that your labels are finalized & ready for print, all of the puzzle pieces have come together and your order will go into the final stage of its production process. Our team will manufacture your order per the specifications of your approved production quote. Our standard lead time for opening orders is 8 weeks, once the labels have been finalized, however, these lead times are not guaranteed and can fluctuate to be both shorter and longer depending on a number of factors including component sourcing & seasonality.</p>', 5, 0, 1),
+                ('Your Order is Complete & Ready for Shipping! Final Payment is Required.', '<p class=\"text-muted lh-base fs-17 word-spacing-6 mb-0\">Once your order is complete and ready for shipping, we will require the balance of your order to be paid. Please note that any shipping charges will be added to your final bill, along with any applicable taxes or fees. Once paid, we will ship your products to your desired location, whether that be your personal or business address, or a fulfillment center of your choosing.</p>', 6, 0, 1),
+                ('Your Vision has Been Brought to Life & your Products are Ready for your Clients!', '<p class=\"text-muted lh-base fs-17 word-spacing-6 mb-0\">Your finished custom products have arrived! You are now ready to launch and present your personal care line to your customers.</p>', 7, 0, 1)
+            ");
+        }
+
+        $checked = true;
+        return true;
+    } catch (Throwable $e) {
+        $checked = false;
+        return false;
+    }
+}
+
+function cms_get_services_sections(bool $includeInactive = false): array
+{
+    $cacheKey = cms_cache_key('services', 'sections' . ($includeInactive ? '_all' : '_active'));
+    if (!preview_mode_should_bypass_cache() && !$includeInactive) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $pdo = db();
+    if (!$pdo || !cms_ensure_services_tables($pdo)) {
+        return [];
+    }
+
+    $activeClause = ($includeInactive || preview_mode_include_drafts()) ? '' : ' WHERE is_active = 1';
+    $rows = db_fetch_all($pdo, 'SELECT * FROM services_sections' . $activeClause . ' ORDER BY sort_order ASC, id ASC');
+
+    if (!preview_mode_should_bypass_cache() && !$includeInactive) {
+        cache_set($cacheKey, $rows, 300);
+    }
+
+    if (preview_mode_include_drafts()) {
+        $rows = draft_merge_rows($rows, 'services_section');
+    }
+
+    return $rows;
+}
+
+function cms_get_services_accordions(bool $includeInactive = false): array
+{
+    $cacheKey = cms_cache_key('services', 'accordions' . ($includeInactive ? '_all' : '_active'));
+    if (!preview_mode_should_bypass_cache() && !$includeInactive) {
+        $cached = cache_get($cacheKey);
+        if (is_array($cached)) {
+            return $cached;
+        }
+    }
+
+    $pdo = db();
+    if (!$pdo || !cms_ensure_services_tables($pdo)) {
+        return [];
+    }
+
+    $activeClause = ($includeInactive || preview_mode_include_drafts()) ? '' : ' WHERE is_active = 1';
+    $rows = db_fetch_all($pdo, 'SELECT * FROM services_accordions' . $activeClause . ' ORDER BY sort_order ASC, id ASC');
+
+    if (!preview_mode_should_bypass_cache() && !$includeInactive) {
+        cache_set($cacheKey, $rows, 300);
+    }
+
+    if (preview_mode_include_drafts()) {
+        $rows = draft_merge_rows($rows, 'services_accordion');
+    }
+
+    return $rows;
+}
+
+function cms_get_services_layout(): string
+{
+    $layout = cms_get_setting('services_layout', 'default');
+    $allowed = ['default', 'left', 'right', 'center'];
+    return in_array($layout, $allowed, true) ? $layout : 'default';
+}
+

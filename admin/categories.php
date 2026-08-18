@@ -98,7 +98,7 @@ include __DIR__ . '/_layout_top.php';
   <div class="col-lg-12">
     <div class="form-section">
       <h5 class="mb-3"><?= $editId?'Edit':'Add' ?> Category</h5>
-      <form method="post" enctype="multipart/form-data" style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+      <form method="post" enctype="multipart/form-data" style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;" data-section-preview='{"content_type":"category","entity_id":<?= (int) ($edit['id'] ?? 0) ?>}'>
         <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
         <input type="hidden" name="action" value="save">
         <input type="hidden" name="id" value="<?= (int)$edit['id'] ?>">

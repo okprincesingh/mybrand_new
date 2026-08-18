@@ -1,8 +1,12 @@
 <?php
 require_once __DIR__ . '/_init.php';
+require_once __DIR__ . '/../includes/cms_homepage_sections.php';
+
 $adminUser = admin_require_auth();
-$title = 'Instagram Reels';
+$title = 'Instagram Reels Management';
 $pdo = db();
+
+$reelsContent = cms_get_home_instagram_reels_content();
 
 $defaults = [
   'id' => 0,
@@ -33,6 +37,40 @@ if ($pdo && $editId > 0) {
 if ($pdo && $_SERVER['REQUEST_METHOD'] === 'POST') {
   verify_csrf_or_fail();
   $action = (string) ($_POST['action'] ?? 'save');
+
+  if ($action === 'save_header_content') {
+    $eyebrowText = trim((string) ($_POST['eyebrow_text'] ?? 'Video Showcase'));
+    $headingHtml = trim((string) ($_POST['heading_html'] ?? ''));
+    $introText = trim((string) ($_POST['intro_text'] ?? ''));
+    $taglineText = trim((string) ($_POST['tagline_text'] ?? ''));
+    $isActive = isset($_POST['is_active']) ? 1 : 0;
+
+    $stmt = $pdo->prepare("
+      INSERT INTO home_instagram_reels_content
+        (section_key, eyebrow_text, heading_html, intro_text, tagline_text, is_active)
+      VALUES
+        (:section_key, :eyebrow_text, :heading_html, :intro_text, :tagline_text, :is_active)
+      ON DUPLICATE KEY UPDATE
+        eyebrow_text = VALUES(eyebrow_text),
+        heading_html = VALUES(heading_html),
+        intro_text = VALUES(intro_text),
+        tagline_text = VALUES(tagline_text),
+        is_active = VALUES(is_active),
+        updated_at = CURRENT_TIMESTAMP
+    ");
+    $stmt->execute([
+      ':section_key' => 'main',
+      ':eyebrow_text' => $eyebrowText,
+      ':heading_html' => $headingHtml,
+      ':intro_text' => $introText,
+      ':tagline_text' => $taglineText,
+      ':is_active' => $isActive,
+    ]);
+    cms_invalidate_home_instagram_reels_content_cache();
+    admin_flash('success', 'Instagram Reels section headers updated successfully.');
+    header('Location: home-instagram.php');
+    exit;
+  }
 
   if ($action === 'delete') {
     $id = (int) ($_POST['id'] ?? 0);
@@ -109,13 +147,61 @@ foreach ($rows as $row) {
   }
 }
 
+$livePreviewUrl = url('index.php');
 include __DIR__ . '/_layout_top.php';
 ?>
+
+<!-- Section Header & Tagline Settings -->
+<div class="widget-card mb-4">
+  <div class="widget-header">
+    <h5 class="widget-title"><i class="bi bi-gear me-2"></i>Instagram Reels Section Header & Tagline Settings</h5>
+  </div>
+  <div class="widget-body p-3">
+    <form method="post" action="" data-section-preview='{"content_type":"home_instagram_reels_content","entity_id":<?= (int) ($reelsContent['id'] ?? 0) ?>}'>
+      <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+      <input type="hidden" name="action" value="save_header_content">
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Eyebrow Text <span class="text-danger">*</span></label>
+          <input class="form-control" name="eyebrow_text" value="<?= e((string) ($reelsContent['eyebrow_text'] ?? 'Video Showcase')) ?>" required placeholder="e.g. VIDEO SHOWCASE">
+          <small class="text-muted">Small badge text above title (e.g. "VIDEO SHOWCASE").</small>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Main Heading (HTML allowed) <span class="text-danger">*</span></label>
+          <input class="form-control" name="heading_html" value="<?= e((string) ($reelsContent['heading_html'] ?? '')) ?>" required placeholder='e.g. <span>Watch it!</span>...'>
+          <small class="text-muted">Headline HTML (e.g. <code>&lt;span&gt;Watch it!&lt;/span&gt; &lt;span class="social-reels__title-star"&gt;*&lt;/span&gt;...</code>).</small>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Intro Text <span class="text-danger">*</span></label>
+        <textarea class="form-control" rows="2" name="intro_text" required placeholder="e.g. We don’t just manufacture products..."><?= e((string) ($reelsContent['intro_text'] ?? '')) ?></textarea>
+        <small class="text-muted">Subtitle/Lead text below main heading.</small>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Tagline Text (Below Reels) <span class="text-danger">*</span></label>
+        <textarea class="form-control" rows="2" name="tagline_text" required placeholder="e.g. mybrandplease.com - turns your ambition into artistry..."><?= e((string) ($reelsContent['tagline_text'] ?? '')) ?></textarea>
+        <small class="text-muted">Tagline paragraph rendered below the video reel slider.</small>
+      </div>
+
+      <div class="mb-3 form-check">
+        <input class="form-check-input" type="checkbox" name="is_active" id="headerActive" <?= ((int) ($reelsContent['is_active'] ?? 1)) === 1 ? 'checked' : '' ?>>
+        <label class="form-check-label" for="headerActive">Active</label>
+      </div>
+
+      <button type="submit" class="btn btn-primary"><i class="bi bi-check-circle me-1"></i>Update Header Settings</button>
+    </form>
+  </div>
+</div>
+
 <div class="row g-4">
   <div class="col-lg-5">
     <div class="form-section">
       <h5 class="mb-4"><?= $formData['id'] ? 'Edit Reel' : 'Add New Reel' ?></h5>
-      <form method="post" enctype="multipart/form-data" style="display:flex;flex-direction:column;gap:0.5rem;">
+      <form method="post" enctype="multipart/form-data" style="display:flex;flex-direction:column;gap:0.5rem;" data-section-preview='{"content_type":"home_instagram_reel","entity_id":<?= (int) $formData['id'] ?>}'>
         <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
         <input type="hidden" name="action" value="save">
         <input type="hidden" name="id" value="<?= (int) $formData['id'] ?>">

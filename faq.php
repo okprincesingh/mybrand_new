@@ -141,13 +141,18 @@ function render_common_faq_layout(string $slug): void
                 <div class="private-label-sidebar__social">
                   <h3>Follow Us On Social Network</h3>
                   <ul class="private-label-sidebar__social-list">
-                    <li><a href="https://www.youtube.com/@mybrandplease" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a></li>
-                    <li><a href="https://www.facebook.com/mybrandplease" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a></li>
-                    <li><a href="https://www.instagram.com/mybrandplease_/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a></li>
-                    <li><a href="https://www.tiktok.com/@mybrandplease.com" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a></li>
-                    <li><a href="https://x.com/mybrandplease" target="_blank" rel="noopener noreferrer" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a></li>
-                    <li><a href="https://www.linkedin.com/in/mybrandplease" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a></li>
-                    <li><a href="https://in.pinterest.com/mybrandplease/" target="_blank" rel="noopener noreferrer" aria-label="Pinterest"><i class="fa-brands fa-pinterest-p"></i></a></li>
+                    <?php $faqSocialLinks = cms_get_social_media_links(true); ?>
+                    <?php foreach ($faqSocialLinks as $social): ?>
+                      <li>
+                        <a href="<?php echo htmlspecialchars(url($social['url']), ENT_QUOTES, 'UTF-8'); ?>" <?php echo !empty($social['open_in_new_tab']) ? 'target="_blank" rel="noopener noreferrer"' : ''; ?> aria-label="<?php echo htmlspecialchars($social['platform'], ENT_QUOTES, 'UTF-8'); ?>">
+                          <?php if (!empty($social['icon_image'])): ?>
+                            <img src="<?php echo htmlspecialchars(url($social['icon_image']), ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($social['platform'], ENT_QUOTES, 'UTF-8'); ?>" style="width:16px;height:16px;object-fit:contain;">
+                          <?php else: ?>
+                            <i class="<?php echo htmlspecialchars($social['icon_class'] ?: 'fa-solid fa-link', ENT_QUOTES, 'UTF-8'); ?>"></i>
+                          <?php endif; ?>
+                        </a>
+                      </li>
+                    <?php endforeach; ?>
                   </ul>
                 </div>
 

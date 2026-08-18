@@ -19,6 +19,12 @@ if (in_array(catalog_normalize_identity($slug), $combinedAerosolPerfumeSlugs, tr
     exit;
 }
 
+$directFile = __DIR__ . '/' . $slug . '.php';
+if (is_file($directFile) && !in_array($slug, ['index', 'slug-router', '404'], true)) {
+    require $directFile;
+    exit;
+}
+
 $category = catalog_find_category($slug);
 if ($category) {
     $_GET['category'] = (string) ($category['slug'] ?? $slug);

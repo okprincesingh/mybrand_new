@@ -108,9 +108,10 @@ if ($pdo && blog_table_exists($pdo) && $_SERVER['REQUEST_METHOD'] === 'POST') {
   ];
 }
 
+$livePreviewUrl = !empty($data['slug']) ? url('blog-details.php?slug=' . urlencode((string) $data['slug'])) : url('blog.php');
 include __DIR__ . '/_layout_top.php';
 ?>
-<form method="post" enctype="multipart/form-data" class="card card-body">
+<form method="post" enctype="multipart/form-data" class="card card-body" data-section-preview='{"content_type":"blog","entity_id":<?= (int) ($data['id'] ?? 0) ?>}'>
   <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
 
   <?php if (!$pdo || !blog_table_exists($pdo)): ?>

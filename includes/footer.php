@@ -5,18 +5,14 @@ require_once __DIR__ . '/security.php';
 require_once __DIR__ . '/captcha.php';
 require_once __DIR__ . '/cms.php';
 require_once __DIR__ . '/catalog.php';
-$footerSections = cms_get_footer_sections();
-$quickLinks = [];
-$legalLinks = [];
+$footerBrand = cms_get_footer_brand();
+$footerLinks = cms_get_footer_links(null, true);
+$footerBottom = cms_get_footer_bottom();
+$socialLinks = cms_get_social_media_links(true);
 
-if (isset($footerSections[0]['links']) && is_array($footerSections[0]['links'])) {
-    $quickLinks = $footerSections[0]['links'];
-}
-
-if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links'])) {
-    $legalLinks = $footerSections[1]['links'];
-}
-
+$quickLinks = $footerLinks['quick_links'] ?? [];
+$complianceLinks = $footerLinks['compliances'] ?? [];
+$legalLinks = $footerLinks['legal_disclaimers'] ?? [];
 ?>
 <section class="hero-marquee" aria-label="Private label manufacturing services">
     <div class="hero-marquee__strip hero-marquee__strip--back">
@@ -57,97 +53,99 @@ if (isset($footerSections[1]['links']) && is_array($footerSections[1]['links']))
     </div>
 </section>
 
-            <footer class="pl-footer pl-footer--v2 rr-ov-hidden">
-        <div class="container rr-container-1350">
-          <div class="row g-5 pb-5">
-            <div class="col-lg-3">
-                <div class="plf-brand">
-                  <a href="<?php echo url('index.php'); ?>" class="plf-logo d-inline-block mb-3">
-                     <img src="<?php echo url('uploads/logo/mybrandfooter.gif'); ?>" alt="mybrandplease">
-                  </a>
-                <p class="plf-lead">Get in touch with us however is most convenient for you.</p>
-                <p class="plf-contact"><span>Call / WhatsApp:</span> +91 (971) 700 4615</p>
-                <p class="plf-contact"><span>Email:</span> info@mybrandplease.com</p>
+<footer class="pl-footer pl-footer--v2 rr-ov-hidden">
+  <div class="container rr-container-1350">
+    <div class="row g-5 pb-5">
+      <div class="col-lg-3">
+        <div class="plf-brand">
+          <a href="<?php echo url('index.php'); ?>" class="plf-logo d-inline-block mb-3">
+            <img src="<?php echo url(htmlspecialchars($footerBrand['logo'], ENT_QUOTES, 'UTF-8')); ?>" alt="mybrandplease" loading="lazy" style="max-height: 80px; width: auto;">
+          </a>
+          <p class="plf-lead"><?php echo htmlspecialchars($footerBrand['tagline'], ENT_QUOTES, 'UTF-8'); ?></p>
+          <p class="plf-contact"><span>Call / WhatsApp:</span> <?php echo htmlspecialchars($footerBrand['phone'], ENT_QUOTES, 'UTF-8'); ?></p>
+          <p class="plf-contact"><span>Email:</span> <?php echo htmlspecialchars($footerBrand['email'], ENT_QUOTES, 'UTF-8'); ?></p>
 
-                  <div class="plf-follow mt-4">
-                    <p class="plf-follow-btn">FOLLOW US <i class="fa-solid fa-user"></i></p>
-                  <div class="plf-social mt-3">
-                    <a target="_blank" href="<?php echo url('https://www.youtube.com/@mybrandplease'); ?>" aria-label="Youtube"><i class="fa-brands fa-youtube"></i></a>
-                    <a target="_blank" href="<?php echo url('https://www.facebook.com/mybrandplease'); ?>" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-                    <a target="_blank" href="<?php echo url('https://www.instagram.com/mybrandplease_/'); ?>" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-                    <a target="_blank" href="https://www.tiktok.com/@mybrandplease.com" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-                    <a target="_blank" href="<?php echo url('https://x.com/mybrandplease'); ?>" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
-                    <a target="_blank" href="<?php echo url('https://www.linkedin.com/in/mybrandplease'); ?>" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-                    <a target="_blank" href="<?php echo url('https://in.pinterest.com/mybrandplease/'); ?>" aria-label="Pinterest"><i class="fa-brands fa-pinterest-p"></i></a>
-                  </div>
-                </div>
-              </div>
+          <div class="plf-follow mt-4">
+            <p class="plf-follow-btn">FOLLOW US <i class="fa-solid fa-user"></i></p>
+            <div class="plf-social mt-3">
+              <?php foreach ($socialLinks as $social): ?>
+                <a href="<?php echo htmlspecialchars(url($social['url']), ENT_QUOTES, 'UTF-8'); ?>" <?php echo !empty($social['open_in_new_tab']) ? 'target="_blank" rel="noopener noreferrer"' : ''; ?> aria-label="<?php echo htmlspecialchars($social['platform'], ENT_QUOTES, 'UTF-8'); ?>">
+                  <?php if (!empty($social['icon_image'])): ?>
+                    <img src="<?php echo htmlspecialchars(url($social['icon_image']), ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($social['platform'], ENT_QUOTES, 'UTF-8'); ?>" style="width:16px;height:16px;object-fit:contain;">
+                  <?php else: ?>
+                    <i class="<?php echo htmlspecialchars($social['icon_class'] ?: 'fa-solid fa-link', ENT_QUOTES, 'UTF-8'); ?>"></i>
+                  <?php endif; ?>
+                </a>
+              <?php endforeach; ?>
             </div>
-
-            <div class="col-sm-6 col-lg-3">
-              <h4 class="plf-title">QUICK LINKS</h4>
-              <ul class="plf-list list-unstyled mb-4">
-                <li><a href="<?php echo htmlspecialchars(catalog_shop_link('skin-care'), ENT_QUOTES, 'UTF-8'); ?>">Skin Care</a></li>
-                <li><a href="<?php echo htmlspecialchars(catalog_shop_link('body-care'), ENT_QUOTES, 'UTF-8'); ?>">Body Care</a></li>
-                <li><a href="<?php echo htmlspecialchars(catalog_shop_link('hair-care'), ENT_QUOTES, 'UTF-8'); ?>">Hair Care</a></li>
-                <li><a href="<?php echo htmlspecialchars(catalog_shop_link('bathing-soaps'), ENT_QUOTES, 'UTF-8'); ?>">Bathing Soaps</a></li>
-                <li><a href="<?php echo htmlspecialchars(catalog_shop_link('especially-for-men'), ENT_QUOTES, 'UTF-8'); ?>">For Men</a></li>
-                <li><a href="<?php echo htmlspecialchars(catalog_shop_link('fragrances'), ENT_QUOTES, 'UTF-8'); ?>">Fragrance</a></li>
-                <li><a href="<?php echo htmlspecialchars(url('product-catalog.php'), ENT_QUOTES, 'UTF-8'); ?>">Our Product Catalogue</a></li>
-                <li><a href="<?php echo htmlspecialchars(url('https://mybrandplease.trustpass.alibaba.com/'), ENT_QUOTES, 'UTF-8'); ?>">mybrandplease@alibaba.com</a></li>
-              </ul>
-
-            </div>
-
-            <div class="col-sm-6 col-lg-3">
-              <h4 class="plf-title">COMPLIANCES</h4>
-              <ul class="plf-list list-unstyled">
-                <li><a href="<?php echo url('https://www.fda.gov/'); ?>">FDA Registered</a></li>
-                <li><a href="<?php echo url('https://www.iso.org/standard/36437.html'); ?>">ISO 22716 Certified</a></li>
-                <li><a href="<?php echo url('https://ec.europa.eu/growth/tools-databases/cosing/reference/annexes'); ?>">Compliant to EU CosIng</a></li>
-                <li><a href="<?php echo url('https://www.fda.gov/cosmetics/cosmetics-laws-regulations/modernization-cosmetics-regulation-act-2022-mocra'); ?>">MoCRA Compliant</a></li>
-                <li><a href="<?php echo url('https://www.ewg.org/ewgverified/'); ?>">EWG Verified®</a></li>
-                <li><a href="<?php echo url('https://credobeauty.com/pages/the-credo-clean-standard-1'); ?>">Credo Clean Standard</a></li>
-                <li><a href="<?php echo url('https://madesafe.org/collections/cosmetics'); ?>">MADE SAFE®</a></li>
-                <li><a href="<?php echo url('https://cleanlabelproject.org/clean-label-project-certification/'); ?>">Clean Label Project</a></li>
-                <li><a href="<?php echo url('https://www.crueltyfreeinternational.org/for-brands/our-approval-programme/'); ?>">Cruelty-Free Compliant</a></li>
-                <li><a href="<?php echo url('https://biorius.com/cosmetics-certifications/vegan-certification/'); ?>">Vegan Certified</a></li>
-              </ul>
-            </div>
-
-            <div class="col-sm-6 col-lg-3">
-              <h4 class="plf-title">LEGAL DISCLAIMERS</h4>
-              <ul class="plf-list list-unstyled mb-4">
-                <!-- CMS legal links intentionally not rendered here; static links below are used instead. -->
-                 <li><a href="<?php echo url('terms-conditions.php'); ?>">Terms &amp; Conditions</a></li>
-                  <li><a href="<?php echo url('privacy.php'); ?>">Privacy Policy</a></li>
-                  <li><a href="<?php echo url('contact.php'); ?>">Refund Policy</a></li>
-                  <li><a href="<?php echo url('shipping-policy.php'); ?>">Shipping Policy</a></li>
-                  <li><a href="<?php echo url('contact.php'); ?>">Form Center</a></li>
-              </ul>
-
-            </div>
-          </div>
-
-          <div class="plf-trust-row" aria-label="Trust badges and secure payment">
-            <a href="https://g.co/kgs/YgaRfY" target="_blank" rel="noopener noreferrer">
-              <img src="<?php echo url('assets/imgs/home/footer/google-Reviews_mybrand.webp'); ?>" alt="Google Reviews">
-            </a>
-            <a href="https://www.trustpilot.com/review/mybrandplease.com?utm_medium=trustbox&utm_source=TrustBoxReviewCollector" target="_blank" rel="noopener noreferrer">
-              <img src="<?php echo url('assets/imgs/home/footer/Trust-Pilot-Reviews_mybrand.webp'); ?>" alt="Trustpilot Reviews">
-            </a>
-            <img src="<?php echo url('assets/imgs/home/footer/fei.webp'); ?>" alt="USFDA">
-            <img src="<?php echo url('assets/imgs/home/footer/duns.webp'); ?>" alt="DUNS">
-            <img src="<?php echo url('assets/imgs/home/footer/CPNP-Registered.webp'); ?>" alt="CPNP Registered">
-            <img class="plf-trust-row__payment" src="<?php echo url('assets/imgs/home/footer/stripe.png'); ?>" alt="Secure Stripe payment">
-          </div>
-
-          <div class="plf-bottom d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
-            <p class="mb-0">&copy; 2005-2026 NIMISHA IMPEX WORLDWIDE (P) LIMITED | All rights reserved</p>
-            <p class="mb-0">Developed and Maintained by <a href="https://jaikviktechnology.com/" target="_blank" rel="noopener noreferrer">JTPL</a></p>
           </div>
         </div>
-      </footer>
+      </div>
+
+      <div class="col-sm-6 col-lg-3">
+        <h4 class="plf-title">QUICK LINKS</h4>
+        <ul class="plf-list list-unstyled mb-4">
+          <?php foreach ($quickLinks as $link): ?>
+            <li>
+              <a href="<?php echo htmlspecialchars(url($link['url']), ENT_QUOTES, 'UTF-8'); ?>" <?php echo !empty($link['open_in_new_tab']) ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>>
+                <?php echo htmlspecialchars($link['label'], ENT_QUOTES, 'UTF-8'); ?>
+              </a>
+            </li>
+          <?php endforeach; ?>
+        </ul>
+      </div>
+
+      <div class="col-sm-6 col-lg-3">
+        <h4 class="plf-title">COMPLIANCES</h4>
+        <ul class="plf-list list-unstyled">
+          <?php foreach ($complianceLinks as $link): ?>
+            <li>
+              <a href="<?php echo htmlspecialchars(url($link['url']), ENT_QUOTES, 'UTF-8'); ?>" <?php echo !empty($link['open_in_new_tab']) ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>>
+                <?php echo htmlspecialchars($link['label'], ENT_QUOTES, 'UTF-8'); ?>
+              </a>
+            </li>
+          <?php endforeach; ?>
+        </ul>
+      </div>
+
+      <div class="col-sm-6 col-lg-3">
+        <h4 class="plf-title">LEGAL DISCLAIMERS</h4>
+        <ul class="plf-list list-unstyled mb-4">
+          <?php foreach ($legalLinks as $link): ?>
+            <li>
+              <a href="<?php echo htmlspecialchars(url($link['url']), ENT_QUOTES, 'UTF-8'); ?>" <?php echo !empty($link['open_in_new_tab']) ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>>
+                <?php echo htmlspecialchars($link['label'], ENT_QUOTES, 'UTF-8'); ?>
+              </a>
+            </li>
+          <?php endforeach; ?>
+        </ul>
+      </div>
+    </div>
+
+    <div class="plf-trust-row" aria-label="Trust badges and secure payment">
+      <?php $trustBadges = cms_get_trust_badges(true); ?>
+      <?php foreach ($trustBadges as $badge): ?>
+        <?php if (!empty($badge['link_url'])): ?>
+          <a href="<?php echo htmlspecialchars($badge['link_url'], ENT_QUOTES, 'UTF-8'); ?>"<?php echo !empty($badge['open_in_new_tab']) ? ' target="_blank" rel="noopener noreferrer"' : ''; ?>>
+            <img src="<?php echo htmlspecialchars(url($badge['image']), ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($badge['label'], ENT_QUOTES, 'UTF-8'); ?>" loading="lazy">
+          </a>
+        <?php else: ?>
+          <img src="<?php echo htmlspecialchars(url($badge['image']), ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($badge['label'], ENT_QUOTES, 'UTF-8'); ?>" loading="lazy">
+        <?php endif; ?>
+      <?php endforeach; ?>
+    </div>
+
+    <div class="plf-bottom d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+      <p class="mb-0"><?php echo $footerBottom['copyright_text'] ?? '&copy; 2005-2026 NIMISHA IMPEX WORLDWIDE (P) LIMITED | All rights reserved'; ?></p>
+      <p class="mb-0">
+        <?php echo htmlspecialchars($footerBottom['developer_credit_text'] ?? 'Developed and Maintained by', ENT_QUOTES, 'UTF-8'); ?>
+        <a href="<?php echo htmlspecialchars(url($footerBottom['developer_credit_url'] ?? 'https://jaikviktechnology.com/'), ENT_QUOTES, 'UTF-8'); ?>" target="_blank" rel="noopener noreferrer">
+          <?php echo htmlspecialchars($footerBottom['developer_credit_label'] ?? 'JTPL', ENT_QUOTES, 'UTF-8'); ?>
+        </a>
+      </p>
+    </div>
+  </div>
+</footer>
 
       <div class="enquiry-modal" id="enquiry-modal" aria-hidden="true">
         <div class="enquiry-modal__backdrop" data-enquiry-close></div>

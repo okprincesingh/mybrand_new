@@ -205,27 +205,63 @@
 
     const profileUrls = {
       tp: "https://www.trustpilot.com/review/mybrandplease.com?utm_medium=trustbox&utm_source=TrustBoxReviewCollector",
-      goog: "https://www.google.com/search?sca_esv=bb6909982b54b99b&hl=en-IN&sxsrf=ANbL-n6qXDzrzsH5f5lZNI_Ah48QB9jjpw:1779717448312&si=AL3DRZEsmMGCryMMFSHJ3StBhOdZ2-6yYkXd_doETEE1OR-qOY_XvxlYEfuQHA_YuEiHG_72NxKrvskJekSzqy-K2bzweuOLyl7a2xQlxue37ORu3aw8uiLZyOQzvcCNu7AMP3jPY3c1u0N-h67CszFADy_fotsv3Q%3D%3D&q=mybrandplease.com+Reviews&sa=X&ved=2ahUKEwiyorqSzNSUAxVnUGwGHai-Fe8Q0bkNegQIJhAH&biw=2231&bih=969&dpr=2",
-      ali: "https://mybrandplease.trustpass.alibaba.com/company_profile/feedback.html?spm=a2700.shop_cp.88.105.2f087bc8WNX5wH"
+      goog: "https://www.google.com/search?q=mybrandplease.com+Reviews",
+      ali: "https://mybrandplease.trustpass.alibaba.com/company_profile/feedback.html"
     };
 
-    const allReviews = [
-      { p: "tp", name: "Steve Marc", ini: "SM", ac: "#E6FBF4", tc: "#00875A",  date: "8 Mar 2026", text: "Communication was clear and professional from the beginning, the team stayed responsive, and the products arrived on time with quality that met expectations." },
-      { p: "tp", name: "Zain Sheikh", ini: "ZS", ac: "#E6FBF4", tc: "#00875A",  date: "21 Feb 2026", text: "A professional long-term partner with strong expertise across formulation, packaging, design, compliance, and customer service." },
-      { p: "tp", name: "Meghana Ghosh", ini: "MG", ac: "#E6FBF4", tc: "#00875A",  date: "15 Feb 2026", text: "mybrandplease supported the brand from concept to launch with guidance on ingredients, positioning, compliance, packaging, and market readiness." },
-      { p: "tp", name: "Yawovi Yevoudakor", ini: "YY", ac: "#E6FBF4", tc: "#00875A",  date: "16 Oct 2025", text: "Good products, helpful customer service, and a pleasant purchase experience made it easy to return for another order." },
-      { p: "tp", name: "Elina", ini: "EL", ac: "#E6FBF4", tc: "#00875A",  date: "11 May 2025", text: "The hair care range delivered top-shelf quality and made launching a new brand feel simple and successful." },
-      { p: "goog", name: "Priya Mehta", ini: "PM", ac: "#E8F0FE", tc: "#1A73E8",  date: "9 May 2026", text: "Incredible service from start to finish. They handled formulation and labeling while keeping the MOQ practical for a startup brand." },
-      { p: "goog", name: "James Carter", ini: "JC", ac: "#E8F0FE", tc: "#1A73E8",  date: "1 May 2026", text: "Exceptional quality control and a responsive team. The custom formulation matched the brief and gave us confidence to expand the line." },
-      { p: "goog", name: "Ananya Joshi", ini: "AJ", ac: "#E8F0FE", tc: "#1A73E8",  date: "24 Apr 2026", text: "The team guided us through each step of the private label process and helped the final products look premium." },
-      { p: "goog", name: "Rahul Sharma", ini: "RS", ac: "#E8F0FE", tc: "#1A73E8",  date: "18 Apr 2026", text: "Top quality private label formulations with noticeable customer response after switching to mybrandplease." },
-      { p: "goog", name: "Nisha Kapoor", ini: "NK", ac: "#E8F0FE", tc: "#1A73E8",  date: "12 Apr 2026", text: "Supportive communication, polished packaging, and dependable timelines made the launch process much smoother." },
-      { p: "ali", name: "Li Wei", ini: "LW", ac: "#FFF2E8", tc: "#C25200",  date: "6 May 2026", text: "A strong B2B supplier for private label cosmetics with fast communication and reliable bulk order delivery." },
-      { p: "ali", name: "Maria Santos", ini: "MS", ac: "#FFF2E8", tc: "#C25200",  date: "28 Apr 2026", text: "Custom branding was handled well, the products passed quality checks, and the pricing stayed competitive for reorder planning." },
-      { p: "ali", name: "Omar Khan", ini: "OK", ac: "#FFF2E8", tc: "#C25200",  date: "19 Apr 2026", text: "Samples, packaging options, and production details were explained clearly, which helped us move forward with confidence." },
-      { p: "ali", name: "Sofia Martins", ini: "SM", ac: "#FFF2E8", tc: "#C25200",  date: "10 Apr 2026", text: "The team responded quickly during sourcing and kept the order organized from product selection through dispatch." },
-      { p: "ali", name: "Daniel Roberts", ini: "DR", ac: "#FFF2E8", tc: "#C25200",  date: "2 Apr 2026", text: "Reliable supplier experience with clear communication, good packaging quality, and consistent private label support." },
-    ];
+    const cmsContent = window.cmsTestimonialsContent || {};
+    const defaultHeadingText = cmsContent.heading_text || "Here's what our customers say";
+    const defaultRatingPrefix = cmsContent.rating_prefix || "mybrandplease.com is rated";
+    const defaultRatingHighlight = cmsContent.rating_highlight || "Excellent";
+
+    const platformColorMap = {
+      tp: { ac: "#E6FBF4", tc: "#00875A" },
+      goog: { ac: "#E8F0FE", tc: "#1A73E8" },
+      ali: { ac: "#FFF2E8", tc: "#C25200" }
+    };
+
+    function getInitials(name) {
+      if (!name) return "U";
+      const parts = name.trim().split(/\s+/);
+      if (parts.length >= 2) {
+        return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+      }
+      return name.substr(0, 2).toUpperCase();
+    }
+
+    const allReviews = (window.cmsTestimonials && Array.isArray(window.cmsTestimonials) && window.cmsTestimonials.length > 0)
+      ? window.cmsTestimonials.map(r => {
+          const p = r.platform || 'tp';
+          const colors = platformColorMap[p] || platformColorMap.tp;
+          return {
+            p: p,
+            name: r.name || '',
+            ini: r.ini || getInitials(r.name),
+            ac: r.ac || colors.ac,
+            tc: r.tc || colors.tc,
+            date: r.review_date || r.date || '',
+            text: r.content || r.text || '',
+            stars: r.rating || r.stars || 5,
+            image_path: r.image_path || r.img || ''
+          };
+        })
+      : [
+          { p: "tp", name: "Steve Marc", ini: "SM", ac: "#E6FBF4", tc: "#00875A",  date: "8 Mar 2026", text: "Communication was clear and professional from the beginning, the team stayed responsive, and the products arrived on time with quality that met expectations.", stars: 5, image_path: "" },
+          { p: "tp", name: "Zain Sheikh", ini: "ZS", ac: "#E6FBF4", tc: "#00875A",  date: "21 Feb 2026", text: "A professional long-term partner with strong expertise across formulation, packaging, design, compliance, and customer service.", stars: 5, image_path: "" },
+          { p: "tp", name: "Meghana Ghosh", ini: "MG", ac: "#E6FBF4", tc: "#00875A",  date: "15 Feb 2026", text: "mybrandplease supported the brand from concept to launch with guidance on ingredients, positioning, compliance, packaging, and market readiness.", stars: 5, image_path: "" },
+          { p: "tp", name: "Yawovi Yevoudakor", ini: "YY", ac: "#E6FBF4", tc: "#00875A",  date: "16 Oct 2025", text: "Good products, helpful customer service, and a pleasant purchase experience made it easy to return for another order.", stars: 5, image_path: "" },
+          { p: "tp", name: "Elina", ini: "EL", ac: "#E6FBF4", tc: "#00875A",  date: "11 May 2025", text: "The hair care range delivered top-shelf quality and made launching a new brand feel simple and successful.", stars: 5, image_path: "" },
+          { p: "goog", name: "Priya Mehta", ini: "PM", ac: "#E8F0FE", tc: "#1A73E8",  date: "9 May 2026", text: "Incredible service from start to finish. They handled formulation and labeling while keeping the MOQ practical for a startup brand.", stars: 5, image_path: "" },
+          { p: "goog", name: "James Carter", ini: "JC", ac: "#E8F0FE", tc: "#1A73E8",  date: "1 May 2026", text: "Exceptional quality control and a responsive team. The custom formulation matched the brief and gave us confidence to expand the line.", stars: 5, image_path: "" },
+          { p: "goog", name: "Ananya Joshi", ini: "AJ", ac: "#E8F0FE", tc: "#1A73E8",  date: "24 Apr 2026", text: "The team guided us through each step of the private label process and helped the final products look premium.", stars: 5, image_path: "" },
+          { p: "goog", name: "Rahul Sharma", ini: "RS", ac: "#E8F0FE", tc: "#1A73E8",  date: "18 Apr 2026", text: "Top quality private label formulations with noticeable customer response after switching to mybrandplease.", stars: 5, image_path: "" },
+          { p: "goog", name: "Nisha Kapoor", ini: "NK", ac: "#E8F0FE", tc: "#1A73E8",  date: "12 Apr 2026", text: "Supportive communication, polished packaging, and dependable timelines made the launch process much smoother.", stars: 5, image_path: "" },
+          { p: "ali", name: "Li Wei", ini: "LW", ac: "#FFF2E8", tc: "#C25200",  date: "6 May 2026", text: "A strong B2B supplier for private label cosmetics with fast communication and reliable bulk order delivery.", stars: 5, image_path: "" },
+          { p: "ali", name: "Maria Santos", ini: "MS", ac: "#FFF2E8", tc: "#C25200",  date: "28 Apr 2026", text: "Custom branding was handled well, the products passed quality checks, and the pricing stayed competitive for reorder planning.", stars: 5, image_path: "" },
+          { p: "ali", name: "Omar Khan", ini: "OK", ac: "#FFF2E8", tc: "#C25200",  date: "19 Apr 2026", text: "Samples, packaging options, and production details were explained clearly, which helped us move forward with confidence.", stars: 5, image_path: "" },
+          { p: "ali", name: "Sofia Martins", ini: "SM", ac: "#FFF2E8", tc: "#C25200",  date: "10 Apr 2026", text: "The team responded quickly during sourcing and kept the order organized from product selection through dispatch.", stars: 5, image_path: "" },
+          { p: "ali", name: "Daniel Roberts", ini: "DR", ac: "#FFF2E8", tc: "#C25200",  date: "2 Apr 2026", text: "Reliable supplier experience with clear communication, good packaging quality, and consistent private label support.", stars: 5, image_path: "" }
+        ];
 
     const platLogo = {
       tp: "assets/imgs/about/trusti.png",
@@ -254,15 +290,15 @@
     };
     const scoreLabel = { all: "Trustpilot", tp: "Trustpilot", goog: "Google", ali: "Alibaba" };
     const scoreValue = { all: "4.4", tp: "4.4", goog: "5", ali: "4.7" };
-    const scoreText = { all: "Excellent", tp: "Excellent", goog: "Excellent", ali: "Excellent" };
+    const scoreText = { all: defaultRatingHighlight, tp: defaultRatingHighlight, goog: defaultRatingHighlight, ali: defaultRatingHighlight };
     const headingHTML = {
-      all: "mybrandplease.com is rated <b>Excellent</b>",
-      tp: "mybrandplease.com is rated <b>Excellent</b>",
-      goog: "mybrandplease.com is rated <b>Excellent</b>",
-      ali: "mybrandplease.com is rated <b>Excellent</b>"
+      all: `${esc(defaultRatingPrefix)} <b>${esc(defaultRatingHighlight)}</b>`,
+      tp: `${esc(defaultRatingPrefix)} <b>${esc(defaultRatingHighlight)}</b>`,
+      goog: `${esc(defaultRatingPrefix)} <b>${esc(defaultRatingHighlight)}</b>`,
+      ali: `${esc(defaultRatingPrefix)} <b>${esc(defaultRatingHighlight)}</b>`
     };
     const subText = {
-      all: "Here's what our customers say",
+      all: defaultHeadingText,
       tp: "",
       goog: "",
       ali: ""
@@ -364,13 +400,17 @@
     }
 
     function render() {
-      document.getElementById("track").innerHTML = list.map((r) => `
+      document.getElementById("track").innerHTML = list.map((r) => {
+        const avatarContent = r.image_path ?
+          `<img src="${esc(r.image_path)}" alt="${esc(r.name)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">` :
+          esc(r.ini);
+        return `
         <div class="rv-card">
           <span class="rv-qmark">"</span>
           <p class="rv-text">${esc(r.text)}</p>
           <div class="rv-footer">
             <div class="rv-reviewer">
-              <div class="rv-avatar" style="background:${esc(r.ac)};color:${esc(r.tc)}">${esc(r.ini)}</div>
+              <div class="rv-avatar" style="background:${esc(r.ac)};color:${esc(r.tc)}">${avatarContent}</div>
               <div>
                 <p class="rv-name">${esc(r.name)}</p>
                 <p class="rv-date">${esc(r.date)}</p>
@@ -385,7 +425,8 @@
           </div>
           <a class="rv-readmore" href="${esc(profileUrls[r.p])}" target="_blank" rel="noopener noreferrer">Read more</a>
         </div>
-      `).join("");
+      `;
+      }).join("");
 
       document.getElementById("track").style.transform = `translateX(-${cur * 100}%)`;
       document.getElementById("dots").innerHTML = list.map((_, i) =>
@@ -394,6 +435,7 @@
       updatePlatformBadge(hasReviewInteraction);
       updateScoreCard(list[cur] ? list[cur].p : "all");
     }
+
 
     function resetProg() {
       clearInterval(progT);

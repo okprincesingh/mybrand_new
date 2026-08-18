@@ -1,0 +1,1 @@
+a:3:{s:3:"key";s:57:"catalog:filtered:b155a4fe2a503250ff73993c1a347b69b7aaa5e6";s:10:"expires_at";i:1786166758;s:4:"data";a:0:{}}

@@ -220,6 +220,77 @@ body.admin-body {
   transform: translateX(2px);
 }
 
+/* Collapsible Home dropdown in sidebar */
+.admin-nav-toggle {
+  cursor: pointer;
+  position: relative;
+}
+
+.admin-nav-toggle .admin-nav-caret {
+  margin-left: auto;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s ease;
+  flex-shrink: 0;
+}
+
+.admin-nav-toggle:hover .admin-nav-caret,
+.admin-nav-toggle.active .admin-nav-caret {
+  color: #22d3ee;
+}
+
+.admin-nav-toggle[aria-expanded="true"] .admin-nav-caret,
+.admin-nav-toggle.open .admin-nav-caret {
+  transform: rotate(180deg);
+}
+
+.admin-nav-collapse {
+  padding: .25rem 0 .5rem;
+  margin-bottom: .3rem;
+}
+
+.admin-nav-collapse .admin-sub-link {
+  padding: .6rem 1rem .6rem 2.6rem;
+  font-size: 0.9rem;
+  margin-bottom: .2rem;
+  border-radius: 10px;
+  position: relative;
+}
+
+.admin-nav-collapse .admin-sub-link::after {
+  content: '';
+  position: absolute;
+  left: 1.6rem;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(148, 163, 184, 0.4);
+  transform: translateY(-50%);
+  transition: background 0.3s ease;
+}
+
+.admin-nav-collapse .admin-sub-link i {
+  font-size: 1.05rem;
+  width: 20px;
+  height: 20px;
+}
+
+.admin-nav-collapse .admin-sub-link:hover {
+  transform: translateX(2px);
+}
+
+.admin-nav-collapse .admin-sub-link:hover::after,
+.admin-nav-collapse .admin-sub-link.active::after {
+  background: #22d3ee;
+}
+
+.admin-nav-collapse .admin-sub-link.active {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.18), rgba(29, 78, 216, 0.12));
+  border: 1px solid rgba(37, 99, 235, 0.25);
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.15);
+}
+
 .admin-main { min-height: 100vh; }
 
 .admin-topbar {

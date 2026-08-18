@@ -1,12 +1,16 @@
 <?php
 require_once __DIR__ . '/_init.php';
 
+$error = '';
 if (admin_current()) {
-    header('Location: ' . url('admin/dashboard.php'), true, 302);
-    exit;
+    $destination = admin_first_accessible_admin_page(admin_current());
+    if ($destination !== null) {
+        header('Location: ' . url('admin/' . $destination), true, 302);
+        exit;
+    }
+    $error = 'Your account is active but has not been granted access to any CMS section.';
 }
 
-$error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verify_csrf_or_fail();
     $errors = validate_required_fields($_POST, ['email', 'password']);
@@ -20,10 +24,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $token = admin_login($email, $password);
         if ($token) {
-            header('Location: ' . url('admin/dashboard.php'), true, 302);
-            exit;
+            $destination = admin_first_accessible_admin_page(admin_current() ?? []);
+            if ($destination !== null) {
+                header('Location: ' . url('admin/' . $destination), true, 302);
+                exit;
+            }
+            $error = 'Your account is active but has not been granted access to any CMS section.';
+        } else {
+            $error = 'Invalid credentials.';
         }
-        $error = 'Invalid credentials.';
     }
 }
 ?>

@@ -2,6 +2,8 @@
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/helpers.php';
 require_once __DIR__ . '/url.php';
+require_once __DIR__ . '/preview.php';
+require_once __DIR__ . '/draft.php';
 
 function blog_fallback_posts(): array
 {
@@ -125,8 +127,13 @@ function blog_get_posts(array $filters = [], array $pagination = []): array
         return ['items' => $items, 'total' => $total];
     }
 
-    $where = ['status = :st'];
-    $params = [':st' => 'published'];
+    $where = preview_mode_include_drafts() ? ['1=1'] : [];
+    $params = [];
+
+    if (!preview_mode_include_drafts()) {
+        $where[] = 'status = :st';
+        $params[':st'] = 'published';
+    }
 
     if (!empty($filters['category'])) {
         $where[] = 'category = :cat';
@@ -179,10 +186,25 @@ function blog_get_post_by_slug(string $slug): ?array
         return null;
     }
 
-    return db_fetch_one($pdo, 'SELECT id,title,slug,excerpt,content,meta_title,canonical_url,meta_keywords,meta_description,featured_image,category,author_name,published_at,status,tags FROM blog_posts WHERE slug = :slug AND status = :st LIMIT 1', [
-        ':slug' => $slug,
-        ':st' => 'published',
-    ]);
+
+    $statusClause = preview_mode_include_drafts() ? '' : ' AND status = :st';
+    $params = [':slug' => $slug];
+    if (!preview_mode_include_drafts()) {
+        $params[':st'] = 'published';
+    }
+
+    $row = db_fetch_one($pdo, 'SELECT id,title,slug,excerpt,content,meta_title,canonical_url,meta_keywords,meta_description,featured_image,category,author_name,published_at,status,tags FROM blog_posts WHERE slug = :slug' . $statusClause . ' LIMIT 1', $params);
+
+    if (!$row) {
+        return null;
+    }
+
+    if (preview_mode_include_drafts()) {
+        $row = draft_merge_row((array) $row, 'blog', (int) ($row['id'] ?? 0));
+    }
+
+    return is_array($row) ? $row : null;
+
 }
 
 function blog_get_categories(): array
@@ -201,7 +223,12 @@ function blog_get_categories(): array
         return $out;
     }
 
-    return db_fetch_all($pdo, 'SELECT category AS name, COUNT(*) AS count FROM blog_posts WHERE status = :st GROUP BY category ORDER BY category ASC', [':st' => 'published']);
+    $statusClause = preview_mode_include_drafts() ? '' : ' WHERE status = :st';
+    $params = [];
+    if (!preview_mode_include_drafts()) {
+        $params[':st'] = 'published';
+    }
+    return db_fetch_all($pdo, 'SELECT category AS name, COUNT(*) AS count FROM blog_posts' . $statusClause . ' GROUP BY category ORDER BY category ASC', $params);
 }
 
 function blog_get_recent_posts(int $limit = 3, ?string $excludeSlug = null): array
@@ -216,11 +243,19 @@ function blog_get_recent_posts(int $limit = 3, ?string $excludeSlug = null): arr
         return array_slice($items, 0, $limit);
     }
 
-    $sql = 'SELECT id,title,slug,featured_image,published_at FROM blog_posts WHERE status = :st';
-    $params = [':st' => 'published'];
+    $sql = 'SELECT id,title,slug,featured_image,published_at FROM blog_posts';
+    $params = [];
+    $whereParts = [];
+    if (!preview_mode_include_drafts()) {
+        $whereParts[] = 'status = :st';
+        $params[':st'] = 'published';
+    }
     if ($excludeSlug) {
-        $sql .= ' AND slug <> :slug';
+        $whereParts[] = 'slug <> :slug';
         $params[':slug'] = $excludeSlug;
+    }
+    if ($whereParts) {
+        $sql .= ' WHERE ' . implode(' AND ', $whereParts);
     }
     $sql .= ' ORDER BY published_at DESC, id DESC LIMIT :lim';
 

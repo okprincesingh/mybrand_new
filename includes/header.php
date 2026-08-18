@@ -6,84 +6,18 @@ require_once __DIR__ . '/user.php';
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
-$headerMenuItems = cms_get_resolved_header_menu();
-if (!function_exists('header_menu_item_is_certificates')) {
-    function header_menu_item_is_certificates(array $item): bool
-    {
-        $url = strtolower(trim((string) ($item['url'] ?? '')));
-        $title = strtolower(trim((string) ($item['title'] ?? '')));
-        return str_contains($url, 'our-certificates') || str_contains($title, 'certificate');
-    }
+
+// Fetch dynamic navbar logo and menu tree
+$navLogo = cms_get_nav_logo();
+$headerLogoUrl = !empty($navLogo['logo_image']) ? url($navLogo['logo_image']) : url('uploads/logo/mybrandplease-1.gif');
+$headerLogoLink = !empty($navLogo['logo_link_url']) ? url($navLogo['logo_link_url']) : url('index.php');
+$headerLogoAlt = !empty($navLogo['brand_text']) ? (string)$navLogo['brand_text'] : 'mybrandplease Logo';
+
+$headerMenuItems = cms_get_nav_menu_tree();
+if (empty($headerMenuItems)) {
+    $headerMenuItems = cms_get_resolved_header_menu();
 }
 
-$certificatesMenuItem = [
-    'id' => 909001,
-    'title' => 'Our Certificates',
-    'url' => 'our-certificates.php',
-    'children' => [],
-];
-
-foreach ($headerMenuItems as &$headerMenuItem) {
-    if (cms_header_menu_key($headerMenuItem) === 'our-product') {
-        $headerMenuItem['title'] = 'Sample';
-    }
-    if (cms_header_menu_key($headerMenuItem) === 'additional-services') {
-        $headerMenuItem['title'] = 'Services';
-    }
-    if (cms_header_menu_key($headerMenuItem) === 'about-us') {
-        $hasCertificatesLink = false;
-        if (!isset($headerMenuItem['children']) || !is_array($headerMenuItem['children'])) {
-            $headerMenuItem['children'] = [];
-        }
-        foreach ($headerMenuItem['children'] as &$childMenuItem) {
-            if (header_menu_item_is_certificates($childMenuItem)) {
-                $hasCertificatesLink = true;
-                $childMenuItem['url'] = 'our-certificates.php';
-                $childMenuItem['title'] = 'Our Certificates';
-                $childMenuItem['children'] = [];
-                break;
-            }
-        }
-        unset($childMenuItem);
-
-        if (!$hasCertificatesLink) {
-            $headerMenuItem['children'][] = $certificatesMenuItem;
-        }
-    } else {
-        $filteredChildren = [];
-        foreach ((array) ($headerMenuItem['children'] ?? []) as $childMenuItem) {
-            if (!header_menu_item_is_certificates($childMenuItem)) {
-                $filteredChildren[] = $childMenuItem;
-            }
-        }
-        $headerMenuItem['children'] = $filteredChildren;
-    }
-}
-unset($headerMenuItem);
-$headerMenuItems = array_values(array_filter($headerMenuItems, static function (array $headerMenuItem): bool {
-    return cms_header_menu_key($headerMenuItem) !== 'home';
-}));
-$headerMenuPriority = [
-    'our-product' => 0,
-    'how-it-works' => 1,
-    'why-choose-us' => 2,
-    'about-us' => 3,
-    'additional-services' => 4,
-    'resources' => 5,
-];
-usort($headerMenuItems, static function (array $a, array $b) use ($headerMenuPriority): int {
-    $aKey = cms_header_menu_key($a);
-    $bKey = cms_header_menu_key($b);
-    $aPriority = $headerMenuPriority[$aKey] ?? 100;
-    $bPriority = $headerMenuPriority[$bKey] ?? 100;
-
-    if ($aPriority === $bPriority) {
-        return ((int) ($a['sort_order'] ?? $a['id'] ?? 0)) <=> ((int) ($b['sort_order'] ?? $b['id'] ?? 0));
-    }
-
-    return $aPriority <=> $bPriority;
-});
-$headerLogo = url('uploads/logo/mybrandplease-1.gif');
 $headerUser = user_current();
 $headerUserName = '';
 if ($headerUser) {
@@ -122,8 +56,14 @@ if (!function_exists('render_header_menu_items')) {
     {
         foreach ($items as $item) {
             $hasChildren = !empty($item['children']);
-            echo '<li' . ($hasChildren ? ' class="menu-item-has-children"' : '') . '>';
-            echo '<a href="' . htmlspecialchars(url((string) $item['url']), ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars((string) $item['title'], ENT_QUOTES, 'UTF-8') . '</a>';
+            $hasDropdown = $hasChildren || !empty($item['has_dropdown']);
+            $openInNewTab = !empty($item['open_in_new_tab']);
+            $targetAttr = $openInNewTab ? ' target="_blank" rel="noopener noreferrer"' : '';
+            $itemLabel = (string) ($item['label'] ?? $item['title'] ?? '');
+            $itemUrl = (string) ($item['url'] ?? '#');
+
+            echo '<li' . ($hasDropdown ? ' class="menu-item-has-children"' : '') . '>';
+            echo '<a href="' . htmlspecialchars(url($itemUrl), ENT_QUOTES, 'UTF-8') . '"' . $targetAttr . '>' . htmlspecialchars($itemLabel, ENT_QUOTES, 'UTF-8') . '</a>';
             if ($hasChildren) {
                 echo '<ul class="dp-menu">';
                 render_header_menu_items($item['children']);
@@ -150,8 +90,8 @@ if (!function_exists('render_header_menu_items')) {
           <div class="side-info-content">
             <div class="offset-widget offset-header">
               <div class="offset-logo">
-                <a href="<?php echo url('index.php'); ?>">
-                  <img src="<?php echo $headerLogo; ?>" alt="mybrandplease Logo" />
+                <a href="<?php echo htmlspecialchars($headerLogoLink, ENT_QUOTES, 'UTF-8'); ?>">
+                  <img src="<?php echo htmlspecialchars($headerLogoUrl, ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($headerLogoAlt, ENT_QUOTES, 'UTF-8'); ?>" />
                 </a>
               </div>
               <button id="side-info-close" class="side-info-close">
@@ -178,7 +118,14 @@ if (!function_exists('render_header_menu_items')) {
                     <nav class="moc-menu-panel moc-menu-panel--root" aria-label="Mobile root menu">
                       <ul class="moc-list">
                         <?php foreach ($headerMenuItems as $menuItem): ?>
-                          <?php $hasChildren = !empty($menuItem['children']); ?>
+                          <?php
+                            $hasChildren = !empty($menuItem['children']);
+                            $hasDropdown = $hasChildren || !empty($menuItem['has_dropdown']);
+                            $itemLabel = (string) ($menuItem['label'] ?? $menuItem['title'] ?? '');
+                            $itemUrl = (string) ($menuItem['url'] ?? '#');
+                            $openInNewTab = !empty($menuItem['open_in_new_tab']);
+                            $targetAttr = $openInNewTab ? ' target="_blank" rel="noopener noreferrer"' : '';
+                          ?>
                           <li>
                             <?php if ($hasChildren): ?>
                               <button
@@ -186,18 +133,18 @@ if (!function_exists('render_header_menu_items')) {
                                 class="moc-link moc-parent"
                                 data-menu-id="<?php echo (int) ($menuItem['id'] ?? 0); ?>"
                               >
-                                <span><?php echo htmlspecialchars((string) ($menuItem['title'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></span>
+                                <span><?php echo htmlspecialchars($itemLabel, ENT_QUOTES, 'UTF-8'); ?></span>
                                 <span class="moc-chevron" aria-hidden="true">&#8250;</span>
                               </button>
                             <?php else: ?>
-                              <a class="moc-link" href="<?php echo htmlspecialchars(url((string) ($menuItem['url'] ?? '#')), ENT_QUOTES, 'UTF-8'); ?>">
-                                <?php echo htmlspecialchars((string) ($menuItem['title'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>
+                              <a class="moc-link" href="<?php echo htmlspecialchars(url($itemUrl), ENT_QUOTES, 'UTF-8'); ?>"<?php echo $targetAttr; ?>>
+                                <?php echo htmlspecialchars($itemLabel, ENT_QUOTES, 'UTF-8'); ?>
                               </a>
                             <?php endif; ?>
                           </li>
                         <?php endforeach; ?>
                         <li class="moc-cta-item">
-                          <a class="moc-cta-btn" href="<?php echo url('contact.php'); ?>">Get In Touch</a>
+                          <a class="moc-cta-btn" href="<?php echo url('contact'); ?>">Get In Touch</a>
                         </li>
                       </ul>
                     </nav>
@@ -213,10 +160,10 @@ if (!function_exists('render_header_menu_items')) {
             <div class="offset-widget-box">
               <h2 class="title">Social Info</h2>
               <div class="offset-social">
-                <a href="<?php echo url('contact.php'); ?>" class="facebook" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="<?php echo url('contact.php'); ?>" class="twitter" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                <a href="<?php echo url('contact.php'); ?>" class="linkedin" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                <a href="<?php echo url('contact.php'); ?>" class="youtube" aria-label="Youtube"><i class="fab fa-youtube"></i></a>
+                <a href="<?php echo url('contact'); ?>" class="facebook" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="<?php echo url('contact'); ?>" class="twitter" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="<?php echo url('contact'); ?>" class="linkedin" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="<?php echo url('contact'); ?>" class="youtube" aria-label="Youtube"><i class="fab fa-youtube"></i></a>
               </div>
             </div>
           </div>
@@ -233,8 +180,8 @@ if (!function_exists('render_header_menu_items')) {
               <!-- Logo Column -->
               <div class="col-auto">
                 <div class="header__logo">
-                  <a href="<?php echo url('index.php'); ?>">
-                    <img src="<?php echo $headerLogo; ?>" class="normal-logo" alt="mybrandplease Logo" />
+                  <a href="<?php echo htmlspecialchars($headerLogoLink, ENT_QUOTES, 'UTF-8'); ?>">
+                    <img src="<?php echo htmlspecialchars($headerLogoUrl, ENT_QUOTES, 'UTF-8'); ?>" class="normal-logo" alt="<?php echo htmlspecialchars($headerLogoAlt, ENT_QUOTES, 'UTF-8'); ?>" />
                   </a>
                 </div>
               </div>
@@ -251,7 +198,7 @@ if (!function_exists('render_header_menu_items')) {
               <!-- Actions Column -->
               <div class="col-auto">
                 <div class="header-right d-flex align-items-center gap-3">
-                  <a href="<?php echo url('index.php'); ?>" class="action-btn header-home-btn d-none d-xl-inline-flex" aria-label="Home">
+                  <a href="<?php echo url(''); ?>" class="action-btn header-home-btn d-none d-xl-inline-flex" aria-label="Home">
                     <i class="fa-regular fa-house"></i>
                   </a>
 
@@ -269,7 +216,7 @@ if (!function_exists('render_header_menu_items')) {
                       <div class="search-backdrop"></div>
                       <div class="search-inner" role="document">
                         <button class="search-close" type="button" aria-label="Close search">&times;</button>
-                        <form class="search-form" action="<?php echo htmlspecialchars(url('shop.php'), ENT_QUOTES, 'UTF-8'); ?>" method="get" role="search">
+                        <form class="search-form" action="<?php echo htmlspecialchars(url('shop'), ENT_QUOTES, 'UTF-8'); ?>" method="get" role="search">
                           <input type="search" name="q" class="search-input" placeholder="Search..."
                             autocomplete="off" />
                           <button type="submit" class="search-submit" aria-label="Submit search">
@@ -280,15 +227,15 @@ if (!function_exists('render_header_menu_items')) {
                     </div>
                   </div>
 
-                  <a href="<?php echo url('meeting-schedule.php'); ?>" class="header-meta-link d-none d-lg-inline-flex">
+                  <a href="<?php echo url('meeting-schedule'); ?>" class="header-meta-link d-none d-lg-inline-flex">
                     Get Free Consultation
                   </a>
 
-                  <a href="<?php echo url('contact.php'); ?>" class="btn-orange d-inline-flex header-get-touch-btn">
+                  <a href="<?php echo url('contact'); ?>" class="btn-orange d-inline-flex header-get-touch-btn">
                     Get In Touch
                   </a>
 
-                  <a href="<?php echo url('cart.php'); ?>" class="action-btn position-relative header-cart-btn" aria-label="Cart">
+                  <a href="<?php echo url('cart'); ?>" class="action-btn position-relative header-cart-btn" aria-label="Cart">
                     <i class="fa-solid fa-cart-shopping"></i>
                     <span
                       class="cart-count position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-light"
@@ -316,12 +263,12 @@ if (!function_exists('render_header_menu_items')) {
                           <span>Signed in as</span>
                           <strong><?php echo htmlspecialchars($headerUserName, ENT_QUOTES, 'UTF-8'); ?></strong>
                         </div>
-                        <a href="<?php echo url('user-dashboard.php'); ?>" role="menuitem"><i class="fa-regular fa-grid-2"></i> Dashboard</a>
-                        <a href="<?php echo url('user-orders.php'); ?>" role="menuitem"><i class="fa-regular fa-bag-shopping"></i> Orders</a>
-                        <a href="<?php echo url('user-wishlist.php'); ?>" role="menuitem"><i class="fa-regular fa-heart"></i> Wishlist</a>
+                        <a href="<?php echo url('user-dashboard'); ?>" role="menuitem"><i class="fa-regular fa-grid-2"></i> Dashboard</a>
+                        <a href="<?php echo url('user-orders'); ?>" role="menuitem"><i class="fa-regular fa-bag-shopping"></i> Orders</a>
+                        <a href="<?php echo url('user-wishlist'); ?>" role="menuitem"><i class="fa-regular fa-heart"></i> Wishlist</a>
                       <?php else: ?>
-                        <a href="<?php echo url('register.php'); ?>" role="menuitem"><i class="fa-regular fa-user-plus"></i> Register</a>
-                        <a href="<?php echo url('login.php'); ?>" role="menuitem"><i class="fa-regular fa-right-to-bracket"></i> Login</a>
+                        <a href="<?php echo url('register'); ?>" role="menuitem"><i class="fa-regular fa-user-plus"></i> Register</a>
+                        <a href="<?php echo url('login'); ?>" role="menuitem"><i class="fa-regular fa-right-to-bracket"></i> Login</a>
                       <?php endif; ?>
                     </div>
                   </div>
